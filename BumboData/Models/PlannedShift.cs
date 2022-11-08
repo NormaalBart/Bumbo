@@ -15,7 +15,7 @@ namespace BumboData.Models
         [Key]
         public int ShiftId { get; set; }
         public int EmployeeId { get; set; }
-        public virtual Employee? Employee { get; set; }
+        public virtual Employee Employee { get; set; }
         public int PrognosisId { get; set; }
         public virtual PrognosisDay PrognosisDay { get; set; }
 
