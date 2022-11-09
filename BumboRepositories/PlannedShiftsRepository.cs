@@ -1,9 +1,8 @@
 ﻿using BumboData;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
 
-namespace BumboServices
+namespace BumboRepositories
 {
     public class PlannedShiftsRepository : IPlannedShifts
     {

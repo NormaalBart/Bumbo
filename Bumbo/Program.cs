@@ -1,7 +1,5 @@
 using BumboData;
-using BumboServices;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Build.Execution;
+using BumboRepositories;
 using Microsoft.EntityFrameworkCore;
 
 

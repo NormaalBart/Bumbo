@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BumboData\BumboData.csproj" />
-    <ProjectReference Include="..\BumboServices\BumboRepositories.csproj" />
+    <ProjectReference Include="..\BumboRepositories\BumboRepositories.csproj" />
   </ItemGroup>
 
 </Project>
