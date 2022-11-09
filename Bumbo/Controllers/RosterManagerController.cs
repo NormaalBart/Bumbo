@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Bumbo.Controllers
 {
-    public class RosterManager : Controller
+    public class RosterManagerController : Controller
     {
         private IMapper _mapper;
         private IEmployee _employeeRepository;
         private IPrognosis _prognosisRepository;
         private IPlannedShifts _shiftRepository;
         private IUnavailableMoments _unavailableRepository;
-        public RosterManager(IMapper mapper, IEmployee employee, IPrognosis prognosis, IPlannedShifts plannedShifts, IUnavailableMoments unavailableMoments)
+        public RosterManagerController(IMapper mapper, IEmployee employee, IPrognosis prognosis, IPlannedShifts plannedShifts, IUnavailableMoments unavailableMoments)
         {
             _mapper = mapper;
             _employeeRepository = employee;
