@@ -5,11 +5,11 @@ using System.Numerics;
 
 namespace BumboServices
 {
-    public class PlannedShiftsService : IPlannedShifts
+    public class PlannedShiftsRepository : IPlannedShifts
     {
         private MyContext _context;
 
-        public PlannedShiftsService(MyContext context)
+        public PlannedShiftsRepository(MyContext context)
         {
             _context = context;
         }

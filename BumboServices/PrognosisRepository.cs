@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace BumboServices
 {
-    public class PrognosisService : IPrognosis
+    public class PrognosisRepository : IPrognosis
     {
         private MyContext _context;
-        public PrognosisService(MyContext context)
+        public PrognosisRepository(MyContext context)
         {
             _context = context;
         }

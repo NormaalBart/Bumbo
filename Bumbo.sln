@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bumbo", "Bumbo\Bumbo.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboData", "BumboData\BumboData.csproj", "{6EC761A3-7DB3-4343-A708-134235B638CF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboServices", "BumboServices\BumboServices.csproj", "{3223D8D6-22A3-4E9B-8AA7-7D0BC22672A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboRepositories", "BumboServices\BumboRepositories.csproj", "{3223D8D6-22A3-4E9B-8AA7-7D0BC22672A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

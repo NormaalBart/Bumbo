@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace BumboServices
 {
-    public class EmployeeService : IEmployee
+    public class EmployeeRepository : IEmployee
     {
         private MyContext _context;
-        public EmployeeService(MyContext context)
+        public EmployeeRepository(MyContext context)
         {
             this._context = context;
         }

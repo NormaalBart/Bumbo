@@ -18,10 +18,10 @@ namespace Bumbo
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            builder.Services.AddScoped<IEmployee, EmployeeService>();
-            builder.Services.AddScoped<IPrognosis, PrognosisService>();
-            builder.Services.AddScoped<IPlannedShifts, PlannedShiftsService>();
-            builder.Services.AddScoped<IUnavailableMoments, UnavailableMomentService>();
+            builder.Services.AddScoped<IEmployee, EmployeeRepository>();
+            builder.Services.AddScoped<IPrognosis, PrognosisRepository>();
+            builder.Services.AddScoped<IPlannedShifts, PlannedShiftsRepository>();
+            builder.Services.AddScoped<IUnavailableMoments, UnavailableMomentRepository>();
             builder.Services.AddDbContext<MyContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Bumbo"));

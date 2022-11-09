@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace BumboServices
 {
-    public class UnavailableMomentService : IUnavailableMoments
+    public class UnavailableMomentRepository : IUnavailableMoments
     {
         private MyContext _context;
 
-        public UnavailableMomentService(MyContext context)
+        public UnavailableMomentRepository(MyContext context)
         {
             this._context = context;
         }
