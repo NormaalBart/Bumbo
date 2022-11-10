@@ -1,0 +1,47 @@
+﻿@model Bumbo.Models.PrognosisManager.PrognosisListViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PrognosisList[0].AmountOfCollies)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrognosisList[0].AmountOfCustomers)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrognosisList[0].Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.PrognosisList) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountOfCollies)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountOfCustomers)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
