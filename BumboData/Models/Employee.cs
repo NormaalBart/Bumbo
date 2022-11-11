@@ -19,6 +19,7 @@ public class Employee: IdentityUser
     [Required]
     public DateOnly Birthdate { get; set; }
 
+    [Required]
     public Boolean Active { get; set; }
     
     [Required]
