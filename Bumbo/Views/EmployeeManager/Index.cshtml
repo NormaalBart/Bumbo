@@ -4,22 +4,35 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center">Medewerker management</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
+<!--Create new button and sorting buttons in a header above the table-->
+<div class="container">
+    <div class="top-header row">
+        <div class="col">
+            <a asp-action="Create" class="btn btn-lg btn-primary">Create New</a>
+        </div>
+        
+        <div class="col">
+            <form asp-action="Index" method="get" class="">
+                <div class="form-actions no-color">
+                    <p>
+                        <input type="search" name="SearchString" value="@ViewData["CurrentFilter"] " placeholder="Zoek op naam" />
+                        <input type="submit" value="Search" class="btn btn-default" /> 
+                    </p>
+                </div>
+            </form>
+        </div>
+       
+    </div>
+</div>
+
+
+<table class="table table-striped table-hover table-bordered">
+    <thead class="table table-dark">
+        <tr >
             <th>
-                @Html.DisplayNameFor(model => model.Employees[0].FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employees[0].MiddleName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employees[0].LastName)
+                @Html.DisplayNameFor(model => model.Employees[0].FullName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Employees[0].Function)
@@ -27,23 +40,22 @@
             <th>
                 @Html.DisplayNameFor(model => model.Employees[0].Region)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)
+            <th class="text-center">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)</a>
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employees[0].IsEmployed)
+            </th>
+            <th>
+                acties
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Employees) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MiddleName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                    @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Function)
@@ -51,9 +63,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Region)
             </td>
-            <td>
+                <td class="text-center">
                 @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
             </td>
+            <td class="text-center">
+                @if(item.IsEmployed){
+                        <div class="alert-success"> @Html.DisplayFor(modelItem => item.IsEmployed) </div>
+                }else{
+                        <div class="alert-danger"> @Html.DisplayFor(modelItem => item.IsEmployed) </div>
+                }
+                
+            </td>
+
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |

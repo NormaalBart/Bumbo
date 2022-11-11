@@ -17,9 +17,42 @@ namespace Bumbo.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string sortOrder, string searchString)
         {
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentFilter"] = searchString;
+
+            // The list will only show the following items: 'Name, Department, Function, Region, Employee since, Active' as is determined
+            // in the use case. 
+
+
             var employees = _employeesRepository.GetAll();
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // search in employees if any of the columns contains the searchstring
+                searchString = searchString.ToLower();
+                employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString) || e.LastName.ToLower().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    employees = employees.OrderByDescending(e => e.LastName);
+                    break;
+                case "Date":
+                    employees = employees.OrderBy(e => e.EmployeeJoinedCompany);
+                    break;
+                case "date_desc":
+                    employees = employees.OrderByDescending(e => e.EmployeeJoinedCompany);
+                    break;
+                default:
+                    employees = employees.OrderBy(e => e.LastName);
+                    break;
+            }
+
+
             EmployeeListIndexViewModel list = new EmployeeListIndexViewModel();
             list.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
             
