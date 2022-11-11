@@ -1,9 +1,4 @@
 ﻿using BumboData.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BumboData
 {
@@ -13,8 +8,8 @@ namespace BumboData
         WorkedShift GetById(int id);
         void Add(PlannedShift plannedShift);
         bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift);
-        double GetHoursPlannedInWorkWeek(int employeeId, DateTime currentDate);
+        double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate);
 
-        IEnumerable<PlannedShift> GetShiftsOfEmployeeOnDate(DateTime date, int employeeId);
+        IEnumerable<PlannedShift> GetShiftsOfEmployeeOnDate(DateTime date, string employeeId);
     }
 }

@@ -1,20 +1,14 @@
-﻿using BumboData.Enums;
-using BumboData.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BumboData.Models;
 
 namespace BumboData
 {
     public interface IEmployee 
     {
         IEnumerable<Employee> GetAll();
-        Employee GetById(int id);
+        Employee GetById(string id);
         void Add(Employee employee);
 
-        IEnumerable<Departments> GetDepartmentsOfEmployee(int id);
+        IEnumerable<Department> GetDepartmentsOfEmployee(string id);
 
     }
 }

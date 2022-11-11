@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.PrognosisManager;
 using BumboData;
 using BumboData.Models;
@@ -48,7 +47,7 @@ namespace Bumbo.Controllers
             {
                 return View(prognosis);
             }
-            var prognosisDay = _mapper.Map<PrognosisDay>(prognosis);
+            var prognosisDay = _mapper.Map<Prognosis>(prognosis);
             _prognosisRepository.Add(prognosisDay);
             return RedirectToAction("Index");
         }

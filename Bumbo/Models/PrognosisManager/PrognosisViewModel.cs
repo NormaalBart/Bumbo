@@ -1,7 +1,5 @@
-﻿using BumboData.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bumbo.Models.PrognosisManager
 {
@@ -18,6 +16,6 @@ namespace Bumbo.Models.PrognosisManager
         [Required]
         [DisplayName("Datum")]
         [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
     }
 }
