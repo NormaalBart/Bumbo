@@ -92,7 +92,7 @@ namespace BumboRepositories
         {
 
             // This method returns the next 7 days from the given date.
-            // If there's no prognosis for a week, it will create a new one.
+            // If there's no prognosis for a week, it will return empty new prognosis days.
             // if there's gaps in the week it will check which days are missing and create a new one for those days.
 
             // However, since the manager can only add 7 days at a time now, this should not be a problem in the future.
@@ -129,7 +129,7 @@ namespace BumboRepositories
 
             // in the very rare case scenario which should not happen, where there's
             // days missing in a week where it shouldn't be missing
-            // we check which ones are missing and add default values. 
+            // we check which ones are missing and add default values for those days in the return list.
 
             for (int i = 0; i < 7; i++)
             {

@@ -15,7 +15,6 @@ namespace Bumbo.Models.PrognosisManager
         public int AmountOfCollies { get; set; }
         [DisplayName("Aantal Klanten")]
         [Required]
-        // range between 0, 2000 with custom error message
         [Range(0, 100000, ErrorMessage = "Aantal klanten moet tussen 0 en 100.000 liggen")]
         public int AmountOfCustomers { get; set; }
         [Required]

@@ -16,6 +16,7 @@
 
     <div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
         <div>
+            <!--Arrow to left, using an online arrow png-->
             <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.PrognosisList[0].Date" asp-route-direction="previous">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z" />
@@ -23,9 +24,11 @@
             </a>
         </div>
         <div>
+        <!--Week  number, date information which is in the center.-->
             @Model.DisplayListHeader
         </div>
         <div>
+        <!--Arrow to right, using an online arrow png on the right side of the bar.-->
             <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.PrognosisList[0].Date" asp-route-direction="next">
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z" />
