@@ -3,6 +3,7 @@ using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
 using BumboData.Models;
+using System.Collections.Generic;
 
 namespace Bumbo.Models
 {
@@ -19,6 +20,8 @@ namespace Bumbo.Models
             CreateMap<PlannedShift, ShiftViewModel>();
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
+
+
         }
     }
 }

@@ -11,9 +11,7 @@ namespace BumboData
     {
         IEnumerable<PrognosisDay> GetAll();
         void Add(PrognosisDay prognosisDay);
-        PrognosisDay GetById(int id);
         PrognosisDay GetByDate(DateTime date);
-        void Update(PrognosisDay prognosisDay);
         IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date);
 
         double GetCassierePrognose(DateTime date);
@@ -22,6 +20,10 @@ namespace BumboData
         int GetIdByDate(DateTime date);
 
         DateTime GetNextEmptyPrognosisDate();
+
+        void AddOrUpdateAll(List<PrognosisDay> list);
+
+        IEnumerable<PrognosisDay> GetNextWeek(DateTime firstDayOfWeek);
 
     }
 }
