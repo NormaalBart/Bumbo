@@ -1,4 +1,5 @@
-﻿using BumboData;
+﻿using Bumbo.Utils;
+using BumboData;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,59 +7,63 @@ namespace BumboRepositories
 {
     public class PrognosisRepository : IPrognosis
     {
-        private MyContext _context;
-        public PrognosisRepository(MyContext context)
+        private BumboContext _context;
+        public PrognosisRepository(BumboContext context)
         {
             _context = context;
         }
         
-        public void Add(PrognosisDay prognosisDay)
+        public void Add(Prognosis prognosisDay)
         {
-            _context.Prognosis.Add(prognosisDay);
+            _context.Prognoses.Add(prognosisDay);
             _context.SaveChanges();
         }
 
-        public IEnumerable<PrognosisDay> GetAll()
+        public IEnumerable<Prognosis> GetAll()
         {
-            return _context.Prognosis;
+            return _context.Prognoses;
         }
 
-        public PrognosisDay GetByDate(DateTime date)
+        public Prognosis GetByDate(DateTime date)
         {
-            return _context.Prognosis.Where(p => p.Date == date.Date).Include(p => p.PlannedShiftsOnDay).FirstOrDefault();
+            return _context.Prognoses.FirstOrDefault(p => p.Date == date.ToDateOnly());
         }
 
+        public Prognosis GetById(int id)
+        {
+            return _context.Prognoses.Where(p => p.Id == id).FirstOrDefault();
+        }
 
         public IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date)
         {
-            return _context.PlannedShift.Where(p => p.StartTime.Date == date).Include(p => p.Employee);
+            return _context.PlannedShifts.Where(p => p.StartTime.Date == date).Include(p => p.Employee);
         }
         public double GetCassierePrognose(DateTime date)
         {
-            return _context.Prognosis.Where(p => p.Date == date).Select(p => p.CassiereDepartment).FirstOrDefault();
+            throw new NotImplementedException();
         }
         public double GetFreshPrognose(DateTime date)
         {
-            return _context.Prognosis.Where(p => p.Date == date).Select(p => p.FreshDepartment).FirstOrDefault();
+            throw new NotImplementedException();
         }
         public double GetStockersPrognose(DateTime date)
         {
-            return _context.Prognosis.Where(p => p.Date == date).Select(p => p.StockersDepartment).FirstOrDefault();
+            throw new NotImplementedException();
         }
 
 
         public int GetIdByDate(DateTime date)
         {
-            return _context.Prognosis.Where(p => p.Date == date).Select(p => p.Id).FirstOrDefault();
+            return _context.Prognoses.Where(p => p.Date == date.ToDateOnly()).Select(p => p.Id).FirstOrDefault();
         }
 
-        public DateTime GetNextEmptyPrognosisDate()
+        public DateOnly GetNextEmptyPrognosisDate()
         {
-            if (_context.Prognosis.OrderByDescending(p => p.Date).FirstOrDefault() != null)
+            if (_context.Prognoses.OrderByDescending(p => p.Date).FirstOrDefault() != null)
             {
-                return _context.Prognosis.OrderByDescending(p => p.Date).FirstOrDefault().Date.AddDays(1);
+                return _context.Prognoses.OrderByDescending(p => p.Date).FirstOrDefault().Date.AddDays(1);
             }
-            return DateTime.Now;
+            return DateOnly.FromDateTime(DateTime.Now);
         }
 
         public void AddOrUpdateAll(List<PrognosisDay> list)

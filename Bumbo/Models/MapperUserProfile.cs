@@ -13,8 +13,8 @@ namespace Bumbo.Models
             // To use auto mapper, register it here for each model you want to use.
             CreateMap<EmployeeCreateViewModel, Employee>();
             CreateMap<Employee, EmployeeListItemViewModel>();
-            CreateMap<PrognosisViewModel, PrognosisDay>();
-            CreateMap<PrognosisDay, PrognosisViewModel>();
+            CreateMap<PrognosisViewModel, Prognosis>();
+            CreateMap<Prognosis, PrognosisViewModel>();
             CreateMap<Employee, EmployeeRosterViewModel>();
             CreateMap<PlannedShift, ShiftViewModel>();
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();

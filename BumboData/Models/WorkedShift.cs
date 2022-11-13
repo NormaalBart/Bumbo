@@ -1,35 +1,27 @@
-﻿using BumboData.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BumboData.Models
+namespace BumboData.Models;
+
+public class WorkedShift
 {
-    public class WorkedShift
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int WorkedShiftId { get; set; }
+    [Key]
+    public int Id { get; set; }
+    
+    [Required]
+    public Employee Employee { get; set; }
 
-        public int EmployeeId { get; set; }
-        public virtual Employee Employee { get; set; }
-        [Required]
-        public DateTime StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
-        [Required]
-        public bool IsApproved { get; set; }
-        [Required]
-        public DepartmentEnum Department { get; set; }
+    [Required]
+    public DateTime StartTime { get; set; }
+    
+    public DateTime? EndTime { get; set; }
 
-
-        public WorkedShift()
-        {
-            Employee = new Employee();
-        }
-
-    }
+    [Required]
+    public Boolean Approved { get; set; }
+    
+    [Required]
+    public Branch Branch { get; set; }
+    
+    [Required]
+    public Boolean Sick { get; set; }
 }

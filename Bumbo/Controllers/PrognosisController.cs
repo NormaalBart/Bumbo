@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.PrognosisManager;
 using BumboData;
 using BumboData.Models;

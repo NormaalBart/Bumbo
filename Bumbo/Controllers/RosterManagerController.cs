@@ -3,8 +3,6 @@ using Bumbo.Models.RosterManager;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 
 namespace Bumbo.Controllers
 {
@@ -55,15 +53,14 @@ namespace Bumbo.Controllers
         }
         
         
-        public IActionResult Create(int employeeId, string dateInput, int prognosisId)
+        public IActionResult Create(string employeeId, string dateInput, int prognosisId)
         {
             RosterShiftCreateViewModel viewModel = new RosterShiftCreateViewModel();
-            viewModel.EmployeeId = employeeId;
             viewModel.Date = DateTime.Parse(dateInput);
             viewModel.StartTime = viewModel.Date.AddHours(8);
             viewModel.EndTime = viewModel.Date.AddHours(16);
             viewModel.PrognosisId = prognosisId;
-            viewModel.DepartmentsList = _employeeRepository.GetById(employeeId).Departments.ToList();
+            viewModel.DepartmentsList = _employeeRepository.GetById(employeeId).AllowedDepartments.ToList();
             
             return View(viewModel);
         }
@@ -75,7 +72,7 @@ namespace Bumbo.Controllers
         {
             int maxHoursInWeekAllowed = 40; // DEFAULT 40 TODO 
             
-            newShift.DepartmentsList = _employeeRepository.GetById(newShift.EmployeeId).Departments.ToList();
+            newShift.DepartmentsList = _employeeRepository.GetById(newShift.EmployeeId).AllowedDepartments.ToList();
 
             // since starttime and endtime seem to only save the timestamps, we need to add the date to it
             newShift.StartTime = newShift.Date.AddHours(newShift.StartTime.Hour);
@@ -101,13 +98,13 @@ namespace Bumbo.Controllers
                     return View(newShift);
                 }
                 // check availability employee
-                if (!_unavailableRepository.IsEmployeeAvailable(shift.EmployeeId, shift.StartTime, shift.EndTime))
+                if (!_unavailableRepository.IsEmployeeAvailable(shift.Employee.Id, shift.StartTime, shift.EndTime))
                 {
                     ModelState.AddModelError("StartTime", "Medewerker is niet beschikbaar voor deze tijd.");
                     ModelState.AddModelError("EndTime", "Medewerker is niet beschikbaar voor deze tijd.");
                 }
                 // check if CAO rules are met.
-                if(_shiftRepository.GetHoursPlannedInWorkWeek(shift.EmployeeId, shift.StartTime.Date) + (shift.EndTime - shift.StartTime).TotalHours > maxHoursInWeekAllowed)
+                if(_shiftRepository.GetHoursPlannedInWorkWeek(shift.Employee.Id, shift.StartTime.Date) + (shift.EndTime - shift.StartTime).TotalHours > maxHoursInWeekAllowed)
                 {
                     ModelState.AddModelError("StartTime", "Medewerker heeft al te veel gewerkt deze week.");
                     ModelState.AddModelError("EndTime", "Medewerker heeft al te veel gewerkt deze week.");

@@ -1,17 +1,14 @@
 ﻿using BumboData.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BumboData
 {
     public interface IPrognosis
     {
-        IEnumerable<PrognosisDay> GetAll();
-        void Add(PrognosisDay prognosisDay);
-        PrognosisDay GetByDate(DateTime date);
+        IEnumerable<Prognosis> GetAll();
+        void Add(Prognosis prognosisDay);
+        Prognosis GetById(int id);
+        Prognosis GetByDate(DateTime date);
+        void Update(Prognosis prognosisDay);
         IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date);
 
         double GetCassierePrognose(DateTime date);
@@ -19,7 +16,7 @@ namespace BumboData
         double GetStockersPrognose(DateTime date);
         int GetIdByDate(DateTime date);
 
-        DateTime GetNextEmptyPrognosisDate();
+        DateOnly GetNextEmptyPrognosisDate();
 
         void AddOrUpdateAll(List<PrognosisDay> list);
 
