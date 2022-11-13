@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bumbo.Models.PrognosisManager;
+using Bumbo.Utils;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,7 @@ namespace Bumbo.Controllers
 
             // Returns the week of prognose days.
             PrognosisListViewModel list = new PrognosisListViewModel();
-            var prognosisDb = _prognosisRepository.GetNextWeek(startOfWeek);
+            var prognosisDb = _prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly());
             list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(prognosisDb).ToList();
 
 
@@ -63,7 +64,7 @@ namespace Bumbo.Controllers
             {
                 return View(list);
             }
-            List<PrognosisDay> result = _mapper.Map<List<PrognosisDay>>(list.PrognosisList);
+            List<Prognosis> result = _mapper.Map<List<Prognosis>>(list.PrognosisList);
             if (result.Count != 0)
             {
                 _prognosisRepository.AddOrUpdateAll(result);

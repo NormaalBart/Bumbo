@@ -1,4 +1,5 @@
-﻿using BumboData.Models;
+﻿using Bumbo.Utils;
+using BumboData.Models;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace Bumbo.Models.PrognosisManager
@@ -34,7 +35,7 @@ namespace Bumbo.Models.PrognosisManager
             DateTime lastDate = PrognosisList.OrderByDescending(p => p.Date).FirstOrDefault().Date;
 
             string result = "Week "
-                    + System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(firstDate, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday)
+                    + firstDate.GetWeekNumber()
                     + " | "
                     + firstDate.Day
                     + " "
@@ -42,7 +43,9 @@ namespace Bumbo.Models.PrognosisManager
                     + "   -  "
                     + lastDate.Day
                     + " "
-                    + lastDate.ToString("MMMM");
+                    + lastDate.ToString("MMMM")
+                    + "  "
+                    + lastDate.Year;
             return result;
         }
     }

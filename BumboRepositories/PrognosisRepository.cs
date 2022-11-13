@@ -8,9 +8,11 @@ namespace BumboRepositories
     public class PrognosisRepository : IPrognosis
     {
         private BumboContext _context;
-        public PrognosisRepository(BumboContext context)
+        private IBranch _branchRepository;
+        public PrognosisRepository(BumboContext context, IBranch branchRepository)
         {
             _context = context;
+            _branchRepository = branchRepository;
         }
         
         public void Add(Prognosis prognosisDay)
@@ -24,9 +26,10 @@ namespace BumboRepositories
             return _context.Prognoses;
         }
 
-        public Prognosis GetByDate(DateTime date)
+        public Prognosis GetByDate(DateOnly date)
         {
-            return _context.Prognoses.FirstOrDefault(p => p.Date == date.ToDateOnly());
+           
+            return _context.Prognoses.FirstOrDefault(p => p.Date == date);
         }
 
         public Prognosis GetById(int id)
@@ -40,15 +43,18 @@ namespace BumboRepositories
         }
         public double GetCassierePrognose(DateTime date)
         {
-            throw new NotImplementedException();
+            return 100;
+            //throw new NotImplementedException();
         }
         public double GetFreshPrognose(DateTime date)
         {
-            throw new NotImplementedException();
+            return 100;
+            //throw new NotImplementedException();
         }
         public double GetStockersPrognose(DateTime date)
         {
-            throw new NotImplementedException();
+            return 100;
+            //throw new NotImplementedException();
         }
 
 
@@ -65,8 +71,8 @@ namespace BumboRepositories
             }
             return DateOnly.FromDateTime(DateTime.Now);
         }
-
-        public void AddOrUpdateAll(List<PrognosisDay> list)
+        
+        public void AddOrUpdateAll(List<Prognosis> list)
         {
             if(list.Count == 0)
             {
@@ -74,26 +80,37 @@ namespace BumboRepositories
             }
             foreach (var item in list)
             {
-                // if item already exists, update it otherwise add.
-                if (_context.Prognosis.Where(p => p.Date.Date == item.Date.Date).FirstOrDefault() != null)
+                // each prognose has a branch and department prognoses. These Department prognoses
+                // contain the amount of hours and employees that are needed for that department.
+
+
+                // First we check if the prognose already exists, in which case we update it.
+                // other wise we add it.
+                if (_context.Prognoses.Where(p => p.Date == item.Date).FirstOrDefault() != null)
                 {
-                    var prognosisDay = _context.Prognosis.Where(p => p.Date == item.Date).FirstOrDefault();
-                    prognosisDay.AmountOfCollies = item.AmountOfCollies;
-                    prognosisDay.AmountOfCustomers = item.AmountOfCustomers;
-                    prognosisDay.updatePrognosis();
-                    _context.Prognosis.Update(prognosisDay);
+                    var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognoses).FirstOrDefault();
+                    prognosisDay.ColiCount = item.ColiCount;
+                    prognosisDay.CustomerCount = item.CustomerCount;
+                    prognosisDay.DepartmentPrognoses = item.DepartmentPrognoses;
+
+
+                    _context.Prognoses.Update(prognosisDay);
                 }
                 else
                 {
                     // makes sure that there's no time instance in the date.
-                    item.Date = item.Date.Date;
-                    _context.Prognosis.Add(item);
+
+                    // get the branch of the item
+                    item.Branch = _branchRepository.GetBranchOfUser();
+
+                    _context.Prognoses.Add(item);
+                    
                 }
             }
             _context.SaveChanges();
         }
 
-        public IEnumerable<PrognosisDay> GetNextWeek(DateTime firstDayOfWeek)
+        public IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek)
         {
 
             // This method returns the next 7 days from the given date.
@@ -104,7 +121,7 @@ namespace BumboRepositories
             // As long as the manager cannot add specific days without adding the entire week it will be fine. 
 
 
-            var nextWeek = _context.Prognosis.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7));
+            var nextWeek = _context.Prognoses.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7));
             if (nextWeek.Count() == 7)
             {
                 // prevent very rare case scenario where the database has 7 days in a row, but is also somehow wrong or not starting correctly. 
@@ -115,17 +132,17 @@ namespace BumboRepositories
             }
 
             
-            var resultList = new List<PrognosisDay>();
+            var resultList = new List<Prognosis>();
             // if the database does not have any days for the week, we add them with default values. 
             // this does not mean adding them to the database, but adding them to the resulting list which returns.
             if (nextWeek.Count() == 0)
             {
                 for (int i = 0; i < 7; i++)
                 {
-                    PrognosisDay prognosis = new PrognosisDay();
+                    Prognosis prognosis = new Prognosis();
                     prognosis.Date = firstDayOfWeek.AddDays(i);
-                    prognosis.AmountOfCustomers = 0;
-                    prognosis.AmountOfCollies = 0;
+                    prognosis.CustomerCount = 0;
+                    prognosis.ColiCount = 0;
                     resultList.Add(prognosis);
                 }
                 return resultList;
@@ -141,10 +158,10 @@ namespace BumboRepositories
                 var temp = this.GetByDate(firstDayOfWeek.AddDays(i));
                 if(temp == null)
                 {
-                    PrognosisDay prognosis = new PrognosisDay();
+                    Prognosis prognosis = new Prognosis();
                     prognosis.Date = firstDayOfWeek.AddDays(i);
-                    prognosis.AmountOfCustomers = 0;
-                    prognosis.AmountOfCollies = 0;
+                    prognosis.CustomerCount = 0;
+                    prognosis.ColiCount = 0;
                     resultList.Add(prognosis);
                 }
                 else
@@ -154,5 +171,32 @@ namespace BumboRepositories
             }
             return resultList;
         }
+
+        public IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis)
+        {
+            // This method calculates the amount of employees and hours needed for each department.
+            // This is done using the standard from the database.
+            List<DepartmentPrognosis> result = new List<DepartmentPrognosis>();
+            if (_context.Standards == null)
+            {
+                // create 3 new department prognoses for each department.
+                // with default values
+                foreach (var department in _context.Departments)
+                {
+                    DepartmentPrognosis departmentPrognosis = new DepartmentPrognosis();
+                    departmentPrognosis.Prognosis = prognosis;
+                    departmentPrognosis.Department = department;
+                    departmentPrognosis.RequiredEmployees = 1;
+                    departmentPrognosis.RequiredHours = 1;
+                    result.Add(departmentPrognosis);
+                }
+            }
+            return result;
+
+
+        }
     }
+
+
+  
 }

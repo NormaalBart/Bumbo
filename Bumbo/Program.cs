@@ -19,6 +19,7 @@ namespace Bumbo
             builder.Services.AddScoped<IPrognosis, PrognosisRepository>();
             builder.Services.AddScoped<IPlannedShifts, PlannedShiftsRepository>();
             builder.Services.AddScoped<IUnavailableMoments, UnavailableMomentRepository>();
+            builder.Services.AddScoped<IBranch, BranchRepository>();
             builder.Services.AddDbContext<BumboContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Bumbo"));
