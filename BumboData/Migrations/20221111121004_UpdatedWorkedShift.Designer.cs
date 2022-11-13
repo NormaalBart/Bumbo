@@ -4,6 +4,7 @@ using BumboData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20221111121004_UpdatedWorkedShift")]
+    partial class UpdatedWorkedShift
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,39 +23,6 @@ namespace BumboData.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("BumboData.Models.Branch", b =>
-                {
-                    b.Property<int>("BranchId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BranchId"), 1L, 1);
-
-                    b.Property<int>("HouseNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("BranchId");
-
-                    b.HasIndex("ManagerId");
-
-                    b.ToTable("Branches");
-                });
 
             modelBuilder.Entity("BumboData.Models.Departments", b =>
                 {
@@ -81,9 +50,6 @@ namespace BumboData.Migrations
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -119,8 +85,6 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
-
                     b.ToTable("Employees");
                 });
 
@@ -131,9 +95,6 @@ namespace BumboData.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShiftId"), 1L, 1);
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Department")
                         .HasColumnType("int");
@@ -151,8 +112,6 @@ namespace BumboData.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ShiftId");
-
-                    b.HasIndex("BranchId");
 
                     b.HasIndex("EmployeeId");
 
@@ -224,17 +183,11 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.WorkedShift", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("WorkedShiftId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("Approved")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WorkedShiftId"), 1L, 1);
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -242,15 +195,16 @@ namespace BumboData.Migrations
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Sick")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("BranchId");
+                    b.HasKey("WorkedShiftId");
 
                     b.HasIndex("EmployeeId");
 
@@ -272,30 +226,8 @@ namespace BumboData.Migrations
                     b.ToTable("DepartmentsEmployee");
                 });
 
-            modelBuilder.Entity("BumboData.Models.Branch", b =>
-                {
-                    b.HasOne("BumboData.Models.Employee", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Manager");
-                });
-
-            modelBuilder.Entity("BumboData.Models.Employee", b =>
-                {
-                    b.HasOne("BumboData.Models.Branch", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("BranchId");
-                });
-
             modelBuilder.Entity("BumboData.Models.PlannedShift", b =>
                 {
-                    b.HasOne("BumboData.Models.Branch", null)
-                        .WithMany("PlannedShifts")
-                        .HasForeignKey("BranchId");
-
                     b.HasOne("BumboData.Models.Employee", "Employee")
                         .WithMany("PlannedShifts")
                         .HasForeignKey("EmployeeId")
@@ -326,19 +258,11 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.WorkedShift", b =>
                 {
-                    b.HasOne("BumboData.Models.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BumboData.Models.Employee", "Employee")
                         .WithMany("WorkedShifts")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Branch");
 
                     b.Navigation("Employee");
                 });
@@ -356,13 +280,6 @@ namespace BumboData.Migrations
                         .HasForeignKey("EmployeesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BumboData.Models.Branch", b =>
-                {
-                    b.Navigation("Employees");
-
-                    b.Navigation("PlannedShifts");
                 });
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
