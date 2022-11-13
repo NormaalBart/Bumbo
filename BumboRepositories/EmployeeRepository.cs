@@ -6,8 +6,8 @@ namespace BumboRepositories
 {
     public class EmployeeRepository : IEmployee
     {
-        private MyContext _context;
-        public EmployeeRepository(MyContext context)
+        private BumboContext _context;
+        public EmployeeRepository(BumboContext context)
         {
             this._context = context;
         }
@@ -23,12 +23,12 @@ namespace BumboRepositories
             return _context.Employees;
         }
 
-        public Employee GetById(int id)
+        public Employee GetById(string id)
         {
-            return _context.Employees.Include(e => e.Departments).Where(e => e.Id == id).FirstOrDefault();
+            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<Departments> GetDepartmentsOfEmployee(int id)
+        public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
         {
             // return _context.Employees.Where(e => e.Id == id).Include(e => e.Departments).SelectMany(e => e.Departments);
             throw new NotImplementedException();

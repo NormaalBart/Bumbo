@@ -5,32 +5,32 @@ namespace BumboRepositories
 {
     public class UnavailableMomentRepository : IUnavailableMoments
     {
-        private MyContext _context;
+        private BumboContext _context;
 
-        public UnavailableMomentRepository(MyContext context)
+        public UnavailableMomentRepository(BumboContext context)
         {
             this._context = context;
         }
 
-        public void Add(UnavailableMoment unavailableMoment)
+        public void Add(WorkedShift workedShift)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<UnavailableMoment> GetAll()
+        public IEnumerable<WorkedShift> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public UnavailableMoment GetById(int id)
+        public WorkedShift GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsEmployeeAvailable(int employeeId, DateTime startTime, DateTime endTime)
+        public bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime)
         {
             // check if employee is unavailable in unavailable moments 
-            var unavailableMoments = _context.UnavailableMoment.Where(u => u.EmployeeId == employeeId && u.StartTime.Date == startTime.Date).ToList();
+            var unavailableMoments = _context.UnavailableMoments.Where(u => u.Employee.Id == employeeId && u.StartTime.Date == startTime.Date).ToList();
             if (unavailableMoments.Count > 0)
             {
                 foreach (var moment in unavailableMoments)

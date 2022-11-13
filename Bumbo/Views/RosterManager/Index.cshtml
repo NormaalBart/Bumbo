@@ -1,5 +1,4 @@
-﻿@using BumboData.Enums
-@model Bumbo.Models.RosterManager.RosterDayViewModel
+﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
 
 
 
@@ -136,7 +135,8 @@
 
                                 @if (Model.IsPlanned(employee, i))
                                 {
-                                    switch (Model.GetEmployeeDepartmentShift(employee, i))
+                                    // TODO: Redo code
+                                    @*switch (Model.GetEmployeeDepartmentShift(employee, i))
                                     {
                                         case DepartmentEnum.Cassiere:
                                             <td style="width: 4%; background-color: yellow ; padding: 10px; border: 1px solid darkgrey;"> </td>
@@ -150,7 +150,7 @@
                                         default:
                                             <td style="width: 4%; background-color: white ; padding: 10px; border: 1px solid darkgrey;"> </td>
                                             break;
-                                    }
+                                    }*@
                                 }
                                 else
                                 {

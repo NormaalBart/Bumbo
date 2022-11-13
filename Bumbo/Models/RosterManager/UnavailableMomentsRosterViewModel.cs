@@ -1,6 +1,4 @@
-﻿using BumboData.Enums;
-
-namespace Bumbo.Models.RosterManager
+﻿namespace Bumbo.Models.RosterManager
 {
     public class UnavailableMomentsRosterViewModel
     {

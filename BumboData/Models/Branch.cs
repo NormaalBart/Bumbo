@@ -1,31 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace BumboData.Models
+namespace BumboData.Models;
+
+public class Branch
 {
-    public class Branch
-    {
-        [Required]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int BranchId { get; set; }
-        [Required]
-        public int ManagerId { get; set; }
-        public virtual Employee Manager { get; set; }
-        public virtual ICollection<Employee> Employees { get; set; }
-        [Required]
-        public string Name { get; set; }
-        public string PostalCode { get; set; }
-        [Required]
-        public string Region { get; set; }
-        [Required]
-        public int HouseNumber { get; set; }
-        public virtual ICollection<PlannedShift> PlannedShifts { get; set; }
-    }
+    [Key]
+    public int Key { get; set; }
+    
+    public Employee? Manager { get; set; }
+    
+    [Required]
+    public int ShelvingDistance { get; set; }
+    
+    [Required]
+    public String City { get; set; }
+    
+    [Required]
+    public String HouseNumber { get; set; }
+    
+    [Required]
+    public String Street { get; set; }
+    
+    public virtual ICollection<Employee> DefaultEmployees { get; set; }
+
+    public virtual ICollection<Standard> Standards { get; set; }
+    
+    public virtual ICollection<Prognosis> Prognoses { get; set; }
+    
+    public virtual ICollection<StandardOpeningHours> StandardOpeningHours { get; set; }
+    
+    public virtual ICollection<OpeningHoursOverride> OpeningHoursOverrides { get; set; }
 }
