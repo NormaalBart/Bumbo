@@ -43,18 +43,15 @@ namespace BumboRepositories
         }
         public double GetCassierePrognose(DateTime date)
         {
-            return 100;
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
         public double GetFreshPrognose(DateTime date)
         {
-            return 100;
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
         public double GetStockersPrognose(DateTime date)
         {
-            return 100;
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
 
@@ -91,8 +88,9 @@ namespace BumboRepositories
                     var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognoses).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
+                    item.DepartmentPrognoses = this.CalculateDepartmentPrognoses(item).ToList();
                     prognosisDay.DepartmentPrognoses = item.DepartmentPrognoses;
-
+                    
 
                     _context.Prognoses.Update(prognosisDay);
                 }
@@ -102,7 +100,7 @@ namespace BumboRepositories
 
                     // get the branch of the item
                     item.Branch = _branchRepository.GetBranchOfUser();
-
+                    item.DepartmentPrognoses = this.CalculateDepartmentPrognoses(item).ToList();
                     _context.Prognoses.Add(item);
                     
                 }
@@ -117,8 +115,6 @@ namespace BumboRepositories
             // If there's no prognosis for a week, it will return empty new prognosis days.
             // if there's gaps in the week it will check which days are missing and create a new one for those days.
 
-            // However, since the manager can only add 7 days at a time now, this should not be a problem in the future.
-            // As long as the manager cannot add specific days without adding the entire week it will be fine. 
 
 
             var nextWeek = _context.Prognoses.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7));
@@ -133,8 +129,7 @@ namespace BumboRepositories
 
             
             var resultList = new List<Prognosis>();
-            // if the database does not have any days for the week, we add them with default values. 
-            // this does not mean adding them to the database, but adding them to the resulting list which returns.
+            // if the database does not have any days for the week, we return default values.
             if (nextWeek.Count() == 0)
             {
                 for (int i = 0; i < 7; i++)
@@ -177,23 +172,31 @@ namespace BumboRepositories
             // This method calculates the amount of employees and hours needed for each department.
             // This is done using the standard from the database.
             List<DepartmentPrognosis> result = new List<DepartmentPrognosis>();
-            if (_context.Standards == null)
+
+            // create 3 new department prognoses for each department.
+            // with default values
+
+            var standards = _context.Standards.Where(p => p.Branch.Key == prognosis.Branch.Key);
+
+
+            foreach (var department in _context.Departments)
             {
-                // create 3 new department prognoses for each department.
-                // with default values
-                foreach (var department in _context.Departments)
-                {
-                    DepartmentPrognosis departmentPrognosis = new DepartmentPrognosis();
-                    departmentPrognosis.Prognosis = prognosis;
-                    departmentPrognosis.Department = department;
-                    departmentPrognosis.RequiredEmployees = 1;
-                    departmentPrognosis.RequiredHours = 1;
-                    result.Add(departmentPrognosis);
-                }
+                DepartmentPrognosis departmentPrognosis = new DepartmentPrognosis();
+                departmentPrognosis.Prognosis = prognosis;
+                departmentPrognosis.Department = department;
+
+                // calculate using the standard.
+
+
+                // TODO calculate using the standard.
+                departmentPrognosis.RequiredEmployees = 2;
+                departmentPrognosis.RequiredHours = 2;
+
+
+                result.Add(departmentPrognosis);
+
             }
             return result;
-
-
         }
     }
 
