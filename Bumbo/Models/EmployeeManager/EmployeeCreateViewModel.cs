@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.EmployeeManager
@@ -12,44 +13,94 @@ namespace Bumbo.Models.EmployeeManager
         // BID	Vn	Tv	An	Geboortedatum	Leeftijd	Postcode	Huisnummer	Telefoon	Email	In dienst sinds 	
         // Functie	Schaal	KAS	VER	VAK	SER
 
+        //[Required]
+        //[DisplayName("Voornaam")]
+        //public string FirstName { get; set; }
+        //[DisplayName("Tussenvoegsel")]
+        //public string? MiddleName { get; set; }
+        //[Required]
+        //[DisplayName("Achternaam")]
+        //public string LastName { get; set; }
+
+
+        //[Required]
+        //[DisplayName("Geboortedatum")]
+        //public DateTime BirthDate { get; set; }
+        //[Required]
+        //[DisplayName("Email")]
+        //[EmailAddress]
+        //public string Email { get; set; }
+
+        //[Required]
+        //[DisplayName("Regio")]
+        //public string Region { get; set; }
+        //[Required]
+        //[DisplayName("Huisnummer")]
+        //public int HouseNumber { get; set; }
+
+
+        //[Required]
+        //[DisplayName("Functie")]
+        //public string Function { get; set; }
+
+        //[Required]
+        //[DisplayName("In dienst sinds")]
+        //public DateTime EmployeeJoinedCompany { get; set; }
+
+        //[Required]
+        //[DisplayName("In dienst")]
+        //public bool IsEmployed { get; set; }
+
+
         [Required]
         [DisplayName("Voornaam")]
-        public string FirstName { get; set; }
+        public String FirstName { get; set; }
+
         [DisplayName("Tussenvoegsel")]
-        public string? MiddleName { get; set; }
+        public String? Preposition { get; set; }
+
         [Required]
         [DisplayName("Achternaam")]
-        public string LastName { get; set; }
-
+        public String LastName { get; set; }
 
         [Required]
         [DisplayName("Geboortedatum")]
-        public DateTime BirthDate { get; set; }
-        [Required]
-        [DisplayName("Email")]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        [DisplayName("Regio")]
-        public string Region { get; set; }
-        [Required]
-        [DisplayName("Huisnummer")]
-        public int HouseNumber { get; set; }
-        
-
-        [Required]
-        [DisplayName("Functie")]
-        public string Function { get; set; }
-
-        [Required]
-        [DisplayName("In dienst sinds")]
-        public DateTime EmployeeJoinedCompany { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime Birthdate { get; set; }
 
         [Required]
         [DisplayName("In dienst")]
-        public bool IsEmployed { get; set; }
-        
+        public Boolean Active { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [DisplayName("Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [DisplayName("Telefoon")]
+        [Phone]
+        public string PhoneNumber { get; set; }
+
+        [Required]
+        public Branch DefaultBranch { get; set; }
+
+
+        [Required]
+        public String PostalCode { get; set; }
+        [Required]
+        public int HouseNumber { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime EmployeeJoinedCompany { get; set; }
+
+        [Required]
+        public String Function { get; set; }
+
+
+
+
         [DisplayName("kassa afdeling")]
         public bool InCassiereDep { get; set; }
         [DisplayName("Vers afdeling")]
@@ -60,7 +111,7 @@ namespace Bumbo.Models.EmployeeManager
 
         public EmployeeCreateViewModel()
         {
-            this.IsEmployed = true;
+            this.Active = true;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Bumbo.Models
         public MapperUserProfile()
         {
             // To use auto mapper, register it here for each model you want to use.
-            CreateMap<EmployeeCreateViewModel, Employee>();
+            CreateMap<EmployeeCreateViewModel, Employee>().ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateOnly()));
             CreateMap<Employee, EmployeeListItemViewModel>();
             CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<PrognosisViewModel, Prognosis>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateOnly()));

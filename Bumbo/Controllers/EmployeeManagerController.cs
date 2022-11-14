@@ -28,7 +28,6 @@ namespace Bumbo.Controllers
 
             var employees = _employeesRepository.GetAll();
 
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 // search in employees if any of the columns contains the searchstring
@@ -40,12 +39,12 @@ namespace Bumbo.Controllers
                 case "name_desc":
                     employees = employees.OrderByDescending(e => e.LastName);
                     break;
-                case "Date":
-                    employees = employees.OrderBy(e => e.EmployeeJoinedCompany);
-                    break;
-                case "date_desc":
-                    employees = employees.OrderByDescending(e => e.EmployeeJoinedCompany);
-                    break;
+                //case "Date":
+                //    employees = employees.OrderBy(e => e.);
+                //    break;
+                //case "date_desc":
+                //    employees = employees.OrderByDescending(e => e.EmployeeJoinedCompany);
+                //    break;
                 default:
                     employees = employees.OrderBy(e => e.LastName);
                     break;
@@ -61,7 +60,7 @@ namespace Bumbo.Controllers
         public IActionResult Create()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
-            employee.BirthDate = DateTime.Now.AddYears(-18);
+            employee.Birthdate = DateTime.Now.AddYears(-18);
             return View(employee);
         }
 
