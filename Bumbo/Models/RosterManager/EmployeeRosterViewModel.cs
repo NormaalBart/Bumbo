@@ -4,7 +4,7 @@ namespace Bumbo.Models.RosterManager
 {
     public class EmployeeRosterViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [DisplayName("Voornaam")]
         public string FirstName { get; set; }

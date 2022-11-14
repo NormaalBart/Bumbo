@@ -1,44 +1,24 @@
-﻿using BumboData.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace BumboData.Models
+namespace BumboData.Models;
+
+public class PlannedShift
 {
-    public class PlannedShift
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int ShiftId { get; set; }
-        public int EmployeeId { get; set; }
-        public virtual Employee Employee { get; set; }
-        public int PrognosisId { get; set; }
-        public virtual PrognosisDay PrognosisDay { get; set; }
+    [Key]
+    public int Id { get; set; }
+    
+    [Required]
+    public DateTime StartTime { get; set; }
 
-        [Required]
-        public DateTime StartTime { get; set; }
-        [Required]
-        public DateTime EndTime { get; set; }
-        [Required]
-        public DepartmentEnum Department { get; set; }
+    [Required]
+    public DateTime EndTime { get; set; }
 
+    [Required]
+    public Employee Employee { get; set; }
 
-
-        public PlannedShift(int employeeId, DateTime startTime, DateTime endTime, DepartmentEnum department)
-        {
-            EmployeeId = employeeId;
-            Employee = new Employee();
-            PrognosisDay = new PrognosisDay();
-            StartTime = startTime;
-            EndTime = endTime;
-            Department = department;
-        }
-        public PlannedShift()
-        {
-        }
-    }
+    [Required]
+    public Department Department { get; set; }
+    
+    [Required]
+    public Branch Branch { get; set; }
 }
