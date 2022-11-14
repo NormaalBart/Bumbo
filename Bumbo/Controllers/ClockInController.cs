@@ -1,5 +1,7 @@
-﻿using BumboData;
+﻿using Bumbo.Models.EmployeeManager;
+using BumboData;
 using BumboData.Models;
+using BumboRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,34 +15,35 @@ namespace Bumbo.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class ClockInController : Controller
+    public class ClockInController : ControllerBase
     {
-        private readonly MyContext _context;
+        private IWorkedShiftRepository  _workedShiftRepository;
+        private IEmployee _employeeRepository;
+        private IBranchRepository _branchRepository;
 
-        public ClockInController(MyContext context)
+        public ClockInController(IWorkedShiftRepository workedShiftRepository, IEmployee employeeRepository,IBranchRepository branchRepository)
         {
-            _context = context;
+            _workedShiftRepository = workedShiftRepository;
+            _employeeRepository = employeeRepository;
+            _branchRepository = branchRepository;
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Index([FromForm] IncomingData msgBody)
+        public IActionResult Create([FromForm] IncomingData msgBody)
         {
-            Employee employee = _context.Employees.Find(msgBody.EmployeeId);
-            Branch branch = _context.Branches.Find(msgBody.BranchId);
+            Employee employee = _employeeRepository.GetById(msgBody.EmployeeId);
+            Branch branch = _branchRepository.GetById(msgBody.BranchId);
             if (employee == null || branch == null)
             {
-                return Redirect("ClockIn/Error");
+                return Ok();
             }
-            
-            WorkedShift lastWorkedShift = _context.WorkedShift.Where(o => o.Employee == employee && o.EndTime == null)
-                       .OrderByDescending(o => o.StartTime)
-                       .FirstOrDefault();
+
+            WorkedShift lastWorkedShift = _workedShiftRepository.LastWorkedShiftWithNoEndTime(employee);
 
             if (lastWorkedShift != null)
             {
                 lastWorkedShift.EndTime = DateTime.Now;
-                _context.SaveChanges();
-                return View(lastWorkedShift);
+                _workedShiftRepository.Update(lastWorkedShift);
             }
             else
             {
@@ -50,16 +53,9 @@ namespace Bumbo.Controllers
                 newWorkedShift.StartTime = DateTime.Now;
                 newWorkedShift.Sick = false;
                 newWorkedShift.Approved = false;
-                _context.WorkedShift.Add(newWorkedShift);
-                _context.SaveChanges();
-                return View(newWorkedShift);
+                _workedShiftRepository.Add(newWorkedShift);
             }
-        }
-
-        public IActionResult Error()
-        {
-
-            return View();
+            return Ok();
         }
     }
 }

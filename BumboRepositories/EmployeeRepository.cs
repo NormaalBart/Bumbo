@@ -23,9 +23,9 @@ namespace BumboRepositories
             return _context.Employees;
         }
 
-        public Employee GetById(string id)
+        public Employee GetById(int id)
         {
-            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.Id == id).FirstOrDefault();
+            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.Key == id).FirstOrDefault();
         }
 
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
