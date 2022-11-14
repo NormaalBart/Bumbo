@@ -34,7 +34,7 @@ namespace Bumbo.Models.PrognosisManager
             DateTime firstDate = PrognosisList.OrderBy(p => p.Date).FirstOrDefault().Date;
             DateTime lastDate = PrognosisList.OrderByDescending(p => p.Date).FirstOrDefault().Date;
 
-            string result = "Week "
+            string headerString = "Week "
                     + firstDate.GetWeekNumber()
                     + " | "
                     + firstDate.Day
@@ -46,7 +46,7 @@ namespace Bumbo.Models.PrognosisManager
                     + lastDate.ToString("MMMM")
                     + "  "
                     + lastDate.Year;
-            return result;
+            return headerString;
         }
     }
 }

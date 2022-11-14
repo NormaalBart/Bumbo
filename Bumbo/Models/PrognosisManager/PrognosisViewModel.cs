@@ -22,8 +22,5 @@ namespace Bumbo.Models.PrognosisManager
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
-
-        
-
     }
 }

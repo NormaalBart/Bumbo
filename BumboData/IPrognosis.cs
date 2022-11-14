@@ -23,5 +23,6 @@ namespace BumboData
 
         IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis);
 
+
     }
 }

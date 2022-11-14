@@ -4,7 +4,7 @@ using Bumbo.Utils;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.VisualBasic;
 
 namespace Bumbo.Controllers
 {
@@ -19,37 +19,32 @@ namespace Bumbo.Controllers
             _prognosisRepository = prognosisService;
         }
         
-        public IActionResult Index(string? dateInput, string? direction)
+        public IActionResult Index(string? dateInput, bool next)
         {
-            DateTime currentDate = DateTime.Now;
+            // adds 7 because bool next is false by default.
+            DateTime currentDate = DateTime.Now.AddDays(7);
             // start of week, calculated by getting the difference between the date and monday.
             // This method should probably be moved to a static class as it is used in multiple places.
-            int diff = DayOfWeek.Monday - currentDate.DayOfWeek;
-            if (diff > 0)
-                diff -= 7;
-            var startOfWeek = currentDate.AddDays(diff);
+            var startOfWeek = currentDate.GetMondayOfTheWeek();
             
             if (dateInput != null)
             {
                 startOfWeek = DateTime.Parse(dateInput);
             }
-            if(direction != null)
+
+            if (next)
             {
-                if (direction.Equals("next"))
-                {
-                    startOfWeek = startOfWeek.AddDays(7);
-                }
-                if (direction.Equals("previous"))
-                {
-                    startOfWeek = startOfWeek.AddDays(-7);
-                }
+                startOfWeek = startOfWeek.AddDays(7);
             }
+            if (!next)
+            {
+                startOfWeek = startOfWeek.AddDays(-7);
+            }
+
 
             // Returns the week of prognose days.
             PrognosisListViewModel list = new PrognosisListViewModel();
-            var prognosisDb = _prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly());
-            list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(prognosisDb).ToList();
-
+            list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(_prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly())).ToList();
 
             return View(list);
 
@@ -70,6 +65,28 @@ namespace Bumbo.Controllers
                 _prognosisRepository.AddOrUpdateAll(result);
             }
             return View(list);
+        }
+
+        public IActionResult ReUsePreviousWeek(string lastWeekString)
+        {
+            // This method copies the prognosis week from the previous week and adds it to the database for the current week.
+
+            DateOnly lastWeekDate = DateTime.Parse(lastWeekString).ToDateOnly();
+            var lastweekPrognoses = _prognosisRepository.GetNextWeek(lastWeekDate).ToList();
+            List<Prognosis> updatedNewWeek = new List<Prognosis>();
+            foreach (var prognosis in lastweekPrognoses)
+            {
+                Prognosis newPrognosis = new Prognosis();
+                newPrognosis.Date = prognosis.Date.AddDays(7);
+                newPrognosis.Branch = prognosis.Branch;
+                newPrognosis.CustomerCount = prognosis.CustomerCount;
+                newPrognosis.ColiCount = prognosis.ColiCount;
+                updatedNewWeek.Add(newPrognosis);
+            }
+            _prognosisRepository.AddOrUpdateAll(updatedNewWeek);
+
+
+            return RedirectToAction("Index", "Prognosis", new { dateInput = lastWeekString, next = true }) ;
         }
     
     }
