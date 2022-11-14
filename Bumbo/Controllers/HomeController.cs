@@ -1,6 +1,6 @@
-﻿using Bumbo.Models;
+﻿using System.Diagnostics;
+using Bumbo.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace Bumbo.Controllers
 {

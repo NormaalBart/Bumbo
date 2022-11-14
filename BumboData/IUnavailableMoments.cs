@@ -1,17 +1,12 @@
 ﻿using BumboData.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BumboData
 {
     public interface IUnavailableMoments
     {
-        IEnumerable<UnavailableMoment> GetAll();
-        UnavailableMoment GetById(int id);
-        void Add(UnavailableMoment unavailableMoment);
-        bool IsEmployeeAvailable(int employeeId, DateTime startTime, DateTime endTime);
+        IEnumerable<WorkedShift> GetAll();
+        WorkedShift GetById(int id);
+        void Add(WorkedShift workedShift);
+        bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime);
     }
 }

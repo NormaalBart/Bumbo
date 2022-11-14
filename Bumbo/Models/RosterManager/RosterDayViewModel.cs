@@ -1,8 +1,6 @@
-﻿using BumboData.Enums;
+﻿using System.ComponentModel;
+using System.Globalization;
 using BumboData.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel;
-using System.Numerics;
 
 namespace Bumbo.Models.RosterManager
 {
@@ -36,7 +34,7 @@ namespace Bumbo.Models.RosterManager
 
         public int GetWeekNumber(DateTime date)
         {
-            return System.Globalization.CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
 
 
@@ -65,18 +63,18 @@ namespace Bumbo.Models.RosterManager
             return false;
         }
 
-        public DepartmentEnum GetEmployeeDepartmentShift(EmployeeRosterViewModel employee, int hour)
+        public Department? GetEmployeeDepartmentShift(EmployeeRosterViewModel employee, int hour)
         {
             if (employee.PlannedShifts == null)
             {
-                return DepartmentEnum.None;
+                return null;
             }
             List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour <= hour && p.EndTime.Hour > hour).ToList();
             if (shifts.Count > 0)
             {
                 return shifts.First().Department;
             }
-            return DepartmentEnum.None;
+            return null;
         }
 
 
@@ -88,7 +86,8 @@ namespace Bumbo.Models.RosterManager
             }
             foreach (var shift in allShifts)
             {
-                if (shift.Department == DepartmentEnum.Cassiere)
+                // TODO Redo code since departments are now stored in db 
+                /*if (shift.Department == DepartmentEnum.Cassiere)
                 {
                     TimeSpan timespan = shift.EndTime - shift.StartTime;
                     CassierePrognose = CassierePrognose - timespan.TotalHours;
@@ -102,7 +101,7 @@ namespace Bumbo.Models.RosterManager
                 {
                     TimeSpan timespan = shift.EndTime - shift.StartTime;
                     StockersPrognose = StockersPrognose - timespan.TotalHours;
-                }
+                }*/
             }
             CassierePrognose = Math.Round(CassierePrognose, 2);
             FreshPrognose = Math.Round(FreshPrognose, 2);

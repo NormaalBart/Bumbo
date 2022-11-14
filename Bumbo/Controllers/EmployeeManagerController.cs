@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Bumbo.Models.EmployeeManager;
 using BumboData;
-using BumboData.Enums;
 using BumboData.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -74,7 +73,8 @@ namespace Bumbo.Controllers
             {
                 var e = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
                 //e.Departments.Add(new Departments());
-                if (newEmployee.InCassiereDep)
+                // TODO: Redo this code since departments are now stored in the database
+                /*if (newEmployee.InCassiereDep)
                 {
                     e.Departments.Add(new Departments(e.Id, DepartmentEnum.Cassiere));
                 }
@@ -85,7 +85,7 @@ namespace Bumbo.Controllers
                 if (newEmployee.InFreshDep)
                 {
                     e.Departments.Add(new Departments(e.Id, DepartmentEnum.Fresh));
-                }
+                }*/
                 _employeesRepository.Add(e);
                 return RedirectToAction("Index");
 

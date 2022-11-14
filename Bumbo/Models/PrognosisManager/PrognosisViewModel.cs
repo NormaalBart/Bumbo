@@ -1,7 +1,6 @@
-﻿using BumboData.Models;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bumbo.Models.PrognosisManager
 {
@@ -11,13 +10,17 @@ namespace Bumbo.Models.PrognosisManager
  
         [DisplayName("Aantal Collies")]
         [Required]
-        public int AmountOfCollies { get; set; }
+        [Range(0, 100000, ErrorMessage = "Aantal Collies moet tussen 0 en 100.000 liggen")]
+        public int ColiCount { get; set; }
         [DisplayName("Aantal Klanten")]
         [Required]
-        public int AmountOfCustomers { get; set; }
+        [Range(0, 100000, ErrorMessage = "Aantal klanten moet tussen 0 en 100.000 liggen")]
+        public int CustomerCount { get; set; }
+
         [Required]
         [DisplayName("Datum")]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
+
     }
 }
