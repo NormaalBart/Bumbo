@@ -56,22 +56,28 @@ namespace BumboData
                 .WithOne(e => e.DefaultBranch)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<StandardOpeningHours>().HasKey(e => new { e.BranchId, e.DayOfWeek });
+
             modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole { Id = "1",  Name = "Administrator", NormalizedName = "ADMINISTRATOR"},
                 new IdentityRole { Id = "2", Name = "Manager", NormalizedName = "MANAGER"},
                 new IdentityRole { Id = "3", Name = "Medewerker", NormalizedName = "MEDEWERKER"});
 
             modelBuilder.Entity<Branch>().HasData(
-                new Branch { Key = 1, ShelvingDistance = 100, City = "Den Bosch", HouseNumber = "2" }) ;
+                new Branch { Key = 1, 
+                    ShelvingDistance = 100, 
+                    City = "Den Bosch", 
+                    HouseNumber = "2",
+                    Street = "Onderwijsboulevard"}) ;
 
             modelBuilder.Entity<StandardOpeningHours>().HasData(
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Sunday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Monday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Tuesday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Wednesday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Thursday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Friday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
-                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
-                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Sunday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
 
             modelBuilder.Entity<Department>().HasData(
                 new Department {Key = 1, DepartmentName = "Kassa"},
@@ -83,10 +89,11 @@ namespace BumboData
             modelBuilder.Entity<Employee>().HasData(
                 new Employee
                 {
+                    Id = "1",
                     Key = 1,
                     DefaultBranchId = 1,
                     Active = true,
-                    Birthdate = new DateOnly(2003, 10, 02 ),
+                    Birthdate = new DateOnly(2003, 10, 2 ),
                     FirstName = "Jan",
                     LastName = "Piet",
                     UserName = "admin",

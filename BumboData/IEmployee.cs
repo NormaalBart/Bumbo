@@ -10,5 +10,7 @@ namespace BumboData
 
         IEnumerable<Department> GetDepartmentsOfEmployee(string id);
 
+        Employee GetByEmail(string email);
+
     }
 }

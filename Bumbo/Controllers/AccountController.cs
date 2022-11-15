@@ -1,4 +1,5 @@
 ﻿using Bumbo.Models.AccountController;
+using BumboData;
 using BumboData.Models;
 using BumboRepositories;
 using Microsoft.AspNetCore.Identity;
@@ -10,9 +11,9 @@ namespace Bumbo.Controllers
     {
 
         private SignInManager<Employee> _signInManager;
-        private EmployeeRepository _employeeRepository;
+        private IEmployee _employeeRepository;
 
-        public AccountController(SignInManager<Employee> signInManager, EmployeeRepository employeeRepository)
+        public AccountController(SignInManager<Employee> signInManager, IEmployee employeeRepository)
         {
             _signInManager = signInManager;
             _employeeRepository = employeeRepository;

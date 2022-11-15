@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BumboData.Models;
 
@@ -6,10 +7,8 @@ public class StandardOpeningHours
 {
     public Branch Branch { get; set; }
 
-    [Key]
     public int BranchId { get; set; }
 
-    [Key]
     public DayOfWeek DayOfWeek { get; set; }
 
     [Required]

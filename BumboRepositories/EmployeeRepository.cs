@@ -38,7 +38,7 @@ namespace BumboRepositories
 
         public Employee GetByEmail(string emailAddress)
         {
-            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.NormalizedEmail == emailAddress.ToUpper()).FirstOrDefault();
+            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.Email.ToUpper() == emailAddress.ToUpper()).FirstOrDefault();
         }
     }
 }
