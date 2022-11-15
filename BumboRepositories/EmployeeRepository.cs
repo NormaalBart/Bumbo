@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace BumboRepositories
 {
-    public class EmployeeRepository : IEmployee
+    public class EmployeeRepository : IEmployeeRepository
     {
         private BumboContext _context;
 

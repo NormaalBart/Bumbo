@@ -29,4 +29,8 @@
     <ProjectReference Include="..\BumboRepositories\BumboRepositories.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Employee\" />
+  </ItemGroup>
+
 </Project>

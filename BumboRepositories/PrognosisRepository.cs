@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories
 {
-    public class PrognosisRepository : IPrognosis
+    public class PrognosisRepository : IPrognosisRepository
     {
         private BumboContext _context;
-        private IBranch _branchRepository;
-        public PrognosisRepository(BumboContext context, IBranch branchRepository)
+        private IBranchRepository _branchRepository;
+        public PrognosisRepository(BumboContext context, IBranchRepository branchRepository)
         {
             _context = context;
             _branchRepository = branchRepository;

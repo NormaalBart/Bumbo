@@ -2,7 +2,7 @@
 
 namespace BumboData
 {
-    public interface IPrognosis
+    public interface IPrognosisRepository
     {
         IEnumerable<Prognosis> GetAll();
         void Add(Prognosis prognosisDay);

@@ -2,18 +2,21 @@
 using Bumbo.Models.RosterManager;
 using BumboData;
 using BumboData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers
 {
+
+    [Authorize(Roles = "Manager")]
     public class RosterManagerController : Controller
     {
         private IMapper _mapper;
-        private IEmployee _employeeRepository;
-        private IPrognosis _prognosisRepository;
-        private IPlannedShifts _shiftRepository;
-        private IUnavailableMoments _unavailableRepository;
-        public RosterManagerController(IMapper mapper, IEmployee employee, IPrognosis prognosis, IPlannedShifts plannedShifts, IUnavailableMoments unavailableMoments)
+        private IEmployeeRepository _employeeRepository;
+        private IPrognosisRepository _prognosisRepository;
+        private IPlannedShiftsRepository _shiftRepository;
+        private IUnavailableMomentsRepository _unavailableRepository;
+        public RosterManagerController(IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments)
         {
             _mapper = mapper;
             _employeeRepository = employee;

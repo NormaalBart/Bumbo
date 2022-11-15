@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BumboRepositories
 {
-    public class BranchRepository : IBranch
+    public class BranchRepository : IBranchRepository
     {
         private BumboContext _context;
 

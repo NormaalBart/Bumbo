@@ -2,15 +2,19 @@
 using Bumbo.Models.EmployeeManager;
 using BumboData;
 using BumboData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers
 {
+
+    [Authorize(Roles = "Administrator,Manager")]
     public class EmployeeManagerController : Controller
     {
-        private IEmployee _employeesRepository;
+        private IEmployeeRepository _employeesRepository;
         private IMapper _mapper;
-        public EmployeeManagerController(IEmployee employeeService, IMapper mapper)
+
+        public EmployeeManagerController(IEmployeeRepository employeeService, IMapper mapper)
         {
             _employeesRepository = employeeService;
             _mapper = mapper;

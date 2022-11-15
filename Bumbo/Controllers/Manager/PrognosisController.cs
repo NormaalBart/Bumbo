@@ -3,17 +3,19 @@ using Bumbo.Models.PrognosisManager;
 using Bumbo.Utils;
 using BumboData;
 using BumboData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 
 namespace Bumbo.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class PrognosisController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IPrognosis _prognosisRepository;
+        private readonly IPrognosisRepository _prognosisRepository;
 
-        public PrognosisController(IMapper mapper, IPrognosis prognosisService)
+        public PrognosisController(IMapper mapper, IPrognosisRepository prognosisService)
         {
             _mapper = mapper;
             _prognosisRepository = prognosisService;

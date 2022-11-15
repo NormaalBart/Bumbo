@@ -2,7 +2,7 @@
 
 namespace BumboData
 {
-    public interface IPlannedShifts
+    public interface IPlannedShiftsRepository
     {
         IEnumerable<PlannedShift> GetAll();
         WorkedShift GetById(int id);

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories
 {
-    public class PlannedShiftsRepository : IPlannedShifts
+    public class PlannedShiftsRepository : IPlannedShiftsRepository
     {
         private BumboContext _context;
 

@@ -11,16 +11,21 @@ namespace Bumbo.Controllers
     {
 
         private SignInManager<Employee> _signInManager;
-        private IEmployee _employeeRepository;
+        private IEmployeeRepository _employeeRepository;
 
-        public AccountController(SignInManager<Employee> signInManager, IEmployee employeeRepository)
+        public AccountController(SignInManager<Employee> signInManager, IEmployeeRepository employeeRepository)
         {
             _signInManager = signInManager;
             _employeeRepository = employeeRepository;
         }
 
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
+            if(_signInManager.IsSignedIn(User))
+            {
+                //TODO this doesnt work!?
+                await _signInManager.SignOutAsync();
+            }
             return View();
         }
 
@@ -39,12 +44,18 @@ namespace Bumbo.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, loginModel.Password, false, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return Redirect("AdminHome/Index");
                 }
             }
 
             ModelState.AddModelError(string.Empty, "Onbekend account");
             return View(loginModel);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login");
         }
     }
 }

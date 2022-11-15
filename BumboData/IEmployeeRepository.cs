@@ -2,7 +2,7 @@
 
 namespace BumboData
 {
-    public interface IEmployee 
+    public interface IEmployeeRepository
     {
         IEnumerable<Employee> GetAll();
         Employee GetById(string id);

@@ -2,7 +2,7 @@
 
 namespace BumboData
 {
-    public interface IUnavailableMoments
+    public interface IUnavailableMomentsRepository
     {
         IEnumerable<WorkedShift> GetAll();
         WorkedShift GetById(int id);

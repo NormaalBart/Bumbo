@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BumboData
 {
-    public interface IBranch
+    public interface IBranchRepository 
     {
         Branch GetBranchOfUser();
     }
