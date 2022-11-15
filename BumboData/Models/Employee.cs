@@ -19,7 +19,9 @@ public class Employee: IdentityUser
     
     [Required]
     public DateOnly Birthdate { get; set; }
-
+    /// <summary>
+    /// Indicates if the employee is still employed.
+    /// </summary>
     [Required]
     public Boolean Active { get; set; }
     /// <summary>

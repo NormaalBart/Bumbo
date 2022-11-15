@@ -1,4 +1,5 @@
 ﻿using BumboData.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,46 +11,7 @@ namespace Bumbo.Models.EmployeeManager
 
 
         // These are the values mentioned in the casus:
-        // BID	Vn	Tv	An	Geboortedatum	Leeftijd	Postcode	Huisnummer	Telefoon	Email	In dienst sinds 	
-        // Functie	Schaal	KAS	VER	VAK	SER
-
-        //[Required]
-        //[DisplayName("Voornaam")]
-        //public string FirstName { get; set; }
-        //[DisplayName("Tussenvoegsel")]
-        //public string? MiddleName { get; set; }
-        //[Required]
-        //[DisplayName("Achternaam")]
-        //public string LastName { get; set; }
-
-
-        //[Required]
-        //[DisplayName("Geboortedatum")]
-        //public DateTime BirthDate { get; set; }
-        //[Required]
-        //[DisplayName("Email")]
-        //[EmailAddress]
-        //public string Email { get; set; }
-
-        //[Required]
-        //[DisplayName("Regio")]
-        //public string Region { get; set; }
-        //[Required]
-        //[DisplayName("Huisnummer")]
-        //public int HouseNumber { get; set; }
-
-
-        //[Required]
-        //[DisplayName("Functie")]
-        //public string Function { get; set; }
-
-        //[Required]
-        //[DisplayName("In dienst sinds")]
-        //public DateTime EmployeeJoinedCompany { get; set; }
-
-        //[Required]
-        //[DisplayName("In dienst")]
-        //public bool IsEmployed { get; set; }
+        //BID,Vn,Tv,An,Geboortedatum,Postcode,Huisnummer,Telefoon,Email,In dienst, Functie, KAS, VERS, VAK
 
 
         [Required]
@@ -69,7 +31,7 @@ namespace Bumbo.Models.EmployeeManager
         public DateTime Birthdate { get; set; }
 
         [Required]
-        [DisplayName("In dienst")]
+        [DisplayName("Is momenteel in dienst")]
         public Boolean Active { get; set; }
 
         [Required]
@@ -83,35 +45,33 @@ namespace Bumbo.Models.EmployeeManager
         public string PhoneNumber { get; set; }
 
         [Required]
-        public Branch DefaultBranch { get; set; }
-
-
-        [Required]
+        [DisplayName("Postcode")]
         public String PostalCode { get; set; }
         [Required]
+        [DisplayName("Huisnummer")]
         public int HouseNumber { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
+        [DisplayName("In dienst sinds")]
         public DateTime EmployeeJoinedCompany { get; set; }
 
         [Required]
+        [DisplayName("Functie")]
         public String Function { get; set; }
-
-
-
-
-        [DisplayName("kassa afdeling")]
-        public bool InCassiereDep { get; set; }
-        [DisplayName("Vers afdeling")]
-        public bool InFreshDep { get; set; }
-        [DisplayName("VakkenVullers afdeling")]
-        public bool InStockersDep { get; set; }
+        
+        public List<Department> DepartmentSelectionList { get; set; }
+        public virtual ICollection<Department> AllowedDepartments { get; set; }
 
 
         public EmployeeCreateViewModel()
         {
             this.Active = true;
+            this.EmployeeJoinedCompany = DateTime.Now.Date;
+            this.Birthdate = DateTime.Now.AddYears(-18);
+
+            DepartmentSelectionList = new List<Department>();
+            AllowedDepartments = new List<Department>();
         }
     }
 }

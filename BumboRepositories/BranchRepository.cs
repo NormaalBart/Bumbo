@@ -16,6 +16,7 @@ namespace BumboRepositories
         {
             this._context = context;
         }
+
         public Branch GetBranchOfUser()
         {
             // I implemented this method when branch creation and login features

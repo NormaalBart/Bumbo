@@ -12,7 +12,6 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <h2>Naam</h2>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -28,13 +27,16 @@
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-            <h2>Persoonlijke informatie</h2>
             <div class="form-group">
                 <label asp-for="Birthdate" class="control-label"></label>
                 <input asp-for="Birthdate" class="form-control" />
                 <span asp-validation-for="Birthdate" class="text-danger"></span>
             </div>
-            <h2>Contact informatie</h2>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                </label>
+            </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -45,7 +47,6 @@
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
-            
             <div class="form-group">
                 <label asp-for="PostalCode" class="control-label"></label>
                 <input asp-for="PostalCode" class="form-control" />
@@ -56,11 +57,10 @@
                 <input asp-for="HouseNumber" class="form-control" />
                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
             </div>
-            <h2>Bedrijfs informatie</h2>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
-                </label>
+            <div class="form-group">
+                <label asp-for="EmployeeJoinedCompany" class="control-label"></label>
+                <input asp-for="EmployeeJoinedCompany" class="form-control" />
+                <span asp-validation-for="EmployeeJoinedCompany" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Function" class="control-label"></label>
@@ -68,30 +68,20 @@
                 <span asp-validation-for="Function" class="text-danger"></span>
             </div>
 
+
+            <!--Multiple select list for departments of employee-->
             <div class="form-group">
-                <label asp-for="EmployeeJoinedCompany" class="control-label"></label>
-                <input asp-for="EmployeeJoinedCompany" class="form-control" />
-                <span asp-validation-for="EmployeeJoinedCompany" class="text-danger"></span>
-            </div>
+                <label asp-for="AllowedDepartments" class="control-label"></label>
+                <select asp-for="AllowedDepartments" class="form-control" multiple>
+                    <option value="">Select a department</option>
+                    @foreach (var item in Model.DepartmentSelectionList)
+                    {
+                        <option value="@item.Key">@item.DepartmentName</option>
+                    }
+                </select>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-
-            <h3>Medewerker zit in de volgende afdelingen:</h3>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="InCassiereDep" /> @Html.DisplayNameFor(model => model.InCassiereDep)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="InFreshDep" /> @Html.DisplayNameFor(model => model.InFreshDep)
-                </label>
-            </div>
-                       <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="InStockersDep" /> @Html.DisplayNameFor(model => model.InStockersDep)
-                </label>
             </div>
         </form>
     </div>

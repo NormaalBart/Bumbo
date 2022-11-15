@@ -17,7 +17,7 @@
             <form asp-action="Index" method="get" class="">
                 <div class="form-actions no-color">
                     <p>
-                        <input type="search" name="SearchString" value="@ViewData["CurrentFilter"] " placeholder="Zoek op naam" />
+                        <input type="search" name="SearchString" value="@Model.SearchString " placeholder="Zoek op naam" />
                         <input type="submit" value="Search" class="btn btn-default" /> 
                     </p>
                 </div>
@@ -37,14 +37,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.Employees[0].Function)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employees[0].Region)
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Employees[0].Birthdate)
             </th>
             <th class="text-center">
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Employees[0].IsEmployed)
+                @Html.DisplayNameFor(model => model.Employees[0].Active)
             </th>
             <th>
                 acties
@@ -60,17 +60,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Function)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Region)
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Birthdate)
             </td>
                 <td class="text-center">
                 @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
             </td>
             <td class="text-center">
-                @if(item.IsEmployed){
-                        <div class="alert-success"> @Html.DisplayFor(modelItem => item.IsEmployed) </div>
+                @if(item.Active){
+                        <div class="alert-success"> @Html.DisplayFor(modelItem => item.Active) </div>
                 }else{
-                        <div class="alert-danger"> @Html.DisplayFor(modelItem => item.IsEmployed) </div>
+                        <div class="alert-danger"> @Html.DisplayFor(modelItem => item.Active) </div>
                 }
                 
             </td>

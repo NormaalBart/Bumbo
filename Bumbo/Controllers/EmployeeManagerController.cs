@@ -3,6 +3,8 @@ using Bumbo.Models.EmployeeManager;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbo.Controllers
 {
@@ -10,29 +12,40 @@ namespace Bumbo.Controllers
     {
         private IEmployee _employeesRepository;
         private IMapper _mapper;
-        public EmployeeManagerController(IEmployee employeeService, IMapper mapper)
+        private IBranch _branchRepository;
+        private IDepartments _departmentsRepository;
+        public EmployeeManagerController(IEmployee employeeService, IMapper mapper, IBranch branchService, IDepartments departmentService)
         {
             _employeesRepository = employeeService;
             _mapper = mapper;
+            _branchRepository = branchService;
+            _departmentsRepository = departmentService; 
+
         }
 
-        public IActionResult Index(string sortOrder, string searchString)
+
+        public IActionResult Index(string sortOrder, string searchString, bool includeInactive, bool includeActive)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = searchString;
+            ViewData["IncludeInactive"] = includeInactive;
+            ViewData["IncludeActive"] = includeActive;
+
 
             // The list will only show the following items: 'Name, Department, Function, Region, Employee since, Active' as is determined
             // in the use case. 
-
+            EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
 
             var employees = _employeesRepository.GetAll();
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 // search in employees if any of the columns contains the searchstring
+                resultingListViewModel.SearchString = searchString;
                 searchString = searchString.ToLower();
                 employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString) || e.LastName.ToLower().Contains(searchString));
+                
             }
             switch (sortOrder)
             {
@@ -51,40 +64,40 @@ namespace Bumbo.Controllers
             }
 
 
-            EmployeeListIndexViewModel list = new EmployeeListIndexViewModel();
-            list.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
+           
+            resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
             
-            return View(list);
+            return View(resultingListViewModel);
         }
-
+        
         public IActionResult Create()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
-            employee.Birthdate = DateTime.Now.AddYears(-18);
+            employee.DepartmentSelectionList = _departmentsRepository.GetAllExistingDepartments().ToList();
             return View(employee);
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeCreateViewModel newEmployee)
+        public IActionResult Create(EmployeeCreateViewModel newEmployee, List<int> AllowedDepartments)
         {
+            // List of int 'AllowedDepartments' contains the department ID's selected in the form.
+            // we use those keys to get the correct departments from the department and add them to the new employee.
+            // Parameter name is 'AllowedDepartments' due to Form auto binding to make it easier.
+            ModelState.Clear();
+            TryValidateModel(newEmployee);
             if (ModelState.IsValid)
             {
+   
+                
                 var e = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
-                //e.Departments.Add(new Departments());
-                // TODO: Redo this code since departments are now stored in the database
-                /*if (newEmployee.InCassiereDep)
+                e.DefaultBranch = _branchRepository.GetBranchOfUser();
+                foreach (var selectedDep in AllowedDepartments)
                 {
-                    e.Departments.Add(new Departments(e.Id, DepartmentEnum.Cassiere));
+                    e.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
                 }
-                if (newEmployee.InStockersDep)
-                {
-                    e.Departments.Add(new Departments(e.Id, DepartmentEnum.Stocker));
-                }
-                if (newEmployee.InFreshDep)
-                {
-                    e.Departments.Add(new Departments(e.Id, DepartmentEnum.Fresh));
-                }*/
+                Console.WriteLine(e.AllowedDepartments.Count);
                 _employeesRepository.Add(e);
                 return RedirectToAction("Index");
 
