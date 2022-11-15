@@ -21,7 +21,7 @@ namespace Bumbo.Controllers
 
         public async Task<IActionResult> Login()
         {
-            if(_signInManager.IsSignedIn(User))
+            if (_signInManager.IsSignedIn(User))
             {
                 //TODO this doesnt work!?
                 await _signInManager.SignOutAsync();
@@ -39,12 +39,23 @@ namespace Bumbo.Controllers
 
             var user = _employeeRepository.GetByEmail(loginModel.EmailAddress);
 
-            if(user != null)
+            if (user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(user, loginModel.Password, false, false);
                 if (result.Succeeded)
                 {
-                    return Redirect("AdminHome/Index");
+                    if (User.IsInRole("Administrator"))
+                    {
+                        return Redirect("AdminHome/Index");
+                    }
+                    else if (User.IsInRole("Manager"))
+                    {
+                        return Redirect("EmployeeManager/Index");
+                    }
+                    else if (User.IsInRole("Medewerker"))
+                    {
+                        return Redirect("Employee/Index");
+                    }
                 }
             }
 

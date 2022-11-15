@@ -9,7 +9,7 @@ namespace BumboData
     public class BumboContext : IdentityDbContext<Employee, IdentityRole, string>
     {
         public BumboContext(DbContextOptions<BumboContext> options) : base(options) { }
-        
+
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Department> Departments { get; set; }
@@ -35,21 +35,21 @@ namespace BumboData
             // Manually set these since EF can't figure it out 
             modelBuilder.Entity<Employee>()
 
-                .HasOne(i=>i.DefaultBranch)
+                .HasOne(i => i.DefaultBranch)
                 .WithMany(i => i.DefaultEmployees);
-            
+
             modelBuilder.Entity<Branch>()
                 .HasOne(i => i.Manager)
                 .WithMany(i => i.ManagedBranches);
-            
+
             // Disable some cascade deletes, otherwise multiple cascade paths are created
-            
+
             // When deleting an employee that was a branch manager, don't delete the branch too.
             modelBuilder.Entity<Employee>()
                 .HasMany(e => e.ManagedBranches)
                 .WithOne(e => e.Manager)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             // By deleting a branch, do not also delete all employees
             modelBuilder.Entity<Branch>()
                 .HasMany(e => e.DefaultEmployees)
@@ -59,16 +59,19 @@ namespace BumboData
             modelBuilder.Entity<StandardOpeningHours>().HasKey(e => new { e.BranchId, e.DayOfWeek });
 
             modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Id = "1",  Name = "Administrator", NormalizedName = "ADMINISTRATOR"},
-                new IdentityRole { Id = "2", Name = "Manager", NormalizedName = "MANAGER"},
-                new IdentityRole { Id = "3", Name = "Medewerker", NormalizedName = "MEDEWERKER"});
+                new IdentityRole { Id = "1", Name = "Administrator", NormalizedName = "ADMINISTRATOR" },
+                new IdentityRole { Id = "2", Name = "Manager", NormalizedName = "MANAGER" },
+                new IdentityRole { Id = "3", Name = "Medewerker", NormalizedName = "MEDEWERKER" });
 
             modelBuilder.Entity<Branch>().HasData(
-                new Branch { Key = 1, 
-                    ShelvingDistance = 100, 
-                    City = "Den Bosch", 
+                new Branch
+                {
+                    Key = 1,
+                    ShelvingDistance = 100,
+                    City = "Den Bosch",
                     HouseNumber = "2",
-                    Street = "Onderwijsboulevard"}) ;
+                    Street = "Onderwijsboulevard"
+                });
 
             modelBuilder.Entity<StandardOpeningHours>().HasData(
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Sunday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
@@ -80,25 +83,56 @@ namespace BumboData
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
 
             modelBuilder.Entity<Department>().HasData(
-                new Department {Key = 1, DepartmentName = "Kassa"},
-                new Department { Key = 2, DepartmentName = "Vers"},
-                new Department { Key = 3, DepartmentName = "Vullers"}
+                new Department { Key = 1, DepartmentName = "Kassa" },
+                new Department { Key = 2, DepartmentName = "Vers" },
+                new Department { Key = 3, DepartmentName = "Vullers" }
                 );
 
             var hasher = new PasswordHasher<Employee>();
             modelBuilder.Entity<Employee>().HasData(
+                // Admin
                 new Employee
                 {
                     Id = "1",
                     Key = 1,
                     DefaultBranchId = 1,
                     Active = true,
-                    Birthdate = new DateOnly(2003, 10, 2 ),
+                    Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Jan",
                     LastName = "Piet",
                     UserName = "admin",
                     PasswordHash = hasher.HashPassword(null, "admin"),
                     Email = "admin@admin.com",
+                    EmailConfirmed = true,
+                },
+                // Manager
+                new Employee
+                {
+                    Id = "2",
+                    Key = 2,
+                    DefaultBranchId = 1,
+                    Active = true,
+                    Birthdate = new DateOnly(2003, 10, 2),
+                    FirstName = "Manager",
+                    LastName = "Piet",
+                    UserName = "manager",
+                    PasswordHash = hasher.HashPassword(null, "manager"),
+                    Email = "manager@manager.com",
+                    EmailConfirmed = true,
+                },
+                // Medewerker
+                new Employee
+                {
+                    Id = "3",
+                    Key = 3,
+                    DefaultBranchId = 1,
+                    Active = true,
+                    Birthdate = new DateOnly(2003, 10, 2),
+                    FirstName = "Medewerker",
+                    LastName = "Piet",
+                    UserName = "medewerker",
+                    PasswordHash = hasher.HashPassword(null, "medewerker"),
+                    Email = "medewerker@medewerker.com",
                     EmailConfirmed = true,
                 });
 
@@ -106,7 +140,15 @@ namespace BumboData
                 new IdentityUserRole<string>
                 {
                     RoleId = "1",
-                    UserId = "1",   
+                    UserId = "1",
+                }, new IdentityUserRole<string>
+                {
+                    RoleId = "2",
+                    UserId = "2",
+                }, new IdentityUserRole<string>
+                {
+                    RoleId = "3",
+                    UserId = "3",
                 });
         }
 
@@ -115,12 +157,12 @@ namespace BumboData
             builder.Properties<DateOnly>()
                 .HaveConversion<DateOnlyConverter>()
                 .HaveColumnType("date");
-            
+
             builder.Properties<TimeOnly>()
                 .HaveConversion<TimeOnlyConverter>()
                 .HaveColumnType("date");
         }
-        
+
         /// <summary>
         /// Converts <see cref="DateOnly" /> to <see cref="DateTime"/> and vice versa.
         /// </summary>
