@@ -1,5 +1,7 @@
 using BumboData;
+using BumboData.Models;
 using BumboRepositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bumbo
@@ -27,6 +29,13 @@ namespace Bumbo
 
             });
 
+            builder.Services.AddIdentity<Employee, IdentityRole>(
+                options => {
+            options.SignIn.RequireConfirmedAccount = false;
+            }
+            ).AddEntityFrameworkStores<BumboContext>();
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -37,11 +46,12 @@ namespace Bumbo
                 app.UseHsts();
             }
 
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(

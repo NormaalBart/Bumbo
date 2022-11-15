@@ -1,10 +1,12 @@
 ﻿using BumboData.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BumboData
 {
-    public class BumboContext : DbContext
+    public class BumboContext : IdentityDbContext<Employee, IdentityRole, string>
     {
         public BumboContext(DbContextOptions<BumboContext> options) : base(options) { }
         
@@ -22,6 +24,8 @@ namespace BumboData
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Setup allowed departments table
             modelBuilder.Entity<Department>()
                 .HasMany(i => i.AllowedEmployees)
@@ -30,6 +34,7 @@ namespace BumboData
 
             // Manually set these since EF can't figure it out 
             modelBuilder.Entity<Employee>()
+
                 .HasOne(i=>i.DefaultBranch)
                 .WithMany(i => i.DefaultEmployees);
             
@@ -50,8 +55,54 @@ namespace BumboData
                 .HasMany(e => e.DefaultEmployees)
                 .WithOne(e => e.DefaultBranch)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = "1",  Name = "Administrator", NormalizedName = "ADMINISTRATOR"},
+                new IdentityRole { Id = "2", Name = "Manager", NormalizedName = "MANAGER"},
+                new IdentityRole { Id = "3", Name = "Medewerker", NormalizedName = "MEDEWERKER"});
+
+            modelBuilder.Entity<Branch>().HasData(
+                new Branch { Key = 1, ShelvingDistance = 100, City = "Den Bosch", HouseNumber = "2" }) ;
+
+            modelBuilder.Entity<StandardOpeningHours>().HasData(
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Monday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Tuesday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Wednesday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Thursday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Friday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
+                new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Sunday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
+
+            modelBuilder.Entity<Department>().HasData(
+                new Department {Key = 1, DepartmentName = "Kassa"},
+                new Department { Key = 2, DepartmentName = "Vers"},
+                new Department { Key = 3, DepartmentName = "Vullers"}
+                );
+
+            var hasher = new PasswordHasher<Employee>();
+            modelBuilder.Entity<Employee>().HasData(
+                new Employee
+                {
+                    Key = 1,
+                    DefaultBranchId = 1,
+                    Active = true,
+                    Birthdate = new DateOnly(2003, 10, 02 ),
+                    FirstName = "Jan",
+                    LastName = "Piet",
+                    UserName = "admin",
+                    PasswordHash = hasher.HashPassword(null, "admin"),
+                    Email = "admin@admin.com",
+                    EmailConfirmed = true,
+                });
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = "1",
+                    UserId = "1",   
+                });
         }
-        
+
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {
             builder.Properties<DateOnly>()

@@ -1,12 +1,14 @@
 ﻿using BumboData;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BumboRepositories
 {
     public class EmployeeRepository : IEmployee
     {
         private BumboContext _context;
+
         public EmployeeRepository(BumboContext context)
         {
             this._context = context;
@@ -34,6 +36,9 @@ namespace BumboRepositories
             throw new NotImplementedException();
         }
 
-
+        public Employee GetByEmail(string emailAddress)
+        {
+            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.NormalizedEmail == emailAddress.ToUpper()).FirstOrDefault();
+        }
     }
 }

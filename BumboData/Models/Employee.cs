@@ -7,7 +7,7 @@ public class Employee: IdentityUser
 {
     [Key]
     public int Key { get; set; }
-    
+
     [Required]
     public String FirstName { get; set; }
     
@@ -22,8 +22,10 @@ public class Employee: IdentityUser
     [Required]
     public Boolean Active { get; set; }
     
-    [Required]
     public Branch DefaultBranch { get; set; }
+
+    [Required]
+    public int DefaultBranchId { get; set; }
 
     public virtual ICollection<Branch> ManagedBranches { get; set; }
     public virtual ICollection<Department> AllowedDepartments { get; set; }
