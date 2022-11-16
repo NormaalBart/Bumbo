@@ -8,8 +8,8 @@ namespace BumboRepositories
     public class PrognosisRepository : IPrognosis
     {
         private BumboContext _context;
-        private IBranch _branchRepository;
-        public PrognosisRepository(BumboContext context, IBranch branchRepository)
+        private IBranchRepository _branchRepository;
+        public PrognosisRepository(BumboContext context, IBranchRepository branchRepository)
         {
             _context = context;
             _branchRepository = branchRepository;
