@@ -5,7 +5,7 @@ namespace BumboData
     public interface IEmployee 
     {
         IEnumerable<Employee> GetAll();
-        Employee GetById(int id);
+        Employee GetById(string id);
         void Add(Employee employee);
 
         IEnumerable<Department> GetDepartmentsOfEmployee(string id);

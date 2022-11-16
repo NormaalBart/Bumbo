@@ -1,18 +1,14 @@
-﻿using Bumbo.Models.EmployeeManager;
+﻿using Bumbo.Models;
+using Bumbo.Models.EmployeeManager;
 using BumboData;
 using BumboData.Models;
 using BumboRepositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Bumbo.Controllers
 {
-    public class IncomingData
-    {
-        public int EmployeeId { get; set; }
-        public int BranchId { get; set; }
-    }
-
     [ApiController]
     [Route("[controller]")]
     public class ClockInController : ControllerBase
@@ -29,13 +25,13 @@ namespace Bumbo.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Create([FromForm] IncomingData msgBody)
+        public IActionResult Create([FromForm] IncomingDataClockIn msgBody)
         {
             Employee employee = _employeeRepository.GetById(msgBody.EmployeeId);
             Branch branch = _branchRepository.GetById(msgBody.BranchId);
             if (employee == null || branch == null)
             {
-                return Ok();
+                return BadRequest();
             }
 
             WorkedShift lastWorkedShift = _workedShiftRepository.LastWorkedShiftWithNoEndTime(employee);

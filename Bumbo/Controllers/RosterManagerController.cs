@@ -60,7 +60,7 @@ namespace Bumbo.Controllers
             viewModel.StartTime = viewModel.Date.AddHours(8);
             viewModel.EndTime = viewModel.Date.AddHours(16);
             viewModel.PrognosisId = prognosisId;
-            viewModel.DepartmentsList = _employeeRepository.GetById(int.Parse(employeeId)).AllowedDepartments.ToList();
+            viewModel.DepartmentsList = _employeeRepository.GetById(employeeId).AllowedDepartments.ToList();
             
             return View(viewModel);
         }
@@ -72,7 +72,7 @@ namespace Bumbo.Controllers
         {
             int maxHoursInWeekAllowed = 40; // DEFAULT 40 TODO 
             
-            newShift.DepartmentsList = _employeeRepository.GetById(int.Parse(newShift.EmployeeId)).AllowedDepartments.ToList();
+            newShift.DepartmentsList = _employeeRepository.GetById(newShift.EmployeeId).AllowedDepartments.ToList();
 
             // since starttime and endtime seem to only save the timestamps, we need to add the date to it
             newShift.StartTime = newShift.Date.AddHours(newShift.StartTime.Hour);
