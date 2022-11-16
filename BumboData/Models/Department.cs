@@ -5,7 +5,7 @@ namespace BumboData.Models;
 public class Department
 {
     [Key]
-    public int Key { get; set; }
+    public int Id { get; set; }
     
     [Required]
     public String DepartmentName { get; set; }
