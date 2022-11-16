@@ -76,10 +76,10 @@
                     <option value="">Select a department</option>
                     @foreach (var item in Model.DepartmentSelectionList)
                     {
-                        <option value="@item.Key">@item.DepartmentName</option>
+                        <option value="@item.Id">@item.DepartmentName</option>
                     }
                 </select>
-
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -8,26 +8,51 @@
 
 <!--Create new button and sorting buttons in a header above the table-->
 <div>
-    <div class="top-header align-items-start">
-            <div class="text-center">
-                <form asp-action="Index" method="get" class="container">
-                    <div class="form-actions no-color row">
+    <div class="top-header align-items-center align-items-center">
+            <div class="top-header-content">
+                <form asp-action="Index" method="get" class="container ">
+                <div class="form-actions no-color row justify-content-center">
+   
+
+
+
                     <div class="col-2">
-                        <a asp-action="Create" class="btn btn-lg btn-primary">Create New</a>
+                        <div class="top-header-content">
+                            <a asp-action="Create" class="btn btn-lg btn-primary">Create New</a>
+                        </div>
                     </div>
-                        <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" class="col-2" />
-                    <div class="form-group form-check  col-2">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IncludeActive" /> @Html.DisplayNameFor(model => model.IncludeActive)
-                        </label>
+                    <div class="col-2">
+                        <div class="form-group top-header-content form-check">
+                            <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
+                        </div>
                     </div>
-                    <div class="form-group form-check  col-2">
+                    <div class="col-2">
+                        <div class="form-group top-header-content form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="IncludeActive" /> @Html.DisplayNameFor(model => model.IncludeActive)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group top-header-content">
                             <label class="form-check-label">
                                 <input class="form-check-input" asp-for="IncludeInactive" /> @Html.DisplayNameFor(model => model.IncludeInactive)
                             </label>
                         </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group top-header-content">
+                             <select name="cars" id="cars" form="carform">
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="opel">Opel</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                        </div>
+                    </div>
+          
 
-                        <div class="btn btn-warning col-2">
+                        <div class="btn btn-warning col-2 text-center">
                             <input type="submit" value="Search" class="btn btn-default" />
                         </div>
                     </div>

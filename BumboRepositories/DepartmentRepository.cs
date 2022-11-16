@@ -23,7 +23,7 @@ namespace BumboRepositories
 
         public Department GetById(int id)
         {
-            return _context.Departments.Where(d => d.Key == id).FirstOrDefault();
+            return _context.Departments.Where(d => d.Id == id).FirstOrDefault();
         }
     }
 }
