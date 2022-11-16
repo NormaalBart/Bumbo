@@ -11,11 +11,13 @@ namespace Bumbo.Controllers
     {
 
         private SignInManager<Employee> _signInManager;
+        private UserManager<Employee> _userManager;
         private IEmployeeRepository _employeeRepository;
 
-        public AccountController(SignInManager<Employee> signInManager, IEmployeeRepository employeeRepository)
+        public AccountController(SignInManager<Employee> signInManager, UserManager<Employee> userManager, IEmployeeRepository employeeRepository)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _employeeRepository = employeeRepository;
         }
 
@@ -23,7 +25,6 @@ namespace Bumbo.Controllers
         {
             if (_signInManager.IsSignedIn(User))
             {
-                //TODO this doesnt work!?
                 await _signInManager.SignOutAsync();
             }
             return View();
@@ -44,15 +45,17 @@ namespace Bumbo.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, loginModel.Password, false, false);
                 if (result.Succeeded)
                 {
-                    if (User.IsInRole("Administrator"))
+                    //User does not have roles yet assigned, so have to get from database.
+                    var roles = await _userManager.GetRolesAsync(user);
+                    if (roles.Contains("Administrator"))
                     {
-                        return Redirect("AdminHome/Index");
+                        return Redirect("Branch/Index");
                     }
-                    else if (User.IsInRole("Manager"))
+                    else if (roles.Contains("Manager"))
                     {
                         return Redirect("EmployeeManager/Index");
                     }
-                    else if (User.IsInRole("Medewerker"))
+                    else if (roles.Contains("Medewerker"))
                     {
                         return Redirect("Employee/Index");
                     }

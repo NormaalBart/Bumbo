@@ -30,6 +30,12 @@ namespace Bumbo.Models.EmployeeManager
         [EmailAddress]
         public string Email { get; set; }
 
+
+        [Required]
+        [DisplayName("Wachtwoord")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
         [Required]
         [DisplayName("Regio")]
         public string Region { get; set; }
@@ -56,7 +62,6 @@ namespace Bumbo.Models.EmployeeManager
         public bool InFreshDep { get; set; }
         [DisplayName("VakkenVullers afdeling")]
         public bool InStockersDep { get; set; }
-
 
         public EmployeeCreateViewModel()
         {

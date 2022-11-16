@@ -13,7 +13,7 @@ namespace BumboData
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<DepartmentPrognosis> DepartmentPrognoses { get; set; }
+        public DbSet<DepartmentPrognosis> DepartmentPrognosis { get; set; }
         public DbSet<OpeningHoursOverride> OpeningHoursOverride { get; set; }
         public DbSet<PlannedShift> PlannedShifts { get; set; }
         public DbSet<Prognosis> Prognoses { get; set; }
@@ -25,7 +25,6 @@ namespace BumboData
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             // Setup allowed departments table
             modelBuilder.Entity<Department>()
                 .HasMany(i => i.AllowedEmployees)
@@ -66,7 +65,8 @@ namespace BumboData
             modelBuilder.Entity<Branch>().HasData(
                 new Branch
                 {
-                    Key = 1,
+                    Id = 1,
+                    Name = "Bumbo v1",
                     ShelvingDistance = 100,
                     City = "Den Bosch",
                     HouseNumber = "2",
@@ -83,9 +83,9 @@ namespace BumboData
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
 
             modelBuilder.Entity<Department>().HasData(
-                new Department { Key = 1, DepartmentName = "Kassa" },
-                new Department { Key = 2, DepartmentName = "Vers" },
-                new Department { Key = 3, DepartmentName = "Vullers" }
+                new Department { Id = 1, DepartmentName = "Kassa" },
+                new Department { Id = 2, DepartmentName = "Vers" },
+                new Department { Id = 3, DepartmentName = "Vullers" }
                 );
 
             var hasher = new PasswordHasher<Employee>();
@@ -94,7 +94,7 @@ namespace BumboData
                 new Employee
                 {
                     Id = "1",
-                    Key = 1,
+                    Key = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
                     DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
@@ -104,12 +104,15 @@ namespace BumboData
                     PasswordHash = hasher.HashPassword(null, "admin"),
                     Email = "admin@admin.com",
                     EmailConfirmed = true,
+                    Postalcode = "1234AA",
+                    Housenumber = "10",
+                    Function = "Administrator"
                 },
                 // Manager
                 new Employee
                 {
                     Id = "2",
-                    Key = 2,
+                    Key = "3a792773-527d-4bb7-8319-6db070350d38",
                     DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
@@ -119,12 +122,15 @@ namespace BumboData
                     PasswordHash = hasher.HashPassword(null, "manager"),
                     Email = "manager@manager.com",
                     EmailConfirmed = true,
+                    Postalcode = "1234AA",
+                    Housenumber = "10",
+                    Function = "Manager"
                 },
                 // Medewerker
                 new Employee
                 {
                     Id = "3",
-                    Key = 3,
+                    Key = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                     DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
@@ -134,7 +140,10 @@ namespace BumboData
                     PasswordHash = hasher.HashPassword(null, "medewerker"),
                     Email = "medewerker@medewerker.com",
                     EmailConfirmed = true,
-                });
+                    Postalcode = "1234AA",
+                    Housenumber = "10",
+                    Function = "Vuller"
+                }); 
 
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>

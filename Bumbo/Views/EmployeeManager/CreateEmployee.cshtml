@@ -1,5 +1,6 @@
 ﻿@model Bumbo.Models.EmployeeManager.EmployeeCreateViewModel
 
+
 @{
     ViewData["Title"] = "Create";
 }
@@ -10,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="CreateEmployee">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <h2>Naam</h2>
             <div class="form-group">
@@ -67,7 +68,7 @@
                 <span asp-validation-for="EmployeeJoinedCompany" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="CreateEmployee" class="btn btn-primary" />
             </div>
 
             <h3>Medewerker zit in de volgende afdelingen:</h3>

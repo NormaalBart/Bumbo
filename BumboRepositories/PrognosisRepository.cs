@@ -85,11 +85,11 @@ namespace BumboRepositories
                 // other wise we add it.
                 if (_context.Prognoses.Where(p => p.Date == item.Date).FirstOrDefault() != null)
                 {
-                    var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognoses).FirstOrDefault();
+                    var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
-                    item.DepartmentPrognoses = this.CalculateDepartmentPrognoses(item).ToList();
-                    prognosisDay.DepartmentPrognoses = item.DepartmentPrognoses;
+                    item.DepartmentPrognosis = this.CalculateDepartmentPrognosis(item).ToList();
+                    prognosisDay.DepartmentPrognosis = item.DepartmentPrognosis;
                     
 
                     _context.Prognoses.Update(prognosisDay);
@@ -100,7 +100,7 @@ namespace BumboRepositories
 
                     // get the branch of the item
                     item.Branch = _branchRepository.GetBranchOfUser();
-                    item.DepartmentPrognoses = this.CalculateDepartmentPrognoses(item).ToList();
+                    item.DepartmentPrognosis = this.CalculateDepartmentPrognosis(item).ToList();
                     _context.Prognoses.Add(item);
                     
                 }
@@ -167,7 +167,7 @@ namespace BumboRepositories
             return resultList;
         }
 
-        public IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis)
+        public IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognosis(Prognosis prognosis)
         {
             // This method calculates the amount of employees and hours needed for each department.
             // This is done using the standard from the database.

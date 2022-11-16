@@ -5,6 +5,10 @@ namespace BumboData.Models;
 
 public class Employee: IdentityUser
 {
+
+    [Key]
+    public string Key;
+
     [Required]
     public String FirstName { get; set; }
     

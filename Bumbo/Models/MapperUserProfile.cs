@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
@@ -14,12 +15,15 @@ namespace Bumbo.Models
             // To use auto mapper, register it here for each model you want to use.
             CreateMap<EmployeeCreateViewModel, Employee>();
             CreateMap<Employee, EmployeeListItemViewModel>();
+            CreateMap<Employee, EmployeeRosterViewModel>();
             CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<PrognosisViewModel, Prognosis>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateOnly()));
-            CreateMap<Employee, EmployeeRosterViewModel>();
             CreateMap<PlannedShift, ShiftViewModel>();
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
+            CreateMap<Branch, BranchModel>();
+            CreateMap<BranchModel, Branch>();
+
         }
     }
 }

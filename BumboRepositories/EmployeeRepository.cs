@@ -40,5 +40,21 @@ namespace BumboRepositories
         {
             return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.Email.ToUpper() == emailAddress.ToUpper()).FirstOrDefault();
         }
+
+        public IEnumerable<Employee> GetAllManagers()
+        {
+            var users = _context.UserRoles.Where(role => role.RoleId == "2").Select(role=> role.UserId).ToList();
+            return _context.Employees.Where(employee => users.Contains(employee.Id));
+        }
+
+        public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
+        {
+            return _context.Employees.Where(employee => employee.DefaultBranchId == branch);
+        }
+
+        object IEmployeeRepository.GetAll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

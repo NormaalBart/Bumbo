@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    [Migration("20221115200437_Adding_Seeddata")]
-    partial class Adding_Seeddata
+    [Migration("20221116131711_Added_name_Branch")]
+    partial class Added_name_Branch
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,11 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Branch", b =>
                 {
-                    b.Property<int>("Key")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -43,6 +43,10 @@ namespace BumboData.Migrations
                     b.Property<string>("ManagerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ShelvingDistance")
                         .HasColumnType("int");
 
@@ -50,7 +54,7 @@ namespace BumboData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Key");
+                    b.HasKey("Id");
 
                     b.HasIndex("ManagerId");
 
@@ -59,9 +63,10 @@ namespace BumboData.Migrations
                     b.HasData(
                         new
                         {
-                            Key = 1,
+                            Id = 1,
                             City = "Den Bosch",
                             HouseNumber = "2",
+                            Name = "Bumbo v1",
                             ShelvingDistance = 100,
                             Street = "Onderwijsboulevard"
                         });
@@ -69,34 +74,34 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Department", b =>
                 {
-                    b.Property<int>("Key")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Key");
+                    b.HasKey("Id");
 
                     b.ToTable("Departments");
 
                     b.HasData(
                         new
                         {
-                            Key = 1,
+                            Id = 1,
                             DepartmentName = "Kassa"
                         },
                         new
                         {
-                            Key = 2,
+                            Id = 2,
                             DepartmentName = "Vers"
                         },
                         new
                         {
-                            Key = 3,
+                            Id = 3,
                             DepartmentName = "Vullers"
                         });
                 });
@@ -109,7 +114,7 @@ namespace BumboData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("DepartmentKey")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("PrognosisId")
@@ -123,11 +128,11 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentKey");
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("PrognosisId");
 
-                    b.ToTable("DepartmentPrognoses");
+                    b.ToTable("DepartmentPrognosis");
                 });
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
@@ -158,12 +163,20 @@ namespace BumboData.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("EmployeeSince")
+                        .HasColumnType("date");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Key")
-                        .HasColumnType("int");
+                    b.Property<string>("Function")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Housenumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -191,6 +204,10 @@ namespace BumboData.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Postalcode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Preposition")
                         .HasColumnType("nvarchar(max)");
@@ -226,19 +243,68 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "fc40537f-a7b6-400e-83e5-7348d73e5ebb",
+                            ConcurrencyStamp = "11e55be0-9007-4eac-ad96-726e0604179f",
                             DefaultBranchId = 1,
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FirstName = "Jan",
-                            Key = 1,
+                            Function = "Administrator",
+                            Housenumber = "10",
                             LastName = "Piet",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEF7D6YQY4AUfRKjBVUI/MZLb8VRfIe1JNk9qJpYDjXNpncMXOtOpgp5JS172AW+gJQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAxxi7LJjAEJLIdcVYy7fkIv5Cf+Cgzjz8oIhG9Gf7Hy18FQno6AYLTL4TfyCvNwSA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b2e9e731-f897-4186-9660-baa0100a70ba",
+                            Postalcode = "1234AA",
+                            SecurityStamp = "4fc3dc08-161a-48bc-8ce4-2fce1f632c52",
                             TwoFactorEnabled = false,
                             UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "973fc020-9b7b-40de-a189-73a9d3a29e8a",
+                            DefaultBranchId = 1,
+                            Email = "manager@manager.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Manager",
+                            Function = "Manager",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAEAACcQAAAAELlO4mESoJ3sreol1NYiOeGHjyYI7+9VRjI9Tu4jwbOw/vspc5olLN9iRj40yzUJfg==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "75fa307c-81a6-480b-b31a-d2b86fca0194",
+                            TwoFactorEnabled = false,
+                            UserName = "manager"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "38393104-e041-4f39-8928-6df414a801d1",
+                            DefaultBranchId = 1,
+                            Email = "medewerker@medewerker.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Medewerker",
+                            Function = "Vuller",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAEAACcQAAAAEA4b0a532o9ThlcZ+BSJnkoqv/pN0PDUoIbN+4uculrjXXcHERx9bpDMuk2ussuVuQ==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "8edb3490-eea9-4b30-a850-3ca1ad396e30",
+                            TwoFactorEnabled = false,
+                            UserName = "medewerker"
                         });
                 });
 
@@ -247,7 +313,7 @@ namespace BumboData.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("BranchKey")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CloseTime")
@@ -258,7 +324,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Date");
 
-                    b.HasIndex("BranchKey");
+                    b.HasIndex("BranchId");
 
                     b.ToTable("OpeningHoursOverride");
                 });
@@ -271,10 +337,10 @@ namespace BumboData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BranchKey")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DepartmentKey")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeId")
@@ -289,9 +355,9 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchKey");
+                    b.HasIndex("BranchId");
 
-                    b.HasIndex("DepartmentKey");
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("EmployeeId");
 
@@ -306,7 +372,7 @@ namespace BumboData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BranchKey")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<int>("ColiCount")
@@ -320,7 +386,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchKey");
+                    b.HasIndex("BranchId");
 
                     b.ToTable("Prognoses");
                 });
@@ -330,7 +396,7 @@ namespace BumboData.Migrations
                     b.Property<int>("Key")
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchKey")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<int>("Value")
@@ -338,7 +404,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Key");
 
-                    b.HasIndex("BranchKey");
+                    b.HasIndex("BranchId");
 
                     b.ToTable("Standards");
                 });
@@ -366,50 +432,50 @@ namespace BumboData.Migrations
                         {
                             BranchId = 1,
                             DayOfWeek = 0,
-                            CloseTime = new DateTime(2022, 11, 15, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 15, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 1,
-                            CloseTime = new DateTime(2022, 11, 15, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 15, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 2,
-                            CloseTime = new DateTime(2022, 11, 15, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 15, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 3,
-                            CloseTime = new DateTime(2022, 11, 15, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 15, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 4,
-                            CloseTime = new DateTime(2022, 11, 15, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 15, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 5,
-                            CloseTime = new DateTime(2022, 11, 15, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 15, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 6,
-                            CloseTime = new DateTime(2022, 11, 15, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 15, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -452,7 +518,7 @@ namespace BumboData.Migrations
                     b.Property<bool>("Approved")
                         .HasColumnType("bit");
 
-                    b.Property<int>("BranchKey")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeId")
@@ -470,7 +536,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchKey");
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("EmployeeId");
 
@@ -479,13 +545,13 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("DepartmentEmployee", b =>
                 {
-                    b.Property<int>("AllowedDepartmentsKey")
+                    b.Property<int>("AllowedDepartmentsId")
                         .HasColumnType("int");
 
                     b.Property<string>("AllowedEmployeesId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("AllowedDepartmentsKey", "AllowedEmployeesId");
+                    b.HasKey("AllowedDepartmentsId", "AllowedEmployeesId");
 
                     b.HasIndex("AllowedEmployeesId");
 
@@ -522,21 +588,21 @@ namespace BumboData.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "513b8bc3-fc8b-4acf-b013-4328702dea58",
+                            ConcurrencyStamp = "bb04ebe5-be50-4b5e-917c-44943545b903",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "6df9e759-3737-4f32-9d4f-b3bd59bda3d5",
+                            ConcurrencyStamp = "8951e2da-4966-4563-af94-7f730e6a15f0",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "91a9f932-961e-4015-8655-1b5d8f0c40c8",
+                            ConcurrencyStamp = "e6a44e84-edf2-4804-8573-4c6259db901b",
                             Name = "Medewerker",
                             NormalizedName = "MEDEWERKER"
                         });
@@ -633,6 +699,16 @@ namespace BumboData.Migrations
                         {
                             UserId = "1",
                             RoleId = "1"
+                        },
+                        new
+                        {
+                            UserId = "2",
+                            RoleId = "2"
+                        },
+                        new
+                        {
+                            UserId = "3",
+                            RoleId = "3"
                         });
                 });
 
@@ -669,12 +745,12 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentKey")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BumboData.Models.Prognosis", "Prognosis")
-                        .WithMany("DepartmentPrognoses")
+                        .WithMany("DepartmentPrognosis")
                         .HasForeignKey("PrognosisId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -699,7 +775,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany("OpeningHoursOverrides")
-                        .HasForeignKey("BranchKey")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -710,13 +786,13 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany()
-                        .HasForeignKey("BranchKey")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BumboData.Models.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentKey")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -737,7 +813,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany("Prognoses")
-                        .HasForeignKey("BranchKey")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -748,7 +824,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany("Standards")
-                        .HasForeignKey("BranchKey")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -781,7 +857,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany()
-                        .HasForeignKey("BranchKey")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -800,7 +876,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Department", null)
                         .WithMany()
-                        .HasForeignKey("AllowedDepartmentsKey")
+                        .HasForeignKey("AllowedDepartmentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -888,7 +964,7 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Prognosis", b =>
                 {
-                    b.Navigation("DepartmentPrognoses");
+                    b.Navigation("DepartmentPrognosis");
                 });
 #pragma warning restore 612, 618
         }

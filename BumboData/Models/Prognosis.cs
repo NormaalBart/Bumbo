@@ -19,5 +19,5 @@ public class Prognosis
     [Required]
     public int CustomerCount { get; set; }
 
-    public virtual ICollection<DepartmentPrognosis> DepartmentPrognoses { get; set; }
+    public virtual ICollection<DepartmentPrognosis> DepartmentPrognosis { get; set; }
 }

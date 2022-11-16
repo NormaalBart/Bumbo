@@ -14,10 +14,10 @@ namespace Bumbo.Controllers
     public class ClockInController : ControllerBase
     {
         private IWorkedShiftRepository  _workedShiftRepository;
-        private IEmployee _employeeRepository;
+        private IEmployeeRepository _employeeRepository;
         private IBranchRepository _branchRepository;
 
-        public ClockInController(IWorkedShiftRepository workedShiftRepository, IEmployee employeeRepository,IBranchRepository branchRepository)
+        public ClockInController(IWorkedShiftRepository workedShiftRepository, IEmployeeRepository employeeRepository, IBranchRepository branchRepository)
         {
             _workedShiftRepository = workedShiftRepository;
             _employeeRepository = employeeRepository;

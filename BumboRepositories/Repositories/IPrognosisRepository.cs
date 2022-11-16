@@ -21,7 +21,7 @@ namespace BumboData
 
         IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek);
 
-        IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis);
+        IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognosis(Prognosis prognosis);
 
 
     }

@@ -4,6 +4,7 @@ using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Bumbo.Controllers
 {
@@ -22,14 +23,30 @@ namespace Bumbo.Controllers
 
         public IActionResult Index()
         {
-            var employees = _employeesRepository.GetAll();
+            IEnumerable<Employee> employees;
+            if (User.IsInRole("Administrator"))
+            {
+                employees = _employeesRepository.GetAllManagers();
+            }
+            else
+            {
+                var currentUserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                Employee manager = _employeesRepository.GetById(currentUserID);
+                employees = _employeesRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId);
+            }
             EmployeeListIndexViewModel list = new EmployeeListIndexViewModel();
             list.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
-            
             return View(list);
         }
 
-        public IActionResult Create()
+        public IActionResult CreateEmployee()
+        {
+            EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
+            employee.BirthDate = DateTime.Now.AddYears(-18);
+            return View(employee);
+        }
+
+        public IActionResult CreateManager()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
             employee.BirthDate = DateTime.Now.AddYears(-18);
@@ -38,7 +55,7 @@ namespace Bumbo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeCreateViewModel newEmployee)
+        public IActionResult CreateEmployee(EmployeeCreateViewModel newEmployee)
         {
             if (ModelState.IsValid)
             {
@@ -61,12 +78,12 @@ namespace Bumbo.Controllers
                 return RedirectToAction("Index");
 
             }
-            
+
             return View(newEmployee);
-            
+
         }
-        
-    } 
-        
-    
+
+    }
+
+
 }
