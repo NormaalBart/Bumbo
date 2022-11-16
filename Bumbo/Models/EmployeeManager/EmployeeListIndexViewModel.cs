@@ -1,4 +1,6 @@
-﻿namespace Bumbo.Models.EmployeeManager
+﻿using System.ComponentModel;
+
+namespace Bumbo.Models.EmployeeManager
 {
     public class EmployeeListIndexViewModel
     {
@@ -9,8 +11,14 @@
         public string RegionSortParm { get; set; }
         public string StatusSortParm { get; set; }
         public string CurrentFilter { get; set; }
-        public string SearchString { get; set; }
+ 
         public int? PageNumber { get; set; }
+
+        [DisplayName("Inclusief medewerkers in dienst")]
+        public bool IncludeActive { get; set; }
+        [DisplayName("Inclusief medewerkers niet in dienst")]
+        public bool IncludeInactive { get; set; }
+        public string SearchString { get; set; }
 
 
         public EmployeeListIndexViewModel()

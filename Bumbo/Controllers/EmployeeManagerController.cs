@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bumbo.Models;
 using Bumbo.Models.EmployeeManager;
 using BumboData;
 using BumboData.Models;
@@ -24,20 +25,39 @@ namespace Bumbo.Controllers
         }
 
 
-        public IActionResult Index(string sortOrder, string searchString, bool includeInactive, bool includeActive)
+        public IActionResult Index(string sortOrder, string searchString, bool includeInactive, bool includeActive, int? pageNumber)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["CurrentFilter"] = searchString;
+            //ViewData["CurrentFilter"] = searchString;
             ViewData["IncludeInactive"] = includeInactive;
             ViewData["IncludeActive"] = includeActive;
 
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
 
-            // The list will only show the following items: 'Name, Department, Function, Region, Employee since, Active' as is determined
-            // in the use case. 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
 
             var employees = _employeesRepository.GetAll();
+            if (!includeInactive && !includeActive)
+            {
+                employees = employees.Where(e => e.Active);
+                resultingListViewModel.IncludeActive = true;
+            }
+            else if (!includeInactive && includeActive)
+            {
+                employees = employees.Where(e => e.Active);
+            }
+            else if (includeInactive && !includeActive)
+            {
+                employees = employees.Where(e => e.Active == false);
+            }
+
+           
+            
+            
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -63,10 +83,8 @@ namespace Bumbo.Controllers
                     break;
             }
 
-
-           
             resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
-            
+
             return View(resultingListViewModel);
         }
         

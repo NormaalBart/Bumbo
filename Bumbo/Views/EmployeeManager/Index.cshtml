@@ -7,24 +7,33 @@
 <h1 class="text-center">Medewerker management</h1>
 
 <!--Create new button and sorting buttons in a header above the table-->
-<div class="container">
-    <div class="top-header row">
-        <div class="col">
-            <a asp-action="Create" class="btn btn-lg btn-primary">Create New</a>
+<div>
+    <div class="top-header align-items-start">
+            <div class="text-center">
+                <form asp-action="Index" method="get" class="container">
+                    <div class="form-actions no-color row">
+                    <div class="col-2">
+                        <a asp-action="Create" class="btn btn-lg btn-primary">Create New</a>
+                    </div>
+                        <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" class="col-2" />
+                    <div class="form-group form-check  col-2">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="IncludeActive" /> @Html.DisplayNameFor(model => model.IncludeActive)
+                        </label>
+                    </div>
+                    <div class="form-group form-check  col-2">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="IncludeInactive" /> @Html.DisplayNameFor(model => model.IncludeInactive)
+                            </label>
+                        </div>
+
+                        <div class="btn btn-warning col-2">
+                            <input type="submit" value="Search" class="btn btn-default" />
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        
-        <div class="col">
-            <form asp-action="Index" method="get" class="">
-                <div class="form-actions no-color">
-                    <p>
-                        <input type="search" name="SearchString" value="@Model.SearchString " placeholder="Zoek op naam" />
-                        <input type="submit" value="Search" class="btn btn-default" /> 
-                    </p>
-                </div>
-            </form>
-        </div>
-       
-    </div>
 </div>
 
 
