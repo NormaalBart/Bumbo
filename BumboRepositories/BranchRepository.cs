@@ -1,5 +1,6 @@
 ﻿using BumboData;
 using BumboData.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BumboRepositories
 {
-    public class BranchRepository : IBranch
+    public class BranchRepository : IBranchRepository
     {
         private BumboContext _context;
 
@@ -16,7 +17,6 @@ namespace BumboRepositories
         {
             this._context = context;
         }
-
         public Branch GetBranchOfUser()
         {
             // I implemented this method when branch creation and login features
