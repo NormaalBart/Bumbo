@@ -8,6 +8,8 @@ namespace BumboData
         Employee GetById(string id);
         void Add(Employee employee);
 
+        void Update(Employee employee);
+
         IEnumerable<Department> GetDepartmentsOfEmployee(string id);
 
     }

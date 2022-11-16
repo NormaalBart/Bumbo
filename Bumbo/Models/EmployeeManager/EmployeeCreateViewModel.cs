@@ -49,11 +49,11 @@ namespace Bumbo.Models.EmployeeManager
         public String PostalCode { get; set; }
         [Required]
         [DisplayName("Huisnummer")]
-        public int HouseNumber { get; set; }
+        public string HouseNumber { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        [DisplayName("In dienst sinds")]
+        [DisplayName("In dienst sinds (De datum waarop deze medewerker in het bedrijf is begonnen)")]
         public DateTime EmployeeJoinedCompany { get; set; }
 
         [Required]
@@ -61,7 +61,10 @@ namespace Bumbo.Models.EmployeeManager
         public String Function { get; set; }
         
         public List<Department> DepartmentSelectionList { get; set; }
+        [DisplayName("Kies een of meerdere afdelingen voor deze medewerker.")]
         public virtual ICollection<Department> AllowedDepartments { get; set; }
+
+        public string? EmployeeKey { get; set; }
 
 
         public EmployeeCreateViewModel()

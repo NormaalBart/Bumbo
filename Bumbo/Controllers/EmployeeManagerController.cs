@@ -4,8 +4,7 @@ using Bumbo.Models.EmployeeManager;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using BumboData.Enums;
 
 namespace Bumbo.Controllers
 {
@@ -13,9 +12,9 @@ namespace Bumbo.Controllers
     {
         private IEmployee _employeesRepository;
         private IMapper _mapper;
-        private IBranch _branchRepository;
+        private IBranchRepository _branchRepository;
         private IDepartments _departmentsRepository;
-        public EmployeeManagerController(IEmployee employeeService, IMapper mapper, IBranch branchService, IDepartments departmentService)
+        public EmployeeManagerController(IEmployee employeeService, IMapper mapper, IBranchRepository branchService, IDepartments departmentService)
         {
             _employeesRepository = employeeService;
             _mapper = mapper;
@@ -25,20 +24,12 @@ namespace Bumbo.Controllers
         }
 
 
-        public IActionResult Index(string sortOrder, string searchString, bool includeInactive, bool includeActive, int? pageNumber)
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, SortingOption currentSort)
         {
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            //ViewData["CurrentFilter"] = searchString;
-            ViewData["IncludeInactive"] = includeInactive;
-            ViewData["IncludeActive"] = includeActive;
-
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
+
+           
 
             var employees = _employeesRepository.GetAll();
             if (!includeInactive && !includeActive)
@@ -55,33 +46,46 @@ namespace Bumbo.Controllers
                 employees = employees.Where(e => e.Active == false);
             }
 
-           
-            
-            
-
             if (!String.IsNullOrEmpty(searchString))
             {
                 // search in employees if any of the columns contains the searchstring
                 resultingListViewModel.SearchString = searchString;
                 searchString = searchString.ToLower();
                 employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString) || e.LastName.ToLower().Contains(searchString));
-                
             }
-            switch (sortOrder)
+
+            switch (currentSort)
             {
-                case "name_desc":
-                    employees = employees.OrderByDescending(e => e.LastName);
+                // case for each sortingoption, with asc and desc
+                case SortingOption.Name_Asc:
+                    employees = employees.OrderBy(e => e.FirstName);
                     break;
-                //case "Date":
-                //    employees = employees.OrderBy(e => e.);
-                //    break;
-                //case "date_desc":
-                //    employees = employees.OrderByDescending(e => e.EmployeeJoinedCompany);
-                //    break;
-                default:
-                    employees = employees.OrderBy(e => e.LastName);
+                case SortingOption.Name_Desc:
+                    employees = employees.OrderByDescending(e => e.FirstName);
+                    break;
+                case SortingOption.Function_Desc:
+                    employees = employees.OrderByDescending(e => e.Function);
+                    break;
+                case SortingOption.Function_Asc:
+                    employees = employees.OrderBy(e => e.Function);
+                    break;
+                case SortingOption.Birthdate_Asc:
+                    employees = employees.OrderBy(e => e.Birthdate);
+                    break;
+                case SortingOption.Birthdate_Desc:
+                    employees = employees.OrderByDescending(e => e.Birthdate);
+                    break;
+                case SortingOption.EmployeeSince_Asc:
+                    employees = employees.OrderBy(e => e.EmployeeSince);
+                    break;
+                case SortingOption.EmployeeSince_Desc:
+                    employees = employees.OrderByDescending(e => e.EmployeeSince);
+                    break;
+                default: 
+                    employees = employees.OrderBy(e => e.FirstName);
                     break;
             }
+
 
             resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
 
@@ -115,7 +119,6 @@ namespace Bumbo.Controllers
                 {
                     e.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
                 }
-                Console.WriteLine(e.AllowedDepartments.Count);
                 _employeesRepository.Add(e);
                 return RedirectToAction("Index");
 
@@ -124,7 +127,37 @@ namespace Bumbo.Controllers
             return View(newEmployee);
             
         }
-        
+
+        public IActionResult Edit(string employeeKey)
+        {
+            EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
+            employee = _mapper.Map<Employee, EmployeeCreateViewModel>(_employeesRepository.GetById(employeeKey));
+            employee.DepartmentSelectionList = _departmentsRepository.GetAllExistingDepartments().ToList();
+            employee.EmployeeKey = employeeKey;
+            return View(employee);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(EmployeeCreateViewModel employee, List<int> AllowedDepartments)
+        {
+            ModelState.Clear();
+            TryValidateModel(employee);
+            if (ModelState.IsValid)
+            {
+                var newEmployee = _mapper.Map<EmployeeCreateViewModel, Employee>(employee);
+                foreach (var selectedDep in AllowedDepartments)
+                {
+                    newEmployee.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
+                }
+                _employeesRepository.Update(newEmployee);
+                return RedirectToAction("Index");
+
+            }
+
+            return View(employee);
+        }
+
     } 
         
     

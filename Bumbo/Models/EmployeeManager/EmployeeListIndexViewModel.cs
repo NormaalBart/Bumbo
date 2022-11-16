@@ -1,30 +1,43 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Enums;
+using Newtonsoft.Json.Linq;
+using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.EmployeeManager
 {
     public class EmployeeListIndexViewModel
     {
         public List<EmployeeListItemViewModel> Employees { get; set; }
-        public string CurrentSort { get; set; }
-        public string NameSortParm { get; set; }
-        public string FunctionSortParm { get; set; }
-        public string RegionSortParm { get; set; }
-        public string StatusSortParm { get; set; }
-        public string CurrentFilter { get; set; }
- 
-        public int? PageNumber { get; set; }
-
-        [DisplayName("Inclusief medewerkers in dienst")]
+        [DisplayName("Toon medewerkers in dienst")]
         public bool IncludeActive { get; set; }
-        [DisplayName("Inclusief medewerkers niet in dienst")]
+        [DisplayName("Toon medewerkers niet in dients")]
         public bool IncludeInactive { get; set; }
         public string SearchString { get; set; }
+
+        public SortingOption CurrentSort { get; set; }
+        
+        public List<SortingOption> AvailableSortOptions { get; set; }
+
 
 
         public EmployeeListIndexViewModel()
         {
             Employees = new List<EmployeeListItemViewModel>();
+            // available sort options fill with all options from enum
+            AvailableSortOptions = new List<SortingOption>();
+            foreach (var option in Enum.GetValues(typeof(SortingOption)))
+            {
+                AvailableSortOptions.Add((SortingOption)option);
+                
+            }
+           
         }
-            
+
+        public string GetSortingDisplayName(SortingOption sortoption)
+        {
+            return sortoption.GetAttribute<DisplayAttribute>().Name;
+        }
+
     }
 }

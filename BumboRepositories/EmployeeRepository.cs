@@ -34,6 +34,10 @@ namespace BumboRepositories
             throw new NotImplementedException();
         }
 
-
+        public void Update(Employee employee)
+        {
+            _context.Update(employee);
+            _context.SaveChanges();
+        }
     }
 }

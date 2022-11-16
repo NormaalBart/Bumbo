@@ -5,9 +5,10 @@
 
 
 <div class="container ">
-    <div >
-        <form asp-action="Create" id="CreateForm">
+    <div>
+        <form asp-action="Edit" id="EditForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.EmployeeKey" />
             <div class="row">
                 <div class="col border border-3 border-dark employee-create-box">
                     <!--Persoonlijke informatie column-->
@@ -28,7 +29,7 @@
                             </div>
                         </div>
                     </div>
-                   
+
 
                     <div class="p-3">
                         <h5>Persoonlijke informatie</h5>
@@ -39,7 +40,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="BV. naam@example.com"/>
+                            <input asp-for="Email" class="form-control" placeholder="BV. naam@example.com" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -50,7 +51,7 @@
                         <div class="row">
                             <div class="form-group col">
                                 <label asp-for="PostalCode" class="control-label"></label>
-                                <input asp-for="PostalCode" class="form-control" placeholder="BV. 3943GC"/>
+                                <input asp-for="PostalCode" class="form-control" placeholder="BV. 3943GC" />
                                 <span asp-validation-for="PostalCode" class="text-danger"></span>
                             </div>
                             <div class="form-group col">
@@ -59,13 +60,13 @@
                                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
                             </div>
                         </div>
-                       
+
                     </div>
                 </div>
 
                 <div class="col border border-3 border-dark employee-create-box">
                     <!--Bedrijfs informatie column-->
-                 
+
 
                     <div class="form-group">
                         <label asp-for="EmployeeJoinedCompany" class="control-label"></label>
@@ -95,20 +96,23 @@
                         </select>
                     </div>
                 </div>
-               
+
 
             </div>
+ 
+
         </form>
     </div>
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <input type="submit" value="Voeg toe!" form="CreateForm" class="btn btn-success btn-lg" />
+    <input type="submit" value="Veranderingen Opslaan!" form="EditForm" class="btn btn-success btn-lg" />
 </div>
-
-<div class ="form-group h-100 d-flex align-items-center justify-content-center p-3">
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
