@@ -5,10 +5,6 @@ namespace BumboData.Models;
 
 public class Employee: IdentityUser
 {
-
-    [Key]
-    public int Key { get; set; }
-    
     [Required]
     public String FirstName { get; set; }
     
@@ -22,6 +18,18 @@ public class Employee: IdentityUser
 
     [Required]
     public Boolean Active { get; set; }
+
+    [Required] 
+    public string Postalcode { get; set; }
+
+    [Required] 
+    public string Housenumber { get; set; }
+
+    [Required] 
+    public DateOnly EmployeeSince { get; set; }
+
+    [Required] 
+    public string Function { get; set; }
 
     [Required]
     public Branch DefaultBranch { get; set; }

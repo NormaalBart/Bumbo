@@ -4,6 +4,7 @@ using BumboData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    partial class BumboContextModelSnapshot : ModelSnapshot
+    [Migration("20221114122534_Changed id name parameter department")]
+    partial class Changedidnameparameterdepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,11 +26,11 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Branch", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Key")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -38,8 +40,8 @@ namespace BumboData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ManagerId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("ManagerKey")
+                        .HasColumnType("int");
 
                     b.Property<int>("ShelvingDistance")
                         .HasColumnType("int");
@@ -48,9 +50,9 @@ namespace BumboData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Key");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("ManagerKey");
 
                     b.ToTable("Branches");
                 });
@@ -103,8 +105,11 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Key")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"), 1L, 1);
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -118,7 +123,7 @@ namespace BumboData.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DefaultBranchId")
+                    b.Property<int>("DefaultBranchKey")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -127,19 +132,11 @@ namespace BumboData.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("EmployeeSince")
-                        .HasColumnType("date");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Function")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Housenumber")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -167,10 +164,6 @@ namespace BumboData.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Postalcode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Preposition")
                         .HasColumnType("nvarchar(max)");
 
@@ -183,9 +176,9 @@ namespace BumboData.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Key");
 
-                    b.HasIndex("DefaultBranchId");
+                    b.HasIndex("DefaultBranchKey");
 
                     b.ToTable("Employees");
                 });
@@ -195,7 +188,7 @@ namespace BumboData.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchKey")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CloseTime")
@@ -206,7 +199,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Date");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchKey");
 
                     b.ToTable("OpeningHoursOverride");
                 });
@@ -219,15 +212,14 @@ namespace BumboData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchKey")
                         .HasColumnType("int");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("EmployeeKey")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -237,11 +229,11 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchKey");
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeKey");
 
                     b.ToTable("PlannedShifts");
                 });
@@ -254,7 +246,7 @@ namespace BumboData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchKey")
                         .HasColumnType("int");
 
                     b.Property<int>("ColiCount")
@@ -268,7 +260,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchKey");
 
                     b.ToTable("Prognoses");
                 });
@@ -278,7 +270,7 @@ namespace BumboData.Migrations
                     b.Property<int>("Key")
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchKey")
                         .HasColumnType("int");
 
                     b.Property<int>("Value")
@@ -286,7 +278,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Key");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchKey");
 
                     b.ToTable("Standards");
                 });
@@ -296,7 +288,7 @@ namespace BumboData.Migrations
                     b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchKey")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CloseTime")
@@ -307,7 +299,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("DayOfWeek");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchKey");
 
                     b.ToTable("StandardOpeningHours");
                 });
@@ -320,9 +312,8 @@ namespace BumboData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("EmployeeKey")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -335,7 +326,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeKey");
 
                     b.ToTable("UnavailableMoments");
                 });
@@ -351,12 +342,11 @@ namespace BumboData.Migrations
                     b.Property<bool>("Approved")
                         .HasColumnType("bit");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchKey")
                         .HasColumnType("int");
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("EmployeeKey")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("datetime2");
@@ -369,9 +359,9 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchKey");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeKey");
 
                     b.ToTable("WorkedShifts");
                 });
@@ -381,12 +371,12 @@ namespace BumboData.Migrations
                     b.Property<int>("AllowedDepartmentsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("AllowedEmployeesId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("AllowedEmployeesKey")
+                        .HasColumnType("int");
 
-                    b.HasKey("AllowedDepartmentsId", "AllowedEmployeesId");
+                    b.HasKey("AllowedDepartmentsId", "AllowedEmployeesKey");
 
-                    b.HasIndex("AllowedEmployeesId");
+                    b.HasIndex("AllowedEmployeesKey");
 
                     b.ToTable("Employee_allowed_Department", (string)null);
                 });
@@ -395,7 +385,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Employee", "Manager")
                         .WithMany("ManagedBranches")
-                        .HasForeignKey("ManagerId")
+                        .HasForeignKey("ManagerKey")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Manager");
@@ -424,7 +414,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "DefaultBranch")
                         .WithMany("DefaultEmployees")
-                        .HasForeignKey("DefaultBranchId")
+                        .HasForeignKey("DefaultBranchKey")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -435,7 +425,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany("OpeningHoursOverrides")
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("BranchKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -446,7 +436,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany()
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("BranchKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -458,7 +448,7 @@ namespace BumboData.Migrations
 
                     b.HasOne("BumboData.Models.Employee", "Employee")
                         .WithMany("PlannedShifts")
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("EmployeeKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -473,7 +463,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany("Prognoses")
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("BranchKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -484,7 +474,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany("Standards")
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("BranchKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -495,7 +485,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany("StandardOpeningHours")
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("BranchKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -506,7 +496,7 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Employee", "Employee")
                         .WithMany("UnavailableMoments")
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("EmployeeKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -517,13 +507,13 @@ namespace BumboData.Migrations
                 {
                     b.HasOne("BumboData.Models.Branch", "Branch")
                         .WithMany()
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("BranchKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BumboData.Models.Employee", "Employee")
                         .WithMany("WorkedShifts")
-                        .HasForeignKey("EmployeeId")
+                        .HasForeignKey("EmployeeKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -542,7 +532,7 @@ namespace BumboData.Migrations
 
                     b.HasOne("BumboData.Models.Employee", null)
                         .WithMany()
-                        .HasForeignKey("AllowedEmployeesId")
+                        .HasForeignKey("AllowedEmployeesKey")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

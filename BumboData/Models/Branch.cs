@@ -5,7 +5,7 @@ namespace BumboData.Models;
 public class Branch
 {
     [Key]
-    public int Key { get; set; }
+    public int Id { get; set; }
     
     public Employee? Manager { get; set; }
     
