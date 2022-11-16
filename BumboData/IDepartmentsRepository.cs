@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BumboData
 {
-    public interface IDepartments
+    public interface IDepartmentsRepository
     {
         IEnumerable<Department> GetAllExistingDepartments();
         Department GetById(int id);

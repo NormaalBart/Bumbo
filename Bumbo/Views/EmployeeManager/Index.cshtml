@@ -81,7 +81,7 @@
                 @Html.DisplayNameFor(model => model.Employees[0].Birthdate)
             </th>
             <th class="text-center">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)</a>
+                @Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Employees[0].Active)

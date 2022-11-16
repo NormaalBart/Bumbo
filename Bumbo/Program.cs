@@ -19,7 +19,7 @@ namespace Bumbo
             builder.Services.AddScoped<IPrognosis, PrognosisRepository>();
             builder.Services.AddScoped<IPlannedShifts, PlannedShiftsRepository>();
             builder.Services.AddScoped<IUnavailableMoments, UnavailableMomentRepository>();
-            builder.Services.AddScoped<IDepartments, DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentsRepository, DepartmentRepository>();
             builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 

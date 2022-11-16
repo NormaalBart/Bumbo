@@ -13,8 +13,8 @@ namespace Bumbo.Controllers
         private IEmployee _employeesRepository;
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
-        private IDepartments _departmentsRepository;
-        public EmployeeManagerController(IEmployee employeeService, IMapper mapper, IBranchRepository branchService, IDepartments departmentService)
+        private IDepartmentsRepository _departmentsRepository;
+        public EmployeeManagerController(IEmployee employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
         {
             _employeesRepository = employeeService;
             _mapper = mapper;
