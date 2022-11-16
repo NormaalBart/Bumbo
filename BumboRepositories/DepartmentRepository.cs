@@ -1,5 +1,6 @@
 ﻿using BumboData;
 using BumboData.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace BumboRepositories
 
         public Department GetById(int id)
         {
-            return _context.Departments.Where(d => d.Id == id).FirstOrDefault();
+            return _context.Departments.Where(d => d.Id == id).Include(d => d.AllowedEmployees).FirstOrDefault();
         }
     }
 }

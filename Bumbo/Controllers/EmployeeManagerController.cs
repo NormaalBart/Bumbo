@@ -95,18 +95,20 @@ namespace Bumbo.Controllers
         public IActionResult Create()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
-            employee.DepartmentSelectionList = _departmentsRepository.GetAllExistingDepartments().ToList();
+            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            {
+                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, false));
+            }
             return View(employee);
         }
 
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeCreateViewModel newEmployee, List<int> AllowedDepartments)
+        public IActionResult Create(EmployeeCreateViewModel newEmployee, List<int> selectedDepartments)
         {
-            // List of int 'AllowedDepartments' contains the department ID's selected in the form.
+            // List of int 'selectedDepartments' contains the department ID's selected in the form.
             // we use those keys to get the correct departments from the department and add them to the new employee.
-            // Parameter name is 'AllowedDepartments' due to Form auto binding to make it easier.
             ModelState.Clear();
             TryValidateModel(newEmployee);
             if (ModelState.IsValid)
@@ -115,7 +117,7 @@ namespace Bumbo.Controllers
                 
                 var e = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
                 e.DefaultBranch = _branchRepository.GetBranchOfUser();
-                foreach (var selectedDep in AllowedDepartments)
+                foreach (var selectedDep in selectedDepartments)
                 {
                     e.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
                 }
@@ -132,24 +134,29 @@ namespace Bumbo.Controllers
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
             employee = _mapper.Map<Employee, EmployeeCreateViewModel>(_employeesRepository.GetById(employeeKey));
-            employee.DepartmentSelectionList = _departmentsRepository.GetAllExistingDepartments().ToList();
+            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            {
+                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employeeKey, d.Id)));
+            }
+            
             employee.EmployeeKey = employeeKey;
             return View(employee);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EmployeeCreateViewModel employee, List<int> AllowedDepartments)
+        public IActionResult Edit(EmployeeCreateViewModel employee, List<int> selectedDepartments)
         {
             ModelState.Clear();
             TryValidateModel(employee);
             if (ModelState.IsValid)
             {
                 var newEmployee = _mapper.Map<EmployeeCreateViewModel, Employee>(employee);
-                foreach (var selectedDep in AllowedDepartments)
+                foreach (var selectedDep in selectedDepartments)
                 {
                     newEmployee.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
                 }
+                newEmployee.DefaultBranch = _branchRepository.GetBranchOfUser();
                 _employeesRepository.Update(newEmployee);
                 return RedirectToAction("Index");
 

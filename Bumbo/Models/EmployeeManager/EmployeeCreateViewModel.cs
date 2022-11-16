@@ -60,9 +60,10 @@ namespace Bumbo.Models.EmployeeManager
         [DisplayName("Functie")]
         public String Function { get; set; }
         
-        public List<Department> DepartmentSelectionList { get; set; }
         [DisplayName("Kies een of meerdere afdelingen voor deze medewerker.")]
         public virtual ICollection<Department> AllowedDepartments { get; set; }
+
+        public List<EmployeeDepartmentViewModel> EmployeeSelectedDepartments { get; set; }
 
         public string? EmployeeKey { get; set; }
 
@@ -73,8 +74,10 @@ namespace Bumbo.Models.EmployeeManager
             this.EmployeeJoinedCompany = DateTime.Now.Date;
             this.Birthdate = DateTime.Now.AddYears(-18);
 
-            DepartmentSelectionList = new List<Department>();
             AllowedDepartments = new List<Department>();
+
+            EmployeeSelectedDepartments = new List<EmployeeDepartmentViewModel>();
+
         }
     }
 }

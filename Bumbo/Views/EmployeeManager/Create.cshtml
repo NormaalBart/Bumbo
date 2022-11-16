@@ -85,15 +85,19 @@
 
 
                     <!--Multiple select list for departments of employee-->
-                    <div class="form-group">
-                        <label asp-for="AllowedDepartments" class="control-label"></label>
-                        <select asp-for="AllowedDepartments" class="form-control" multiple>
-                            @foreach (var item in Model.DepartmentSelectionList)
-                            {
-                                <option value="@item.Id">@item.DepartmentName</option>
-                            }
-                        </select>
+
+                    <div class="form-group text-center">
+                        <h5>Selecteer in welke afdelingen deze medewerker kan werken:</h5>
+                        @foreach (var department in Model.EmployeeSelectedDepartments)
+                        {
+
+                            <tr>
+                                <td> <input type="checkbox" name="selectedDepartments" value="@department.DepartmentId" /> @department.DepartmentName
+                            </tr>
+                                
+                        }
                     </div>
+
                 </div>
                
 

@@ -10,7 +10,7 @@ namespace BumboData
 
         void Update(Employee employee);
 
-        IEnumerable<Department> GetDepartmentsOfEmployee(string id);
+        bool EmployeeIsInDepartment(string employeeId, int departmentId);
 
     }
 }
