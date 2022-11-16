@@ -17,6 +17,26 @@ namespace BumboRepositories
         {
             this._context = context;
         }
+        public void Add(Branch branch)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Branch> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Branch GetById(int id)
+        {
+
+            return _context.Branches.Where(e => e.Id == id).FirstOrDefault();
+        }
+
+        public void Update(Branch branch)
+        {
+            throw new NotImplementedException();
+        }
         public Branch GetBranchOfUser()
         {
             // I implemented this method when branch creation and login features
