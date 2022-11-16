@@ -30,7 +30,7 @@ namespace BumboRepositories
         public Branch GetById(int id)
         {
             
-            return _context.Branches.Where(e => e.Key == id).FirstOrDefault();
+            return _context.Branches.Where(e => e.Id == id).FirstOrDefault();
         }
 
         public void Update(Branch branch)

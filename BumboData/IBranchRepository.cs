@@ -1,4 +1,5 @@
 ﻿using BumboData.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace BumboData
         Branch GetById(int key);
         void Add(Branch branch);
         void Update(Branch branch);
+        Branch GetBranchOfUser();
     }
 }
