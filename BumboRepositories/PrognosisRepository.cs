@@ -176,7 +176,7 @@ namespace BumboRepositories
             // create 3 new department prognoses for each department.
             // with default values
 
-            var standards = _context.Standards.Where(p => p.Branch.Key == prognosis.Branch.Key);
+            var standards = _context.Standards.Where(p => p.Branch.Id == prognosis.Branch.Id);
 
 
             foreach (var department in _context.Departments)

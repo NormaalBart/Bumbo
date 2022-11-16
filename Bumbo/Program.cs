@@ -21,6 +21,7 @@ namespace Bumbo
             builder.Services.AddScoped<IPrognosisRepository, PrognosisRepository>();
             builder.Services.AddScoped<IPlannedShiftsRepository, PlannedShiftsRepository>();
             builder.Services.AddScoped<IUnavailableMomentsRepository, UnavailableMomentRepository>();
+            builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
             builder.Services.AddDbContext<BumboContext>(options =>
             {
