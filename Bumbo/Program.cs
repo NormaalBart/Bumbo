@@ -11,7 +11,7 @@ namespace Bumbo
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-         
+
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
@@ -22,6 +22,9 @@ namespace Bumbo
             builder.Services.AddScoped<IDepartmentsRepository, DepartmentRepository>();
             builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+
+            builder.Services.AddScoped<IUnavailableMomentsCreate, UnavailableMomentCreateRepository>();
+
 
             builder.Services.AddDbContext<BumboContext>(options =>
             {
