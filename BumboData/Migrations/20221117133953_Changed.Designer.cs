@@ -4,6 +4,7 @@ using BumboData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    partial class BumboContextModelSnapshot : ModelSnapshot
+    [Migration("20221117133953_Changed")]
+    partial class Changed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,7 +243,7 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "d0c675fe-d1eb-4b71-819b-ec3703597487",
+                            ConcurrencyStamp = "144fb2b5-fd05-4386-a60c-6b2c697cce72",
                             DefaultBranchId = 1,
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
@@ -253,10 +255,10 @@ namespace BumboData.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELxU/f5VeGLvS+2gQ271bEL2bc9fqHr6/c8+Jd/UO8cW9yxzcRO6RMV8WxtRxw5EmA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFXKAwzCAfCGPuLkcdrCmpummNanJmDFvLTPlLdemP/NeF9xIrjXPTowSxDa3xHLDA==",
                             PhoneNumberConfirmed = false,
                             Postalcode = "1234AA",
-                            SecurityStamp = "a8bf1aee-89b0-42b0-930c-088119c24bd9",
+                            SecurityStamp = "520f2079-c202-4d5f-833b-5c1b8d1de114",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -266,7 +268,7 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "0abc6f3d-1d38-41aa-9e7b-b3b57c3ff9a1",
+                            ConcurrencyStamp = "42f818f2-7305-46c8-b0b3-07c73938c3fd",
                             DefaultBranchId = 1,
                             Email = "manager@manager.com",
                             EmailConfirmed = true,
@@ -278,10 +280,10 @@ namespace BumboData.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
                             NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAEAACcQAAAAECaN+romCHwpseuzlKFDGuz0Wk/nErQ1xZvp8wSKC0elVYkn94/UmMlChSLG/9V2lg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIyW2IFltRlzsltGG2KZRx7s8nyOZtUx/19WXmOUKn41qfAQKKEqsNoaqqZPFSu3Rw==",
                             PhoneNumberConfirmed = false,
                             Postalcode = "1234AA",
-                            SecurityStamp = "6053eed1-c3fc-4e26-83cf-e4535a89b7d3",
+                            SecurityStamp = "f4524472-cf13-4d4d-89f7-cd730df2b99f",
                             TwoFactorEnabled = false,
                             UserName = "manager"
                         },
@@ -291,7 +293,7 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "a2591366-2b8b-4cb4-bcb9-bbe0d9940e53",
+                            ConcurrencyStamp = "04fba3a4-6fc7-4417-8e70-28ac40196a97",
                             DefaultBranchId = 1,
                             Email = "medewerker@medewerker.com",
                             EmailConfirmed = true,
@@ -303,10 +305,10 @@ namespace BumboData.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MEDEWERKER@MEDEWERKER.COM",
                             NormalizedUserName = "MEDEWERKER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGoJ0etz+863ow/ALj73Od5HqoXPJV33Kf+u2dtE+aLIkl2s2UIOgsBA6W7GO4CdZg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB+1cbEPlBzDW3oSxIdOs4nwkCGbURHFpAGLF0Z77w7CZJzqs0NC1UlwObHzS30cVg==",
                             PhoneNumberConfirmed = false,
                             Postalcode = "1234AA",
-                            SecurityStamp = "db6494f1-3729-4128-8806-7adb04d0df5f",
+                            SecurityStamp = "f0479aaf-6ff4-47ed-a1c4-751f9b78011e",
                             TwoFactorEnabled = false,
                             UserName = "medewerker"
                         });
@@ -592,21 +594,21 @@ namespace BumboData.Migrations
                         new
                         {
                             Id = "administrator",
-                            ConcurrencyStamp = "64ee46b5-61f6-461f-baf7-35a040f1353d",
+                            ConcurrencyStamp = "d7dc692a-ffc4-4639-acdd-b29c0abbd0f2",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "manager",
-                            ConcurrencyStamp = "a6d543ce-4444-4e70-8549-38010647eacb",
+                            ConcurrencyStamp = "b5dfb148-32a9-46aa-a725-c26d14f38d53",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "employee",
-                            ConcurrencyStamp = "65f3b20f-9801-4b4e-9074-89622442095a",
+                            ConcurrencyStamp = "5621a84a-6a83-47a3-82c4-c6849af98419",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });
@@ -701,18 +703,18 @@ namespace BumboData.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
-                            RoleId = "1"
+                            UserId = "1",
+                            RoleId = "administrator"
                         },
                         new
                         {
-                            UserId = "3a792773-527d-4bb7-8319-6db070350d38",
-                            RoleId = "2"
+                            UserId = "2",
+                            RoleId = "manager"
                         },
                         new
                         {
-                            UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            RoleId = "3"
+                            UserId = "3",
+                            RoleId = "employee"
                         });
                 });
 

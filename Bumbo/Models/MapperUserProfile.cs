@@ -21,8 +21,8 @@ namespace Bumbo.Models
             CreateMap<PlannedShift, ShiftViewModel>();
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
-            CreateMap<Branch, BranchModel>();
-            CreateMap<BranchModel, Branch>();
+            CreateMap<Branch, BranchuViewModel>();
+            CreateMap<BranchuViewModel, Branch>();
 
         }
     }

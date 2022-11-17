@@ -1,4 +1,5 @@
 ﻿@using BumboData.Models
+@using BumboData.Enums
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
@@ -26,7 +27,7 @@
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bumbo</a>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
-                            @if (User.IsInRole("Administrator"))
+                            @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Branch" asp-action="Index">Filiaalmanagement</a>
@@ -36,7 +37,7 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Medewerker Management</a>
                                 </li>
                             }
-                            else if (User.IsInRole("Manager"))
+                            else if (User.IsInRole(RoleType.MANAGER.Name))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Medewerker Management</a>
@@ -48,7 +49,7 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Roster Management</a>
                                 </li>
                             }
-                            else if (User.IsInRole("Medewerker"))
+                            else if (User.IsInRole(RoleType.EMPLOYEE.Name))
                             {
                                 <h1>Medewerker</h1>
                                 <li class="nav-item">

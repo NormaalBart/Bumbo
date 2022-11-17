@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.BranchController
 {
-    public class BranchModel
+    public class BranchuViewModel
     {
 
         [DisplayName("Naam")]

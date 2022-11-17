@@ -1,7 +1,7 @@
 ﻿using Bumbo.Models.AccountController;
 using BumboData;
+using BumboData.Enums;
 using BumboData.Models;
-using BumboRepositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +25,8 @@ namespace Bumbo.Controllers
         {
             if (_signInManager.IsSignedIn(User))
             {
-                await _signInManager.SignOutAsync();
+                Employee employee = await _userManager.GetUserAsync(User);
+                return await RedirectToPageAsync(employee);
             }
             return View();
         }
@@ -38,32 +39,38 @@ namespace Bumbo.Controllers
                 return View(loginModel);
             }
 
-            var user = _employeeRepository.GetByEmail(loginModel.EmailAddress);
+            var employee = _employeeRepository.GetByEmail(loginModel.EmailAddress);
 
-            if (user != null)
+            if (employee != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(user, loginModel.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(employee, loginModel.Password, false, false);
                 if (result.Succeeded)
                 {
-                    //User does not have roles yet assigned, so have to get from database.
-                    var roles = await _userManager.GetRolesAsync(user);
-                    if (roles.Contains("Administrator"))
-                    {
-                        return Redirect("Branch/Index");
-                    }
-                    else if (roles.Contains("Manager"))
-                    {
-                        return Redirect("EmployeeManager/Index");
-                    }
-                    else if (roles.Contains("Medewerker"))
-                    {
-                        return Redirect("Employee/Index");
-                    }
+                    return await RedirectToPageAsync(employee);
                 }
             }
 
             ModelState.AddModelError(string.Empty, "Onbekend account");
             return View(loginModel);
+        }
+
+        private async Task<IActionResult> RedirectToPageAsync(Employee employee)
+        {
+            //User does not have roles yet assigned, so have to get from database.
+            var roles = await _userManager.GetRolesAsync(employee);
+            if (roles.Contains(RoleType.ADMINISTRATOR.Name))
+            {
+                return RedirectToAction("Index", "Branch");
+            }
+            else if (roles.Contains(RoleType.MANAGER.Name))
+            {
+                return RedirectToAction("Index", "EmployeeManager");
+            }
+            else if (roles.Contains(RoleType.EMPLOYEE.Name))
+            {
+                return RedirectToAction("Index", "Employee");
+            }
+            return RedirectToAction("Login");
         }
 
         public async Task<IActionResult> Logout()

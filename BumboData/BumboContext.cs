@@ -1,4 +1,5 @@
-﻿using BumboData.Models;
+﻿using BumboData.Enums;
+using BumboData.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -58,9 +59,9 @@ namespace BumboData
             modelBuilder.Entity<StandardOpeningHours>().HasKey(e => new { e.BranchId, e.DayOfWeek });
 
             modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Id = "1", Name = "Administrator", NormalizedName = "ADMINISTRATOR" },
-                new IdentityRole { Id = "2", Name = "Manager", NormalizedName = "MANAGER" },
-                new IdentityRole { Id = "3", Name = "Medewerker", NormalizedName = "MEDEWERKER" });
+                new IdentityRole { Id = RoleType.ADMINISTRATOR.RoleId, Name = RoleType.ADMINISTRATOR.Name, NormalizedName = RoleType.ADMINISTRATOR.NormalizedName },
+                new IdentityRole { Id = RoleType.MANAGER.RoleId, Name = RoleType.MANAGER.Name, NormalizedName = RoleType.MANAGER.NormalizedName },
+                new IdentityRole { Id = RoleType.EMPLOYEE.RoleId, Name = RoleType.EMPLOYEE.Name, NormalizedName = RoleType.EMPLOYEE.NormalizedName });
 
             modelBuilder.Entity<Branch>().HasData(
                 new Branch
@@ -83,81 +84,84 @@ namespace BumboData
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
 
             modelBuilder.Entity<Department>().HasData(
-                new Department { Id = 1, DepartmentName = "Kassa" },
-                new Department { Id = 2, DepartmentName = "Vers" },
-                new Department { Id = 3, DepartmentName = "Vullers" }
-                );
+                new Department { Id = DepartmentType.CASSIERS.DepartmentId, DepartmentName = DepartmentType.CASSIERS.Name },
+                new Department { Id = DepartmentType.FRESH.DepartmentId, DepartmentName = DepartmentType.FRESH.Name },
+                new Department { Id = DepartmentType.FILLERS.DepartmentId, DepartmentName = DepartmentType.FILLERS.Name }
+                ); ;
 
             var hasher = new PasswordHasher<Employee>();
             modelBuilder.Entity<Employee>().HasData(
                 // Admin
                 new Employee
                 {
-                    Id = "1",
-                    Key = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
+                    Id = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
                     DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Jan",
                     LastName = "Piet",
                     UserName = "admin",
+                    NormalizedUserName = "ADMIN",
                     PasswordHash = hasher.HashPassword(null, "admin"),
                     Email = "admin@admin.com",
+                    NormalizedEmail = "ADMIN@ADMIN.COM",
                     EmailConfirmed = true,
                     Postalcode = "1234AA",
                     Housenumber = "10",
-                    Function = "Administrator"
+                    Function = RoleType.ADMINISTRATOR.Name
                 },
                 // Manager
                 new Employee
                 {
-                    Id = "2",
-                    Key = "3a792773-527d-4bb7-8319-6db070350d38",
+                    Id = "3a792773-527d-4bb7-8319-6db070350d38",
                     DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Manager",
                     LastName = "Piet",
                     UserName = "manager",
+                    NormalizedUserName = "MANAGER",
                     PasswordHash = hasher.HashPassword(null, "manager"),
                     Email = "manager@manager.com",
+                    NormalizedEmail = "MANAGER@MANAGER.COM",
                     EmailConfirmed = true,
                     Postalcode = "1234AA",
                     Housenumber = "10",
-                    Function = "Manager"
+                    Function = RoleType.MANAGER.Name
                 },
                 // Medewerker
                 new Employee
                 {
-                    Id = "3",
-                    Key = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                    Id = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                     DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Medewerker",
                     LastName = "Piet",
                     UserName = "medewerker",
+                    NormalizedUserName = "MEDEWERKER",
                     PasswordHash = hasher.HashPassword(null, "medewerker"),
                     Email = "medewerker@medewerker.com",
+                    NormalizedEmail = "MEDEWERKER@MEDEWERKER.COM",
                     EmailConfirmed = true,
                     Postalcode = "1234AA",
                     Housenumber = "10",
-                    Function = "Vuller"
-                }); 
+                    Function = DepartmentType.FRESH.Name,
+                });
 
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
                     RoleId = "1",
-                    UserId = "1",
+                    UserId = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
                 }, new IdentityUserRole<string>
                 {
                     RoleId = "2",
-                    UserId = "2",
+                    UserId = "3a792773-527d-4bb7-8319-6db070350d38",
                 }, new IdentityUserRole<string>
                 {
                     RoleId = "3",
-                    UserId = "3",
+                    UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                 });
         }
 

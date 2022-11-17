@@ -25,7 +25,7 @@ namespace Bumbo.Controllers.Admin
         public ActionResult Index()
         {
             var branches = _branchRepository.GetAll();
-            List<BranchModel> result = _mapper.Map<List<BranchModel>>(branches);
+            List<BranchuViewModel> result = _mapper.Map<List<BranchuViewModel>>(branches);
             return View(result);
         }
 
@@ -38,7 +38,7 @@ namespace Bumbo.Controllers.Admin
         // POST: BranchController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BranchModel branchModel)
+        public ActionResult Create(BranchuViewModel branchModel)
         {
             if (ModelState.IsValid)
             {

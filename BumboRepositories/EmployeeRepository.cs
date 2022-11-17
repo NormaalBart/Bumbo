@@ -1,4 +1,5 @@
 ﻿using BumboData;
+using BumboData.Enums;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -39,12 +40,12 @@ namespace BumboRepositories
 
         public Employee GetByEmail(string emailAddress)
         {
-            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.Email.ToUpper() == emailAddress.ToUpper()).FirstOrDefault();
+            return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.NormalizedEmail == emailAddress.ToUpper()).FirstOrDefault();
         }
 
         public IEnumerable<Employee> GetAllManagers()
         {
-            var users = _context.UserRoles.Where(role => role.RoleId == "2").Select(role=> role.UserId).ToList();
+            var users = _context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId).Select(role=> role.UserId).ToList();
             return _context.Employees.Where(employee => users.Contains(employee.Id));
         }
 
