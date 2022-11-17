@@ -30,10 +30,11 @@ namespace BumboRepositories
             return _context.Employees.Include(e => e.AllowedDepartments).Where(e => e.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
+        public bool EmployeeIsInDepartment(string employeeId, int departmentId)
         {
-            // return _context.Employees.Where(e => e.Id == id).Include(e => e.Departments).SelectMany(e => e.Departments);
-            throw new NotImplementedException();
+            // returns bool if an employee has a department with the department id
+            return _context.Employees.Where(e => e.Id == employeeId).Include(e => e.AllowedDepartments).Any(e => e.AllowedDepartments.Any(d => d.Id == departmentId));
+
         }
 
         public Employee GetByEmail(string emailAddress)
@@ -55,6 +56,12 @@ namespace BumboRepositories
         object IEmployeeRepository.GetAll()
         {
             throw new NotImplementedException();
+        }
+        
+        public void Update(Employee employee)
+        {
+            _context.Update(employee);
+            _context.SaveChanges();
         }
     }
 }

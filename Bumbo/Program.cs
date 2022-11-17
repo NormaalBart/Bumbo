@@ -17,12 +17,14 @@ namespace Bumbo
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            builder.Services.AddScoped<IPrognosisRepository, PrognosisRepository>();
-            builder.Services.AddScoped<IPlannedShiftsRepository, PlannedShiftsRepository>();
-            builder.Services.AddScoped<IUnavailableMomentsRepository, UnavailableMomentRepository>();
+            builder.Services.AddScoped<IEmployee, EmployeeRepository>();
+            builder.Services.AddScoped<IPrognosis, PrognosisRepository>();
+            builder.Services.AddScoped<IPlannedShifts, PlannedShiftsRepository>();
+            builder.Services.AddScoped<IUnavailableMoments, UnavailableMomentRepository>();
+            builder.Services.AddScoped<IDepartmentsRepository, DepartmentRepository>();
             builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+
             builder.Services.AddDbContext<BumboContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Bumbo"));

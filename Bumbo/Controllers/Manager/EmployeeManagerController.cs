@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Bumbo.Models;
 using Bumbo.Models.EmployeeManager;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using BumboData.Enums;
 
 namespace Bumbo.Controllers
 {
@@ -14,66 +16,115 @@ namespace Bumbo.Controllers
     {
         private IEmployeeRepository _employeesRepository;
         private IMapper _mapper;
-
-        public EmployeeManagerController(IEmployeeRepository employeeService, IMapper mapper)
+        private IBranchRepository _branchRepository;
+        private IDepartmentsRepository _departmentsRepository;
+        public EmployeeManagerController(IEmployee employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
         {
             _employeesRepository = employeeService;
             _mapper = mapper;
+            _branchRepository = branchService;
+            _departmentsRepository = departmentService; 
+
         }
 
-        public IActionResult Index()
+
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, SortingOption currentSort)
         {
-            IEnumerable<Employee> employees;
-            if (User.IsInRole("Administrator"))
-            {
-                employees = _employeesRepository.GetAllManagers();
-            }
-            else
-            {
-                var currentUserID = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                Employee manager = _employeesRepository.GetById(currentUserID);
-                employees = _employeesRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId);
-            }
-            EmployeeListIndexViewModel list = new EmployeeListIndexViewModel();
-            list.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
-            return View(list);
-        }
 
-        public IActionResult CreateEmployee()
+            EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
+
+           
+
+            var employees = _employeesRepository.GetAll();
+            if (!includeInactive && !includeActive)
+            {
+                employees = employees.Where(e => e.Active);
+                resultingListViewModel.IncludeActive = true;
+            }
+            else if (!includeInactive && includeActive)
+            {
+                employees = employees.Where(e => e.Active);
+            }
+            else if (includeInactive && !includeActive)
+            {
+                employees = employees.Where(e => e.Active == false);
+            }
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // search in employees if any of the columns contains the searchstring
+                resultingListViewModel.SearchString = searchString;
+                searchString = searchString.ToLower();
+                employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString) || e.LastName.ToLower().Contains(searchString));
+            }
+
+            switch (currentSort)
+            {
+                // case for each sortingoption, with asc and desc
+                case SortingOption.Name_Asc:
+                    employees = employees.OrderBy(e => e.FirstName);
+                    break;
+                case SortingOption.Name_Desc:
+                    employees = employees.OrderByDescending(e => e.FirstName);
+                    break;
+                case SortingOption.Function_Desc:
+                    employees = employees.OrderByDescending(e => e.Function);
+                    break;
+                case SortingOption.Function_Asc:
+                    employees = employees.OrderBy(e => e.Function);
+                    break;
+                case SortingOption.Birthdate_Asc:
+                    employees = employees.OrderBy(e => e.Birthdate);
+                    break;
+                case SortingOption.Birthdate_Desc:
+                    employees = employees.OrderByDescending(e => e.Birthdate);
+                    break;
+                case SortingOption.EmployeeSince_Asc:
+                    employees = employees.OrderBy(e => e.EmployeeSince);
+                    break;
+                case SortingOption.EmployeeSince_Desc:
+                    employees = employees.OrderByDescending(e => e.EmployeeSince);
+                    break;
+                default: 
+                    employees = employees.OrderBy(e => e.FirstName);
+                    break;
+            }
+
+
+            resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
+
+            return View(resultingListViewModel);
+        }
+        
+        public IActionResult Create()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
-            employee.BirthDate = DateTime.Now.AddYears(-18);
+            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            {
+                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, false));
+            }
             return View(employee);
         }
 
-        public IActionResult CreateManager()
-        {
-            EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
-            employee.BirthDate = DateTime.Now.AddYears(-18);
-            return View(employee);
-        }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateEmployee(EmployeeCreateViewModel newEmployee)
+        public IActionResult Create(EmployeeCreateViewModel newEmployee, List<int> selectedDepartments)
         {
+            // List of int 'selectedDepartments' contains the department ID's selected in the form.
+            // we use those keys to get the correct departments from the department and add them to the new employee.
+            ModelState.Clear();
+            TryValidateModel(newEmployee);
             if (ModelState.IsValid)
             {
+   
+                
                 var e = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
-                //e.Departments.Add(new Departments());
-                // TODO: Redo this code since departments are now stored in the database
-                /*if (newEmployee.InCassiereDep)
+                e.DefaultBranch = _branchRepository.GetBranchOfUser();
+                foreach (var selectedDep in selectedDepartments)
                 {
-                    e.Departments.Add(new Departments(e.Id, DepartmentEnum.Cassiere));
+                    e.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
                 }
-                if (newEmployee.InStockersDep)
-                {
-                    e.Departments.Add(new Departments(e.Id, DepartmentEnum.Stocker));
-                }
-                if (newEmployee.InFreshDep)
-                {
-                    e.Departments.Add(new Departments(e.Id, DepartmentEnum.Fresh));
-                }*/
                 _employeesRepository.Add(e);
                 return RedirectToAction("Index");
 
@@ -83,7 +134,42 @@ namespace Bumbo.Controllers
 
         }
 
-    }
+        public IActionResult Edit(string employeeKey)
+        {
+            EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
+            employee = _mapper.Map<Employee, EmployeeCreateViewModel>(_employeesRepository.GetById(employeeKey));
+            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            {
+                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employeeKey, d.Id)));
+            }
+            
+            employee.EmployeeKey = employeeKey;
+            return View(employee);
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(EmployeeCreateViewModel employee, List<int> selectedDepartments)
+        {
+            ModelState.Clear();
+            TryValidateModel(employee);
+            if (ModelState.IsValid)
+            {
+                var newEmployee = _mapper.Map<EmployeeCreateViewModel, Employee>(employee);
+                foreach (var selectedDep in selectedDepartments)
+                {
+                    newEmployee.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
+                }
+                newEmployee.DefaultBranch = _branchRepository.GetBranchOfUser();
+                _employeesRepository.Update(newEmployee);
+                return RedirectToAction("Index");
 
+            }
+
+            return View(employee);
+        }
+
+    } 
+        
+    
 }
