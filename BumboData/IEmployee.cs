@@ -8,7 +8,9 @@ namespace BumboData
         Employee GetById(string id);
         void Add(Employee employee);
 
-        IEnumerable<Department> GetDepartmentsOfEmployee(string id);
+        void Update(Employee employee);
+
+        bool EmployeeIsInDepartment(string employeeId, int departmentId);
 
     }
 }
