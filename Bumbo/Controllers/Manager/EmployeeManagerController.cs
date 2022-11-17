@@ -113,6 +113,9 @@ namespace Bumbo.Controllers
             {
                 employee.Function = "Manager";
                 employee.Branches = _branchRepository.GetUnmanagedBranches();
+            } else
+            {
+                employee.SelectedBranch = 1;
             }
             return View(employee);
         }
@@ -156,11 +159,11 @@ namespace Bumbo.Controllers
                     employee.DefaultBranch = _branchRepository.GetById(employee.DefaultBranchId);
                     employee.DefaultBranch.Manager = employee;
                     _branchRepository.Update(employee.DefaultBranch);
-                    _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
+                    await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
                 }
                 else
                 {
-                    _userManager.AddToRoleAsync(employee, RoleType.EMPLOYEE.Name);
+                    await _userManager.AddToRoleAsync(employee, RoleType.EMPLOYEE.Name);
                 }
                 return RedirectToAction("Index");
 

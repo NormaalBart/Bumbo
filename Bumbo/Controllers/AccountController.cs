@@ -23,10 +23,13 @@ namespace Bumbo.Controllers
 
         public async Task<IActionResult> Login()
         {
-            if (_signInManager.IsSignedIn(User))
+            if (User != null && _signInManager.IsSignedIn(User))
             {
                 Employee employee = await _userManager.GetUserAsync(User);
-                return await RedirectToPageAsync(employee);
+                if (employee != null)
+                {
+                    return await RedirectToPageAsync(employee);
+                }
             }
             return View();
         }

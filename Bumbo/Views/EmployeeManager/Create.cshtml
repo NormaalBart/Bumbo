@@ -93,10 +93,10 @@
                         <input asp-for="EmployeeJoinedCompany" class="form-control" />
                         <span asp-validation-for="EmployeeJoinedCompany" class="text-danger"></span>
                     </div>
-                    @Html.HiddenFor(m => m.AllowedDepartments)
                     <!--Multiple select list for departments of employee-->
                     @if (User.IsInRole(RoleType.MANAGER.Name))
                     {
+                        @Html.HiddenFor(m => m.SelectedBranch)
                         <div class="form-group">
                             <label asp-for="Function" class="control-label"></label>
                             <input asp-for="Function" class="form-control" />
@@ -116,6 +116,7 @@
                     }
                     else if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                     {
+                        @Html.HiddenFor(m => m.AllowedDepartments)
                         @Html.HiddenFor(m => m.Function)
                         <label asp-for="SelectedBranch" class="control-label"></label>
                         <select class="form-control" asp-for="SelectedBranch">
