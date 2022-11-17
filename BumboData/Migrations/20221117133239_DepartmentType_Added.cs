@@ -8,20 +8,6 @@ namespace BumboData.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "1", "1" });
-
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "2", "2" });
-
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "3", "3" });
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
@@ -68,21 +54,6 @@ namespace BumboData.Migrations
                 keyValue: "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                 columns: new[] { "ConcurrencyStamp", "Function", "PasswordHash", "SecurityStamp" },
                 values: new object[] { "17fdbff7-c932-46d6-8187-3fd3c08ce023", "Vers", "AQAAAAEAACcQAAAAENx7YDjDyn4TDUfZAGpXWWJ7oMNboazF2NGiv2Vz3ud1725TqO5fR8Za67M+jGp/Rw==", "c129384b-b87a-4448-9bd9-11af51382afc" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "administrator", "1" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "manager", "2" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "employee", "3" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

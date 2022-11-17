@@ -149,18 +149,19 @@ namespace BumboData
                     Function = DepartmentType.FRESH.Name,
                 });
 
+
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
-                    RoleId = "1",
+                    RoleId = RoleType.ADMINISTRATOR.RoleId,
                     UserId = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
                 }, new IdentityUserRole<string>
                 {
-                    RoleId = "2",
+                    RoleId = RoleType.MANAGER.RoleId,
                     UserId = "3a792773-527d-4bb7-8319-6db070350d38",
                 }, new IdentityUserRole<string>
                 {
-                    RoleId = "3",
+                    RoleId = RoleType.EMPLOYEE.RoleId,
                     UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                 });
         }

@@ -451,20 +451,7 @@ namespace BumboData.Migrations
                     { 1, 6, new DateTime(2022, 11, 16, 20, 0, 0, 0, DateTimeKind.Local), new DateTime(2022, 11, 16, 8, 0, 0, 0, DateTimeKind.Local) }
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "1", "1" });
 
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "2", "2" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "3", "3" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

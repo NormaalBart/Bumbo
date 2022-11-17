@@ -8,21 +8,6 @@ namespace BumboData.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "administrator", "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2" });
-
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "manager", "3a792773-527d-4bb7-8319-6db070350d38" });
-
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "employee", "d916944e-c1aa-44d6-83a0-cb04c5734e6b" });
-
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
@@ -43,16 +28,6 @@ namespace BumboData.Migrations
                 keyValue: "manager",
                 column: "ConcurrencyStamp",
                 value: "3dc0c308-6fc7-4b13-a81b-6e3bf94dc575");
-
-            migrationBuilder.InsertData(
-                table: "AspNetUserRoles",
-                columns: new[] { "RoleId", "UserId" },
-                values: new object[,]
-                {
-                    { "1", "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2" },
-                    { "2", "3a792773-527d-4bb7-8319-6db070350d38" },
-                    { "3", "d916944e-c1aa-44d6-83a0-cb04c5734e6b" }
-                });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
@@ -78,21 +53,6 @@ namespace BumboData.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "1", "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2" });
-
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "2", "3a792773-527d-4bb7-8319-6db070350d38" });
-
-            migrationBuilder.DeleteData(
-                table: "AspNetUserRoles",
-                keyColumns: new[] { "RoleId", "UserId" },
-                keyValues: new object[] { "3", "d916944e-c1aa-44d6-83a0-cb04c5734e6b" });
-
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
