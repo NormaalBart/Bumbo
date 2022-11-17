@@ -52,16 +52,16 @@ namespace BumboRepositories
         {
             return _context.Employees.Where(employee => employee.DefaultBranchId == branch);
         }
-
-        object IEmployeeRepository.GetAll()
-        {
-            throw new NotImplementedException();
-        }
         
         public void Update(Employee employee)
         {
             _context.Update(employee);
             _context.SaveChanges();
+        }
+
+        public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
+        {
+            return _context.Employees.Where(e => e.Id == id).Include(e => e.AllowedDepartments).FirstOrDefault().AllowedDepartments;
         }
     }
 }

@@ -18,12 +18,12 @@ namespace Bumbo.Controllers
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
         private IDepartmentsRepository _departmentsRepository;
-        public EmployeeManagerController(IEmployee employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
+        public EmployeeManagerController(IEmployeeRepository employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
         {
             _employeesRepository = employeeService;
             _mapper = mapper;
             _branchRepository = branchService;
-            _departmentsRepository = departmentService; 
+            _departmentsRepository = departmentService;
 
         }
 
@@ -33,7 +33,7 @@ namespace Bumbo.Controllers
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
 
-           
+
 
             var employees = _employeesRepository.GetAll();
             if (!includeInactive && !includeActive)
@@ -85,7 +85,7 @@ namespace Bumbo.Controllers
                 case SortingOption.EmployeeSince_Desc:
                     employees = employees.OrderByDescending(e => e.EmployeeSince);
                     break;
-                default: 
+                default:
                     employees = employees.OrderBy(e => e.FirstName);
                     break;
             }
@@ -95,7 +95,7 @@ namespace Bumbo.Controllers
 
             return View(resultingListViewModel);
         }
-        
+
         public IActionResult Create()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
@@ -106,7 +106,7 @@ namespace Bumbo.Controllers
             return View(employee);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(EmployeeCreateViewModel newEmployee, List<int> selectedDepartments)
@@ -117,8 +117,8 @@ namespace Bumbo.Controllers
             TryValidateModel(newEmployee);
             if (ModelState.IsValid)
             {
-   
-                
+
+
                 var e = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
                 e.DefaultBranch = _branchRepository.GetBranchOfUser();
                 foreach (var selectedDep in selectedDepartments)
@@ -142,7 +142,7 @@ namespace Bumbo.Controllers
             {
                 employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employeeKey, d.Id)));
             }
-            
+
             employee.EmployeeKey = employeeKey;
             return View(employee);
         }
@@ -169,7 +169,7 @@ namespace Bumbo.Controllers
             return View(employee);
         }
 
-    } 
-        
-    
+    }
+
+
 }

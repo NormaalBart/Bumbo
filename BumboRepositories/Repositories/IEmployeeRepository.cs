@@ -16,6 +16,8 @@ namespace BumboData
 
         IEnumerable<Employee> GetAllManagers();
         IEnumerable<Employee> GetAllEmployeesOfBranch(int defaultBranchId);
-        object GetAll();
+        IEnumerable<Employee> GetAll();
+        bool EmployeeIsInDepartment(string employeeKey, int id);
+        void Update(Employee newEmployee);
     }
 }
