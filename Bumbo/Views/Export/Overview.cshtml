@@ -1,0 +1,65 @@
+﻿@model Bumbo.Models.ExportManager.ExportOverviewViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Uren overzicht</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 sticky-top" style="height: 100%;">
+            @foreach (var modelSelectableMonth in Model.SelectableMonths)
+            {
+                if (modelSelectableMonth.Month == Model.SelectedMonth.Month)
+                {
+                    <a class="btn my-1 w-100 btn-primary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
+                }
+                else
+                {
+                    <a asp-action="Overview" asp-route-SelectedMonth="@modelSelectableMonth.ToString("yyyy-MM")" class="btn my-1 w-100 py-1 btn-secondary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
+                }
+            }
+        </div>
+        <div class="col-md-8">
+            <table class="w-100" style="border-style: dashed">
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+                <tr style="height: 150px">
+                    <td></td><td></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-2 sticky-top" style="height: 100%;">
+            <h3>Filters</h3>
+            <form asp-action="Overview" method="get">
+                <div class="form-group w-100">
+                    <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
+                    <input type="search" name="SearchDepartmentsQuery" class="export-screen-input-field my-2" value="@Model.SearchDepartmentsQuery" placeholder="Afdeling naam"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
