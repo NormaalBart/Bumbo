@@ -71,38 +71,38 @@ namespace BumboData.Migrations
                 });
 
             modelBuilder.Entity("BumboData.Models.Department", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                            {
+                                b.Property<int>("Id")
+                                    .ValueGeneratedOnAdd()
+                                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("DepartmentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                                b.Property<string>("DepartmentName")
+                                    .IsRequired()
+                                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                                b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                                b.ToTable("Departments");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DepartmentName = "Kassa"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DepartmentName = "Vers"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DepartmentName = "Vullers"
-                        });
-                });
+                                b.HasData(
+                                    new
+                                    {
+                                        Id = 1,
+                                        DepartmentName = "Kassa"
+                                    },
+                                    new
+                                    {
+                                        Id = 2,
+                                        DepartmentName = "Vers"
+                                    },
+                                    new
+                                    {
+                                        Id = 3,
+                                        DepartmentName = "Vullers"
+                                    });
+                            });
 
             modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
                 {

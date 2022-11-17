@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BumboData.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bumbo.Controllers
 {
@@ -14,12 +15,15 @@ namespace Bumbo.Controllers
     [Authorize(Roles = "Administrator,Manager")]
     public class EmployeeManagerController : Controller
     {
+        private UserManager<Employee> _userManager;
         private IEmployeeRepository _employeesRepository;
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
         private IDepartmentsRepository _departmentsRepository;
-        public EmployeeManagerController(IEmployeeRepository employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
+
+        public EmployeeManagerController(UserManager<Employee> userManager, IEmployeeRepository employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
         {
+            _userManager = userManager;
             _employeesRepository = employeeService;
             _mapper = mapper;
             _branchRepository = branchService;
@@ -32,8 +36,6 @@ namespace Bumbo.Controllers
         {
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
-
-
 
             var employees = _employeesRepository.GetAll();
             if (!includeInactive && !includeActive)
@@ -99,9 +101,18 @@ namespace Bumbo.Controllers
         public IActionResult Create()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
+
+
             foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
             {
-                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, false));
+                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName,
+                    User.IsInRole(RoleType.ADMINISTRATOR.Name)));
+            }
+
+            if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
+            {
+                employee.Function = "Manager";
+                employee.Branches = _branchRepository.GetUnmanagedBranches();
             }
             return View(employee);
         }
@@ -109,7 +120,7 @@ namespace Bumbo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeCreateViewModel newEmployee, List<int> selectedDepartments)
+        public async Task<IActionResult> CreateAsync(EmployeeCreateViewModel newEmployee, List<int> selectedDepartments)
         {
             // List of int 'selectedDepartments' contains the department ID's selected in the form.
             // we use those keys to get the correct departments from the department and add them to the new employee.
@@ -117,15 +128,40 @@ namespace Bumbo.Controllers
             TryValidateModel(newEmployee);
             if (ModelState.IsValid)
             {
-
-
-                var e = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
-                e.DefaultBranch = _branchRepository.GetBranchOfUser();
-                foreach (var selectedDep in selectedDepartments)
+                var employee = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
+                if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                 {
-                    e.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
+                    employee.DefaultBranchId = (int)newEmployee.SelectedBranch;
                 }
-                _employeesRepository.Add(e);
+                else
+                {
+                    Employee manager = await _userManager.GetUserAsync(User);
+                    employee.DefaultBranch = manager.DefaultBranch;
+                    foreach (var selectedDep in selectedDepartments)
+                    {
+                        employee.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
+                    }
+                }
+
+                if (_employeesRepository.Exists(employee))
+                {
+                    ModelState.AddModelError(string.Empty, "Deze gebruiker bestaat al met deze naam.");
+                    return View();
+                }
+
+                _employeesRepository.Add(employee);
+                if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
+                {
+                    await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
+                    employee.DefaultBranch = _branchRepository.GetById(employee.DefaultBranchId);
+                    employee.DefaultBranch.Manager = employee;
+                    _branchRepository.Update(employee.DefaultBranch);
+                    _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
+                }
+                else
+                {
+                    _userManager.AddToRoleAsync(employee, RoleType.EMPLOYEE.Name);
+                }
                 return RedirectToAction("Index");
 
             }
@@ -160,7 +196,6 @@ namespace Bumbo.Controllers
                 {
                     newEmployee.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
                 }
-                newEmployee.DefaultBranch = _branchRepository.GetBranchOfUser();
                 _employeesRepository.Update(newEmployee);
                 return RedirectToAction("Index");
 

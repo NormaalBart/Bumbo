@@ -59,6 +59,14 @@ namespace BumboData.Migrations
                 keyValue: "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash", "SecurityStamp" },
                 values: new object[] { "db684bd5-17de-4227-b50f-dbd7283abbdb", "AQAAAAEAACcQAAAAEBz9F8lLUXMOPPmH4LRtgpWEQ+v0Bw95d7wEZLK0jctVhc2Hsp7qIjELM/9D9BE8cQ==", "a0faf8bb-ac45-4dc2-b1e3-70defd329b11" });
+
+            migrationBuilder.UpdateData(
+                table: "Branches",
+                keyColumn: "Id",
+                keyValue: "1",
+                columns: new[] { "ManagerId" },
+                values: new object[] { "3a792773-527d-4bb7-8319-6db070350d38" });
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

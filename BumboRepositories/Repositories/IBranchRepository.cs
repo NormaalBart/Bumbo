@@ -14,6 +14,6 @@ namespace BumboData
         Branch GetById(int key);
         void Add(Branch branch);
         void Update(Branch branch);
-        Branch GetBranchOfUser();
+        List<Branch> GetUnmanagedBranches();
     }
 }

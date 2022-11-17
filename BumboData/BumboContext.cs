@@ -149,7 +149,6 @@ namespace BumboData
                     Function = DepartmentType.FRESH.Name,
                 });
 
-
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {

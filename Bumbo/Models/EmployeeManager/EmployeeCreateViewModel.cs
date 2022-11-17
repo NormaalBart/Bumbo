@@ -30,6 +30,7 @@ namespace Bumbo.Models.EmployeeManager
         [DataType(DataType.Date)]
         public DateTime Birthdate { get; set; }
 
+
         [Required]
         [DisplayName("Is momenteel in dienst")]
         public Boolean Active { get; set; }
@@ -39,11 +40,10 @@ namespace Bumbo.Models.EmployeeManager
         [DisplayName("Email")]
         public string Email { get; set; }
 
-
         [Required]
         [DisplayName("Wachtwoord")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public String Password { get; set; }
 
         [Required]
         [DisplayName("Telefoon")]
@@ -65,7 +65,13 @@ namespace Bumbo.Models.EmployeeManager
         [Required]
         [DisplayName("Functie")]
         public String Function { get; set; }
-        
+
+        [Required]
+        [DisplayName("Van welke branch is deze persoon de manager?")]
+        public int? SelectedBranch { get; set; }
+
+        public List<Branch> Branches { get; set; }
+
         [DisplayName("Kies een of meerdere afdelingen voor deze medewerker.")]
         public virtual ICollection<Department> AllowedDepartments { get; set; }
 
@@ -73,8 +79,13 @@ namespace Bumbo.Models.EmployeeManager
 
         public string? EmployeeKey { get; set; }
 
+        public string FullName
+        {
+            get => $"{LastName}, {FirstName} {Preposition}";
+        }
         public EmployeeCreateViewModel()
         {
+            this.Branches = new List<Branch>();
             this.Active = true;
             this.EmployeeJoinedCompany = DateTime.Now.Date;
             this.Birthdate = DateTime.Now.AddYears(-18);

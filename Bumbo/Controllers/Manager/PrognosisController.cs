@@ -4,6 +4,7 @@ using Bumbo.Utils;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 
@@ -12,11 +13,13 @@ namespace Bumbo.Controllers
     [Authorize(Roles = "Manager")]
     public class PrognosisController : Controller
     {
+        private readonly UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
         private readonly IPrognosisRepository _prognosisRepository;
 
-        public PrognosisController(IMapper mapper, IPrognosisRepository prognosisService)
+        public PrognosisController(UserManager<Employee> userManager, IMapper mapper, IPrognosisRepository prognosisService)
         {
+            _userManager = userManager;
             _mapper = mapper;
             _prognosisRepository = prognosisService;
         }
@@ -54,7 +57,7 @@ namespace Bumbo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(PrognosisListViewModel list)
+        public async Task<IActionResult> IndexAsync(PrognosisListViewModel list)
         {
             
             if (!ModelState.IsValid)
@@ -64,12 +67,13 @@ namespace Bumbo.Controllers
             List<Prognosis> result = _mapper.Map<List<Prognosis>>(list.PrognosisList);
             if (result.Count != 0)
             {
-                _prognosisRepository.AddOrUpdateAll(result);
+                Employee employee = await _userManager.GetUserAsync(User);
+                _prognosisRepository.AddOrUpdateAllAsync(employee.DefaultBranch, result);
             }
             return View(list);
         }
 
-        public IActionResult ReUsePreviousWeek(string lastWeekString)
+        public async Task<IActionResult> ReUsePreviousWeekAsync(string lastWeekString)
         {
             // This method copies the prognosis week from the previous week and adds it to the database for the current week.
 
@@ -85,8 +89,8 @@ namespace Bumbo.Controllers
                 newPrognosis.ColiCount = prognosis.ColiCount;
                 updatedNewWeek.Add(newPrognosis);
             }
-            _prognosisRepository.AddOrUpdateAll(updatedNewWeek);
-
+            Employee employee = await _userManager.GetUserAsync(User);
+            _prognosisRepository.AddOrUpdateAllAsync(employee.DefaultBranch, updatedNewWeek);
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = lastWeekString, next = true }) ;
         }

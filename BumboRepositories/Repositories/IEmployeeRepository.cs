@@ -19,5 +19,6 @@ namespace BumboData
         IEnumerable<Employee> GetAll();
         bool EmployeeIsInDepartment(string employeeKey, int id);
         void Update(Employee newEmployee);
+        bool Exists(Employee newEmployee);
     }
 }

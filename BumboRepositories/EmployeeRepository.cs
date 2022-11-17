@@ -45,7 +45,7 @@ namespace BumboRepositories
 
         public IEnumerable<Employee> GetAllManagers()
         {
-            var users = _context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId).Select(role=> role.UserId).ToList();
+            var users = _context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId).Select(role => role.UserId).ToList();
             return _context.Employees.Where(employee => users.Contains(employee.Id));
         }
 
@@ -53,7 +53,7 @@ namespace BumboRepositories
         {
             return _context.Employees.Where(employee => employee.DefaultBranchId == branch);
         }
-        
+
         public void Update(Employee employee)
         {
             _context.Update(employee);
@@ -63,6 +63,11 @@ namespace BumboRepositories
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
         {
             return _context.Employees.Where(e => e.Id == id).Include(e => e.AllowedDepartments).FirstOrDefault().AllowedDepartments;
+        }
+
+        public bool Exists(Employee newEmployee)
+        {
+            return _context.Employees.Where(e => e.NormalizedEmail == newEmployee.NormalizedEmail || e.NormalizedUserName == newEmployee.NormalizedUserName).Any();
         }
     }
 }
