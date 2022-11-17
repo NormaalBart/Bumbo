@@ -1,5 +1,11 @@
 ﻿@model Bumbo.Models.EmployeeManager.EmployeeCreateViewModel
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+    </div>
+}
 
 <h1 class="text-center">Medewerker toevoegen</h1>
 
@@ -88,6 +94,10 @@
 
                     <div class="form-group text-center">
                         <h5>Selecteer in welke afdelingen deze medewerker kan werken:</h5>
+                        @if (Model.EmployeeSelectedDepartments.Count() == 0)
+                        {
+                            <p class="alert-danger">Er zijn geen beschikbare afdelingen gevonden!</p>
+                        }
                         @foreach (var department in Model.EmployeeSelectedDepartments)
                         {
 
@@ -96,6 +106,8 @@
                             </tr>
                                 
                         }
+                        <br />
+                        <span asp-validation-for="AllowedDepartments" class="text-danger"></span>
                     </div>
 
                 </div>
