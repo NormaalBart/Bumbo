@@ -1,4 +1,5 @@
-﻿using BumboData;
+﻿using Bumbo.Utils;
+using BumboData;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,10 +56,10 @@ namespace BumboRepositories
 
         }
 
-        public IEnumerable<PlannedShift> GetShiftsOfEmployeeOnDate(DateTime date, string employeeId)
+        public IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId)
         {
-
-            return _context.PlannedShifts.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date);
+            // returns the next 7 days.
+            return _context.PlannedShifts.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= date && p.StartTime <= date.AddDays(7)).Include(p => p.Department).Include(p => p.Branch);
         }
 
         public bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift)

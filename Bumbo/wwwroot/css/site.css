@@ -91,3 +91,24 @@ button[type="submit"] {
         text-decoration: none;
     }
 
+.date-display {
+    width: 20%;
+}
+
+.selected {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+.today {
+    height: 25px;
+    width: 25px;
+    border: solid;
+    border-color: black;
+    border-radius: 50%;
+    display: inline-block;
+}
