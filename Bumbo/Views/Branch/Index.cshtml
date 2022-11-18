@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Bumbo.Models.BranchController.BranchuViewModel>
+﻿@model IEnumerable<Bumbo.Models.BranchController.BranchViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,15 +19,9 @@
                 @Html.DisplayNameFor(model => model.ShelvingDistance)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.City)
+                @Html.DisplayNameFor(model => model.FormattedStreet)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HouseNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Street)
-            </th>
-            <th></th>
+            <th>Acties</th>
         </tr>
     </thead>
     <tbody>
@@ -40,18 +34,13 @@
                 @Html.DisplayFor(modelItem => item.ShelvingDistance)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.City)
+                @Html.DisplayFor(modelItem => item.FormattedStreet)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HouseNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Street)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Verander", "Edit", new {  id=item.Id }) |
+                <div class="btn btn-warning">
+                @Html.ActionLink("Zet inactief", "SetInactive", new {  id=item.Id })
+                </div>
             </td>
         </tr>
 }

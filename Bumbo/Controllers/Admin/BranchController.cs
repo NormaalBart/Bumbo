@@ -24,8 +24,8 @@ namespace Bumbo.Controllers.Admin
         // GET: BranchController
         public ActionResult Index()
         {
-            var branches = _branchRepository.GetAll();
-            List<BranchuViewModel> result = _mapper.Map<List<BranchuViewModel>>(branches);
+            var branches = _branchRepository.GetAllActiveBranches();
+            List<BranchViewModel> result = _mapper.Map<List<BranchViewModel>>(branches);
             return View(result);
         }
 
@@ -38,7 +38,7 @@ namespace Bumbo.Controllers.Admin
         // POST: BranchController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BranchuViewModel branchModel)
+        public ActionResult Create(BranchViewModel branchModel)
         {
             if (ModelState.IsValid)
             {
@@ -60,16 +60,25 @@ namespace Bumbo.Controllers.Admin
         // GET: BranchController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Branch branch = _branchRepository.GetById(id);
+            BranchViewModel branchViewModel = _mapper.Map<BranchViewModel>(branch);
+            return View(branchViewModel);
         }
 
         // POST: BranchController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(BranchViewModel branchViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Fout in validatie");
+                return View(branchViewModel);
+            }
             try
             {
+                Branch branch = _mapper.Map<Branch>(branchViewModel);
+                _branchRepository.Update(branch);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -78,19 +87,20 @@ namespace Bumbo.Controllers.Admin
             }
         }
 
-        // GET: BranchController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult SetInactive(int id)
         {
-            return View();
+            Branch branch = _branchRepository.GetById(id);
+            BranchViewModel branchViewModel = _mapper.Map<BranchViewModel>(branch);
+            return View(branchViewModel);
         }
 
-        // POST: BranchController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult SetInactive(int id, IFormCollection collection)
         {
             try
             {
+                _branchRepository.SetInactive(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

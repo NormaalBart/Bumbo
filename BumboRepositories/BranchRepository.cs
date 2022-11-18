@@ -23,9 +23,9 @@ namespace BumboRepositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Branch> GetAll()
+        public IEnumerable<Branch> GetAllActiveBranches()
         {
-            return _context.Branches;
+            return _context.Branches.Where(branch => !branch.Inactive);
         }
 
         public Branch GetById(int id)
@@ -43,6 +43,13 @@ namespace BumboRepositories
         public List<Branch> GetUnmanagedBranches()
         {
             return _context.Branches.Where(branch => branch.Manager == null).ToList();
+        }
+
+        public void SetInactive(int id)
+        {
+            Branch branch = GetById(id);
+            branch.Inactive = true;
+            Update(branch);
         }
     }
 }

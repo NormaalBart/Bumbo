@@ -33,4 +33,5 @@ public class Branch
     public virtual ICollection<StandardOpeningHours> StandardOpeningHours { get; set; }
     
     public virtual ICollection<OpeningHoursOverride> OpeningHoursOverrides { get; set; }
+    public bool Inactive { get; set; }
 }

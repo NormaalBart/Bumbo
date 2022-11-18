@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.BranchController
 {
-    public class BranchuViewModel
+    public class BranchViewModel
     {
+
+        public int Id { get; set; }
 
         [DisplayName("Naam")]
         public string Name { get; set; }
@@ -29,5 +31,10 @@ namespace Bumbo.Models.BranchController
         [DisplayName("Straat")]
         public String Street { get; set; }
 
+        [DisplayName("Adres")]
+        public string FormattedStreet
+        {
+            get => $"{Street} {HouseNumber} te {City}";
+        }
     }
 }
