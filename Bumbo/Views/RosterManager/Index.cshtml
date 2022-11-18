@@ -38,7 +38,14 @@
                 @Html.DisplayNameFor(model => model.CassierePrognose) :
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.CassierePrognose) Uren
+                @if (Model.CassierePrognose == -1)
+                {
+                    <span>Geen Info</span>
+                }
+                else
+                {
+                    <span>@Model.CassierePrognose Uren</span>
+                }
             </dd>
         </div>
 
@@ -47,7 +54,14 @@
                 @Html.DisplayNameFor(model => model.FreshPrognose) :
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.FreshPrognose) Uren
+                @if (Model.FreshPrognose == -1)
+                {
+                    <span>Geen Info</span>
+                }
+                else
+                {
+                    <span>@Model.FreshPrognose Uren</span>
+                }
             </dd>
         </div>
 
@@ -56,7 +70,14 @@
                 @Html.DisplayNameFor(model => model.StockersPrognose) :
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.StockersPrognose) Uren
+                @if (Model.StockersPrognose == -1)
+                {
+                    <span>Geen Info</span>
+                }
+                else
+                {
+                    <span>@Model.StockersPrognose Uren</span>
+                }
             </dd>
         </div>
 
