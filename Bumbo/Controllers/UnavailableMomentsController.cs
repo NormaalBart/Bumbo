@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
 using Bumbo.Models.RosterManager;
+using BumboData;
 using BumboData.Models;
-using BumboRepositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers
 {
     public class UnavailableMomentsController : Controller
     {
-        private readonly UnavailableMomentCreateRepository _createRepository;
+        private readonly IUnavailableMomentsCreate _createRepository;
         private IMapper _mapper;
-        public UnavailableMomentsController(UnavailableMomentCreateRepository unavailableMomentRepository, IMapper mapper)
+
+        public UnavailableMomentsController(IUnavailableMomentsCreate unavailableMomentRepository, IMapper mapper)
         {
             _createRepository = unavailableMomentRepository;
             _mapper = mapper;
@@ -18,14 +19,16 @@ namespace Bumbo.Controllers
 
         public IActionResult Index()
         {
-            UnavailableMomentsRosterViewModel resultingListViewModel = new UnavailableMomentsRosterViewModel();
+            //UnavailableMomentsRosterViewModel resultingListViewModel = new UnavailableMomentsRosterViewModel();
             return RedirectToAction("Create");
-            return View(resultingListViewModel);
+            //return View(resultingListViewModel);
         }
 
         public IActionResult Create()
         {
             UnavailableMomentsCreateViewModel unAvailableMoments = new UnavailableMomentsCreateViewModel();
+            unAvailableMoments.StartTime = DateTime.Now;
+            unAvailableMoments.EndTime = DateTime.Now.AddHours(5);
             return View(unAvailableMoments);
         }
 
@@ -38,11 +41,24 @@ namespace Bumbo.Controllers
             if (ModelState.IsValid)
             {
                 var newUnavailableMoment = _mapper.Map<UnavailableMomentsCreateViewModel, UnavailableMoment>(unavailableMomentViewModel);
-                _createRepository.Add(newUnavailableMoment);
-                return RedirectToAction("Index");
+                _createRepository.AddEmployeeToUnavailableMoment(newUnavailableMoment);
+                if (newUnavailableMoment != null && UnavailableMomentValid(newUnavailableMoment))
+                {
+                    _createRepository.Add(newUnavailableMoment);
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(unavailableMomentViewModel);
+        }
+
+        private bool UnavailableMomentValid(UnavailableMoment unavailableMoment)
+        {
+            // TODO check if the time doesn't overlap with another unavailable moment
+            if (unavailableMoment == null) { return false; }
+            if (unavailableMoment.StartTime.CompareTo(unavailableMoment.EndTime) < 1) { return false; }
+            if (unavailableMoment.Employee == null) { return false; }
+            return true;
         }
     }
 }

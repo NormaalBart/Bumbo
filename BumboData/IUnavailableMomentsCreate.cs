@@ -6,5 +6,6 @@ namespace BumboData
     {
         IEnumerable<UnavailableMoment> GetAll();
         void Add(UnavailableMoment unavailableMoment);
+        void AddEmployeeToUnavailableMoment(UnavailableMoment unavailableMoment);
     }
 }
