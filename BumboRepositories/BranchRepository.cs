@@ -19,12 +19,13 @@ namespace BumboRepositories
         }
         public void Add(Branch branch)
         {
-            throw new NotImplementedException();
+            _context.Branches.Add(branch);
+            _context.SaveChanges();
         }
 
         public IEnumerable<Branch> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Branches.ToList();
         }
 
         public Branch GetById(int id)

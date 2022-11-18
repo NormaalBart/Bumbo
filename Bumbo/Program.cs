@@ -15,6 +15,7 @@ namespace Bumbo
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            
             builder.Services.AddScoped<IEmployee, EmployeeRepository>();
             builder.Services.AddScoped<IPrognosis, PrognosisRepository>();
             builder.Services.AddScoped<IPlannedShifts, PlannedShiftsRepository>();

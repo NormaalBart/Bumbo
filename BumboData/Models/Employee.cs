@@ -43,4 +43,9 @@ public class Employee: IdentityUser
     public virtual ICollection<WorkedShift> WorkedShifts { get; set; }
     
     public virtual ICollection<UnavailableMoment> UnavailableMoments { get; set; }
+
+    public string FullName()
+    {
+        return FirstName + (Preposition != null ? " " + Preposition : "") + " " + LastName;
+    }
 }

@@ -41,6 +41,18 @@ namespace BumboRepositories
                        .FirstOrDefault();
         }
 
+        public List<WorkedShift> GetWorkedShiftsInMonth(string employee, int year, int month)
+        {
+            return _context.WorkedShifts.Include(i => i.Employee).Where(s =>
+                s.Employee.Id == employee && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
+        }
+        
+        public List<WorkedShift> GetWorkedShiftsInMonth(int year, int month)
+        {
+            return _context.WorkedShifts.Include(i => i.Employee)
+                .Where(s => s.StartTime.Year == year && s.StartTime.Month == month).ToList();
+        }
+
         public void Update(WorkedShift workedShift)
         {
             _context.WorkedShifts.Update(workedShift);

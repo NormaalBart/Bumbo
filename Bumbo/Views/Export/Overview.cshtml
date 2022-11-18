@@ -11,7 +11,8 @@
         <div class="col-md-2 sticky-top" style="height: 100%;">
             @foreach (var modelSelectableMonth in Model.SelectableMonths)
             {
-                if (modelSelectableMonth.Month == Model.SelectedMonth.Month)
+                if (modelSelectableMonth.Month == Model.SelectedMonth.Month
+                    && modelSelectableMonth.Year == Model.SelectedMonth.Year)
                 {
                     <a class="btn my-1 w-100 btn-primary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
                 }
@@ -22,34 +23,29 @@
             }
         </div>
         <div class="col-md-8">
-            <table class="w-100" style="border-style: dashed">
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
-                <tr style="height: 150px">
-                    <td></td><td></td>
-                </tr>
+            <table class="w-100">
+                @if (Model.ExportOverviewListItemViewModels.Count == 0)
+                {
+                    <p class="text-center">Geen resultaten gevonden</p>
+                }
+                else
+                {
+                    @foreach (var viewModel in Model.ExportOverviewListItemViewModels)
+                    {
+                        <tr class="my-1" style="border: dashed black;">
+                            <td>
+                                <p class="fw-bold text-center">@viewModel.Employee.FullName()</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">Deze maand</p>
+                                <p class="d-inline-block">Aantal gewerkte uren:</p>
+                                <p class="d-inline-block text-right">@viewModel.CurrentMonth.HoursWorked</p><br/>
+                                <p class="d-inline-block">Aantal zieke uren:</p>
+                                <p class="d-inline-block text-right">@viewModel.CurrentMonth.HoursSick</p>
+                            </td>
+                        </tr>
+                    }
+                }
             </table>
         </div>
         <div class="col-md-2 sticky-top" style="height: 100%;">
@@ -57,7 +53,7 @@
             <form asp-action="Overview" method="get">
                 <div class="form-group w-100">
                     <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
-                    <input type="search" name="SearchDepartmentsQuery" class="export-screen-input-field my-2" value="@Model.SearchDepartmentsQuery" placeholder="Afdeling naam"/>
+                    <input class="btn btn-primary my-2" type="submit" value="Zoeken"></input>
                 </div>
             </form>
         </div>

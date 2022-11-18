@@ -10,6 +10,8 @@ public class ExportOverviewViewModel
 
     public String SearchDepartmentsQuery { get; set; }
 
+    public List<ExportOverviewListItemViewModel> ExportOverviewListItemViewModels { get; set; }
+
     public ExportOverviewViewModel()
     {
         
