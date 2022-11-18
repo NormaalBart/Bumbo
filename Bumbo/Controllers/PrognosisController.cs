@@ -45,7 +45,7 @@ namespace Bumbo.Controllers
             // Returns the week of prognose days.
             PrognosisListViewModel list = new PrognosisListViewModel();
             list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(_prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly())).ToList();
-
+            list.CopyToWeekNumber = startOfWeek.GetWeekNumber();
             return View(list);
 
         }
@@ -67,27 +67,34 @@ namespace Bumbo.Controllers
             return View(list);
         }
 
-        public IActionResult ReUsePreviousWeek(string lastWeekString)
-        {
-            // This method copies the prognosis week from the previous week and adds it to the database for the current week.
 
-            DateOnly lastWeekDate = DateTime.Parse(lastWeekString).ToDateOnly();
-            var lastweekPrognoses = _prognosisRepository.GetNextWeek(lastWeekDate).ToList();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CopyFromWeek(int copyFromWeekNumber, int copyToWeekNumber, int copyFromYear, int copyToYear)
+        {
+            // This method copies the prognosis week from a certain week and adds it to another one.
+            DateTime copyFromDate = OtherUtils.FirstDateOfWeekISO8601(copyFromYear, copyFromWeekNumber);
+            DateTime copyToDate = OtherUtils.FirstDateOfWeekISO8601(copyToYear, copyToWeekNumber);
+
+
+            var copyFromPrognoses = _prognosisRepository.GetNextWeek(copyFromDate.ToDateOnly()).ToList();
             List<Prognosis> updatedNewWeek = new List<Prognosis>();
-            foreach (var prognosis in lastweekPrognoses)
+            for (int i = 0; i < copyFromPrognoses.Count(); i++)
             {
                 Prognosis newPrognosis = new Prognosis();
-                newPrognosis.Date = prognosis.Date.AddDays(7);
-                newPrognosis.Branch = prognosis.Branch;
-                newPrognosis.CustomerCount = prognosis.CustomerCount;
-                newPrognosis.ColiCount = prognosis.ColiCount;
+                newPrognosis.Date = copyToDate.ToDateOnly().AddDays(i);
+                newPrognosis.Branch = copyFromPrognoses[i].Branch;
+                newPrognosis.CustomerCount = copyFromPrognoses[i].CustomerCount;
+                newPrognosis.ColiCount = copyFromPrognoses[i].ColiCount;
                 updatedNewWeek.Add(newPrognosis);
             }
+            
             _prognosisRepository.AddOrUpdateAll(updatedNewWeek);
 
-
-            return RedirectToAction("Index", "Prognosis", new { dateInput = lastWeekString, next = true }) ;
+            return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });
         }
+            
+        
     
     }
 }
