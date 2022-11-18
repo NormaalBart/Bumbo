@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bumbo.Models.EmployeeManager;
+using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
 using Bumbo.Utils;
@@ -21,6 +22,9 @@ namespace Bumbo.Models
             CreateMap<PlannedShift, ShiftViewModel>();
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
+
+            CreateMap<PlannedShift, EmployeeShiftViewModel>().ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber)).ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street)).ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City)).ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
+
         }
     }
 }
