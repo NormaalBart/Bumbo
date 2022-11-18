@@ -55,14 +55,31 @@ namespace BumboData
                 .HasMany(e => e.DefaultEmployees)
                 .WithOne(e => e.DefaultBranch)
                 .OnDelete(DeleteBehavior.Restrict);
-
+            
             modelBuilder.Entity<StandardOpeningHours>().HasKey(e => new { e.BranchId, e.DayOfWeek });
 
-            modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Id = RoleType.ADMINISTRATOR.RoleId, Name = RoleType.ADMINISTRATOR.Name, NormalizedName = RoleType.ADMINISTRATOR.NormalizedName },
-                new IdentityRole { Id = RoleType.MANAGER.RoleId, Name = RoleType.MANAGER.Name, NormalizedName = RoleType.MANAGER.NormalizedName },
-                new IdentityRole { Id = RoleType.EMPLOYEE.RoleId, Name = RoleType.EMPLOYEE.Name, NormalizedName = RoleType.EMPLOYEE.NormalizedName });
+            Seed(modelBuilder);
+        }
 
+        private void Seed(ModelBuilder modelBuilder)
+        {
+            SeedRoles(modelBuilder);
+            SeedUsers(modelBuilder);
+            SeedBranches(modelBuilder);
+            SeedDepartments(modelBuilder);
+        }
+
+        private void SeedDepartments(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Department>().HasData(
+                new Department { Id = DepartmentType.CASSIERS.DepartmentId, DepartmentName = DepartmentType.CASSIERS.Name },
+                new Department { Id = DepartmentType.FRESH.DepartmentId, DepartmentName = DepartmentType.FRESH.Name },
+                new Department { Id = DepartmentType.FILLERS.DepartmentId, DepartmentName = DepartmentType.FILLERS.Name }
+            ); ;
+        }
+
+        private void SeedBranches(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Branch>().HasData(
                 new Branch
                 {
@@ -83,12 +100,19 @@ namespace BumboData
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Friday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
 
-            modelBuilder.Entity<Department>().HasData(
-                new Department { Id = DepartmentType.CASSIERS.DepartmentId, DepartmentName = DepartmentType.CASSIERS.Name },
-                new Department { Id = DepartmentType.FRESH.DepartmentId, DepartmentName = DepartmentType.FRESH.Name },
-                new Department { Id = DepartmentType.FILLERS.DepartmentId, DepartmentName = DepartmentType.FILLERS.Name }
-                ); ;
+        }
 
+        private void SeedRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = RoleType.ADMINISTRATOR.RoleId, Name = RoleType.ADMINISTRATOR.Name, NormalizedName = RoleType.ADMINISTRATOR.NormalizedName },
+                new IdentityRole { Id = RoleType.MANAGER.RoleId, Name = RoleType.MANAGER.Name, NormalizedName = RoleType.MANAGER.NormalizedName },
+                new IdentityRole { Id = RoleType.EMPLOYEE.RoleId, Name = RoleType.EMPLOYEE.Name, NormalizedName = RoleType.EMPLOYEE.NormalizedName });
+
+        }
+
+        private void SeedUsers(ModelBuilder modelBuilder)
+        {
             var hasher = new PasswordHasher<Employee>();
             modelBuilder.Entity<Employee>().HasData(
                 // Admin
@@ -148,7 +172,7 @@ namespace BumboData
                     Housenumber = "10",
                     Function = DepartmentType.FRESH.Name,
                 });
-
+            
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
