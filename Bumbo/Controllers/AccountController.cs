@@ -51,9 +51,15 @@ namespace Bumbo.Controllers
                 {
                     return await RedirectToPageAsync(employee);
                 }
+                else
+                {
+                    // Return invalid password
+                    ModelState.AddModelError("Password", "Verkeerde email en wachtwoord combinatie, probeer opnieuw.");
+                    return View(loginModel);
+                }
             }
 
-            ModelState.AddModelError(string.Empty, "Onbekend account");
+            ModelState.AddModelError("EmailAddress", "Account is niet gevonden");
             return View(loginModel);
         }
 
