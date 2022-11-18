@@ -28,10 +28,9 @@ namespace BumboRepositories
             return _context.Branches.Where(branch => !branch.Inactive);
         }
 
-        public Branch GetById(int id)
+        public Branch? GetById(int id)
         {
-
-            return _context.Branches.Where(e => e.Id == id).FirstOrDefault();
+            return _context.Branches.FirstOrDefault(e => e.Id == id);
         }
 
         public void Update(Branch branch)
@@ -47,9 +46,12 @@ namespace BumboRepositories
 
         public void SetInactive(int id)
         {
-            Branch branch = GetById(id);
-            branch.Inactive = true;
-            Update(branch);
+            var branch = GetById(id);
+            if (branch != null)
+            {
+                branch.Inactive = true;
+                Update(branch);
+            }
         }
     }
 }

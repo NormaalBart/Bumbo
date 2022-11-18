@@ -44,13 +44,10 @@ namespace Bumbo.Controllers.Admin
             {
                 Branch branch = _mapper.Map<Branch>(branchModel);
                 branch.StandardOpeningHours = new List<StandardOpeningHours>();
-                branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = DayOfWeek.Sunday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
-                branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = DayOfWeek.Monday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
-                branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = DayOfWeek.Tuesday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
-                branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = DayOfWeek.Wednesday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
-                branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = DayOfWeek.Thursday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
-                branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = DayOfWeek.Friday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
-                branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
+                foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
+                {
+                    branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = day, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
+                }
                 _branchRepository.Add(branch);
                 return RedirectToAction(nameof(Index));
             }
@@ -60,7 +57,11 @@ namespace Bumbo.Controllers.Admin
         // GET: BranchController/Edit/5
         public ActionResult Edit(int id)
         {
-            Branch branch = _branchRepository.GetById(id);
+            var branch = _branchRepository.GetById(id);
+            if (branch == null)
+            {
+                return RedirectToAction("Index");
+            }
             BranchViewModel branchViewModel = _mapper.Map<BranchViewModel>(branch);
             return View(branchViewModel);
         }
@@ -89,7 +90,11 @@ namespace Bumbo.Controllers.Admin
 
         public ActionResult SetInactive(int id)
         {
-            Branch branch = _branchRepository.GetById(id);
+            var branch = _branchRepository.GetById(id);
+            if (branch == null)
+            {
+                return RedirectToAction("Index");
+            }
             BranchViewModel branchViewModel = _mapper.Map<BranchViewModel>(branch);
             return View(branchViewModel);
         }
@@ -98,15 +103,8 @@ namespace Bumbo.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult SetInactive(int id, IFormCollection collection)
         {
-            try
-            {
-                _branchRepository.SetInactive(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _branchRepository.SetInactive(id); 
+            return RedirectToAction(nameof(Index));
         }
     }
 }

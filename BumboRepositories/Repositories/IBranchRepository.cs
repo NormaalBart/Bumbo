@@ -11,7 +11,7 @@ namespace BumboData
     public interface IBranchRepository
     {
         IEnumerable<Branch> GetAllActiveBranches();
-        Branch GetById(int key);
+        Branch? GetById(int key);
         void Add(Branch branch);
         void Update(Branch branch);
         List<Branch> GetUnmanagedBranches();
