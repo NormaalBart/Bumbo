@@ -92,6 +92,7 @@ button[type="submit"] {
     }
 
 
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
@@ -129,3 +130,26 @@ button[type="submit"] {
         text-decoration: none;
         cursor: pointer;
     } 
+
+.date-display {
+    width: 20%;
+}
+
+.selected {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+.today {
+    height: 25px;
+    width: 25px;
+    border: solid;
+    border-color: black;
+    border-radius: 50%;
+    display: inline-block;
+}
+

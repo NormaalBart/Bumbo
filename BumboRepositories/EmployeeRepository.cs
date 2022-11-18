@@ -12,6 +12,11 @@ namespace BumboRepositories
             this._context = context;
         }
 
+        public string GetIdOfEmployeeLoggedIn()
+        {
+            return _context.Employees.FirstOrDefault().Id;
+        }
+
         public void Add(Employee employee)
         {
             _context.Employees.Add(employee);

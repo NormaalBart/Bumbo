@@ -4,6 +4,7 @@ namespace BumboData
 {
     public interface IEmployee 
     {
+        string GetIdOfEmployeeLoggedIn();
         IEnumerable<Employee> GetAll();
         Employee GetById(string id);
         void Add(Employee employee);
