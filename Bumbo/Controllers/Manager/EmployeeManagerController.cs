@@ -139,7 +139,7 @@ namespace Bumbo.Controllers
                 else
                 {
                     Employee manager = await _userManager.GetUserAsync(User);
-                    employee.DefaultBranch = manager.DefaultBranch;
+                    employee.DefaultBranchId = manager.DefaultBranchId;
                     foreach (var selectedDep in selectedDepartments)
                     {
                         employee.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));

@@ -69,6 +69,10 @@ namespace Bumbo.Controllers
             if (result.Count != 0)
             {
                 Employee employee = await _userManager.GetUserAsync(User);
+                foreach(var prognosis in result)
+                {
+                    prognosis.BranchId = employee.DefaultBranchId;
+                }
                 _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, result);
             }
             return View(list);
