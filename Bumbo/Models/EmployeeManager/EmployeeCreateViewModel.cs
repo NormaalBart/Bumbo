@@ -43,6 +43,12 @@ namespace Bumbo.Models.EmployeeManager
         [DisplayName("Email")]
         public string Email { get; set; }
 
+        [Required]
+        [DisplayName("Wachtwoord")]
+        [DataType(DataType.Password)]
+        public String Password { get; set; }
+
+        [Required]
         [Required(ErrorMessage = "Het telefoonnummer is verplicht")]
         [DisplayName("Telefoon")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
@@ -70,7 +76,13 @@ namespace Bumbo.Models.EmployeeManager
         [DisplayName("Functie")]
         [StringLength(50)]
         public String Function { get; set; }
-        
+
+        [Required]
+        [DisplayName("Van welke branch is deze persoon de manager?")]
+        public int? SelectedBranch { get; set; }
+
+        public List<Branch> Branches { get; set; }
+
         [DisplayName("Kies een of meerdere afdelingen voor deze medewerker.")]
         public virtual ICollection<Department> AllowedDepartments { get; set; }
 
@@ -78,9 +90,13 @@ namespace Bumbo.Models.EmployeeManager
 
         public string? EmployeeKey { get; set; }
 
-
+        public string FullName
+        {
+            get => $"{LastName}, {FirstName} {Preposition}";
+        }
         public EmployeeCreateViewModel()
         {
+            this.Branches = new List<Branch>();
             this.Active = true;
             this.EmployeeJoinedCompany = DateTime.Now.Date;
             this.Birthdate = DateTime.Now.AddYears(-18);

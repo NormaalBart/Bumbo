@@ -38,8 +38,15 @@ namespace BumboData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Inactive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ManagerId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ShelvingDistance")
                         .HasColumnType("int");
@@ -53,6 +60,18 @@ namespace BumboData.Migrations
                     b.HasIndex("ManagerId");
 
                     b.ToTable("Branches");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Den Bosch",
+                            HouseNumber = "2",
+                            Inactive = false,
+                            Name = "Bumbo v1",
+                            ShelvingDistance = 100,
+                            Street = "Onderwijsboulevard"
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.Department", b =>
@@ -70,6 +89,23 @@ namespace BumboData.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DepartmentName = "Kassa"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DepartmentName = "Vers"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DepartmentName = "Vullers"
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
@@ -98,7 +134,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("PrognosisId");
 
-                    b.ToTable("DepartmentPrognoses");
+                    b.ToTable("DepartmentPrognosis");
                 });
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
@@ -116,13 +152,15 @@ namespace BumboData.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DefaultBranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -153,10 +191,12 @@ namespace BumboData.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -181,13 +221,99 @@ namespace BumboData.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DefaultBranchId");
 
-                    b.ToTable("Employees");
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "f2ca3125-74d2-454e-80a2-f0441a34d834",
+                            DefaultBranchId = 1,
+                            Email = "admin@admin.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Jan",
+                            Function = "Administrator",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMr1kgizSk90jwcN054IkveAR/6xH+AymwNUrSMPVsz6Jn4S5RTDu+VvORLuj6PaEQ==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "9adf8ab5-107e-4fe2-95fe-78d040aa994d",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = "3a792773-527d-4bb7-8319-6db070350d38",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "4737e021-f7fd-44b4-b238-dddf3fe57b46",
+                            DefaultBranchId = 1,
+                            Email = "manager@manager.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Manager",
+                            Function = "Manager",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MANAGER@MANAGER.COM",
+                            NormalizedUserName = "MANAGER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEATU2FewqDZ2dbglGcDP+VrXKx9n+t8ckpH7JIOK6UvdEVS2/4cf4PEmk7/es9gbjQ==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "24b78f66-7335-4def-89ff-5c701ab236fd",
+                            TwoFactorEnabled = false,
+                            UserName = "manager"
+                        },
+                        new
+                        {
+                            Id = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "b43389d7-4775-4c3f-890c-2f692e64e3ea",
+                            DefaultBranchId = 1,
+                            Email = "medewerker@medewerker.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Medewerker",
+                            Function = "Vers",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MEDEWERKER@MEDEWERKER.COM",
+                            NormalizedUserName = "MEDEWERKER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPLNxH75RNXy/Xu4fELxae/kuWW83wdzA4hWefhiJc2QyuwcZEKDPsBzgX4jMen2DQ==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "1cdb5c0a-a978-4f52-835e-c1cfdd116cd5",
+                            TwoFactorEnabled = false,
+                            UserName = "medewerker"
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.OpeningHoursOverride", b =>
@@ -293,10 +419,10 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.StandardOpeningHours", b =>
                 {
-                    b.Property<int>("DayOfWeek")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CloseTime")
@@ -305,11 +431,60 @@ namespace BumboData.Migrations
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("date");
 
-                    b.HasKey("DayOfWeek");
-
-                    b.HasIndex("BranchId");
+                    b.HasKey("BranchId", "DayOfWeek");
 
                     b.ToTable("StandardOpeningHours");
+
+                    b.HasData(
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 0,
+                            CloseTime = new DateTime(2022, 11, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 20, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 1,
+                            CloseTime = new DateTime(2022, 11, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 20, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 2,
+                            CloseTime = new DateTime(2022, 11, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 20, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 3,
+                            CloseTime = new DateTime(2022, 11, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 20, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 4,
+                            CloseTime = new DateTime(2022, 11, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 20, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 5,
+                            CloseTime = new DateTime(2022, 11, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 20, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 6,
+                            CloseTime = new DateTime(2022, 11, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 20, 8, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.UnavailableMoment", b =>
@@ -391,6 +566,179 @@ namespace BumboData.Migrations
                     b.ToTable("Employee_allowed_Department", (string)null);
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "administrator",
+                            ConcurrencyStamp = "4eee60d8-aef1-47fd-9397-5a89474607f0",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = "manager",
+                            ConcurrencyStamp = "c0733c74-f727-4e5f-a953-29208091222a",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "employee",
+                            ConcurrencyStamp = "dc4076f1-b8f0-4bd3-aeb0-6de6b453a2e7",
+                            Name = "Employee",
+                            NormalizedName = "EMPLOYEE"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
+                            RoleId = "administrator"
+                        },
+                        new
+                        {
+                            UserId = "3a792773-527d-4bb7-8319-6db070350d38",
+                            RoleId = "manager"
+                        },
+                        new
+                        {
+                            UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            RoleId = "employee"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("BumboData.Models.Branch", b =>
                 {
                     b.HasOne("BumboData.Models.Employee", "Manager")
@@ -410,7 +758,7 @@ namespace BumboData.Migrations
                         .IsRequired();
 
                     b.HasOne("BumboData.Models.Prognosis", "Prognosis")
-                        .WithMany("DepartmentPrognoses")
+                        .WithMany("DepartmentPrognosis")
                         .HasForeignKey("PrognosisId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -547,6 +895,57 @@ namespace BumboData.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BumboData.Models.Branch", b =>
                 {
                     b.Navigation("DefaultEmployees");
@@ -573,7 +972,7 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Prognosis", b =>
                 {
-                    b.Navigation("DepartmentPrognoses");
+                    b.Navigation("DepartmentPrognosis");
                 });
 #pragma warning restore 612, 618
         }

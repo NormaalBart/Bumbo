@@ -5,6 +5,7 @@ namespace BumboData.Models;
 
 public class Employee: IdentityUser
 {
+
     [Required]
     public String FirstName { get; set; }
     
@@ -33,6 +34,9 @@ public class Employee: IdentityUser
 
     [Required]
     public Branch DefaultBranch { get; set; }
+
+    [Required]
+    public int DefaultBranchId { get; set; }
 
     public virtual ICollection<Branch> ManagedBranches { get; set; }
  

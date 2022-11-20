@@ -1,8 +1,8 @@
 ﻿using Bumbo.Models;
 using Bumbo.Models.EmployeeManager;
-using BumboData;
 using BumboData.Models;
 using BumboRepositories;
+using BumboRepositories.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -14,10 +14,10 @@ namespace Bumbo.Controllers
     public class ClockInController : ControllerBase
     {
         private IWorkedShiftRepository  _workedShiftRepository;
-        private IEmployee _employeeRepository;
+        private IEmployeeRepository _employeeRepository;
         private IBranchRepository _branchRepository;
 
-        public ClockInController(IWorkedShiftRepository workedShiftRepository, IEmployee employeeRepository,IBranchRepository branchRepository)
+        public ClockInController(IWorkedShiftRepository workedShiftRepository, IEmployeeRepository employeeRepository, IBranchRepository branchRepository)
         {
             _workedShiftRepository = workedShiftRepository;
             _employeeRepository = employeeRepository;
