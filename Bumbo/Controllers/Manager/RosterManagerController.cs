@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.RosterManager;
+using Bumbo.Utils;
 using BumboData;
 using BumboData.Models;
-using Microsoft.AspNetCore.Authorization;
+using BumboRepositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers
@@ -42,7 +44,7 @@ namespace Bumbo.Controllers
 
             foreach (var emp in viewModel.Employees)
             {
-                emp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetShiftsOfEmployeeOnDate(date, emp.Id)).ToList();
+                emp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, emp.Id)).ToList();
             }
             
 
@@ -120,6 +122,29 @@ namespace Bumbo.Controllers
                     new { controller = "RosterManager", action = "Index", dateInput = newShift.StartTime.Date.ToString()}));
             }
             return View(newShift);
+        }
+
+
+        public IActionResult EmployeeRoster(string? dateInput)
+        {
+            // requested date 
+            DateTime date = DateTime.Today;
+            if (dateInput != null)
+            {
+                date = DateTime.Parse(dateInput);
+            }
+
+            // id of the employee logged in currently.
+            string employeeId = _employeeRepository.GetIdOfEmployeeLoggedIn();
+            
+
+
+            EmployeeShiftsListViewModel shiftsVM = new EmployeeShiftsListViewModel();
+            shiftsVM.Date = date.ToDateOnly();
+            var dbshifts = _shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, employeeId);
+            shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
+
+            return View(shiftsVM);
         }
     }
     
