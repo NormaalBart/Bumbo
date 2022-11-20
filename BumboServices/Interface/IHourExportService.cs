@@ -6,4 +6,5 @@ namespace BumboServices.Interface;
 public interface IHourExportService
 {
     public HourExportModel WorkedShiftsToExportOverview(List<WorkedShift> shifts);
+    public Byte[] CsvExportForMonth(DateTime month);
 }

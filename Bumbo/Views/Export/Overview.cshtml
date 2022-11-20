@@ -69,7 +69,7 @@
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p>Uren ziek:</p>
-                                            <p>@info?.HoursSick.FormatTotalHourMinutes()h</p>
+                                            <p>@(info?.Surcharges?[SurchargeType.Sick].FormatTotalHourMinutes())h</p>
                                         </div>
 
                                         <p class="fw-bold text-center">Toeslagen</p>
@@ -101,7 +101,8 @@
                         <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
                         <h5><label asp-for="SortMode" class="control-label"></label></h5>
                         <select asp-for="SortMode" class="form-control" value="@Model.SortMode" asp-items="@Html.GetEnumSelectList<ExportOverviewSortingOption>()"></select>
-                        <input class="btn btn-primary my-2" type="submit" value="Zoeken">
+                        <input class="btn btn-primary my-2" type="submit" value="Zoeken"><br/>
+                        <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
                     </div>
                 </form>
             </div>

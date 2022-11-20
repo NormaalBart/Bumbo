@@ -26,7 +26,6 @@ public class ExportOverviewListItemViewModel
         return new HourExportModel()
         {
             HoursWorked = CurrentMonth.HoursWorked - PrevMonth.HoursWorked,
-            HoursSick = CurrentMonth.HoursSick - PrevMonth.HoursSick,
             Surcharges = dict
         };
     }

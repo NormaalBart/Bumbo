@@ -5,6 +5,7 @@ using BumboData.Models;
 using BumboRepositories.Repositories;
 using BumboRepositories.Utils;
 using BumboServices.Interface;
+using BumboServices.Surcharges.SurchargeRules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,9 +74,9 @@ public class ExportController : Controller
             ExportOverviewSortingOption.HoursDesc => model.ExportOverviewListItemViewModels
                 .OrderBy(m => m.CurrentMonth.HoursWorked).ToList(),
             ExportOverviewSortingOption.SickAsc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.CurrentMonth.HoursSick).Reverse().ToList(),
+                .OrderBy(m => m.CurrentMonth.Surcharges[SurchargeType.Sick]).Reverse().ToList(),
             ExportOverviewSortingOption.SickDesc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.CurrentMonth.HoursSick).ToList(),
+                .OrderBy(m => m.CurrentMonth.Surcharges[SurchargeType.Sick]).ToList(),
             ExportOverviewSortingOption.DifferenceAsc => model.ExportOverviewListItemViewModels
                 .OrderBy(m => m.GetDifference().HoursWorked).Reverse().ToList(),
             ExportOverviewSortingOption.DifferenceDesc => model.ExportOverviewListItemViewModels
@@ -95,6 +96,15 @@ public class ExportController : Controller
             CurrentMonth = _hourExportService.WorkedShiftsToExportOverview(workedShiftsCurrentMonth),
             PrevMonth = _hourExportService.WorkedShiftsToExportOverview(prevMonthWorkedShifts),
         };
+    }
+
+    public IActionResult GenerateExport(string? SelectedMonth)
+    {
+        var monthSelected = SelectedMonth == null
+            ? DateTime.Now
+            : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
+
+        return File(_hourExportService.CsvExportForMonth(monthSelected), "text/csv", "export-" + SelectedMonth + ".csv");
     }
 
 
