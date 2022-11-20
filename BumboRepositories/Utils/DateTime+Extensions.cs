@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
 
-namespace Bumbo.Utils;
+namespace BumboRepositories.Utils;
 
 public static class DateTime_Extensions
 {
@@ -26,7 +26,7 @@ public static class DateTime_Extensions
         return startOfWeek;
     }
 
-   
+
 
 }
 

@@ -1,11 +1,11 @@
-﻿using Bumbo.Utils;
-using BumboData;
+﻿using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories
 {
-    public class PlannedShiftsRepository : IPlannedShifts
+    public class PlannedShiftsRepository : IPlannedShiftsRepository
     {
         private BumboContext _context;
 

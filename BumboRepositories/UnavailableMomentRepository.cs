@@ -1,9 +1,10 @@
 ﻿using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 
 namespace BumboRepositories
 {
-    public class UnavailableMomentRepository : IUnavailableMoments
+    public class UnavailableMomentRepository : IUnavailableMomentsRepository
     {
         private BumboContext _context;
 
