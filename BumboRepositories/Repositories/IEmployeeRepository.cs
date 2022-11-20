@@ -1,7 +1,7 @@
 ﻿using BumboData.Models;
 using System.Collections.Generic;
 
-namespace BumboData
+namespace BumboRepositories.Repositories
 {
     public interface IEmployeeRepository
     {

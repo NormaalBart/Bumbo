@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BumboData
+namespace BumboRepositories.Repositories
 {
     public interface IDepartmentsRepository
     {
         IEnumerable<Department> GetAllExistingDepartments();
         Department GetById(int id);
-        
+
     }
 }

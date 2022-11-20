@@ -4,8 +4,8 @@ using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
-using Bumbo.Utils;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bumbo.Models

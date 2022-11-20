@@ -1,5 +1,6 @@
 ﻿using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace BumboRepositories
             return _context.Branches.Where(branch => branch.Manager == null).ToList();
         }
 
-        public void SetInactive(int id)
+         public void SetInactive(int id)
         {
             var branch = GetById(id);
             if (branch != null)

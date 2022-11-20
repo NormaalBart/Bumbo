@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using Bumbo.Models.PrognosisManager;
-using Bumbo.Utils;
 using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
+using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -68,7 +69,7 @@ namespace Bumbo.Controllers
             if (result.Count != 0)
             {
                 Employee employee = await _userManager.GetUserAsync(User);
-                _prognosisRepository.AddOrUpdateAllAsync(employee.DefaultBranch, result);
+                _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, result);
             }
             return View(list);
         }
@@ -76,7 +77,7 @@ namespace Bumbo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CopyFromWeek(int copyFromWeekNumber, int copyToWeekNumber, int copyFromYear, int copyToYear)
+        public async Task<IActionResult> CopyFromWeekAsync(int copyFromWeekNumber, int copyToWeekNumber, int copyFromYear, int copyToYear)
         {
             // This method copies the prognosis week from a certain week and adds it to another one.
             DateTime copyFromDate = OtherUtils.FirstDateOfWeekISO8601(copyFromYear, copyFromWeekNumber);
@@ -94,8 +95,9 @@ namespace Bumbo.Controllers
                 newPrognosis.ColiCount = copyFromPrognoses[i].ColiCount;
                 updatedNewWeek.Add(newPrognosis);
             }
-            
-            _prognosisRepository.AddOrUpdateAll(updatedNewWeek);
+
+            Employee employee = await _userManager.GetUserAsync(User);
+            _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, updatedNewWeek);
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });
         }

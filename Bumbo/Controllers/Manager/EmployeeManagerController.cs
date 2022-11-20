@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Bumbo.Models;
 using Bumbo.Models.EmployeeManager;
-using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BumboData.Enums;
 using Microsoft.AspNetCore.Identity;
+using BumboRepositories.Repositories;
 
 namespace Bumbo.Controllers
 {

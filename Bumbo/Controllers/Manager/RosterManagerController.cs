@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.RosterManager;
-using Bumbo.Utils;
-using BumboData;
 using BumboData.Models;
 using BumboRepositories;
+using BumboRepositories.Repositories;
+using BumboRepositories.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers
@@ -13,13 +15,15 @@ namespace Bumbo.Controllers
     [Authorize(Roles = "Manager")]
     public class RosterManagerController : Controller
     {
+        private UserManager<Employee> _userManager;
         private IMapper _mapper;
         private IEmployeeRepository _employeeRepository;
         private IPrognosisRepository _prognosisRepository;
         private IPlannedShiftsRepository _shiftRepository;
         private IUnavailableMomentsRepository _unavailableRepository;
-        public RosterManagerController(IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments)
+        public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments)
         {
+            _userManager = userManager;
             _mapper = mapper;
             _employeeRepository = employee;
             _prognosisRepository = prognosis;
@@ -125,7 +129,7 @@ namespace Bumbo.Controllers
         }
 
 
-        public IActionResult EmployeeRoster(string? dateInput)
+        public async Task<IActionResult> EmployeeRosterAsync(string? dateInput)
         {
             // requested date 
             DateTime date = DateTime.Today;
@@ -135,15 +139,12 @@ namespace Bumbo.Controllers
             }
 
             // id of the employee logged in currently.
-            string employeeId = _employeeRepository.GetIdOfEmployeeLoggedIn();
-            
-
+            Employee employee = await _userManager.GetUserAsync(User);
 
             EmployeeShiftsListViewModel shiftsVM = new EmployeeShiftsListViewModel();
             shiftsVM.Date = date.ToDateOnly();
-            var dbshifts = _shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, employeeId);
+            var dbshifts = _shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, employee.Id);
             shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
-
             return View(shiftsVM);
         }
     }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BumboData
+namespace BumboRepositories.Repositories
 {
     public interface IBranchRepository
     {

@@ -1,6 +1,6 @@
 ﻿using BumboData.Models;
 
-namespace BumboData
+namespace BumboRepositories.Repositories
 {
     public interface IUnavailableMomentsRepository
     {

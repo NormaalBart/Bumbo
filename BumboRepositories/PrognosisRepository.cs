@@ -1,6 +1,7 @@
-﻿using Bumbo.Utils;
-using BumboData;
+﻿using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
+using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,7 +71,7 @@ namespace BumboRepositories
             return DateOnly.FromDateTime(DateTime.Now);
         }
 
-        public void AddOrUpdateAllAsync(Branch defaultBranch, List<Prognosis> list)
+        public void AddOrUpdateAll(Branch branch, List<Prognosis> list)
         {
             if (list.Count == 0)
             {
@@ -89,7 +90,7 @@ namespace BumboRepositories
                     var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
-                    item.DepartmentPrognosis = this.CalculateDepartmentPrognosis(item).ToList();
+                    item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
                     prognosisDay.DepartmentPrognosis = item.DepartmentPrognosis;
 
 
@@ -98,9 +99,10 @@ namespace BumboRepositories
                 else
                 {
                     // makes sure that there's no time instance in the date.
+
                     // get the branch of the item
-                    item.Branch = defaultBranch;
-                    item.DepartmentPrognosis = this.CalculateDepartmentPrognosis(item).ToList();
+                    item.Branch = branch;
+                    item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
                     _context.Prognoses.Add(item);
 
                 }
@@ -167,7 +169,7 @@ namespace BumboRepositories
             return resultList;
         }
 
-        public IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognosis(Prognosis prognosis)
+        public IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis)
         {
             // This method calculates the amount of employees and hours needed for each department.
             // This is done using the standard from the database.
@@ -200,7 +202,4 @@ namespace BumboRepositories
         }
 
     }
-
-
-
 }

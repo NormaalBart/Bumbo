@@ -1,8 +1,8 @@
 ﻿using Bumbo.Models;
 using Bumbo.Models.EmployeeManager;
-using BumboData;
 using BumboData.Models;
 using BumboRepositories;
+using BumboRepositories.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;

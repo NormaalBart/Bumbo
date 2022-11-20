@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.BranchController;
-using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

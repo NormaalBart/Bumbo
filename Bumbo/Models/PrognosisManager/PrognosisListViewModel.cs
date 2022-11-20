@@ -1,5 +1,5 @@
-﻿using Bumbo.Utils;
-using BumboData.Models;
+﻿using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System.ComponentModel.DataAnnotations;
 

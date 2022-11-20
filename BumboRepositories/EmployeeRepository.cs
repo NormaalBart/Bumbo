@@ -1,6 +1,7 @@
 ﻿using BumboData;
 using BumboData.Enums;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 

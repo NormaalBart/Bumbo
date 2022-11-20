@@ -1,6 +1,6 @@
-﻿using Bumbo.Utils;
-using BumboData;
+﻿using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories

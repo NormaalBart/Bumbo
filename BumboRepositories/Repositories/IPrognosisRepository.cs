@@ -1,6 +1,6 @@
 ﻿using BumboData.Models;
 
-namespace BumboData
+namespace BumboRepositories.Repositories
 {
     public interface IPrognosisRepository
     {
@@ -17,11 +17,11 @@ namespace BumboData
 
         DateOnly GetNextEmptyPrognosisDate();
 
-        void AddOrUpdateAllAsync(Branch defaultBranch, List<Prognosis> list);
+        void AddOrUpdateAll(Branch branch, List<Prognosis> list);
 
         IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek);
 
-        IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognosis(Prognosis prognosis);
+        IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis);
 
 
     }
