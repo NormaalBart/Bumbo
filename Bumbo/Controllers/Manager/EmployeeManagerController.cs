@@ -214,7 +214,7 @@ namespace Bumbo.Controllers
             }
             foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
             {
-                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employeeKey, d.Id)));
+                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employee.EmployeeKey, d.Id)));
             }
 
             return View(employee);
