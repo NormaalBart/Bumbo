@@ -1,5 +1,6 @@
 ﻿using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,29 +24,35 @@ namespace BumboRepositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Branch> GetAll()
+        public IEnumerable<Branch> GetAllActiveBranches()
         {
-            return _context.Branches.ToList();
+            return _context.Branches.Where(branch => !branch.Inactive).ToList();
         }
 
-        public Branch GetById(int id)
+        public Branch? GetById(int id)
         {
-
-            return _context.Branches.Where(e => e.Id == id).FirstOrDefault();
+            return _context.Branches.FirstOrDefault(e => e.Id == id);
         }
 
         public void Update(Branch branch)
         {
-            throw new NotImplementedException();
+            _context.Branches.Update(branch);
+            _context.SaveChanges();
         }
-        public Branch GetBranchOfUser()
+
+        public List<Branch> GetUnmanagedBranches()
         {
-            // I implemented this method when branch creation and login features
-            // haven't been made yet. This gets a default first branch to assign
-            // everything to that needs it such as prognosis. 
-            // In the future, revamp this method so it returns the branch
-            // of the user who is currently logged in.
-            return _context.Branches.FirstOrDefault();
+            return _context.Branches.Where(branch => branch.Manager == null).ToList();
+        }
+
+         public void SetInactive(int id)
+        {
+            var branch = GetById(id);
+            if (branch != null)
+            {
+                branch.Inactive = true;
+                Update(branch);
+            }
         }
     }
 }

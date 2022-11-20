@@ -1,7 +1,7 @@
 using BumboData;
+using BumboData.Models;
 using BumboRepositories;
-using BumboServices;
-using BumboServices.Interface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bumbo
@@ -13,15 +13,13 @@ namespace Bumbo
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-         
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            
-            builder.Services.AddScoped<IEmployee, EmployeeRepository>();
-            builder.Services.AddScoped<IPrognosis, PrognosisRepository>();
-            builder.Services.AddScoped<IPlannedShifts, PlannedShiftsRepository>();
-            builder.Services.AddScoped<IUnavailableMoments, UnavailableMomentRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IPrognosisRepository, PrognosisRepository>();
+            builder.Services.AddScoped<IPlannedShiftsRepository, PlannedShiftsRepository>();
+            builder.Services.AddScoped<IUnavailableMomentsRepository, UnavailableMomentRepository>();
             builder.Services.AddScoped<IDepartmentsRepository, DepartmentRepository>();
             builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
@@ -35,6 +33,13 @@ namespace Bumbo
 
             });
 
+            builder.Services.AddIdentity<Employee, IdentityRole>(
+                options => {
+            options.SignIn.RequireConfirmedAccount = false;
+            }
+            ).AddEntityFrameworkStores<BumboContext>();
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -45,16 +50,17 @@ namespace Bumbo
                 app.UseHsts();
             }
 
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

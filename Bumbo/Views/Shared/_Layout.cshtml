@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using BumboData.Models
+@using BumboData.Enums
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,33 +18,60 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bumbo</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Medewerker Management</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Prognosis" asp-action="Index">Prognosis Management</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Roster Management</a>
-                        </li>
-                        <li class="nav-item">
-                           <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Overview">Export hours</a>
-                        </li>
-                    </ul>
-                </div>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bumbo</a>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Branch" asp-action="Index">Filiaalmanagement</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Medewerker Management</a>
+                                </li>
+                            }
+                            else if (User.IsInRole(RoleType.MANAGER.Name))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Medewerker Management</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Prognosis" asp-action="Index">Prognosis Management</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Roster Management</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Overview">Export hours</a>
+                                </li>
+                            }
+                            else if (User.IsInRole(RoleType.EMPLOYEE.Name))
+                            {
+                                <h1>Medewerker</h1>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Roster Management</a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" )">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                }
+                else
+                {
+                    //No header
+                }
             </div>
         </nav>
     </header>
