@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Globalization;
+﻿using System.Globalization;
 using Bumbo.Models.ExportManager;
 using Bumbo.Utils;
 using BumboData;
 using BumboData.Models;
-using BumboRepositories;
+using BumboServices;
+using BumboServices.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 
 namespace Bumbo.Controllers;
 
@@ -16,14 +15,17 @@ public class ExportController: Controller
     private readonly IEmployee _employeeRepository;
     private readonly IBranchRepository _branchRepository;
     private readonly IWorkedShiftRepository _workedShiftRepository;
+    private readonly IHourExportService _hourExportService;
     
     public ExportController(IEmployee employeeRepository, 
         IBranchRepository branchRepository, 
-        IWorkedShiftRepository workedShiftRepository)
+        IWorkedShiftRepository workedShiftRepository,
+        IHourExportService hourExportService)
     {
         _employeeRepository = employeeRepository;
         _branchRepository = branchRepository;
         _workedShiftRepository = workedShiftRepository;
+        _hourExportService = hourExportService;
     }
     
     public IActionResult Overview(String? SelectedMonth, String? SearchQuery)
@@ -57,11 +59,25 @@ public class ExportController: Controller
         
         // Get all employees that have worked in this month, and get all worked shifts for each employee.
         model.ExportOverviewListItemViewModels = workedShiftsInMonth.GroupBy(i => i.Employee)
-            .Select(e => ExportOverviewListItemViewModel.FromWorkedShifts(e.Key,e.ToList(),
+            .Select(e => FromWorkedShifts(e.Key,e.ToList(),
                 _workedShiftRepository.GetWorkedShiftsInMonth(prevMonth.Year, prevMonth.Month))).ToList();
 
         return View(model);
     }
+    
+    private ExportOverviewListItemViewModel FromWorkedShifts(
+        Employee employee,
+        List<WorkedShift> workedShiftsCurrentMonth, 
+        List<WorkedShift> prevMonthWorkedShifts)
+    {
+        return new ExportOverviewListItemViewModel()
+        {
+            Employee = employee,
+            CurrentMonth = _hourExportService.WorkedShiftsToExportOverview(workedShiftsCurrentMonth),
+            PrevMonth = _hourExportService.WorkedShiftsToExportOverview(prevMonthWorkedShifts),
+        };
+    }
+
 
     // For debug only
     public IActionResult Seed()

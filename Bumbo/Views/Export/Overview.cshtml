@@ -1,4 +1,9 @@
-﻿@model Bumbo.Models.ExportManager.ExportOverviewViewModel
+﻿@using Bumbo.Models.ExportManager
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Diagnostics
+@using Bumbo.Utils
+@using BumboServices.Surcharges.SurchargeRules
+@model Bumbo.Models.ExportManager.ExportOverviewViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -36,13 +41,42 @@
                             <td>
                                 <p class="fw-bold text-center">@viewModel.Employee.FullName()</p>
                             </td>
-                            <td>
-                                <p class="fw-bold">Deze maand</p>
-                                <p class="d-inline-block">Aantal gewerkte uren:</p>
-                                <p class="d-inline-block text-right">@viewModel.CurrentMonth.HoursWorked</p><br/>
-                                <p class="d-inline-block">Aantal zieke uren:</p>
-                                <p class="d-inline-block text-right">@viewModel.CurrentMonth.HoursSick</p>
-                            </td>
+                            @for (var i = 0; i < 3; i++)
+                            {
+                                var info = i switch
+                                {
+                                    0 => viewModel.CurrentMonth,
+                                    1 => viewModel.PrevMonth,
+                                    2 => viewModel.GetDifference(),
+                                    _ => null
+                                    };
+                                <td class="w-25">
+                                    
+                                    @switch (i)
+                                    {
+                                        case 0:
+                                            <p class="fw-bold text-center">Deze maand</p>
+                                            break;
+                                        case 1:
+                                            <p class="fw-bold text-center">Vorige maand</p>
+                                            break;
+                                        case 2:
+                                            <p class="fw-bold text-center">Verschil</p>
+                                            break;
+                                    }
+                                    <p>Aantal gewerkte uren:</p>
+                                    <p>@info?.HoursWorked.FormatTotalHourMinutes()h</p>
+                                    <p>Aantal zieke uren:</p>
+                                    <p>@info?.HoursSick.FormatTotalHourMinutes()h</p>
+                                    <p class="fw-bold text-center">Toeslagen</p>
+                                    <p>Zon- en feestdagen:</p>
+                                    <p>@(info?.Surcharges?[SurchargeType.Holiday].FormatTotalHourMinutes())h</p>
+                                    <p>50%:</p>
+                                    <p>@(info?.Surcharges?[SurchargeType.Surcharge50].FormatTotalHourMinutes())h</p>
+                                    <p>33,33%:</p>
+                                    <p>@(info?.Surcharges?[SurchargeType.Surcharge33].FormatTotalHourMinutes())h</p>
+                                </td>
+                            }
                         </tr>
                     }
                 }

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BumboData\BumboData.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="PublicHoliday" Version="2.20.0" />
+      <PackageReference Include="TimePeriodLibrary.NET" Version="2.1.1" />
+    </ItemGroup>
+
+</Project>

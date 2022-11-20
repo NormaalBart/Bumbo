@@ -1,5 +1,7 @@
 using BumboData;
 using BumboRepositories;
+using BumboServices;
+using BumboServices.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bumbo
@@ -23,6 +25,8 @@ namespace Bumbo
             builder.Services.AddScoped<IDepartmentsRepository, DepartmentRepository>();
             builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+
+            builder.Services.AddScoped<IHourExportService, HourExportService>();
 
             builder.Services.AddDbContext<BumboContext>(options =>
             {

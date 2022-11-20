@@ -6,14 +6,9 @@ public class ExportOverviewViewModel
 
     public List<DateTime> SelectableMonths { get; set; }
 
-    public String SearchQuery { get; set; }
+    public string SearchQuery { get; set; }
 
-    public String SearchDepartmentsQuery { get; set; }
+    public string SearchDepartmentsQuery { get; set; }
 
     public List<ExportOverviewListItemViewModel> ExportOverviewListItemViewModels { get; set; }
-
-    public ExportOverviewViewModel()
-    {
-        
-    }
 }
