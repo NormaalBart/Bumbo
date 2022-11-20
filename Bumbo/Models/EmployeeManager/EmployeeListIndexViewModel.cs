@@ -1,8 +1,6 @@
-﻿using BumboData.Enums;
-using Newtonsoft.Json.Linq;
-using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using BumboData.Enums;
 
 namespace Bumbo.Models.EmployeeManager
 {

@@ -1,11 +1,12 @@
-﻿using Bumbo.Utils;
-using BumboData;
+﻿using BumboData;
 using BumboData.Models;
+using BumboRepositories.Repositories;
+using BumboRepositories.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories
 {
-    public class PrognosisRepository : IPrognosis
+    public class PrognosisRepository : IPrognosisRepository
     {
         private BumboContext _context;
         private IBranchRepository _branchRepository;
@@ -14,7 +15,7 @@ namespace BumboRepositories
             _context = context;
             _branchRepository = branchRepository;
         }
-        
+
         public void Add(Prognosis prognosisDay)
         {
             _context.Prognoses.Add(prognosisDay);
@@ -28,7 +29,7 @@ namespace BumboRepositories
 
         public Prognosis GetByDate(DateOnly date)
         {
-           
+
             return _context.Prognoses.FirstOrDefault(p => p.Date == date);
         }
 
@@ -68,10 +69,10 @@ namespace BumboRepositories
             }
             return DateOnly.FromDateTime(DateTime.Now);
         }
-        
-        public void AddOrUpdateAll(List<Prognosis> list)
+
+        public void AddOrUpdateAll(Branch branch, List<Prognosis> list)
         {
-            if(list.Count == 0)
+            if (list.Count == 0)
             {
                 return;
             }
@@ -85,12 +86,12 @@ namespace BumboRepositories
                 // other wise we add it.
                 if (_context.Prognoses.Where(p => p.Date == item.Date).FirstOrDefault() != null)
                 {
-                    var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognoses).FirstOrDefault();
+                    var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
-                    item.DepartmentPrognoses = this.CalculateDepartmentPrognoses(item).ToList();
-                    prognosisDay.DepartmentPrognoses = item.DepartmentPrognoses;
-                    
+                    item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
+                    prognosisDay.DepartmentPrognosis = item.DepartmentPrognosis;
+
 
                     _context.Prognoses.Update(prognosisDay);
                 }
@@ -99,10 +100,10 @@ namespace BumboRepositories
                     // makes sure that there's no time instance in the date.
 
                     // get the branch of the item
-                    item.Branch = _branchRepository.GetBranchOfUser();
-                    item.DepartmentPrognoses = this.CalculateDepartmentPrognoses(item).ToList();
+                    item.Branch = branch;
+                    item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
                     _context.Prognoses.Add(item);
-                    
+
                 }
             }
             _context.SaveChanges();
@@ -127,7 +128,7 @@ namespace BumboRepositories
                 }
             }
 
-            
+
             var resultList = new List<Prognosis>();
             // if the database does not have any days for the week, we return default values.
             if (nextWeek.Count() == 0)
@@ -151,7 +152,7 @@ namespace BumboRepositories
             for (int i = 0; i < 7; i++)
             {
                 var temp = this.GetByDate(firstDayOfWeek.AddDays(i));
-                if(temp == null)
+                if (temp == null)
                 {
                     Prognosis prognosis = new Prognosis();
                     prognosis.Date = firstDayOfWeek.AddDays(i);
@@ -200,7 +201,4 @@ namespace BumboRepositories
         }
 
     }
-
-
-  
 }
