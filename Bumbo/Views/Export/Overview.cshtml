@@ -1,4 +1,5 @@
 ﻿@using Bumbo.Utils
+@using BumboData.Enums
 @using BumboServices.Surcharges.SurchargeRules
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bumbo.Models.ExportManager.ExportOverviewViewModel
@@ -94,10 +95,12 @@
         </div>
         <div class="col-md-2 d-flex justify-content-center order-sm-0 order-0">
             <div>
-                <h3>Filters</h3>
+                <h4>Filters</h4>
                 <form asp-action="Overview" method="get">
                     <div class="form-group w-100">
                         <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
+                        <h5><label asp-for="SortMode" class="control-label"></label></h5>
+                        <select asp-for="SortMode" class="form-control" value="@Model.SortMode" asp-items="@Html.GetEnumSelectList<ExportOverviewSortingOption>()"></select>
                         <input class="btn btn-primary my-2" type="submit" value="Zoeken">
                     </div>
                 </form>

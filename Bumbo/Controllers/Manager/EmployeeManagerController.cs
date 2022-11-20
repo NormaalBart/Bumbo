@@ -30,7 +30,7 @@ namespace Bumbo.Controllers
         }
 
 
-        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, SortingOption currentSort)
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort)
         {
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
@@ -61,28 +61,28 @@ namespace Bumbo.Controllers
             switch (currentSort)
             {
                 // case for each sortingoption, with asc and desc
-                case SortingOption.Name_Asc:
+                case EmployeeSortingOption.Name_Asc:
                     employees = employees.OrderBy(e => e.FirstName);
                     break;
-                case SortingOption.Name_Desc:
+                case EmployeeSortingOption.Name_Desc:
                     employees = employees.OrderByDescending(e => e.FirstName);
                     break;
-                case SortingOption.Function_Desc:
+                case EmployeeSortingOption.Function_Desc:
                     employees = employees.OrderByDescending(e => e.Function);
                     break;
-                case SortingOption.Function_Asc:
+                case EmployeeSortingOption.Function_Asc:
                     employees = employees.OrderBy(e => e.Function);
                     break;
-                case SortingOption.Birthdate_Asc:
+                case EmployeeSortingOption.Birthdate_Asc:
                     employees = employees.OrderBy(e => e.Birthdate);
                     break;
-                case SortingOption.Birthdate_Desc:
+                case EmployeeSortingOption.Birthdate_Desc:
                     employees = employees.OrderByDescending(e => e.Birthdate);
                     break;
-                case SortingOption.EmployeeSince_Asc:
+                case EmployeeSortingOption.EmployeeSince_Asc:
                     employees = employees.OrderBy(e => e.EmployeeSince);
                     break;
-                case SortingOption.EmployeeSince_Desc:
+                case EmployeeSortingOption.EmployeeSince_Desc:
                     employees = employees.OrderByDescending(e => e.EmployeeSince);
                     break;
                 default:

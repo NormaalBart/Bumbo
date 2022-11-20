@@ -44,10 +44,11 @@ public class HourExportService : IHourExportService
 
     public HourExportModel WorkedShiftsToExportOverview(List<WorkedShift> shifts)
     {
-        // Only allow shifts in the same month
+        // Only allow shifts in the same month, and only approved shifts.
         var first = shifts.FirstOrDefault();
         shifts = shifts.Where(s => s.StartTime.Year == first?.StartTime.Year &&
-                                   s.StartTime.Month == first?.StartTime.Month).ToList();
+                                   s.StartTime.Month == first?.StartTime.Month && 
+                                   s.Approved).ToList();
 
         var dict = new Dictionary<SurchargeType, TimeSpan>();
 

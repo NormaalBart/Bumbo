@@ -13,9 +13,9 @@ namespace Bumbo.Models.EmployeeManager
         public bool IncludeInactive { get; set; }
         public string SearchString { get; set; }
 
-        public SortingOption CurrentSort { get; set; }
+        public EmployeeSortingOption CurrentSort { get; set; }
         
-        public List<SortingOption> AvailableSortOptions { get; set; }
+        public List<EmployeeSortingOption> AvailableSortOptions { get; set; }
 
 
 
@@ -23,16 +23,16 @@ namespace Bumbo.Models.EmployeeManager
         {
             Employees = new List<EmployeeListItemViewModel>();
             // available sort options fill with all options from enum
-            AvailableSortOptions = new List<SortingOption>();
-            foreach (var option in Enum.GetValues(typeof(SortingOption)))
+            AvailableSortOptions = new List<EmployeeSortingOption>();
+            foreach (var option in Enum.GetValues(typeof(EmployeeSortingOption)))
             {
-                AvailableSortOptions.Add((SortingOption)option);
+                AvailableSortOptions.Add((EmployeeSortingOption)option);
                 
             }
            
         }
 
-        public string GetSortingDisplayName(SortingOption sortoption)
+        public string GetSortingDisplayName(EmployeeSortingOption sortoption)
         {
             return sortoption.GetAttribute<DisplayAttribute>().Name;
         }

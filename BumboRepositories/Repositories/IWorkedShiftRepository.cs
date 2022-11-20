@@ -6,6 +6,7 @@ namespace BumboRepositories.Repositories
     {
         WorkedShift LastWorkedShiftWithNoEndTime(Employee employee);
         IEnumerable<WorkedShift> GetAll();
+        IEnumerable<WorkedShift> GetAllApproved();
         WorkedShift GetById(string id);
         void Add(WorkedShift workedShift);
         void Update(WorkedShift workedShift);

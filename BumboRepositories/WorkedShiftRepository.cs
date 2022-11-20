@@ -22,8 +22,14 @@ namespace BumboRepositories
 
         public IEnumerable<WorkedShift> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.WorkedShifts.ToList();
         }
+        
+        public IEnumerable<WorkedShift> GetAllApproved()
+        {
+            return _context.WorkedShifts.Where(s=>s.Approved).ToList();
+        }
+        
 
         public WorkedShift GetById(string id)
         {

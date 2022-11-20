@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace BumboData.Enums
 {
-    public enum SortingOption
+    public enum EmployeeSortingOption
     {
         [Display(Name = "Naam A-Z")]
         Name_Asc,

@@ -1,23 +1,25 @@
 ﻿using System.Globalization;
 using Bumbo.Models.ExportManager;
+using BumboData.Enums;
 using BumboData.Models;
 using BumboRepositories.Repositories;
 using BumboRepositories.Utils;
 using BumboServices.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers;
 
-public class ExportController: Controller
+[Authorize(Roles = "Manager")]
+public class ExportController : Controller
 {
-
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IBranchRepository _branchRepository;
     private readonly IWorkedShiftRepository _workedShiftRepository;
     private readonly IHourExportService _hourExportService;
-    
-    public ExportController(IEmployeeRepository employeeRepository, 
-        IBranchRepository branchRepository, 
+
+    public ExportController(IEmployeeRepository employeeRepository,
+        IBranchRepository branchRepository,
         IWorkedShiftRepository workedShiftRepository,
         IHourExportService hourExportService)
     {
@@ -26,26 +28,28 @@ public class ExportController: Controller
         _workedShiftRepository = workedShiftRepository;
         _hourExportService = hourExportService;
     }
-    
-    public IActionResult Overview(String? SelectedMonth, String? SearchQuery)
+
+    public IActionResult Overview(string? SelectedMonth, string? SearchQuery, ExportOverviewSortingOption? SortMode = ExportOverviewSortingOption.HoursAsc)
     {
-        var monthSelected = SelectedMonth == null ? DateTime.Now : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
-            
+        var monthSelected = SelectedMonth == null
+            ? DateTime.Now
+            : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
+
         var model = new ExportOverviewViewModel();
 
-        var selectableMonths = new List<DateTime>();
-        
-        // Temp
-        foreach (var i in Enumerable.Range(0, 24))
-        {
-            selectableMonths.Add(DateTime.Now.Subtract(TimeSpan.FromDays(i * 30)));
-        }
+        var workedShiftsInMonth =
+            _workedShiftRepository.GetWorkedShiftsInMonth(monthSelected.Year, monthSelected.Month);
+
+        // Get all months available, where at least 1 shift has taken place in.
+        var selectableMonths = _workedShiftRepository.GetAllApproved()
+            .Select(s => (s.StartTime.Date.Year, s.StartTime.Date.Month))
+            .Distinct()
+            .Select(s => new DateTime(s.Year, s.Month, 1)).ToList();
 
         model.SelectableMonths = selectableMonths;
         model.SelectedMonth = monthSelected;
+        model.SortMode = SortMode;
         model.SearchQuery = SearchQuery;
-
-        var workedShiftsInMonth = _workedShiftRepository.GetWorkedShiftsInMonth(monthSelected.Year, monthSelected.Month);
 
         if (SearchQuery != null && SearchQuery.Trim().Length != 0)
         {
@@ -55,18 +59,34 @@ public class ExportController: Controller
         }
 
         var prevMonth = new DateTime(monthSelected.Ticks).AddMonths(-1);
-        
+
         // Get all employees that have worked in this month, and get all worked shifts for each employee.
         model.ExportOverviewListItemViewModels = workedShiftsInMonth.GroupBy(i => i.Employee)
-            .Select(e => FromWorkedShifts(e.Key,e.ToList(),
+            .Select(e => FromWorkedShifts(e.Key, e.ToList(),
                 _workedShiftRepository.GetWorkedShiftsInMonth(e.Key.Id, prevMonth.Year, prevMonth.Month))).ToList();
 
+        // Apply sorting
+        model.ExportOverviewListItemViewModels = SortMode switch
+        {
+            ExportOverviewSortingOption.HoursAsc => model.ExportOverviewListItemViewModels
+                .OrderBy(m => m.CurrentMonth.HoursWorked).Reverse().ToList(),
+            ExportOverviewSortingOption.HoursDesc => model.ExportOverviewListItemViewModels
+                .OrderBy(m => m.CurrentMonth.HoursWorked).ToList(),
+            ExportOverviewSortingOption.SickAsc => model.ExportOverviewListItemViewModels
+                .OrderBy(m => m.CurrentMonth.HoursSick).Reverse().ToList(),
+            ExportOverviewSortingOption.SickDesc => model.ExportOverviewListItemViewModels
+                .OrderBy(m => m.CurrentMonth.HoursSick).ToList(),
+            ExportOverviewSortingOption.DifferenceAsc => model.ExportOverviewListItemViewModels
+                .OrderBy(m => m.GetDifference().HoursWorked).Reverse().ToList(),
+            ExportOverviewSortingOption.DifferenceDesc => model.ExportOverviewListItemViewModels
+                .OrderBy(m => m.GetDifference().HoursWorked).ToList()
+        };
         return View(model);
     }
-    
+
     private ExportOverviewListItemViewModel FromWorkedShifts(
         Employee employee,
-        List<WorkedShift> workedShiftsCurrentMonth, 
+        List<WorkedShift> workedShiftsCurrentMonth,
         List<WorkedShift> prevMonthWorkedShifts)
     {
         return new ExportOverviewListItemViewModel()
@@ -90,9 +110,9 @@ public class ExportController: Controller
             HouseNumber = "12a",
             ShelvingDistance = 123
         });
-        
+
         var branch = _branchRepository.GetAllActiveBranches().First();
-        
+
         // Add employees
         foreach (var i in Enumerable.Range(0, 50))
         {
@@ -119,24 +139,25 @@ public class ExportController: Controller
 
     private void SeedMonth(Branch branch, DateTime month)
     {
-        
         var firstDayOfMonth = new DateTime(month.Year, month.Month, 1);
         var lastDayOfMonth = new DateTime(month.Year, month.Month, DateTime.DaysInMonth(month.Year, month.Month));
-        
+
         var random = new Random();
-        
+
         // Add worked shifts
         foreach (var employee in _employeeRepository.GetAll())
         {
             // Add shift for each day of month
             foreach (var day in Enumerable.Range(firstDayOfMonth.Day, lastDayOfMonth.Day))
             {
-                var startTime = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, day, random.Next(20), random.Next(59), 0);
+                var startTime = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, day, random.Next(20),
+                    random.Next(59), 0);
 
                 var endTime = DateTime.MinValue;
                 while (startTime > endTime)
                 {
-                    endTime = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, day, random.Next(23), random.Next(59), 0);
+                    endTime = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, day, random.Next(23),
+                        random.Next(59), 0);
                 }
 
                 var workedShift = new WorkedShift()
@@ -151,6 +172,5 @@ public class ExportController: Controller
                 _workedShiftRepository.Add(workedShift);
             }
         }
-
     }
 }
