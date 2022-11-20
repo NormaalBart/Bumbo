@@ -28,7 +28,7 @@ namespace BumboRepositories
 
         public IEnumerable<Employee> GetAll()
         {
-            return _context.Employees;
+            return _context.Employees.ToList();
         }
 
         public Employee GetById(string id)
