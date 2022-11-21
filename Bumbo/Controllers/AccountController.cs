@@ -1,7 +1,7 @@
 ﻿using Bumbo.Models.AccountController;
 using BumboData.Enums;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

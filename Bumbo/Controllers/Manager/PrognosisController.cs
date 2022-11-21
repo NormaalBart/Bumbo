@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.PrognosisManager;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Repositories;
 using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
