@@ -1,9 +1,4 @@
 ﻿using BumboData.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BumboRepositories.Repositories
 {
@@ -11,8 +6,11 @@ namespace BumboRepositories.Repositories
     {
         WorkedShift LastWorkedShiftWithNoEndTime(Employee employee);
         IEnumerable<WorkedShift> GetAll();
+        IEnumerable<WorkedShift> GetAllApproved();
         WorkedShift GetById(string id);
         void Add(WorkedShift workedShift);
         void Update(WorkedShift workedShift);
+        List<WorkedShift> GetWorkedShiftsInMonth(string employee, int year, int month);
+        List<WorkedShift> GetWorkedShiftsInMonth(int year, int month);
     }
 }

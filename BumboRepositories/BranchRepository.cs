@@ -1,12 +1,6 @@
 ﻿using BumboData;
 using BumboData.Models;
 using BumboRepositories.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BumboRepositories
 {
@@ -26,7 +20,7 @@ namespace BumboRepositories
 
         public IEnumerable<Branch> GetAllActiveBranches()
         {
-            return _context.Branches.Where(branch => !branch.Inactive);
+            return _context.Branches.Where(branch => !branch.Inactive).ToList();
         }
 
         public Branch? GetById(int id)

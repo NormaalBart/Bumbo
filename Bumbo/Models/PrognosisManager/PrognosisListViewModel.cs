@@ -1,7 +1,4 @@
-﻿using BumboData.Models;
-using BumboRepositories.Utils;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using System.ComponentModel.DataAnnotations;
+﻿using BumboRepositories.Utils;
 
 namespace Bumbo.Models.PrognosisManager
 {

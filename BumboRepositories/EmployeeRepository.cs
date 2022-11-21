@@ -3,7 +3,6 @@ using BumboData.Enums;
 using BumboData.Models;
 using BumboRepositories.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace BumboRepositories
 {
@@ -29,7 +28,7 @@ namespace BumboRepositories
 
         public IEnumerable<Employee> GetAll()
         {
-            return _context.Employees;
+            return _context.Employees.ToList();
         }
 
         public Employee GetById(string id)

@@ -2,7 +2,6 @@
 using BumboData.Models;
 using BumboRepositories.Repositories;
 using BumboRepositories.Utils;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories

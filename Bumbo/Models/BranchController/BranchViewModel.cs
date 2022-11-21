@@ -1,6 +1,6 @@
-﻿using BumboData.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using BumboData.Models;
 
 namespace Bumbo.Models.BranchController
 {

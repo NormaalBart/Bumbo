@@ -1,7 +1,6 @@
-﻿using BumboData.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using BumboData.Models;
 
 namespace Bumbo.Models.EmployeeManager
 {

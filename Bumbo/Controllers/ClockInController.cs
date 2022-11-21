@@ -1,11 +1,8 @@
 ﻿using Bumbo.Models;
-using Bumbo.Models.EmployeeManager;
 using BumboData.Models;
-using BumboRepositories;
 using BumboRepositories.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace Bumbo.Controllers
 {

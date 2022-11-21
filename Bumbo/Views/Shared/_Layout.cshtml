@@ -1,6 +1,6 @@
 ﻿@using BumboData.Models
-@using BumboData.Enums
 @using Microsoft.AspNetCore.Identity
+@using BumboData.Enums
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
 
@@ -47,6 +47,9 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Roster Management</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Overview">Export hours</a>
                                 </li>
                             }
                             else if (User.IsInRole(RoleType.EMPLOYEE.Name))
