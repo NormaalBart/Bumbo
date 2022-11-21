@@ -109,7 +109,7 @@ namespace Bumbo.Controllers
 
             if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
             {
-                employee.Function = "Manager";
+                employee.Function = RoleType.MANAGER.Name;
                 employee.Branches = _branchRepository.GetUnmanagedBranches();
             } else
             {
