@@ -2,7 +2,7 @@
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.RosterManager;
 using BumboData.Models;
-using BumboRepositories.Repositories;
+using BumboRepositories.Interfaces;
 using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -41,7 +41,7 @@ namespace Bumbo.Controllers
             DateTime date = DateTime.Parse(dateInput);
             RosterDayViewModel viewModel = new RosterDayViewModel();
             viewModel.Date = date;
-            var employeeList = _employeeRepository.GetAll();
+            var employeeList = _employeeRepository.GetList();
             var e = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(employeeList);
             viewModel.Employees = e.ToList();
 
@@ -68,7 +68,7 @@ namespace Bumbo.Controllers
             viewModel.StartTime = viewModel.Date.AddHours(8);
             viewModel.EndTime = viewModel.Date.AddHours(16);
             viewModel.PrognosisId = prognosisId;
-            viewModel.DepartmentsList = _employeeRepository.GetById(employeeId).AllowedDepartments.ToList();
+            viewModel.DepartmentsList = _employeeRepository.Get(employeeId).AllowedDepartments.ToList();
             
             return View(viewModel);
         }
@@ -80,7 +80,7 @@ namespace Bumbo.Controllers
         {
             int maxHoursInWeekAllowed = 40; // DEFAULT 40 TODO 
             
-            newShift.DepartmentsList = _employeeRepository.GetById(newShift.EmployeeId).AllowedDepartments.ToList();
+            newShift.DepartmentsList = _employeeRepository.Get(newShift.EmployeeId).AllowedDepartments.ToList();
 
             // since starttime and endtime seem to only save the timestamps, we need to add the date to it
             newShift.StartTime = newShift.Date.AddHours(newShift.StartTime.Hour);

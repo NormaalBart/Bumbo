@@ -2,7 +2,7 @@
 using Bumbo.Models.EmployeeManager;
 using BumboData.Enums;
 using BumboData.Models;
-using BumboRepositories.Repositories;
+using BumboRepositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +35,7 @@ namespace Bumbo.Controllers
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
 
-            var employees = _employeesRepository.GetAll();
+            var employees = _employeesRepository.GetList();
             if (!includeInactive && !includeActive)
             {
                 employees = employees.Where(e => e.Active);
@@ -153,11 +153,11 @@ namespace Bumbo.Controllers
                     return View();
                 }
 
-                _employeesRepository.Add(employee);
+                _employeesRepository.Create(employee);
                 if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                 {
                     await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
-                    employee.DefaultBranch = _branchRepository.GetById(employee.DefaultBranchId);
+                    employee.DefaultBranch = _branchRepository.Get(employee.DefaultBranchId);
                     employee.DefaultBranch.Manager = employee;
                     _branchRepository.Update(employee.DefaultBranch);
                     await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
@@ -180,7 +180,7 @@ namespace Bumbo.Controllers
         public IActionResult Edit(string employeeKey)
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
-            employee = _mapper.Map<Employee, EmployeeCreateViewModel>(_employeesRepository.GetById(employeeKey));
+            employee = _mapper.Map<Employee, EmployeeCreateViewModel>(_employeesRepository.Get(employeeKey));
             foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
             {
                 employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employeeKey, d.Id)));

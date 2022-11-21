@@ -1,6 +1,6 @@
 ﻿using BumboData;
 using BumboData.Models;
-using BumboRepositories.Repositories;
+using BumboRepositories.Interfaces;
 
 namespace BumboRepositories
 {

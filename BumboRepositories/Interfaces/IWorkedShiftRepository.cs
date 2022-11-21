@@ -1,6 +1,6 @@
 ﻿using BumboData.Models;
 
-namespace BumboRepositories.Repositories
+namespace BumboRepositories.Interfaces
 {
     public interface IWorkedShiftRepository
     {

@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BumboData.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace BumboData.Models;
 
-public class Employee: IdentityUser
+public class Employee: IdentityUser, IEntity<string>
 {
 
     [Required]

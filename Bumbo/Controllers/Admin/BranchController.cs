@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.BranchController;
 using BumboData.Models;
-using BumboRepositories.Repositories;
+using BumboRepositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,7 +47,7 @@ namespace Bumbo.Controllers.Admin
                 {
                     branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = day, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
                 }
-                _branchRepository.Add(branch);
+                _branchRepository.Create(branch);
                 return RedirectToAction(nameof(Index));
             }
             return View(branchModel);
@@ -56,7 +56,7 @@ namespace Bumbo.Controllers.Admin
         // GET: BranchController/Edit/5
         public ActionResult Edit(int id)
         {
-            var branch = _branchRepository.GetById(id);
+            var branch = _branchRepository.Get(id);
             if (branch == null)
             {
                 return RedirectToAction("Index");
@@ -89,7 +89,7 @@ namespace Bumbo.Controllers.Admin
 
         public ActionResult SetInactive(int id)
         {
-            var branch = _branchRepository.GetById(id);
+            var branch = _branchRepository.Get(id);
             if (branch == null)
             {
                 return RedirectToAction("Index");

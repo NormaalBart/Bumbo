@@ -1,47 +1,31 @@
 ﻿using BumboData;
 using BumboData.Models;
-using BumboRepositories.Repositories;
+using BumboRepositories.Interfaces;
 
 namespace BumboRepositories
 {
-    public class BranchRepository : IBranchRepository
+    public class BranchRepository : Repository<Branch>, IBranchRepository
     {
-        private BumboContext _context;
 
         public BranchRepository(BumboContext context)
+            : base(context)
         {
-            this._context = context;
-        }
-        public void Add(Branch branch)
-        {
-            _context.Branches.Add(branch);
-            _context.SaveChanges();
+
         }
 
         public IEnumerable<Branch> GetAllActiveBranches()
         {
-            return _context.Branches.Where(branch => !branch.Inactive).ToList();
-        }
-
-        public Branch? GetById(int id)
-        {
-            return _context.Branches.FirstOrDefault(e => e.Id == id);
-        }
-
-        public void Update(Branch branch)
-        {
-            _context.Branches.Update(branch);
-            _context.SaveChanges();
+            return DbSet.Where(branch => !branch.Inactive).ToList();
         }
 
         public List<Branch> GetUnmanagedBranches()
         {
-            return _context.Branches.Where(branch => branch.Manager == null).ToList();
+            return DbSet.Where(branch => branch.Manager == null).ToList();
         }
 
          public void SetInactive(int id)
         {
-            var branch = GetById(id);
+            var branch = Get(id);
             if (branch != null)
             {
                 branch.Inactive = true;
