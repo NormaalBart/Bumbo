@@ -2,10 +2,8 @@
 
 namespace BumboRepositories.Interfaces
 {
-    public interface IDepartmentsRepository
+    public interface IDepartmentsRepository: IRepository<Department>
     {
-        IEnumerable<Department> GetAllExistingDepartments();
         Department GetById(int id);
-
     }
 }

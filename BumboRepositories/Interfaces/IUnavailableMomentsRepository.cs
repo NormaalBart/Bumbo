@@ -2,11 +2,8 @@
 
 namespace BumboRepositories.Interfaces
 {
-    public interface IUnavailableMomentsRepository
+    public interface IUnavailableMomentsRepository: IRepository<UnavailableMoment>
     {
-        IEnumerable<WorkedShift> GetAll();
-        WorkedShift GetById(int id);
-        void Add(WorkedShift workedShift);
         bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime);
     }
 }

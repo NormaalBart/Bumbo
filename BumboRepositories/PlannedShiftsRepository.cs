@@ -5,33 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories
 {
-    public class PlannedShiftsRepository : IPlannedShiftsRepository
+    public class PlannedShiftsRepository : Repository<PlannedShift>, IPlannedShiftsRepository
     {
-        private BumboContext _context;
-
-        public PlannedShiftsRepository(BumboContext context)
+        public PlannedShiftsRepository(BumboContext context): base(context)
         {
-            _context = context;
         }
-        
 
-        public void Add(PlannedShift plannedShift)
-        {
+        public override PlannedShift Create(PlannedShift entity)
+        { 
             // db complains about foreign key being null
-            plannedShift.Employee = _context.Employees.Where(e => e.Id == plannedShift.Employee.Id).FirstOrDefault();
-
-            _context.PlannedShifts.Add(plannedShift);
-            _context.SaveChanges();
+            entity.Employee = Context.Employees.Where(e => e.Id == entity.Employee.Id).FirstOrDefault();
+            return base.Create(entity);
         }
 
-        public IEnumerable<PlannedShift> GetAll()
+        public override IEnumerable<PlannedShift> GetList()
         {
-            return _context.PlannedShifts.Include(p => p.Employee);
-        }
-
-        public WorkedShift GetById(int id)
-        {
-            throw new NotImplementedException();
+            return Context.PlannedShifts.Include(p => p.Employee);
         }
 
         public double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate)
@@ -42,7 +31,7 @@ namespace BumboRepositories
                 diff -= 7;
             var startOfWeek = currentDate.AddDays(diff);
             // check if the employee has worked too much this week 
-            var shiftsThisWeek = _context.PlannedShifts.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
+            var shiftsThisWeek = DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
             if (shiftsThisWeek.Count > 0)
             {
                 double totalHoursThisWeek = 0;
@@ -59,12 +48,12 @@ namespace BumboRepositories
         public IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId)
         {
             // returns the next 7 days.
-            return _context.PlannedShifts.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= date && p.StartTime <= date.AddDays(7)).Include(p => p.Department).Include(p => p.Branch);
+            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= date && p.StartTime <= date.AddDays(7)).Include(p => p.Department).Include(p => p.Branch);
         }
 
         public bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift)
         {
-            var overlappingShifts = _context.PlannedShifts.Where(p => p.Employee.Id == plannedShift.Employee.Id && p.StartTime.Date == plannedShift.StartTime.Date).ToList();
+            var overlappingShifts = DbSet.Where(p => p.Employee.Id == plannedShift.Employee.Id && p.StartTime.Date == plannedShift.StartTime.Date).ToList();
             if (overlappingShifts.Count > 0)
             {
                 foreach (var shift in overlappingShifts)

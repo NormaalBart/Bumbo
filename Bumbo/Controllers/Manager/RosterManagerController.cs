@@ -120,7 +120,7 @@ namespace Bumbo.Controllers
                 }
                 
                 
-                _shiftRepository.Add(shift);
+                _shiftRepository.Create(shift);
                 return RedirectToAction("Index", new RouteValueDictionary(
                     new { controller = "RosterManager", action = "Index", dateInput = newShift.StartTime.Date.ToString()}));
             }

@@ -101,7 +101,7 @@ namespace Bumbo.Controllers
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
 
 
-            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            foreach (var d in _departmentsRepository.GetList().ToList())
             {
                 employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName,
                     User.IsInRole(RoleType.ADMINISTRATOR.Name)));
@@ -169,7 +169,7 @@ namespace Bumbo.Controllers
                 return RedirectToAction("Index");
 
             }
-            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            foreach (var d in _departmentsRepository.GetList().ToList())
             {
                 newEmployee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, false));
             }
@@ -181,7 +181,7 @@ namespace Bumbo.Controllers
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
             employee = _mapper.Map<Employee, EmployeeCreateViewModel>(_employeesRepository.Get(employeeKey));
-            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            foreach (var d in _departmentsRepository.GetList().ToList())
             {
                 employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employeeKey, d.Id)));
             }
@@ -210,7 +210,7 @@ namespace Bumbo.Controllers
                 return RedirectToAction("Index");
 
             }
-            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            foreach (var d in _departmentsRepository.GetList().ToList())
             {
                 employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employee.EmployeeKey, d.Id)));
             }

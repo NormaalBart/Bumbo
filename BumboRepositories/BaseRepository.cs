@@ -46,34 +46,34 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
 
     protected DbSet<TEntity> DbSet => _dbSet ??= Context.Set<TEntity>();
 
-    public TEntity? Get(TKey id) =>
+    public virtual TEntity? Get(TKey id) =>
         DbSet
             .AsQueryable()
             .FirstOrDefault(i => i.Id.Equals(id));
 
-    public TEntity? Get(Expression<Func<TEntity, bool>> predicate) =>
+    public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate) =>
         DbSet
             .AsQueryable()
             .FirstOrDefault(predicate);
 
-    public IEnumerable<TEntity> GetList() => DbSet
+    public virtual IEnumerable<TEntity> GetList() => DbSet
         .AsQueryable()
         .ToList();
 
-    public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate) =>
+    public virtual IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate) =>
         DbSet
             .AsQueryable()
             .Where(predicate)
             .ToList();
 
-    public TEntity Create(TEntity entity)
+    public virtual TEntity Create(TEntity entity)
     {
         DbSet.Add(entity);
         Context.SaveChanges();
         return entity;
     }
 
-    public TEntity Update(TEntity entity)
+    public virtual TEntity Update(TEntity entity)
     {
         bool IsBeingTracked(TEntity e) => DbSet.Local.Any(i => i == e);
 
@@ -91,7 +91,7 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         return entity;
     }
 
-    public void Delete(TEntity entity)
+    public virtual void Delete(TEntity entity)
     {
         Context.Remove(entity);
         Context.SaveChanges();

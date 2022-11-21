@@ -46,7 +46,7 @@ namespace Bumbo.Controllers
                 newWorkedShift.StartTime = DateTime.Now;
                 newWorkedShift.Sick = false;
                 newWorkedShift.Approved = false;
-                _workedShiftRepository.Add(newWorkedShift);
+                _workedShiftRepository.Create(newWorkedShift);
             }
             return Ok();
         }

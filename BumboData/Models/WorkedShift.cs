@@ -1,9 +1,10 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using BumboData.Interfaces;
 
 namespace BumboData.Models;
 
-public class WorkedShift
+public class WorkedShift : IEntity<int>
 {
     [Key]
     public int Id { get; set; }

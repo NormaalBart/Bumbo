@@ -2,11 +2,8 @@
 
 namespace BumboRepositories.Interfaces
 {
-    public interface IPrognosisRepository
+    public interface IPrognosisRepository: IRepository<Prognosis>
     {
-        IEnumerable<Prognosis> GetAll();
-        void Add(Prognosis prognosisDay);
-        Prognosis GetById(int id);
         Prognosis GetByDate(DateOnly date);
         IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date);
 
@@ -22,7 +19,5 @@ namespace BumboRepositories.Interfaces
         IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek);
 
         IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis);
-
-
     }
 }
