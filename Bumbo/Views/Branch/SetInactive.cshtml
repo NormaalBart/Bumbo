@@ -1,0 +1,31 @@
+﻿@model Bumbo.Models.BranchController.BranchViewModel
+
+@{
+    ViewData["Title"] = "SetInactive";
+}
+
+<h3>Weet je zeker dat je deze branch inactief wilt zetten?</h3>
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ShelvingDistance)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ShelvingDistance)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormattedStreet)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormattedStreet)
+        </dd>
+    </dl>
+    
+    <form asp-action="SetInactive">
+        <input type="submit" value="Zet inactief" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

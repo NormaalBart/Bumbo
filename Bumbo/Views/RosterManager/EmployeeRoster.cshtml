@@ -1,0 +1,103 @@
+﻿@model Bumbo.Models.EmployeeRoster.EmployeeShiftsListViewModel
+
+@{
+    ViewData["Title"] = "EmployeeRoster";
+}
+
+<div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark p-2 mx-auto">
+
+    <div>
+        <!--Arrow to left, using an bootstrap arrow png-->
+        <a class="text-decoration-none" asp-action="EmployeeRoster" asp-route-dateInput="@Model.Date.AddMonths(-1)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z" />
+            </svg>
+        </a>
+    </div>
+
+    <div >
+        <!--Week  number, date information which is in the center.-->
+        @Model.Date.ToString("MMMM")  @Model.Date.Year
+    </div>
+
+
+    <div>
+        <!--Arrow to right, using an bootstrap arrow png on the right side of the bar.-->
+        <a class="text-decoration-none" asp-action="EmployeeRoster" asp-route-dateInput="@Model.Date.AddMonths(1)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z" />
+            </svg>
+        </a>
+    </div>
+</div>
+
+<!--Display of all days in line, selected day is highlighted-->
+<div class="row border-bottom border-2 border-dark">
+    <div class="col-1">
+        <!--Arrow to left, using an bootstrap arrow png-->
+        <a class="text-decoration-none" asp-action="EmployeeRoster" asp-route-dateInput="@Model.Date.AddDays(-7)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z" />
+            </svg>
+        </a>
+    </div>
+    @for (int i = 0; i < 7; i++)
+    {
+
+
+        <div class="col text-center m-0">
+            <a class="text-decoration-none " asp-action="EmployeeRoster" asp-route-dateInput="@Model.GetDayDate(i)">
+                <div class="day-header text-black @(Model.DayIsSelected(i) ? "selected" : "") @(Model.IsToday(i) ? "today" : "") ">
+                    @Model.GetDayDate(i).Day
+                </div>
+                <div class="text-black">
+                    @Model.GetDay(i)
+                </div>
+      
+            </a>
+        </div>
+            
+    }
+      <div class="col-1">
+        <!--Arrow to right, using an bootstrap arrow png on the right side of the bar.-->
+        <a class="text-decoration-none" asp-action="EmployeeRoster" asp-route-dateInput="@Model.Date.AddDays(7)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z" />
+            </svg>
+        </a>
+    </div>
+</div>
+
+
+
+<div >
+    @if (Model.shifts.Count() == 0)
+    {
+        <p class="text-center">Geen ingeplande diensten in de komende week.</p>
+    }
+    @foreach (var shift in Model.shifts)
+    {
+        <div class="d-flex flex-row justify-content-around mx-auto align-items-center ">
+            <div class="d-flex flex-column row date-display">
+                <h3>@shift.StartTime.Day</h3>
+                <p>@shift.StartTime.ToString("MMM")</p>
+            </div>
+
+
+            <div class="d-flex row justify-content-around border-bottom border-dark p-3">
+
+
+                <div class="d-flex flow-row justify-content-between ">
+                    <h5>@shift.StartTime.ToShortTimeString() - @shift.EndTime.ToShortTimeString()</h5>
+                    <p>@shift.Street  @shift.HouseNumber</p>
+                </div>
+
+
+                <div class="d-flex flow-row justify-content-between">
+                    <p>@shift.DepartmentName</p>
+                    <p>@shift.City</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
