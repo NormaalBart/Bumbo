@@ -134,8 +134,11 @@ namespace Bumbo.Controllers
         {
             // List of int 'selectedDepartments' contains the department ID's selected in the form.
             // we use those keys to get the correct departments from the department and add them to the new employee.
-            ModelState.Clear();
-            TryValidateModel(newEmployee);
+            if (selectedDepartments == null || selectedDepartments.Count() == 0)
+            {
+                ModelState.AddModelError("AllowedDepartments", "Geen afdelingen geselecteerd.");
+            }
+
             if (ModelState.IsValid)
             {
                 var employee = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
@@ -182,7 +185,10 @@ namespace Bumbo.Controllers
                 return RedirectToAction("Index");
 
             }
-
+            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            {
+                newEmployee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, false));
+            }
             return View(newEmployee);
 
         }
@@ -204,8 +210,11 @@ namespace Bumbo.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EmployeeCreateViewModel employee, List<int> selectedDepartments)
         {
-            ModelState.Clear();
-            TryValidateModel(employee);
+            if (selectedDepartments == null || selectedDepartments.Count() == 0)
+            {
+                ModelState.AddModelError("AllowedDepartments", "Geen afdelingen geselecteerd.");
+            }
+            
             if (ModelState.IsValid)
             {
                 var newEmployee = _mapper.Map<EmployeeCreateViewModel, Employee>(employee);
@@ -216,6 +225,10 @@ namespace Bumbo.Controllers
                 _employeesRepository.Update(newEmployee);
                 return RedirectToAction("Index");
 
+            }
+            foreach (var d in _departmentsRepository.GetAllExistingDepartments().ToList())
+            {
+                employee.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel(d.Id, d.DepartmentName, _employeesRepository.EmployeeIsInDepartment(employee.EmployeeKey, d.Id)));
             }
 
             return View(employee);

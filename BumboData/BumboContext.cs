@@ -95,6 +95,14 @@ namespace BumboData
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Friday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) },
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
 
+            modelBuilder.Entity<Standard>().HasData(
+                new Standard { BranchId = 1 , Key = StandardType.CHECKOUT_EMPLOYEES, Value = 30},
+                new Standard { BranchId = 1, Key = StandardType.FRESH_EMPLOYEES, Value = 100 },
+                new Standard { BranchId = 1, Key = StandardType.SHELF_ARRANGEMENT, Value = 30 },
+                new Standard { BranchId = 1, Key = StandardType.SHELF_STOCKING_TIME, Value = 30 },
+                new Standard { BranchId = 1, Key = StandardType.COLI_TIME, Value = 5 });
+
+
         }
 
         private void SeedRoles(ModelBuilder modelBuilder)
@@ -105,6 +113,8 @@ namespace BumboData
                 new IdentityRole { Id = RoleType.EMPLOYEE.RoleId, Name = RoleType.EMPLOYEE.Name, NormalizedName = RoleType.EMPLOYEE.NormalizedName });
 
         }
+
+
 
         private void SeedUsers(ModelBuilder modelBuilder)
         {
