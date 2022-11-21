@@ -1,8 +1,8 @@
 ﻿using BumboData;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Interfaces;
 
-namespace BumboRepositories
+namespace BumboRepositories.Repositories
 {
     public class BranchRepository : Repository<Branch>, IBranchRepository
     {

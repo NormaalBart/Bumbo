@@ -1,7 +1,8 @@
 using BumboData;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories;
-using BumboRepositories.Interfaces;
+using BumboRepositories.Repositories;
 using BumboServices;
 using BumboServices.Interface;
 using Microsoft.AspNetCore.Identity;

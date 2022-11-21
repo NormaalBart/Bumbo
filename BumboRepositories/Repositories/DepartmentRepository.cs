@@ -1,9 +1,9 @@
 ﻿using BumboData;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BumboRepositories
+namespace BumboRepositories.Repositories
 {
     public class DepartmentRepository : Repository<Department>, IDepartmentsRepository
     {

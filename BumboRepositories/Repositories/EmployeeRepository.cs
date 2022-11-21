@@ -1,10 +1,10 @@
 ﻿using BumboData;
 using BumboData.Enums;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BumboRepositories
+namespace BumboRepositories.Repositories
 {
     public class EmployeeRepository : Repository<Employee, string>, IEmployeeRepository
     {

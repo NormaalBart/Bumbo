@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.RosterManager;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Interfaces;
 using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

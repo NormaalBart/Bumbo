@@ -1,6 +1,6 @@
 ﻿using BumboData.Models;
 
-namespace BumboRepositories.Interfaces
+namespace BumboData.Interfaces.Repositories
 {
     public interface IEmployeeRepository: IRepository<Employee, string>
     {

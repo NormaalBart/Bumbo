@@ -1,26 +1,10 @@
 using System.Linq.Expressions;
 using BumboData;
 using BumboData.Interfaces;
+using BumboData.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace BumboRepositories;
-
-public interface IRepository<TEntity>: IRepository<TEntity, int>
-{
-    
-}
-
-// Implements basic repository actions interface
-public interface IRepository<TEntity, TKey>
-{
-    public TEntity? Get(TKey id);
-    public TEntity? Get(Expression<Func<TEntity, bool>> predicate);
-    public IEnumerable<TEntity> GetList();
-    public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate);
-    public TEntity Create(TEntity entity);
-    public TEntity Update(TEntity entity);
-    public void Delete(TEntity entity);
-}
+namespace BumboRepositories.Repositories;
 
 public abstract class Repository<TEntity> : Repository<TEntity, int>
     where TEntity : class, IEntity<int>
