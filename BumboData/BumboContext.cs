@@ -35,22 +35,15 @@ namespace BumboData
 
             // Manually set these since EF can't figure it out 
             modelBuilder.Entity<Employee>()
-
                 .HasOne(i => i.DefaultBranch)
                 .WithMany(i => i.DefaultEmployees);
 
-            modelBuilder.Entity<Branch>()
-                .HasOne(i => i.Manager)
-                .WithMany(i => i.ManagedBranches);
+            modelBuilder.Entity<Employee>()
+                .HasOne(i => i.ManagesBranch)
+                .WithMany(i => i.Managers);
 
             // Disable some cascade deletes, otherwise multiple cascade paths are created
-
-            // When deleting an employee that was a branch manager, don't delete the branch too.
-            modelBuilder.Entity<Employee>()
-                .HasMany(e => e.ManagedBranches)
-                .WithOne(e => e.Manager)
-                .OnDelete(DeleteBehavior.Restrict);
-
+            
             // By deleting a branch, do not also delete all employees
             modelBuilder.Entity<Branch>()
                 .HasMany(e => e.DefaultEmployees)
@@ -141,6 +134,7 @@ namespace BumboData
                 {
                     Id = "3a792773-527d-4bb7-8319-6db070350d38",
                     DefaultBranchId = 1,
+                    ManagesBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Manager",

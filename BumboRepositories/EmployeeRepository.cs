@@ -30,6 +30,10 @@ namespace BumboRepositories
         {
             return _context.Employees.ToList();
         }
+        public IEnumerable<Employee> GetAll(int branchId)
+        {
+            return _context.Employees.Where(m=> m.DefaultBranchId == branchId).ToList();
+        }
 
         public Employee GetById(string id)
         {

@@ -10,8 +10,6 @@ public class Branch
     [Required]
     public string Name { get; set; }
     
-    public Employee? Manager { get; set; }
-    
     [Required]
     public int ShelvingDistance { get; set; }
     
@@ -24,6 +22,7 @@ public class Branch
     [Required]
     public String Street { get; set; }
     
+    public virtual ICollection<Employee> Managers { get; set; }
     public virtual ICollection<Employee> DefaultEmployees { get; set; }
 
     public virtual ICollection<Standard> Standards { get; set; }

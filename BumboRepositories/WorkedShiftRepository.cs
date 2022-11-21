@@ -25,12 +25,11 @@ namespace BumboRepositories
             return _context.WorkedShifts.ToList();
         }
         
-        public IEnumerable<WorkedShift> GetAllApproved()
+        public IEnumerable<WorkedShift> GetAllApproved(int branch)
         {
-            return _context.WorkedShifts.Where(s=>s.Approved).ToList();
+            return _context.WorkedShifts.Where(s=>s.Approved && s.BranchId == branch).ToList();
         }
         
-
         public WorkedShift GetById(string id)
         {
             throw new NotImplementedException();
@@ -43,15 +42,17 @@ namespace BumboRepositories
                        .FirstOrDefault();
         }
 
-        public List<WorkedShift> GetWorkedShiftsInMonth(string employee, int year, int month)
-        {
-            return _context.WorkedShifts.Include(i => i.Employee).Where(s =>
-                s.Employee.Id == employee && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
-        }
-        
-        public List<WorkedShift> GetWorkedShiftsInMonth(int year, int month)
+        public List<WorkedShift> GetWorkedShiftsInMonth(int branchId, string employee, int year, int month)
         {
             return _context.WorkedShifts.Include(i => i.Employee)
+                .Where(s => s.BranchId == branchId)
+                .Where(s => s.Employee.Id == employee && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
+        }
+        
+        public List<WorkedShift> GetWorkedShiftsInMonth(int branchId, int year, int month)
+        {
+            return _context.WorkedShifts.Include(i => i.Employee)
+                .Where(s => s.BranchId == branchId)
                 .Where(s => s.StartTime.Year == year && s.StartTime.Month == month).ToList();
         }
 

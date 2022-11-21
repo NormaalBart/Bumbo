@@ -15,7 +15,9 @@ namespace BumboRepositories.Repositories
 
         IEnumerable<Employee> GetAllManagers();
         IEnumerable<Employee> GetAllEmployeesOfBranch(int defaultBranchId);
-        IEnumerable<Employee> GetAll();
+        IEnumerable<Employee> GetAll(int branchId);
+        public IEnumerable<Employee> GetAll();
+
         bool EmployeeIsInDepartment(string employeeKey, int id);
         void Update(Employee newEmployee);
         bool Exists(Employee newEmployee);

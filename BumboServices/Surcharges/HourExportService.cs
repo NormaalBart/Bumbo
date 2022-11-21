@@ -14,7 +14,7 @@ namespace BumboServices;
 public class HourExportService : IHourExportService
 {
     private readonly IWorkedShiftRepository _workedShiftRepository;
-    private List<ISurchargeRule> _useSurchargesRules;
+    private readonly List<ISurchargeRule> _useSurchargesRules;
 
     public HourExportService(IWorkedShiftRepository workedShiftRepository)
     {
@@ -97,10 +97,10 @@ public class HourExportService : IHourExportService
     /*
      * Generates an export csv for the given employee and hourexport model list.
      */
-    public Byte[] CsvExportForMonth(DateTime month)
+    public Byte[] CsvExportForMonth(int branchId, DateTime month)
     {
         var workedShiftsInMonth =
-            _workedShiftRepository.GetWorkedShiftsInMonth(month.Year, month.Month);
+            _workedShiftRepository.GetWorkedShiftsInMonth(branchId, month.Year, month.Month);
 
         var exportModels = workedShiftsInMonth.GroupBy(s => s.Employee)
             .Select(s => (s.Key, WorkedShiftsToExportOverview(s.ToList()))).ToList();

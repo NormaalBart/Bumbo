@@ -6,11 +6,11 @@ namespace BumboRepositories.Repositories
     {
         WorkedShift LastWorkedShiftWithNoEndTime(Employee employee);
         IEnumerable<WorkedShift> GetAll();
-        IEnumerable<WorkedShift> GetAllApproved();
+        IEnumerable<WorkedShift> GetAllApproved(int branch);
         WorkedShift GetById(string id);
         void Add(WorkedShift workedShift);
         void Update(WorkedShift workedShift);
-        List<WorkedShift> GetWorkedShiftsInMonth(string employee, int year, int month);
-        List<WorkedShift> GetWorkedShiftsInMonth(int year, int month);
+        List<WorkedShift> GetWorkedShiftsInMonth(int branchId, string employee, int year, int month);
+        List<WorkedShift> GetWorkedShiftsInMonth(int branchId, int year, int month);
     }
 }

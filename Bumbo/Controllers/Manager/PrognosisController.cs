@@ -63,15 +63,16 @@ namespace Bumbo.Controllers
             {
                 return View(list);
             }
+            
             List<Prognosis> result = _mapper.Map<List<Prognosis>>(list.PrognosisList);
             if (result.Count != 0)
             {
-                Employee employee = await _userManager.GetUserAsync(User);
+                var employee = await _userManager.GetUserAsync(User);
                 foreach(var prognosis in result)
                 {
-                    prognosis.BranchId = employee.DefaultBranchId;
+                    prognosis.BranchId = employee.ManagesBranch.Id;
                 }
-                _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, result);
+                _prognosisRepository.AddOrUpdateAll(employee.ManagesBranch, result);
             }
             return View(list);
         }

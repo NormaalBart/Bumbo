@@ -36,7 +36,7 @@ namespace BumboRepositories
 
         public List<Branch> GetUnmanagedBranches()
         {
-            return _context.Branches.Where(branch => branch.Manager == null).ToList();
+            return _context.Branches.Where(branch => branch.Managers.Count == 0).ToList();
         }
 
          public void SetInactive(int id)
