@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Numerics;
 
 namespace BumboData
 {
@@ -67,6 +68,7 @@ namespace BumboData
             SeedUsers(modelBuilder);
             SeedBranches(modelBuilder);
             SeedDepartments(modelBuilder);
+            SeedShifts(modelBuilder);
         }
 
         private void SeedDepartments(ModelBuilder modelBuilder)
@@ -171,6 +173,25 @@ namespace BumboData
                     Postalcode = "1234AA",
                     Housenumber = "10",
                     Function = DepartmentType.FRESH.Name,
+                },
+                // Medewerker
+                new Employee
+                {
+                    Id = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                    DefaultBranchId = 1,
+                    Active = true,
+                    Birthdate = new DateOnly(2004, 10, 2),
+                    FirstName = "Medewerker2",
+                    LastName = "Jan",
+                    UserName = "medewerker2",
+                    NormalizedUserName = "MEDEWERKER2",
+                    PasswordHash = hasher.HashPassword(null, "medewerker"),
+                    Email = "medewerker2@medewerker.com",
+                    NormalizedEmail = "MEDEWERKER2@MEDEWERKER.COM",
+                    EmailConfirmed = true,
+                    Postalcode = "1234AA",
+                    Housenumber = "15",
+                    Function = DepartmentType.FRESH.Name,
                 });
             
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
@@ -187,6 +208,52 @@ namespace BumboData
                     RoleId = RoleType.EMPLOYEE.RoleId,
                     UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                 });
+        }
+
+        private void SeedShifts(ModelBuilder modelBuilder)
+        {
+            var workedShift = new List<WorkedShift>();
+            int id = SeedShiftMonth(workedShift, 1, 1, DateTime.Now);
+            SeedShiftMonth(workedShift, id, 1, DateTime.Now.AddMonths(-1));
+            modelBuilder.Entity<WorkedShift>().HasData(workedShift);
+        }
+
+        private int SeedShiftMonth(List<WorkedShift> list, int shiftId, int branchId, DateTime month)
+        {
+            var random = new Random();
+
+            var firstDayOfMonth = new DateTime(month.Year, month.Month, 1);
+            var lastDayOfMonth = new DateTime(month.Year, month.Month, DateTime.DaysInMonth(month.Year, month.Month));
+
+            foreach (var employee in new string[]{ "d916944e-c1aa-44d6-83a0-cb04c5734e6b", "1c5d93f8-2965-47a1-89f2-fc626e06949b" })
+            {
+                // Add shift for each day of month
+                foreach (var day in Enumerable.Range(firstDayOfMonth.Day, lastDayOfMonth.Day))
+                {
+                    var startTime = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, day, random.Next(20),
+                        random.Next(59), 0);
+
+                    var endTime = DateTime.MinValue;
+                    while (startTime > endTime)
+                    {
+                        endTime = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, day, random.Next(23),
+                            random.Next(59), 0);
+                    }
+
+                    var workedShift = new WorkedShift()
+                    {
+                        Id = shiftId++,
+                        Approved = true,
+                        BranchId = 1,
+                        EmployeeId = employee,
+                        Sick = random.Next(100) <= 5,
+                        StartTime = startTime,
+                        EndTime = endTime
+                    };
+                    list.Add(workedShift);
+                }
+            }
+            return shiftId;
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)

@@ -11,6 +11,8 @@ public class WorkedShift
     [Required]
     public Employee Employee { get; set; }
 
+    public string EmployeeId { get; set; }
+
     [Required]
     public DateTime StartTime { get; set; }
     
@@ -21,7 +23,9 @@ public class WorkedShift
     
     [Required]
     public Branch Branch { get; set; }
-    
+
+    public int BranchId { get; set; }
+
     [Required]
     public Boolean Sick { get; set; }
 }
