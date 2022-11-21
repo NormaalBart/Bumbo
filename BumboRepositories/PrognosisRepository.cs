@@ -44,15 +44,72 @@ namespace BumboRepositories
         }
         public double GetCassierePrognose(DateTime date)
         {
-            throw new NotImplementedException();
+            Prognosis prognosis = _context.Prognoses.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
+            if (prognosis != null)
+            {
+                Standard standard = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.CHECKOUT_EMPLOYEES).SingleOrDefault();
+                if (standard != null)
+                {
+                    Double customerCount = prognosis.CustomerCount;
+                    Double cassierePerCustomersPerHour = standard.Value;
+                    return customerCount / cassierePerCustomersPerHour;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
         }
         public double GetFreshPrognose(DateTime date)
         {
-            throw new NotImplementedException();
+            Prognosis prognosis = _context.Prognoses.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
+            if (prognosis != null)
+            {
+                Standard standard = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.FRESH_EMPLOYEES).SingleOrDefault();
+                if (standard != null)
+                {
+                    Double customerCount = prognosis.CustomerCount;
+                    Double freshEmployeePerCustomersPerHour = standard.Value;
+                    return customerCount / freshEmployeePerCustomersPerHour;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
         }
         public double GetStockersPrognose(DateTime date)
         {
-            throw new NotImplementedException();
+            Prognosis prognosis = _context.Prognoses.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
+            if (prognosis != null)
+            {
+                Standard coliUnloadTimeInMin = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.COLI_TIME).SingleOrDefault();
+                Standard coliStockTimeInMin = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_STOCKING_TIME).SingleOrDefault();
+                Standard shelfArragementTimeInSec = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_ARRANGEMENT).SingleOrDefault();
+                if (coliUnloadTimeInMin != null || coliStockTimeInMin != null || shelfArragementTimeInSec != null)
+                {
+                    Double timeSpentOnColiInMin = (coliUnloadTimeInMin.Value + coliStockTimeInMin.Value) * prognosis.ColiCount;
+                    Double timeSpentOnShelfsInMin = (shelfArragementTimeInSec.Value * prognosis.Branch.ShelvingDistance) / 60;
+
+                    return (timeSpentOnColiInMin + timeSpentOnShelfsInMin) / 60;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
         }
 
 
