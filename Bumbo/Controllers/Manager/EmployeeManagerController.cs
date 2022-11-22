@@ -37,11 +37,11 @@ namespace Bumbo.Controllers
             
             if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
             {
-                employees = _employeesRepository.GetAll();
+                employees = _employeesRepository.GetList();
             } else if (User.IsInRole(RoleType.MANAGER.Name))
             {
                 var manager = await _userManager.GetUserAsync(User);
-                employees = _employeesRepository.GetAll(manager.ManagesBranchId ?? -1);
+                employees = _employeesRepository.GetAllEmployeesOfBranch(manager.ManagesBranchId ?? -1);
             }
             
             if (!includeInactive && !includeActive)
@@ -173,7 +173,7 @@ namespace Bumbo.Controllers
                 if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                 {
                     await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
-                    employee.DefaultBranch = _branchRepository.GetById(employee.DefaultBranchId);
+                    employee.DefaultBranch = _branchRepository.Get(employee.DefaultBranchId);
                     employee.DefaultBranch?.Managers.Add(employee);
                     _branchRepository.Update(employee.DefaultBranch);
                     await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
