@@ -51,7 +51,8 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EmployeeCreateViewModel employeeCreateEditModel, List<int> selectedDepartments )
         {
-            var employee = _mapper.Map<Employee>(employeeCreateEditModel);
+            var employee = _employeesRepository.Get(employeeCreateEditModel.EmployeeKey);
+            _mapper.Map<EmployeeCreateViewModel, Employee>(employeeCreateEditModel, employee);
             foreach(var departmentId in selectedDepartments)
             {
                 var department = _departmentsRepository.Get(departmentId);
