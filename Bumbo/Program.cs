@@ -33,7 +33,7 @@ namespace Bumbo
             builder.Services.AddDbContext<BumboContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Bumbo"));
-
+                options.EnableSensitiveDataLogging();
 
             });
 
