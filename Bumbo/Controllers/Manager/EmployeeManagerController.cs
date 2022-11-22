@@ -26,16 +26,24 @@ namespace Bumbo.Controllers
             _mapper = mapper;
             _branchRepository = branchService;
             _departmentsRepository = departmentService;
-
         }
 
-
-        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort)
+        public async Task<IActionResult> Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort)
         {
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
 
-            var employees = _employeesRepository.GetList();
+            IEnumerable<Employee> employees = new List<Employee>();
+            
+            if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
+            {
+                employees = _employeesRepository.GetList();
+            } else if (User.IsInRole(RoleType.MANAGER.Name))
+            {
+                var manager = await _userManager.GetUserAsync(User);
+                employees = _employeesRepository.GetAllEmployeesOfBranch(manager.ManagesBranchId ?? -1);
+            }
+            
             if (!includeInactive && !includeActive)
             {
                 employees = employees.Where(e => e.Active);
@@ -96,7 +104,7 @@ namespace Bumbo.Controllers
             return View(resultingListViewModel);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             EmployeeCreateViewModel employee = new EmployeeCreateViewModel();
 
@@ -111,9 +119,10 @@ namespace Bumbo.Controllers
             {
                 employee.Function = RoleType.MANAGER.Name;
                 employee.Branches = _branchRepository.GetUnmanagedBranches();
-            } else
+            } else if (User.IsInRole(RoleType.MANAGER.Name))
             {
-                employee.SelectedBranch = 1;
+                // If manager is logged in the new employee is part of the same branch
+                employee.SelectedBranch = (await _userManager.GetUserAsync(User)).ManagesBranchId;
             }
             return View(employee);
         }
@@ -135,12 +144,19 @@ namespace Bumbo.Controllers
                 var employee = _mapper.Map<EmployeeCreateViewModel, Employee>(newEmployee);
                 if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                 {
-                    employee.DefaultBranchId = (int)newEmployee.SelectedBranch;
+                    employee.DefaultBranchId = (int) newEmployee.SelectedBranch;
                 }
                 else
                 {
-                    Employee manager = await _userManager.GetUserAsync(User);
-                    employee.DefaultBranchId = manager.DefaultBranchId;
+                    var manager = await _userManager.GetUserAsync(User);
+
+                    if (manager.ManagesBranchId == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Ongeldige manager status.");
+                        return View();
+                    }
+                    
+                    employee.DefaultBranchId = manager.ManagesBranchId ?? -1;
                     foreach (var selectedDep in selectedDepartments)
                     {
                         employee.AllowedDepartments.Add(_departmentsRepository.GetById(selectedDep));
@@ -158,7 +174,7 @@ namespace Bumbo.Controllers
                 {
                     await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
                     employee.DefaultBranch = _branchRepository.Get(employee.DefaultBranchId);
-                    employee.DefaultBranch.Manager = employee;
+                    employee.DefaultBranch?.Managers.Add(employee);
                     _branchRepository.Update(employee.DefaultBranch);
                     await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.Name);
                 }

@@ -39,8 +39,10 @@ public class Employee: IdentityUser, IEntity<string>
     [Required]
     public int DefaultBranchId { get; set; }
 
-    public virtual ICollection<Branch> ManagedBranches { get; set; }
- 
+    public Branch? ManagesBranch { get; set; }
+    
+    public int? ManagesBranchId { get; set; }
+
     public virtual ICollection<Department> AllowedDepartments { get; set; }
     
     public virtual ICollection<PlannedShift> PlannedShifts { get; set; }

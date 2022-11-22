@@ -20,7 +20,7 @@ namespace BumboRepositories.Repositories
 
         public List<Branch> GetUnmanagedBranches()
         {
-            return DbSet.Where(branch => branch.Manager == null).ToList();
+            return DbSet.Where(branch => branch.Managers.Count == 0).ToList();
         }
 
          public void SetInactive(int id)
