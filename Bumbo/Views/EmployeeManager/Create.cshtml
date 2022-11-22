@@ -94,48 +94,7 @@
                         </label>
                     </div>
                     <!--Multiple select list for departments of employee-->
-                    @if (User.IsInRole(RoleType.MANAGER.Name))
-                    {
-                        @Html.HiddenFor(m => m.SelectedBranch)
-                        <div class="form-group">
-                            <label asp-for="Function" class="control-label"></label>
-                            <input asp-for="Function" class="form-control" />
-                            <span asp-validation-for="Function" class="text-danger"></span>
-                        </div>
-                        <div class="form-group text-center">
-                            <h5>Selecteer in welke afdelingen deze medewerker kan werken:</h5>
-                            @if (Model.EmployeeSelectedDepartments.Count() == 0)
-                            {
-                                <p class="alert-danger">Er zijn geen beschikbare afdelingen gevonden!</p>
-                            }
-                            @foreach (var department in Model.EmployeeSelectedDepartments)
-                            {
-
-                                <tr>
-                                    <td> <input type="checkbox" name="selectedDepartments" value="@department.DepartmentId" /> @department.DepartmentName
-                                </tr>
-
-                            }
-                            <br />
-                            <span asp-validation-for="AllowedDepartments" class="text-danger"></span>
-                        </div>
-                    }
-                    else if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
-                    {
-                        @Html.HiddenFor(m => m.AllowedDepartments)
-                        @Html.HiddenFor(m => m.Function)
-                        <label asp-for="SelectedBranch" class="control-label"></label>
-                        <select class="form-control" asp-for="SelectedBranch">
-                            @foreach (var branch in Model.Branches)
-                            {
-                                <option value="@branch.Id">@branch.Name</option>
-                            }
-                        </select>
-                    }
-
-                </div>
-
-
+                </div
             </div>
         </form>
     </div>
