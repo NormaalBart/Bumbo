@@ -1,103 +1,46 @@
 ﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsListViewModel
 
+@{
+    ViewData["Title"] = "Index";
+}
 
+<h1>Index</h1>
 
-<h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
-
-
-
-<div class="d-flex justify-content-between m-4 border rounded-2">
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date"> Vorige dag </a>
-    </button>
-
-    <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToShortDateString() </p>
-
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date"> Volgende dag </a>
-    </button>
-
-
-</div>
-
-<div>
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <form>
-            <div class="form-group">
-                <button class="btn btn-outline-primary">
-                    <a type="submit" class="text-decoration-none" asp-action="Index" asp-route-department=""> Update rooster </a>
-                </button>
-
-            </div>
-        </form>
-    </div>
-
-    <div class="border border-1" style="background-color: white;">
-
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div style="background-color: yellow ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Kassa afdeling</p>
-            </div>
-            <div style="background-color: green ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Vers afdeling</p>
-            </div>
-            <div style="background-color: saddlebrown ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Vakken vuller afdeling</p>
-            </div>
-            <div style="background-color: white ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Niet ingepland</p>
-            </div>
-            <div style=" background-color: red ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder"> Niet beschikbaar </p>
-
-            </div>
-
-        </div>
-
-
-        <!--table, 24 long horizontal -->
-        <table class="table" style="background-color: white;">
-            <thead>
-                <tr style="width: 4%;">
-                    @for (int i = 7; i < 25; i++)
-                    {
-                        <th>@i</th>
-                    }
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <!--For each available employee, create a row-->
-                @if (Model.Employees != null)
-                {
-                    foreach (var employee in Model.Employees)
-                    {
-                        <tr style="width: 4%;">
-                            <td>
-                                @employee.FullName
-
-                            </td>
-                            @for (int i = 7; i < 24; i++)
-                            {
-
-                            }
-
-
-
-                            }
-                            <td>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDayId" asp-route-dateInput="@Model.Date.ToShortDateString()" asp-action="Create">Voeg dienst toe</a>
-                            </td>
-                        </tr>
-                    }
-                }
-
-            </tbody>
-        </table>
-
-    </div>
-
-</div>
-
-
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.UnavailableMoments)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

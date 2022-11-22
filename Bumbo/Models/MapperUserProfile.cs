@@ -1,4 +1,15 @@
-﻿namespace Bumbo.Models
+﻿using AutoMapper;
+using Bumbo.Models.BranchController;
+using Bumbo.Models.EmployeeManager;
+using Bumbo.Models.EmployeeRoster;
+using Bumbo.Models.PrognosisManager;
+using Bumbo.Models.RosterManager;
+using Bumbo.Models.UnavailableMoments;
+using BumboData.Models;
+using BumboRepositories.Utils;
+using Microsoft.AspNetCore.Identity;
+
+namespace Bumbo.Models
 {
     public class MapperUserProfile : Profile
     {
@@ -23,6 +34,9 @@
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
             CreateMap<UnavailableMomentsCreateViewModel, UnavailableMoment>();
+            CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
+            CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
+
             CreateMap<Branch, BranchViewModel>();
             CreateMap<BranchViewModel, Branch>();
 
