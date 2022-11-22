@@ -12,11 +12,6 @@ namespace BumboRepositories.Repositories
         {
         }
 
-        public string GetIdOfEmployeeLoggedIn()
-        {
-            return DbSet.FirstOrDefault().Id;
-        }
-
         public bool EmployeeIsInDepartment(string employeeId, int departmentId)
         {
             // returns bool if an employee has a department with the department id
