@@ -1,53 +1,32 @@
 ﻿using BumboData;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Repositories;
 using BumboRepositories.Utils;
 using Microsoft.EntityFrameworkCore;
 
-namespace BumboRepositories
+namespace BumboRepositories.Repositories
 {
-    public class PrognosisRepository : IPrognosisRepository
+    public class PrognosisRepository : Repository<Prognosis>, IPrognosisRepository
     {
-        private BumboContext _context;
-        private IBranchRepository _branchRepository;
-        public PrognosisRepository(BumboContext context, IBranchRepository branchRepository)
+        public PrognosisRepository(BumboContext context): base(context)
         {
-            _context = context;
-            _branchRepository = branchRepository;
-        }
-
-        public void Add(Prognosis prognosisDay)
-        {
-            _context.Prognoses.Add(prognosisDay);
-            _context.SaveChanges();
-        }
-
-        public IEnumerable<Prognosis> GetAll()
-        {
-            return _context.Prognoses;
         }
 
         public Prognosis GetByDate(DateOnly date)
         {
-
-            return _context.Prognoses.FirstOrDefault(p => p.Date == date);
-        }
-
-        public Prognosis GetById(int id)
-        {
-            return _context.Prognoses.Where(p => p.Id == id).FirstOrDefault();
+            return DbSet.FirstOrDefault(p => p.Date == date);
         }
 
         public IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date)
         {
-            return _context.PlannedShifts.Where(p => p.StartTime.Date == date).Include(p => p.Employee);
+            return Context.PlannedShifts.Where(p => p.StartTime.Date == date).Include(p => p.Employee);
         }
         public double GetCassierePrognose(DateTime date)
         {
-            Prognosis prognosis = _context.Prognoses.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
+            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
             if (prognosis != null)
             {
-                Standard standard = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.CHECKOUT_EMPLOYEES).SingleOrDefault();
+                Standard standard = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.CHECKOUT_EMPLOYEES).SingleOrDefault();
                 if (standard != null)
                 {
                     Double customerCount = prognosis.CustomerCount;
@@ -66,10 +45,10 @@ namespace BumboRepositories
         }
         public double GetFreshPrognose(DateTime date)
         {
-            Prognosis prognosis = _context.Prognoses.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
+            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
             if (prognosis != null)
             {
-                Standard standard = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.FRESH_EMPLOYEES).SingleOrDefault();
+                Standard standard = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.FRESH_EMPLOYEES).SingleOrDefault();
                 if (standard != null)
                 {
                     Double customerCount = prognosis.CustomerCount;
@@ -88,12 +67,12 @@ namespace BumboRepositories
         }
         public double GetStockersPrognose(DateTime date)
         {
-            Prognosis prognosis = _context.Prognoses.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
+            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
             if (prognosis != null)
             {
-                Standard coliUnloadTimeInMin = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.COLI_TIME).SingleOrDefault();
-                Standard coliStockTimeInMin = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_STOCKING_TIME).SingleOrDefault();
-                Standard shelfArragementTimeInSec = _context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_ARRANGEMENT).SingleOrDefault();
+                Standard coliUnloadTimeInMin = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.COLI_TIME).SingleOrDefault();
+                Standard coliStockTimeInMin = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_STOCKING_TIME).SingleOrDefault();
+                Standard shelfArragementTimeInSec = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_ARRANGEMENT).SingleOrDefault();
                 if (coliUnloadTimeInMin != null || coliStockTimeInMin != null || shelfArragementTimeInSec != null)
                 {
                     Double timeSpentOnColiInMin = (coliUnloadTimeInMin.Value + coliStockTimeInMin.Value) * prognosis.ColiCount;
@@ -115,14 +94,14 @@ namespace BumboRepositories
 
         public int GetIdByDate(DateTime date)
         {
-            return _context.Prognoses.Where(p => p.Date == date.ToDateOnly()).Select(p => p.Id).FirstOrDefault();
+            return DbSet.Where(p => p.Date == date.ToDateOnly()).Select(p => p.Id).FirstOrDefault();
         }
 
         public DateOnly GetNextEmptyPrognosisDate()
         {
-            if (_context.Prognoses.OrderByDescending(p => p.Date).FirstOrDefault() != null)
+            if (DbSet.OrderByDescending(p => p.Date).FirstOrDefault() != null)
             {
-                return _context.Prognoses.OrderByDescending(p => p.Date).FirstOrDefault().Date.AddDays(1);
+                return DbSet.OrderByDescending(p => p.Date).FirstOrDefault().Date.AddDays(1);
             }
             return DateOnly.FromDateTime(DateTime.Now);
         }
@@ -141,16 +120,16 @@ namespace BumboRepositories
 
                 // First we check if the prognose already exists, in which case we update it.
                 // other wise we add it.
-                if (_context.Prognoses.Where(p => p.Date == item.Date).FirstOrDefault() != null)
+                if (DbSet.Where(p => p.Date == item.Date).FirstOrDefault() != null)
                 {
-                    var prognosisDay = _context.Prognoses.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognosis).FirstOrDefault();
+                    var prognosisDay = DbSet.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
                     prognosisDay.DepartmentPrognosis = item.DepartmentPrognosis;
 
 
-                    _context.Prognoses.Update(prognosisDay);
+                    DbSet.Update(prognosisDay);
                 }
                 else
                 {
@@ -159,11 +138,11 @@ namespace BumboRepositories
                     // get the branch of the item
                     item.Branch = branch;
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
-                    _context.Prognoses.Add(item);
+                    DbSet.Add(item);
 
                 }
             }
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         public IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek)
@@ -175,7 +154,7 @@ namespace BumboRepositories
 
 
 
-            var nextWeek = _context.Prognoses.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7));
+            var nextWeek = DbSet.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7));
             if (nextWeek.Count() == 7)
             {
                 // prevent very rare case scenario where the database has 7 days in a row, but is also somehow wrong or not starting correctly. 
@@ -234,10 +213,10 @@ namespace BumboRepositories
             // create 3 new department prognoses for each department.
             // with default values
 
-            var standards = _context.Standards.Where(p => p.Branch.Id == prognosis.Branch.Id);
+            var standards = Context.Standards.Where(p => p.Branch.Id == prognosis.Branch.Id);
 
 
-            foreach (var department in _context.Departments)
+            foreach (var department in Context.Departments)
             {
                 DepartmentPrognosis departmentPrognosis = new DepartmentPrognosis();
                 departmentPrognosis.Prognosis = prognosis;

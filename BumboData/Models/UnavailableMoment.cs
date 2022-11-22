@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BumboData.Interfaces;
 
 namespace BumboData.Models;
 
-public class UnavailableMoment
+public class UnavailableMoment: IEntity
 {
     [Key]
     public int Id { get; set; }

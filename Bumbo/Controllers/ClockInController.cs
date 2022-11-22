@@ -1,6 +1,6 @@
 ﻿using Bumbo.Models;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +24,8 @@ namespace Bumbo.Controllers
         [HttpPost]
         public IActionResult Create([FromForm] IncomingDataClockIn msgBody)
         {
-            Employee employee = _employeeRepository.GetById(msgBody.EmployeeId);
-            Branch branch = _branchRepository.GetById(msgBody.BranchId);
+            Employee employee = _employeeRepository.Get(msgBody.EmployeeId);
+            Branch branch = _branchRepository.Get(msgBody.BranchId);
             if (employee == null || branch == null)
             {
                 return BadRequest();
@@ -46,7 +46,7 @@ namespace Bumbo.Controllers
                 newWorkedShift.StartTime = DateTime.Now;
                 newWorkedShift.Sick = false;
                 newWorkedShift.Approved = false;
-                _workedShiftRepository.Add(newWorkedShift);
+                _workedShiftRepository.Create(newWorkedShift);
             }
             return Ok();
         }

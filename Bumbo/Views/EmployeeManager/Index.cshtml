@@ -1,5 +1,6 @@
 ﻿@using BumboData.Models
 @using Microsoft.AspNetCore.Identity
+@using BumboData.Enums
 @model Bumbo.Models.EmployeeManager.EmployeeListIndexViewModel
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
@@ -21,7 +22,7 @@
                             <div class="form-actions no-color row ">
                                 <div class="col-md-2 justify-content-center text-center my-auto">
                                     <div class="top-header-content">
-                                        @if (User.IsInRole("Administrator"))
+                                        @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                                         {
                                             <a asp-action="Create" class="btn btn-lg btn-primary">Nieuwe manager</a>
                                         }

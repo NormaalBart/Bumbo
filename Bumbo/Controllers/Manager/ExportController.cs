@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using Bumbo.Models.ExportManager;
 using BumboData.Enums;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Repositories;
 using BumboRepositories.Utils;
 using BumboServices.Interface;
 using BumboServices.Surcharges.SurchargeRules;

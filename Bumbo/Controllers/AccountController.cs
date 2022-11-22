@@ -1,7 +1,7 @@
 ﻿using Bumbo.Models.AccountController;
 using BumboData.Enums;
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,7 +73,7 @@ namespace Bumbo.Controllers
             }
             else if (roles.Contains(RoleType.EMPLOYEE.Name))
             {
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "EmployeeRoster");
             }
             return RedirectToAction("Login");
         }
