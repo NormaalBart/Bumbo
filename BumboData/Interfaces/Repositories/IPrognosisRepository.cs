@@ -7,9 +7,6 @@ namespace BumboData.Interfaces.Repositories
         Prognosis GetByDate(DateOnly date);
         IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date);
 
-        double GetCassierePrognose(DateTime date);
-        double GetFreshPrognose(DateTime date);
-        double GetStockersPrognose(DateTime date);
         int GetIdByDate(DateTime date);
 
         DateOnly GetNextEmptyPrognosisDate();

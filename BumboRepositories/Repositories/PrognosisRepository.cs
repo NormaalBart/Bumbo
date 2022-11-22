@@ -14,82 +14,14 @@ namespace BumboRepositories.Repositories
 
         public Prognosis GetByDate(DateOnly date)
         {
-            return DbSet.FirstOrDefault(p => p.Date == date);
+            return DbSet.Include(o => o.Branch).FirstOrDefault(p => p.Date == date);
         }
 
         public IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date)
         {
             return Context.PlannedShifts.Where(p => p.StartTime.Date == date).Include(p => p.Employee);
         }
-        public double GetCassierePrognose(DateTime date)
-        {
-            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
-            if (prognosis != null)
-            {
-                Standard standard = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.CHECKOUT_EMPLOYEES).SingleOrDefault();
-                if (standard != null)
-                {
-                    Double customerCount = prognosis.CustomerCount;
-                    Double cassierePerCustomersPerHour = standard.Value;
-                    return customerCount / cassierePerCustomersPerHour;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        public double GetFreshPrognose(DateTime date)
-        {
-            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
-            if (prognosis != null)
-            {
-                Standard standard = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.FRESH_EMPLOYEES).SingleOrDefault();
-                if (standard != null)
-                {
-                    Double customerCount = prognosis.CustomerCount;
-                    Double freshEmployeePerCustomersPerHour = standard.Value;
-                    return customerCount / freshEmployeePerCustomersPerHour;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        public double GetStockersPrognose(DateTime date)
-        {
-            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
-            if (prognosis != null)
-            {
-                Standard coliUnloadTimeInMin = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.COLI_TIME).SingleOrDefault();
-                Standard coliStockTimeInMin = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_STOCKING_TIME).SingleOrDefault();
-                Standard shelfArragementTimeInSec = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_ARRANGEMENT).SingleOrDefault();
-                if (coliUnloadTimeInMin != null || coliStockTimeInMin != null || shelfArragementTimeInSec != null)
-                {
-                    Double timeSpentOnColiInMin = (coliUnloadTimeInMin.Value + coliStockTimeInMin.Value) * prognosis.ColiCount;
-                    Double timeSpentOnShelfsInMin = (shelfArragementTimeInSec.Value * prognosis.Branch.ShelvingDistance) / 60;
-
-                    return (timeSpentOnColiInMin + timeSpentOnShelfsInMin) / 60;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
-        }
+        
 
 
         public int GetIdByDate(DateTime date)
