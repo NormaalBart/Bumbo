@@ -2,6 +2,7 @@
 using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
+using Bumbo.Models.UnavailableMoments;
 using Bumbo.Utils;
 using BumboData.Models;
 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Bumbo.Models.RosterManager;
+using Bumbo.Models.UnavailableMoments;
 using BumboData;
 using BumboData.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +19,9 @@ namespace Bumbo.Controllers
 
         public IActionResult Index()
         {
-            //UnavailableMomentsRosterViewModel resultingListViewModel = new UnavailableMomentsRosterViewModel();
-            return RedirectToAction("Create");
-            //return View(resultingListViewModel);
+            UnavailableMomentsListViewModel unavailableMomentsListViewModel = new UnavailableMomentsListViewModel();
+            unavailableMomentsListViewModel.Date = DateTime.Now;
+            return View(unavailableMomentsListViewModel);
         }
 
         public IActionResult Create()

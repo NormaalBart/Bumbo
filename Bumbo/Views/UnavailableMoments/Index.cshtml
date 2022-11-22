@@ -1,4 +1,4 @@
-﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
+﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsListViewModel
 
 
 
@@ -18,51 +18,6 @@
     </button>
 
 
-</div>
-
-
-
-<div>
-    <button btn btn-outline-secondary>
-        <a class="text-decoration-none" asp-action="Edit" asp-controller="Prognosis" asp-route-id="@Model.PrognosisDayId">(Edit prognose) Nog te roosterde uren: </a>
-    </button>
-
-</div>
-
-<div>
-
-    <dl class="row border">
-        <div class="border col-sm d-flex justify-content-center flex-nowrap">
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CassierePrognose) :
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.CassierePrognose) Uren
-            </dd>
-        </div>
-
-        <div class="border col-sm d-flex justify-content-center flex-nowrap">
-            <dt>
-                @Html.DisplayNameFor(model => model.FreshPrognose) :
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.FreshPrognose) Uren
-            </dd>
-        </div>
-
-        <div class="border col-sm d-flex justify-content-center flex-nowrap">
-            <dt>
-                @Html.DisplayNameFor(model => model.StockersPrognose) :
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.StockersPrognose) Uren
-            </dd>
-        </div>
-
-
-
-    </dl>
 </div>
 
 <div>
@@ -100,22 +55,16 @@
         </div>
 
 
-
-
         <!--table, 24 long horizontal -->
         <table class="table" style="background-color: white;">
             <thead>
                 <tr style="width: 4%;">
-                    <th>Werknemer Naam</th>
                     @for (int i = 7; i < 25; i++)
                     {
-
                         <th>@i</th>
                     }
                 </tr>
             </thead>
-
-
 
             <tbody>
 
@@ -132,42 +81,7 @@
                             @for (int i = 7; i < 24; i++)
                             {
 
-
-                                @if (Model.IsPlanned(employee, i))
-                                {
-                                    // TODO: Redo code
-                                    @*switch (Model.GetEmployeeDepartmentShift(employee, i))
-                    {
-                    case DepartmentEnum.Cassiere:
-                    <td style="width: 4%; background-color: yellow ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                    break;
-                    case DepartmentEnum.Fresh:
-                    <td style="width: 4%; background-color: green ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                    break;
-                    case DepartmentEnum.Stocker:
-                    <td style="width: 4%; background-color: saddlebrown ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                    break;
-                    default:
-                    <td style="width: 4%; background-color: white ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                    break;
-                    }*@
-                                }
-                                else
-                                {
-
-                                    if (Model.IsUnavailable(employee, i))
-                                    {
-                                        <td style=" width: 4%; background-color: red ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                                    }
-                                    else
-                                    {
-                                        <td style=" width: 4%; background-color: white ; padding: 10px; border: 1px solid darkgrey;">
-
-                                            @*<div> <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDay.Id" asp-route-dateInput="@Model.Date.AddHours(i)" asp-action="Create"></a> </div>*@
-                                        </td>
-                                    }
-
-                                }
+                            }
 
 
 

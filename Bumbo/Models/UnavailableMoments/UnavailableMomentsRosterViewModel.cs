@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bumbo.Models.RosterManager
+namespace Bumbo.Models.UnavailableMoments
 {
     public class UnavailableMomentsCreateViewModel
     {
