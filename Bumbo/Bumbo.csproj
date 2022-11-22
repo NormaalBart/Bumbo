@@ -30,4 +30,8 @@
     <ProjectReference Include="..\BumboServices\BumboServices.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\EmployeeManager\Admin\" />
+  </ItemGroup>
+
 </Project>

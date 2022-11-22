@@ -89,32 +89,23 @@
                         <span asp-validation-for="Function" class="text-danger"></span>
                     </div>
 
-
                     <!--Multiple select list for departments of employee-->
 
                     <div class="form-group text-center">
-                        <h5>Selecteer in welke afdelingen deze medewerker kan werken:</h5>
-                        @foreach (var department in Model.EmployeeSelectedDepartments)
+                        <label asp-for="EmployeeSelectedDepartments" class="control-label"></label>
+
+                        @foreach (var item in Model.EmployeeSelectedDepartments)
                         {
-                            <tr>
-                                @if (department.IsSelected)
-                                {
-                                    <td> <input type="checkbox" name="selectedDepartments" value="@department.DepartmentId" checked /> @department.DepartmentName </td>
-                                }
-                                else
-                                {
-                                    <td> <input type="checkbox" name="selectedDepartments" value="@department.DepartmentId" /> @department.DepartmentName </td>
-                                }
-                            </tr>
+                            <input type="checkbox" name="selectedDepartments" value="@item.DepartmentId" /> @item.DepartmentName
                         }
                         <br />
-                        <span asp-validation-for="AllowedDepartments" class="text-danger"></span>
+                        <span asp-validation-for="EmployeeSelectedDepartments" class="text-danger"></span>
                     </div>
                 </div>
 
 
             </div>
- 
+
 
         </form>
     </div>

@@ -19,22 +19,22 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
         }
 
-        public override IActionResult Create()
+        public IActionResult Create()
         {
             throw new NotImplementedException();
         }
 
-        public override IActionResult Create(BaseCreateViewModel baseCreateViewModel)
+        public IActionResult Create(BaseCreateViewModel baseCreateViewModel)
         {
             throw new NotImplementedException();
         }
 
-        public override IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
             throw new NotImplementedException();
         }
 
-        public override IActionResult Edit(BaseCreateViewModel baseCreateEditModel)
+        public IActionResult Edit(BaseCreateViewModel baseCreateEditModel)
         {
             throw new NotImplementedException();
         }

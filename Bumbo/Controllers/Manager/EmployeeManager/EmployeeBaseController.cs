@@ -32,24 +32,7 @@ namespace Bumbo.Controllers
 
         public abstract IEnumerable<Employee> GetAllEmployeesAsync();
 
-        public abstract IActionResult Create();
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public abstract IActionResult Create(BaseCreateViewModel baseCreateViewModel);
-
-        public abstract IActionResult Edit(int id);
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public abstract IActionResult Edit(BaseCreateViewModel baseCreateEditModel);
-
-        public IActionResult Index()
-        {
-            return Index2(null, false, false, EmployeeSortingOption.EmployeeSince_Asc);
-        }
-
-        public IActionResult Index2(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort)
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort)
         {
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
