@@ -63,15 +63,12 @@ namespace Bumbo.Controllers
             {
                 return View(list);
             }
+            
             List<Prognosis> result = _mapper.Map<List<Prognosis>>(list.PrognosisList);
             if (result.Count != 0)
             {
                 Employee employee = await _userManager.GetUserAsync(User);
-                foreach(var prognosis in result)
-                {
-                    prognosis.BranchId = employee.DefaultBranchId;
-                }
-                _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, result);
+                _prognosisRepository.AddOrUpdateAll(employee.DefaultBranchId, result);
             }
             return View(list);
         }
@@ -99,7 +96,7 @@ namespace Bumbo.Controllers
             }
 
             Employee employee = await _userManager.GetUserAsync(User);
-            _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, updatedNewWeek);
+            _prognosisRepository.AddOrUpdateAll(employee.DefaultBranchId, updatedNewWeek);
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });
         }
