@@ -22,7 +22,8 @@ public class ExportController : Controller
     public ExportController(
         IWorkedShiftRepository workedShiftRepository,
         IHourExportService hourExportService,
-        UserManager<Employee> userManager)
+        UserManager<Employee> userManager,
+        ICAOService service)
     {
         _workedShiftRepository = workedShiftRepository;
         _hourExportService = hourExportService;

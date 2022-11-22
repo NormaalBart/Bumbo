@@ -1,6 +1,7 @@
 using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboDutchCAO.Services;
 using BumboRepositories;
 using BumboRepositories.Repositories;
 using BumboServices;
@@ -29,6 +30,7 @@ namespace Bumbo
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 
             builder.Services.AddScoped<IHourExportService, HourExportService>();
+            builder.Services.AddScoped<ICAOService, DutchCAOService>();
 
             builder.Services.AddDbContext<BumboContext>(options =>
             {
