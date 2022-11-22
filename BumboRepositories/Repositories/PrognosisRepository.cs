@@ -1,4 +1,5 @@
 ﻿using BumboData;
+using BumboData.Interfaces;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -106,7 +107,7 @@ namespace BumboRepositories.Repositories
             return DateOnly.FromDateTime(DateTime.Now);
         }
 
-        public void AddOrUpdateAll(Branch branch, List<Prognosis> list)
+        public void AddOrUpdateAll(int branchId, List<Prognosis> list)
         {
             if (list.Count == 0)
             {
@@ -128,15 +129,15 @@ namespace BumboRepositories.Repositories
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
                     prognosisDay.DepartmentPrognosis = item.DepartmentPrognosis;
 
-
                     DbSet.Update(prognosisDay);
+
                 }
                 else
                 {
                     // makes sure that there's no time instance in the date.
 
                     // get the branch of the item
-                    item.Branch = branch;
+                    item.BranchId = branchId;
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
                     DbSet.Add(item);
 
