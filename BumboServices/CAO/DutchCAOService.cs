@@ -1,9 +1,8 @@
-using System.Reflection;
 using BumboData.Models;
-using BumboDutchCAO.Services.Rules;
+using BumboServices.CAO.Rules;
 using BumboServices.Interface;
 
-namespace BumboDutchCAO.Services;
+namespace BumboServices.CAO;
 
 public class DutchCAOService : ICAOService
 {
@@ -16,7 +15,7 @@ public class DutchCAOService : ICAOService
         var below16Rules = new List<ICAORule>()
         {
             // - Maximaal 8 uur werken per dag incl. school
-            new MaxWorkHoursIncludingSchool(ageRange: new Range(0, 15), 8.0),
+            new MaxWorkHours(ageRange: new Range(0, 15), 8.0, true),
             
         };
         
@@ -24,14 +23,14 @@ public class DutchCAOService : ICAOService
         var otherRules = new List<ICAORule>()
         {
             // - Maximaal 9 uur werken per dag incl. school
-            new MaxWorkHoursIncludingSchool(ageRange:new Range(16, 17), 9.0),
+            new MaxWorkHours(ageRange:new Range(16, 17), 9.0, true),
                 
         };
 
         var generalRules = new List<ICAORule>()
         {
             // Maximaal 12 uur per dienst
-            new MaxWorkHoursIncludingSchool(ageRange: new Range(0, int.MaxValue), 12.0),
+            new MaxWorkHours(ageRange: new Range(0, int.MaxValue), 12.0),
         };
 
         _appliedRules = below16Rules;

@@ -1,7 +1,7 @@
 using BumboData.Models;
 using BumboServices.Utils;
 
-namespace BumboDutchCAO.Services.Rules;
+namespace BumboServices.CAO.Rules;
 
 public interface ICAORule
 {

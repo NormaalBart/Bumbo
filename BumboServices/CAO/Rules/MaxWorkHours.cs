@@ -1,13 +1,16 @@
 using BumboData.Models;
 
-namespace BumboDutchCAO.Services.Rules;
+namespace BumboServices.CAO.Rules;
 
-public class MaxWorkHoursIncludingSchool: CAORuleAppliesToAge
+public class MaxWorkHours: CAORuleAppliesToAge
 {
     private readonly double _maxHours;
-    public MaxWorkHoursIncludingSchool(Range ageRange, double maxHours): base(ageRange)
+    private readonly bool _includeSchool;
+    
+    public MaxWorkHours(Range ageRange, double maxHours, bool includeSchool = false): base(ageRange)
     {
         _maxHours = maxHours;
+        _includeSchool = includeSchool;
     }
 
     public override bool IsValid(List<PlannedShift> plannedShifts)
