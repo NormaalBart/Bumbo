@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BumboData.Interfaces;
 
 namespace BumboData.Models;
 
-public class Prognosis
+public class Prognosis: IEntity
 {
     [Key]
     public int Id { get; set; }
@@ -19,5 +20,6 @@ public class Prognosis
     [Required]
     public int CustomerCount { get; set; }
 
-    public virtual ICollection<DepartmentPrognosis> DepartmentPrognoses { get; set; }
+    public virtual ICollection<DepartmentPrognosis> DepartmentPrognosis { get; set; }
+    public int BranchId { get; set; }
 }

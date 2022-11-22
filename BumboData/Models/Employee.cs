@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BumboData.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace BumboData.Models;
 
-public class Employee: IdentityUser
+public class Employee: IdentityUser, IEntity<string>
 {
+
     [Required]
     public String FirstName { get; set; }
     
@@ -34,6 +36,9 @@ public class Employee: IdentityUser
     [Required]
     public Branch DefaultBranch { get; set; }
 
+    [Required]
+    public int DefaultBranchId { get; set; }
+
     public virtual ICollection<Branch> ManagedBranches { get; set; }
  
     public virtual ICollection<Department> AllowedDepartments { get; set; }
@@ -43,4 +48,9 @@ public class Employee: IdentityUser
     public virtual ICollection<WorkedShift> WorkedShifts { get; set; }
     
     public virtual ICollection<UnavailableMoment> UnavailableMoments { get; set; }
+
+    public string FullName()
+    {
+        return FirstName + (Preposition != null ? " " + Preposition : "") + " " + LastName;
+    }
 }

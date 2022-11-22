@@ -38,8 +38,15 @@ namespace BumboData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Inactive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ManagerId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ShelvingDistance")
                         .HasColumnType("int");
@@ -53,6 +60,18 @@ namespace BumboData.Migrations
                     b.HasIndex("ManagerId");
 
                     b.ToTable("Branches");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Den Bosch",
+                            HouseNumber = "2",
+                            Inactive = false,
+                            Name = "Bumbo v1",
+                            ShelvingDistance = 100,
+                            Street = "Onderwijsboulevard"
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.Department", b =>
@@ -70,6 +89,23 @@ namespace BumboData.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DepartmentName = "Kassa"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DepartmentName = "Vers"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DepartmentName = "Vullers"
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
@@ -98,7 +134,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("PrognosisId");
 
-                    b.ToTable("DepartmentPrognoses");
+                    b.ToTable("DepartmentPrognosis");
                 });
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
@@ -116,13 +152,15 @@ namespace BumboData.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DefaultBranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -153,10 +191,12 @@ namespace BumboData.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -181,13 +221,124 @@ namespace BumboData.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DefaultBranchId");
 
-                    b.ToTable("Employees");
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "ce19d8bf-569b-425d-9f0a-0a276359889f",
+                            DefaultBranchId = 1,
+                            Email = "admin@admin.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Jan",
+                            Function = "Administrator",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL7EoGROpy+hf9MLK9HvJASJJkLz9nzjk+SQPXNglHjhCqTUj3iHqGfDwtLgKoltjw==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "7dbb85a8-2f28-4c84-8161-6054ebd4f7d0",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = "3a792773-527d-4bb7-8319-6db070350d38",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "91f78210-57fa-449c-977b-4792e9754f3c",
+                            DefaultBranchId = 1,
+                            Email = "manager@manager.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Manager",
+                            Function = "Manager",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MANAGER@MANAGER.COM",
+                            NormalizedUserName = "MANAGER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAIUvOL4tP9lmhUz8uohPTRJfo6vFY6ZDJlCd4iWlOvwXn8wMOST04mouQ6QJ64S0Q==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "5e1900c7-3011-4b65-9bd1-66ff3620ccd9",
+                            TwoFactorEnabled = false,
+                            UserName = "manager"
+                        },
+                        new
+                        {
+                            Id = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "4f0bca4b-d492-4a2b-aec6-1388e93637ae",
+                            DefaultBranchId = 1,
+                            Email = "medewerker@medewerker.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Medewerker",
+                            Function = "Vers",
+                            Housenumber = "10",
+                            LastName = "Piet",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MEDEWERKER@MEDEWERKER.COM",
+                            NormalizedUserName = "MEDEWERKER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIc49m81fV0LxA2QDE9Y+z9dzK8ATkdqRe0xhL/LN9rAgqhg30SYypdwQo/krALX8Q==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "d467b96c-f9ff-4731-ae5e-530f298ed1aa",
+                            TwoFactorEnabled = false,
+                            UserName = "medewerker"
+                        },
+                        new
+                        {
+                            Id = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            AccessFailedCount = 0,
+                            Active = true,
+                            Birthdate = new DateTime(2004, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "0a9ace75-6bea-412d-a41d-cbbc4a476029",
+                            DefaultBranchId = 1,
+                            Email = "medewerker2@medewerker.com",
+                            EmailConfirmed = true,
+                            EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Medewerker2",
+                            Function = "Vers",
+                            Housenumber = "15",
+                            LastName = "Jan",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MEDEWERKER2@MEDEWERKER.COM",
+                            NormalizedUserName = "MEDEWERKER2",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPZ8KJ1qk1XihWB0HtruuqWo1ZIVrp4OU+6xRMTRoeAtzbhiCEtOst4i4im6yLUeOw==",
+                            PhoneNumberConfirmed = false,
+                            Postalcode = "1234AA",
+                            SecurityStamp = "a4d6aa01-b0e2-4303-9a69-3ffe28f33546",
+                            TwoFactorEnabled = false,
+                            UserName = "medewerker2"
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.OpeningHoursOverride", b =>
@@ -289,14 +440,46 @@ namespace BumboData.Migrations
                     b.HasIndex("BranchId");
 
                     b.ToTable("Standards");
+
+                    b.HasData(
+                        new
+                        {
+                            Key = 2,
+                            BranchId = 1,
+                            Value = 30
+                        },
+                        new
+                        {
+                            Key = 3,
+                            BranchId = 1,
+                            Value = 100
+                        },
+                        new
+                        {
+                            Key = 4,
+                            BranchId = 1,
+                            Value = 30
+                        },
+                        new
+                        {
+                            Key = 1,
+                            BranchId = 1,
+                            Value = 30
+                        },
+                        new
+                        {
+                            Key = 0,
+                            BranchId = 1,
+                            Value = 5
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.StandardOpeningHours", b =>
                 {
-                    b.Property<int>("DayOfWeek")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CloseTime")
@@ -305,11 +488,60 @@ namespace BumboData.Migrations
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("date");
 
-                    b.HasKey("DayOfWeek");
-
-                    b.HasIndex("BranchId");
+                    b.HasKey("BranchId", "DayOfWeek");
 
                     b.ToTable("StandardOpeningHours");
+
+                    b.HasData(
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 0,
+                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 1,
+                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 2,
+                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 3,
+                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 4,
+                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 5,
+                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                        },
+                        new
+                        {
+                            BranchId = 1,
+                            DayOfWeek = 6,
+                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                        });
                 });
 
             modelBuilder.Entity("BumboData.Models.UnavailableMoment", b =>
@@ -374,6 +606,1228 @@ namespace BumboData.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("WorkedShifts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 1, 8, 47, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 1, 5, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 2, 14, 36, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 2, 3, 16, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 3, 20, 22, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 3, 19, 26, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 4, 3, 5, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 4, 2, 23, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 5, 12, 3, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 11, 5, 1, 4, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 6, 15, 6, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 6, 10, 4, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 7, 17, 45, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 7, 10, 34, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 8, 10, 24, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 8, 2, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 9, 14, 2, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 9, 10, 4, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 10, 14, 25, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 10, 12, 12, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 11, 21, 26, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 11, 18, 48, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 12, 13, 30, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 12, 11, 3, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 13, 17, 46, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 13, 10, 11, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 14, 8, 23, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 14, 5, 47, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 15, 11, 45, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 15, 10, 6, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 16, 19, 29, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 16, 17, 52, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 17, 7, 38, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 17, 6, 31, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 18, 0, 40, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 18, 0, 25, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 19, 13, 4, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 19, 10, 12, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 20, 17, 25, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 20, 14, 35, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 21, 4, 3, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 11, 21, 2, 33, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 22, 18, 44, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 22, 12, 2, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 23, 19, 19, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 23, 5, 43, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 24, 21, 21, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 24, 18, 32, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 25, 16, 42, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 25, 16, 6, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 26, 15, 43, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 26, 12, 40, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 27, 15, 18, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 27, 8, 12, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 28, 21, 0, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 28, 3, 2, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 29, 21, 1, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 29, 12, 27, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 11, 30, 12, 11, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 30, 0, 34, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 1, 10, 21, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 1, 6, 38, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 2, 17, 35, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 2, 10, 27, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 3, 17, 1, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 3, 8, 51, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 4, 21, 28, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 4, 9, 23, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 5, 8, 11, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 5, 6, 20, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 6, 17, 34, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 6, 11, 27, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 7, 7, 30, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 7, 3, 25, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 8, 9, 49, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 8, 5, 14, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 9, 18, 36, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 9, 9, 36, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 10, 12, 13, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 10, 1, 48, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 11, 20, 55, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 11, 9, 55, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 12, 2, 46, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 12, 0, 24, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 13, 20, 53, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 13, 14, 34, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 14, 22, 28, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 14, 11, 58, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 15, 19, 12, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 11, 15, 2, 44, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 16, 20, 31, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 16, 6, 4, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 17, 21, 14, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 17, 18, 1, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 18, 21, 28, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 11, 18, 11, 8, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 19, 20, 44, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 19, 11, 12, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 20, 18, 45, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 20, 9, 23, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 21, 10, 50, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 21, 5, 27, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 22, 11, 45, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 22, 6, 18, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 23, 10, 10, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 23, 6, 47, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 24, 8, 8, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 24, 5, 17, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 25, 17, 12, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 25, 1, 11, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 26, 8, 51, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 26, 1, 41, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 27, 22, 9, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 27, 12, 11, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 28, 7, 5, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 28, 2, 41, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 29, 8, 24, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 29, 3, 50, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 11, 30, 14, 38, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 30, 12, 22, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 61,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 1, 16, 28, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 1, 6, 53, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 62,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 2, 17, 32, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 2, 2, 49, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 63,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 3, 18, 21, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 3, 15, 22, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 64,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 4, 17, 54, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 4, 14, 49, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 65,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 5, 22, 28, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 5, 12, 32, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 66,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 6, 15, 20, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 6, 15, 3, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 67,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 7, 21, 9, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 7, 15, 9, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 68,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 8, 13, 32, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 8, 13, 9, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 69,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 9, 21, 25, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 9, 17, 36, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 70,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 10, 6, 29, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 10, 5, 33, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 71,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 11, 8, 35, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 11, 5, 32, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 72,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 12, 17, 47, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 12, 8, 37, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 73,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 13, 11, 24, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 13, 5, 13, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 74,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 14, 20, 41, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 14, 16, 33, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 75,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 15, 6, 30, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 15, 3, 58, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 76,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 16, 11, 36, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 16, 4, 20, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 77,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 17, 12, 7, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 17, 11, 3, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 78,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 18, 20, 7, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 18, 19, 1, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 79,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 19, 17, 20, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 19, 4, 14, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 80,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 20, 10, 27, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 20, 7, 10, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 81,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 21, 12, 5, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 21, 5, 42, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 82,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 22, 13, 16, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 22, 2, 11, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 83,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 23, 22, 45, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 23, 19, 44, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 84,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 24, 4, 23, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 24, 1, 8, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 85,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 25, 19, 27, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 25, 19, 24, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 86,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 26, 17, 6, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 26, 6, 5, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 87,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 27, 22, 11, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 27, 19, 36, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 88,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 28, 7, 19, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 28, 3, 25, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 89,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 29, 12, 8, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 29, 11, 38, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 90,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 30, 15, 19, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 30, 14, 37, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 91,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            EndTime = new DateTime(2022, 10, 31, 5, 30, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 31, 3, 37, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 92,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 1, 18, 23, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 1, 12, 49, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 93,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 2, 21, 6, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 2, 5, 36, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 94,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 3, 21, 44, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 3, 17, 32, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 95,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 4, 20, 34, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 4, 10, 45, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 96,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 5, 12, 41, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 5, 7, 26, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 97,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 6, 15, 49, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 6, 6, 56, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 98,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 7, 16, 36, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 7, 4, 13, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 99,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 8, 21, 40, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 8, 12, 19, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 100,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 9, 15, 31, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 9, 13, 42, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 101,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 10, 16, 45, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 10, 11, 24, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 11, 21, 28, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 11, 12, 42, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 12, 18, 17, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 12, 15, 14, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 104,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 13, 16, 11, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 13, 0, 41, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 105,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 14, 10, 24, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 14, 5, 7, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 106,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 15, 18, 34, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 15, 18, 7, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 107,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 16, 18, 30, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 16, 7, 53, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 108,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 17, 14, 4, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 17, 7, 10, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 109,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 18, 19, 4, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 18, 17, 31, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 110,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 19, 18, 24, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 19, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 111,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 20, 9, 2, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 20, 3, 43, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 112,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 21, 15, 4, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 21, 5, 58, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 113,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 22, 20, 4, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 22, 11, 40, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 114,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 23, 17, 14, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 23, 13, 41, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 115,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 24, 15, 52, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 24, 10, 22, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 116,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 25, 5, 36, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 25, 5, 13, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 117,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 26, 20, 19, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 26, 18, 35, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 118,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 27, 13, 3, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 27, 12, 51, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 119,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 28, 21, 29, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 28, 12, 58, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 120,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 29, 13, 57, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 29, 5, 38, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 121,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 30, 16, 34, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 30, 11, 55, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 122,
+                            Approved = true,
+                            BranchId = 1,
+                            EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            EndTime = new DateTime(2022, 10, 31, 17, 12, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 31, 16, 32, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("DepartmentEmployee", b =>
@@ -389,6 +1843,179 @@ namespace BumboData.Migrations
                     b.HasIndex("AllowedEmployeesId");
 
                     b.ToTable("Employee_allowed_Department", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "administrator",
+                            ConcurrencyStamp = "58e1b38c-aa1b-4ba6-80a7-4930fcc6cbb7",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = "manager",
+                            ConcurrencyStamp = "189c9bed-50c7-4710-a9d7-cf7068fe4a6f",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "employee",
+                            ConcurrencyStamp = "6f3b49c2-f806-4079-adca-12854f2985b1",
+                            Name = "Employee",
+                            NormalizedName = "EMPLOYEE"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
+                            RoleId = "administrator"
+                        },
+                        new
+                        {
+                            UserId = "3a792773-527d-4bb7-8319-6db070350d38",
+                            RoleId = "manager"
+                        },
+                        new
+                        {
+                            UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            RoleId = "employee"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("BumboData.Models.Branch", b =>
@@ -410,7 +2037,7 @@ namespace BumboData.Migrations
                         .IsRequired();
 
                     b.HasOne("BumboData.Models.Prognosis", "Prognosis")
-                        .WithMany("DepartmentPrognoses")
+                        .WithMany("DepartmentPrognosis")
                         .HasForeignKey("PrognosisId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -547,6 +2174,57 @@ namespace BumboData.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("BumboData.Models.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BumboData.Models.Branch", b =>
                 {
                     b.Navigation("DefaultEmployees");
@@ -573,7 +2251,7 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Prognosis", b =>
                 {
-                    b.Navigation("DepartmentPrognoses");
+                    b.Navigation("DepartmentPrognosis");
                 });
 #pragma warning restore 612, 618
         }

@@ -103,8 +103,8 @@ namespace Bumbo.Models.RosterManager
                     StockersPrognose = StockersPrognose - timespan.TotalHours;
                 }*/
             }
-            CassierePrognose = Math.Round(CassierePrognose, 2);
-            FreshPrognose = Math.Round(FreshPrognose, 2);
+            CassierePrognose = Math.Round(CassierePrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
+            FreshPrognose = Math.Round(FreshPrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
             StockersPrognose = Math.Round(StockersPrognose, 2);
             
         }

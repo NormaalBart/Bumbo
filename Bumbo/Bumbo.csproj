@@ -21,11 +21,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BumboData\BumboData.csproj" />
     <ProjectReference Include="..\BumboRepositories\BumboRepositories.csproj" />
+    <ProjectReference Include="..\BumboServices\BumboServices.csproj" />
   </ItemGroup>
 
 </Project>

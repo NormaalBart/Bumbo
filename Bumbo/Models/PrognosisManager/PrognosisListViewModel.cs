@@ -1,12 +1,17 @@
-﻿using Bumbo.Utils;
-using BumboData.Models;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+﻿using BumboRepositories.Utils;
 
 namespace Bumbo.Models.PrognosisManager
 {
     public class PrognosisListViewModel
     {
         public List<PrognosisViewModel> PrognosisList { get; set; }
+
+ 
+        public int CopyFromWeekNumber { get; set; }
+        public int CopyToWeekNumber { get; set; }
+
+        public int CopyFromYear { get; set; }
+        public int CopyToYear { get; set; }
 
 
         // displays the week number + the start date - end date of the list

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboData", "BumboData\Bumb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboRepositories", "BumboRepositories\BumboRepositories.csproj", "{3223D8D6-22A3-4E9B-8AA7-7D0BC22672A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BumboServices", "BumboServices\BumboServices.csproj", "{FE5FAD97-1B95-4EEB-9215-424F5CDB7B4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3223D8D6-22A3-4E9B-8AA7-7D0BC22672A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3223D8D6-22A3-4E9B-8AA7-7D0BC22672A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3223D8D6-22A3-4E9B-8AA7-7D0BC22672A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE5FAD97-1B95-4EEB-9215-424F5CDB7B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5FAD97-1B95-4EEB-9215-424F5CDB7B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5FAD97-1B95-4EEB-9215-424F5CDB7B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5FAD97-1B95-4EEB-9215-424F5CDB7B4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

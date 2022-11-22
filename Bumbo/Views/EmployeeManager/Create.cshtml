@@ -1,11 +1,22 @@
 ﻿@model Bumbo.Models.EmployeeManager.EmployeeCreateViewModel
+@using BumboData.Enums
+@using BumboData.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Employee> SignInManager
+@inject UserManager<Employee> UserManager
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+    </div>
+}
 
 <h1 class="text-center">Medewerker toevoegen</h1>
 
 
 <div class="container ">
-    <div >
+    <div>
         <form asp-action="Create" id="CreateForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
@@ -28,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                   
+
 
                     <div class="p-3">
                         <h5>Persoonlijke informatie</h5>
@@ -38,19 +49,24 @@
                             <span asp-validation-for="Birthdate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="BV. naam@example.com"/>
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
                             <label asp-for="PhoneNumber" class="control-label"></label>
                             <input asp-for="PhoneNumber" class="form-control" placeholder="Voer een gelding telefoon nummer in" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" placeholder="BV. naam@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input asp-for="Password" class="form-control" placeholder="Voer een geldig wachtwoord in." />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
                         <div class="row">
                             <div class="form-group col">
                                 <label asp-for="PostalCode" class="control-label"></label>
-                                <input asp-for="PostalCode" class="form-control" placeholder="BV. 3943GC"/>
+                                <input asp-for="PostalCode" class="form-control" placeholder="BV. 3943GC" />
                                 <span asp-validation-for="PostalCode" class="text-danger"></span>
                             </div>
                             <div class="form-group col">
@@ -59,13 +75,13 @@
                                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
                             </div>
                         </div>
-                       
+
                     </div>
                 </div>
 
                 <div class="col border border-3 border-dark employee-create-box">
                     <!--Bedrijfs informatie column-->
-                 
+
 
                     <div class="form-group">
                         <label asp-for="EmployeeJoinedCompany" class="control-label"></label>
@@ -77,29 +93,48 @@
                             <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
                         </label>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Function" class="control-label"></label>
-                        <input asp-for="Function" class="form-control" />
-                        <span asp-validation-for="Function" class="text-danger"></span>
-                    </div>
-
-
                     <!--Multiple select list for departments of employee-->
+                    @if (User.IsInRole(RoleType.MANAGER.Name))
+                    {
+                        @Html.HiddenFor(m => m.SelectedBranch)
+                        <div class="form-group">
+                            <label asp-for="Function" class="control-label"></label>
+                            <input asp-for="Function" class="form-control" />
+                            <span asp-validation-for="Function" class="text-danger"></span>
+                        </div>
+                        <div class="form-group text-center">
+                            <h5>Selecteer in welke afdelingen deze medewerker kan werken:</h5>
+                            @if (Model.EmployeeSelectedDepartments.Count() == 0)
+                            {
+                                <p class="alert-danger">Er zijn geen beschikbare afdelingen gevonden!</p>
+                            }
+                            @foreach (var department in Model.EmployeeSelectedDepartments)
+                            {
 
-                    <div class="form-group text-center">
-                        <h5>Selecteer in welke afdelingen deze medewerker kan werken:</h5>
-                        @foreach (var department in Model.EmployeeSelectedDepartments)
-                        {
+                                <tr>
+                                    <td> <input type="checkbox" name="selectedDepartments" value="@department.DepartmentId" /> @department.DepartmentName
+                                </tr>
 
-                            <tr>
-                                <td> <input type="checkbox" name="selectedDepartments" value="@department.DepartmentId" /> @department.DepartmentName
-                            </tr>
-                                
-                        }
-                    </div>
+                            }
+                            <br />
+                            <span asp-validation-for="AllowedDepartments" class="text-danger"></span>
+                        </div>
+                    }
+                    else if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
+                    {
+                        @Html.HiddenFor(m => m.AllowedDepartments)
+                        @Html.HiddenFor(m => m.Function)
+                        <label asp-for="SelectedBranch" class="control-label"></label>
+                        <select class="form-control" asp-for="SelectedBranch">
+                            @foreach (var branch in Model.Branches)
+                            {
+                                <option value="@branch.Id">@branch.Name</option>
+                            }
+                        </select>
+                    }
 
                 </div>
-               
+
 
             </div>
         </form>
@@ -109,10 +144,12 @@
     <input type="submit" value="Voeg toe!" form="CreateForm" class="btn btn-success btn-lg" />
 </div>
 
-<div class ="form-group h-100 d-flex align-items-center justify-content-center p-3">
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

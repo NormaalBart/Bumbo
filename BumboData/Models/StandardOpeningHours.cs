@@ -4,10 +4,10 @@ namespace BumboData.Models;
 
 public class StandardOpeningHours
 {
-    [Key]
     public Branch Branch { get; set; }
 
-    [Key]
+    public int BranchId { get; set; }
+
     public DayOfWeek DayOfWeek { get; set; }
 
     [Required]
