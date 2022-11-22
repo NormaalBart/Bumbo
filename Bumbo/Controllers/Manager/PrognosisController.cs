@@ -63,6 +63,7 @@ namespace Bumbo.Controllers
             {
                 return View(list);
             }
+            
             List<Prognosis> result = _mapper.Map<List<Prognosis>>(list.PrognosisList);
             if (result.Count != 0)
             {
