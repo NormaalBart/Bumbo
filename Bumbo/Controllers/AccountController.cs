@@ -73,7 +73,7 @@ namespace Bumbo.Controllers
             }
             else if (roles.Contains(RoleType.EMPLOYEE.Name))
             {
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "EmployeeRoster");
             }
             return RedirectToAction("Login");
         }
