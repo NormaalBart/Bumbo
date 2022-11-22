@@ -115,9 +115,6 @@ namespace BumboRepositories.Repositories
             }
             foreach (var item in list)
             {
-                // each prognose has a branch and department prognoses. These Department prognoses
-                // contain the amount of hours and employees that are needed for that department.
-
 
                 // First we check if the prognose already exists, in which case we update it.
                 // other wise we add it.
@@ -134,8 +131,6 @@ namespace BumboRepositories.Repositories
                 }
                 else
                 {
-                    // makes sure that there's no time instance in the date.
-
                     // get the branch of the item
                     item.BranchId = branchId;
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
