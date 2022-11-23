@@ -38,9 +38,9 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             }
             if (selectedDepartments.Count == 0)
             {
-                PopulateDepartments(viewModel);
+                PopulateUnselectedDepartments(viewModel);
                 ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
-                return View("Views/EmployeeManager/Manager/Edit.cshtml", viewModel);
+                return View(viewModel);
             }
             var manager = await _userManager.GetUserAsync(User);
             var employee = _mapper.Map<Employee>(viewModel);
