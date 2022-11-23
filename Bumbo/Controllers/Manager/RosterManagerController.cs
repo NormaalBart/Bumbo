@@ -131,24 +131,7 @@ namespace Bumbo.Controllers
         }
 
 
-        public async Task<IActionResult> EmployeeRosterAsync(string? dateInput)
-        {
-            // requested date 
-            DateTime date = DateTime.Today;
-            if (dateInput != null)
-            {
-                date = DateTime.Parse(dateInput);
-            }
 
-            // id of the employee logged in currently.
-            Employee employee = await _userManager.GetUserAsync(User);
-
-            EmployeeShiftsListViewModel shiftsVM = new EmployeeShiftsListViewModel();
-            shiftsVM.Date = date.ToDateOnly();
-            var dbshifts = _shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, employee.Id);
-            shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
-            return View(shiftsVM);
-        }
     }
     
 }

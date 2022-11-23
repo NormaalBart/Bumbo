@@ -11,7 +11,7 @@ namespace BumboData.Interfaces.Repositories
 
         DateOnly GetNextEmptyPrognosisDate();
 
-        void AddOrUpdateAll(Branch branch, List<Prognosis> list);
+        void AddOrUpdateAll(int branchId, List<Prognosis> list);
 
         IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek, int branchId);
 
