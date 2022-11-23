@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bumbo.Models.EmployeeManager
+namespace Bumbo.Models.EmployeeManager.Index
 {
     public class EmployeeListItemViewModel
     {
@@ -26,7 +26,7 @@ namespace Bumbo.Models.EmployeeManager
         [DisplayName("GeboorteDatum")]
         [DataType(DataType.Date)]
         public DateTime Birthdate { get; set; }
-        
+
         [DisplayName("In dienst sinds")]
         [DataType(DataType.Date)]
         public DateTime EmployeeJoinedCompany { get; set; }

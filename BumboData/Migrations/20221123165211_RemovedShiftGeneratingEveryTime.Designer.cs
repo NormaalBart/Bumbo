@@ -4,6 +4,7 @@ using BumboData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    partial class BumboContextModelSnapshot : ModelSnapshot
+    [Migration("20221123165211_RemovedShiftGeneratingEveryTime")]
+    partial class RemovedShiftGeneratingEveryTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1876,7 +1878,7 @@ namespace BumboData.Migrations
                         new
                         {
                             Id = "administrator",
-                            ConcurrencyStamp = "1181a7d7-f073-4d05-b928-cc80f6f5403",
+                            ConcurrencyStamp = "1181a7d7-f073-4d05-b928-cc80f6f54033",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
@@ -1996,11 +1998,6 @@ namespace BumboData.Migrations
                         new
                         {
                             UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            RoleId = "employee"
-                        },
-                        new
-                        {
-                            UserId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
                             RoleId = "employee"
                         });
                 });

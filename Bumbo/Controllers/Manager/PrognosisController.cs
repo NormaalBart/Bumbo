@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bumbo.Controllers
+namespace Bumbo.Controllers.Manager
 {
     [Authorize(Roles = "Manager")]
     public class PrognosisController : Controller
@@ -22,7 +22,7 @@ namespace Bumbo.Controllers
             _mapper = mapper;
             _prognosisRepository = prognosisService;
         }
-        
+
         public async Task<IActionResult> IndexAsync(string? dateInput, bool next)
         {
             // adds 7 because bool next is false by default.
@@ -30,7 +30,7 @@ namespace Bumbo.Controllers
             // start of week, calculated by getting the difference between the date and monday.
             // This method should probably be moved to a static class as it is used in multiple places.
             var startOfWeek = currentDate.GetMondayOfTheWeek();
-            
+
             if (dateInput != null)
             {
                 startOfWeek = DateTime.Parse(dateInput);
@@ -49,7 +49,7 @@ namespace Bumbo.Controllers
             // Returns the week of prognose days.
             PrognosisListViewModel list = new PrognosisListViewModel();
             Employee employee = await _userManager.GetUserAsync(User);
-            list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(_prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly(),employee.DefaultBranchId)).ToList();
+            list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(_prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly(), employee.DefaultBranchId)).ToList();
             list.CopyToWeekNumber = startOfWeek.GetWeekNumber();
             return View(list);
 
@@ -59,12 +59,12 @@ namespace Bumbo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> IndexAsync(PrognosisListViewModel list)
         {
-            
+
             if (!ModelState.IsValid)
             {
                 return View(list);
             }
-            
+
             List<Prognosis> result = _mapper.Map<List<Prognosis>>(list.PrognosisList);
             if (result.Count != 0)
             {
@@ -84,7 +84,7 @@ namespace Bumbo.Controllers
             DateTime copyToDate = OtherUtils.FirstDateOfWeekISO8601(copyToYear, copyToWeekNumber);
 
             Employee employee = await _userManager.GetUserAsync(User);
-            var copyFromPrognoses = _prognosisRepository.GetNextWeek(copyFromDate.ToDateOnly(),employee.DefaultBranchId).ToList();
+            var copyFromPrognoses = _prognosisRepository.GetNextWeek(copyFromDate.ToDateOnly(), employee.DefaultBranchId).ToList();
             List<Prognosis> updatedNewWeek = new List<Prognosis>();
             for (int i = 0; i < copyFromPrognoses.Count(); i++)
             {
@@ -100,8 +100,8 @@ namespace Bumbo.Controllers
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });
         }
-            
-        
-    
+
+
+
     }
 }

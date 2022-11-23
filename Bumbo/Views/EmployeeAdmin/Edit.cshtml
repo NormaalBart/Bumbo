@@ -1,8 +1,8 @@
-﻿@using Bumbo.Models.EmployeeManager.Employee
-@model EmployeeEditViewModel
+﻿@using Bumbo.Models.EmployeeManager.Manager
+@model ManagerEditViewModel
 
 
-<h1 class="text-center">Medewerker wijzigen</h1>
+<h1 class="text-center">Manager wijzigen</h1>
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger text-center" role="alert">
@@ -71,8 +71,6 @@
 
                 <div class="col border border-3 border-dark employee-create-box">
                     <!--Bedrijfs informatie column-->
-
-
                     <div class="form-group">
                         <label asp-for="EmployeeJoinedCompany" class="control-label"></label>
                         <input asp-for="EmployeeJoinedCompany" class="form-control" />
@@ -84,37 +82,20 @@
                         </label>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Function" class="control-label"></label>
-                        <input asp-for="Function" class="form-control" />
-                        <span asp-validation-for="Function" class="text-danger"></span>
-                    </div>
-
-                    <!--Multiple select list for departments of employee-->
-
-                    <div class="form-group text-center">
-                        <label asp-for="EmployeeSelectedDepartments" class="control-label"></label><br />
-                        <span asp-validation-for="EmployeeSelectedDepartments" class="text-danger"></span>
-                        <table>
-                            @foreach (var item in Model.EmployeeSelectedDepartments.OrderBy(department => department.DepartmentName))
+                        <label asp-for="SelectedBranch" class="control-label"></label>
+                        <select class="form-control" asp-for="SelectedBranch">
+                            @foreach (var branch in Model.Branches)
                             {
-                                <tr>
-                                    <td>
-                                        @if (item.IsSelected)
-                                        {
-                                            <input checked type="checkbox" name="selectedDepartments" value="@item.DepartmentId" />
-                                        }
-                                        else
-                                        {
-                                            <input type="checkbox" name="selectedDepartments" value="@item.DepartmentId" />
-                                        }
-                                    </td>
-                                    <td>
-                                        @item.DepartmentName
-                                    </td>
-                                </tr>
+                                if (branch.Id == Model.SelectedBranch)
+                                {
+                                    <option selected value="@branch.Id">@branch.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@branch.Id">@branch.Name</option>
+                                }
                             }
-                        </table>
-                        <br />
+                        </select>
                     </div>
                 </div>
 

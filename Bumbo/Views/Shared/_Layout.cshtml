@@ -25,7 +25,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bumbo</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">Bumbo</a>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
@@ -35,7 +35,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Medewerker Management</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeAdmin" asp-action="Index">Medewerker Management</a>
                                 </li>
                             }
                             else if (User.IsInRole(RoleType.MANAGER.Name))
