@@ -208,3 +208,162 @@
 </div>
 
 
+
+@section Head{ 
+    <link type="text/css" rel="stylesheet" href="themes/calendar_g.css"/>
+    <link type="text/css" rel="stylesheet" href="themes/calendar_green.css"/>
+    <link type="text/css" rel="stylesheet" href="themes/calendar_traditional.css"/>
+    <link type="text/css" rel="stylesheet" href="themes/calendar_transparent.css"/>
+    <link type="text/css" rel="stylesheet" href="themes/calendar_white.css"/>
+}
+
+<div style="display: flex">
+
+    <div style="margin-right: 10px;">
+        <div id="nav"></div>
+    </div>
+
+    <div style="flex-grow: 1;">
+
+        <div class="space">
+            Theme: <select id="theme">
+                <option value="calendar_default">Default</option>
+                <option value="calendar_white">White</option>
+                <option value="calendar_g">Google-Like</option>
+                <option value="calendar_green">Green</option>
+                <option value="calendar_traditional">Traditional</option>
+                <option value="calendar_transparent">Transparent</option>
+            </select>
+        </div>
+
+        <div id="dp"></div>
+    </div>
+
+</div>
+
+
+<script src="~/lib/daypilot/daypilot-all.min.js" asp-append-version="true"></script>
+<script>
+    const nav = new DayPilot.Navigator("nav", {
+        showMonths: 3,
+        skipMonths: 3,
+        selectMode: "Week",
+        onTimeRangeSelected: args => {
+            dp.update({
+                startDate: args.day
+            });
+            app.loadEvents();
+        }
+    });
+    nav.init();
+
+    const dp = new DayPilot.Calendar("dp", {
+        viewType: "Week",
+        eventDeleteHandling: "Update",
+        onEventDeleted: async (args) => {
+            const id = args.e.id();
+            await DayPilot.Http.delete(`/api/CalendarEvents/${id}`);
+            console.log("Deleted.");
+        },
+        onEventMoved: async (args) => {
+            const id = args.e.id();
+            const data = {
+                id: args.e.id(),
+                start: args.newStart,
+                end: args.newEnd,
+                text: args.e.text()
+            };
+            await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
+            console.log("Moved.");
+        },
+        onEventResized: async (args) => {
+            const id = args.e.id();
+            const data = {
+                id: args.e.id(),
+                start: args.newStart,
+                end: args.newEnd,
+                text: args.e.text()
+            };
+            await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
+            console.log("Resized.");
+        },
+        onTimeRangeSelected: async (args) => {
+            const form = [
+                {name: "Name", id: "text"}
+            ];
+
+            const modal = await DayPilot.Modal.form(form, {});
+            dp.clearSelection();
+
+            if (modal.canceled) {
+                return;
+            }
+
+            const event = {
+                start: args.start,
+                end: args.end,
+                text: modal.result.text
+            };
+            const {data} = await DayPilot.Http.post(`/api/CalendarEvents`, event);
+
+            dp.events.add({
+                start: args.start,
+                end: args.end,
+                id: data.id,
+                text: modal.result.text
+            });
+            console.log("Created.");
+
+        },
+        onEventClick: async (args) => {
+            const form = [
+                {name: "Name", id: "text"}
+            ];
+
+            const modal = await DayPilot.Modal.form(form, args.e.data);
+            if (modal.canceled) {
+                return;
+            }
+
+            const id = args.e.id();
+            const data = {
+                id: args.e.id(),
+                start: args.e.start(),
+                end: args.e.end(),
+                text: modal.result.text
+            };
+            await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
+
+            dp.events.update({
+                ...args.e.data,
+                text: modal.result.text
+            });
+            console.log("Updated.");
+
+        }
+
+    });
+    dp.init();
+
+
+    const app = {
+        elements: {
+            theme: document.querySelector("#theme")
+        },
+        loadEvents() {
+            dp.events.load("/api/CalendarEvents");
+        },
+        init() {
+            app.elements.theme.addEventListener("change", () => {
+                dp.update({
+                    theme: app.elements.theme.value
+                });
+            });
+
+            app.loadEvents();
+        }
+    };
+    app.init();
+
+
+</script>
