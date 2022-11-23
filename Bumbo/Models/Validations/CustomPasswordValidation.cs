@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bumbo.Models.EmployeeManager.EmployeeEdit
+namespace Bumbo.Models.Validations
 {
     public class CustomPasswordValidation : ValidationAttribute
     {
@@ -14,12 +14,12 @@ namespace Bumbo.Models.EmployeeManager.EmployeeEdit
                 return new ValidationResult("Wachtwoord moet minimaal 6 tekens hebben");
             }
 
-            else if (!password.Any(ch => Char.IsUpper(ch)))
+            else if (!password.Any(ch => char.IsUpper(ch)))
             {
                 return new ValidationResult("Wachtwoord moet minimaal 1 hoofdletter hebben");
             }
 
-            else if(!password.Any(ch => Char.IsDigit(ch)))
+            else if (!password.Any(ch => char.IsDigit(ch)))
             {
                 return new ValidationResult("Wachtwoord moet minimaal 1 letter hebben");
             }

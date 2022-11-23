@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.BranchController;
-using Bumbo.Models.EmployeeManager;
+using Bumbo.Models.EmployeeManager.Employee;
+using Bumbo.Models.EmployeeManager.Index;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;

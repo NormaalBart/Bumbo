@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using BumboData.Enums;
 
-namespace Bumbo.Models.EmployeeManager
+namespace Bumbo.Models.EmployeeManager.Index
 {
     public class EmployeeListIndexViewModel
     {
@@ -14,7 +14,7 @@ namespace Bumbo.Models.EmployeeManager
         public string SearchString { get; set; }
 
         public EmployeeSortingOption CurrentSort { get; set; }
-        
+
         public List<EmployeeSortingOption> AvailableSortOptions { get; set; }
 
 
@@ -27,9 +27,9 @@ namespace Bumbo.Models.EmployeeManager
             foreach (var option in Enum.GetValues(typeof(EmployeeSortingOption)))
             {
                 AvailableSortOptions.Add((EmployeeSortingOption)option);
-                
+
             }
-           
+
         }
 
         public string GetSortingDisplayName(EmployeeSortingOption sortoption)

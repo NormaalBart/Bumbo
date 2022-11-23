@@ -1,7 +1,8 @@
-﻿@using BumboData.Models
+﻿@using Bumbo.Models.EmployeeManager.Index
+@using BumboData.Models
 @using Microsoft.AspNetCore.Identity
 @using BumboData.Enums
-@model Bumbo.Models.EmployeeManager.EmployeeListIndexViewModel
+@model EmployeeListIndexViewModel
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
 
@@ -129,7 +130,7 @@
                             </td>
 
                             <td>
-                                @Html.ActionLink("Verander", "Edit", new { item.Id }) | 
+                                @Html.ActionLink("Verander", "Edit", new { item.Id }) |
                                 @Html.ActionLink("Reset wachtwoord", "ChangePassword", new { item.Id })
                             </td>
                         </tr>

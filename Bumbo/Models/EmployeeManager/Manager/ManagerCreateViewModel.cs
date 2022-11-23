@@ -1,13 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bumbo.Models.Validations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Bumbo.Models.EmployeeManager.EmployeeEdit
+namespace Bumbo.Models.EmployeeManager.Manager
 {
-    public class EditPasswordViewModel
+    public class ManagerCreateViewModel : ManagerEditViewModel
     {
-
-        public string EmployeeKey { get; set; }
-
-        public string? FullName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

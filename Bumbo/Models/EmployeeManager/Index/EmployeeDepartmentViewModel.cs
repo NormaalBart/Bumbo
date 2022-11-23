@@ -1,4 +1,4 @@
-﻿namespace Bumbo.Models.EmployeeManager
+﻿namespace Bumbo.Models.EmployeeManager.Index
 {
     public class EmployeeDepartmentViewModel
     {
@@ -7,7 +7,7 @@
         public string DepartmentName { get; set; }
 
         public bool IsSelected { get; set; }
-        
+
         public EmployeeDepartmentViewModel()
         {
         }

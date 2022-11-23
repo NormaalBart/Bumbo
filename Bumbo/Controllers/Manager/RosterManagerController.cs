@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
-using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.RosterManager;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Utils;
 using BumboServices.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bumbo.Controllers
+namespace Bumbo.Controllers.Manager
 {
 
     [Authorize(Roles = "Manager")]
@@ -32,8 +30,8 @@ namespace Bumbo.Controllers
             _unavailableRepository = unavailableMoments;
             _prognosesServices = prognosesService;
         }
-            
-            
+
+
         public async Task<IActionResult> IndexAsync(string? dateInput)
         {
 
@@ -54,7 +52,7 @@ namespace Bumbo.Controllers
             }
 
             var employee = await _userManager.GetUserAsync(User);
-            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date,employee.DefaultBranchId);
+            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, employee.DefaultBranchId);
             viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, employee.DefaultBranchId);
             viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date)).ToList();
@@ -62,8 +60,8 @@ namespace Bumbo.Controllers
             viewModel.PrognosisDayId = _prognosisRepository.GetIdByDate(date);
             return View(viewModel);
         }
-        
-        
+
+
         public IActionResult Create(string employeeId, string dateInput, int prognosisId)
         {
             RosterShiftCreateViewModel viewModel = new RosterShiftCreateViewModel();
@@ -72,17 +70,17 @@ namespace Bumbo.Controllers
             viewModel.EndTime = viewModel.Date.AddHours(16);
             viewModel.PrognosisId = prognosisId;
             viewModel.DepartmentsList = _employeeRepository.Get(employeeId).AllowedDepartments.ToList();
-            
+
             return View(viewModel);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(RosterShiftCreateViewModel newShift)
         {
             int maxHoursInWeekAllowed = 40; // DEFAULT 40 TODO 
-            
+
             newShift.DepartmentsList = _employeeRepository.Get(newShift.EmployeeId).AllowedDepartments.ToList();
 
             // since starttime and endtime seem to only save the timestamps, we need to add the date to it
@@ -95,7 +93,7 @@ namespace Bumbo.Controllers
                 ModelState.AddModelError("EndTime", "Eindtijd moet na starttijd komen.");
                 return View(newShift);
             }
-            
+
             if (ModelState.IsValid)
             {
                 var shift = _mapper.Map<PlannedShift>(newShift);
@@ -115,17 +113,17 @@ namespace Bumbo.Controllers
                     ModelState.AddModelError("EndTime", "Medewerker is niet beschikbaar voor deze tijd.");
                 }
                 // check if CAO rules are met.
-                if(_shiftRepository.GetHoursPlannedInWorkWeek(shift.Employee.Id, shift.StartTime.Date) + (shift.EndTime - shift.StartTime).TotalHours > maxHoursInWeekAllowed)
+                if (_shiftRepository.GetHoursPlannedInWorkWeek(shift.Employee.Id, shift.StartTime.Date) + (shift.EndTime - shift.StartTime).TotalHours > maxHoursInWeekAllowed)
                 {
                     ModelState.AddModelError("StartTime", "Medewerker heeft al te veel gewerkt deze week.");
                     ModelState.AddModelError("EndTime", "Medewerker heeft al te veel gewerkt deze week.");
                     return View(newShift);
                 }
-                
-                
+
+
                 _shiftRepository.Create(shift);
                 return RedirectToAction("Index", new RouteValueDictionary(
-                    new { controller = "RosterManager", action = "Index", dateInput = newShift.StartTime.Date.ToString()}));
+                    new { controller = "RosterManager", action = "Index", dateInput = newShift.StartTime.Date.ToString() }));
             }
             return View(newShift);
         }
@@ -133,5 +131,5 @@ namespace Bumbo.Controllers
 
 
     }
-    
+
 }

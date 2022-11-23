@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Bumbo.Models.EmployeeManager;
-using Bumbo.Models.EmployeeManager.EmployeeCreate;
+using Bumbo.Models.EmployeeManager.Employee;
+using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
@@ -64,7 +64,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             var viewModel = _mapper.Map<EmployeeEditViewModel>(employee);
             viewModel.EmployeeSelectedDepartments.Clear();
             PopulateDepartments(viewModel);
-            return View("Views/EmployeeManager/Manager/Edit.cshtml", viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -74,13 +74,13 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             if (!ModelState.IsValid)
             {
                 PopulateDepartments(employeeCreateEditModel);
-                return View("Views/EmployeeManager/Manager/Edit.cshtml", employeeCreateEditModel);
+                return View(employeeCreateEditModel);
             }
             if (selectedDepartments.Count == 0)
             {
                 PopulateDepartments(employeeCreateEditModel);
                 ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
-                return View("Views/EmployeeManager/Manager/Edit.cshtml", employeeCreateEditModel);
+                return View(employeeCreateEditModel);
             }
             var employee = _employeesRepository.Get(employeeCreateEditModel.EmployeeKey);
             _mapper.Map<EmployeeEditViewModel, Employee>(employeeCreateEditModel, employee);

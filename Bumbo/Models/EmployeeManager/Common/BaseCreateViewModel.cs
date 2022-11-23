@@ -1,25 +1,24 @@
-﻿using BumboData.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bumbo.Models.EmployeeManager.EmployeeCreate
+namespace Bumbo.Models.EmployeeManager.Common
 {
-    public abstract class BaseEditViewModel
+    public abstract class BaseCreateViewModel
     {
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Voornaam")]
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        public String FirstName { get; set; }
+        public string FirstName { get; set; }
 
         [DisplayName("Tussenvoegsel")]
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        public String? Preposition { get; set; }
+        public string? Preposition { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Achternaam")]
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        public String LastName { get; set; }
+        public string LastName { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Geboortedatum")]
@@ -28,7 +27,7 @@ namespace Bumbo.Models.EmployeeManager.EmployeeCreate
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Is momenteel in dienst")]
-        public Boolean Active { get; set; }
+        public bool Active { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [EmailAddress(ErrorMessage = "Veld moet een valide email address zijn.")]
@@ -48,7 +47,7 @@ namespace Bumbo.Models.EmployeeManager.EmployeeCreate
         [DisplayName("Postcode")]
         [DataType(DataType.PostalCode, ErrorMessage = "Veld moet een valide postcode zijn.")]
         [StringLength(50)]
-        public String PostalCode { get; set; }
+        public string PostalCode { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Huisnummer")]
@@ -67,11 +66,11 @@ namespace Bumbo.Models.EmployeeManager.EmployeeCreate
         {
             get => $"{LastName}, {FirstName} {Preposition}";
         }
-        public BaseEditViewModel()
+        public BaseCreateViewModel()
         {
-            this.Active = true;
-            this.EmployeeJoinedCompany = DateTime.Now.Date;
-            this.Birthdate = DateTime.Now.AddYears(-18);
+            Active = true;
+            EmployeeJoinedCompany = DateTime.Now.Date;
+            Birthdate = DateTime.Now.AddYears(-18);
         }
 
     }

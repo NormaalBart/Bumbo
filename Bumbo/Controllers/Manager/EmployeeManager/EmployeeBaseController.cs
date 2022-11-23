@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Bumbo.Models.EmployeeManager;
-using Bumbo.Models.EmployeeManager.EmployeeCreate;
-using Bumbo.Models.EmployeeManager.EmployeeEdit;
+using Bumbo.Models.EmployeeManager.Common;
+using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bumbo.Controllers
+namespace Bumbo.Controllers.Manager.EmployeeManager
 {
 
     [Authorize(Roles = "Administrator,Manager")]
@@ -53,7 +52,7 @@ namespace Bumbo.Controllers
                 employees = employees.Where(e => e.Active == false);
             }
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 // search in employees if any of the columns contains the searchstring
                 resultingListViewModel.SearchString = searchString;
@@ -99,7 +98,7 @@ namespace Bumbo.Controllers
 
         public IActionResult ChangePassword(string id)
         {
-            var employee = _employeesRepository.Get(id); 
+            var employee = _employeesRepository.Get(id);
             var viewModel = new EditPasswordViewModel { EmployeeKey = id, FullName = employee.FullName() };
             return View("Views/EmployeeBase/ChangePassword.cshtml", viewModel);
         }

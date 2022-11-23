@@ -3,14 +3,13 @@ using Bumbo.Models.ExportManager;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Utils;
 using BumboServices.Interface;
 using BumboServices.Surcharges.SurchargeRules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bumbo.Controllers;
+namespace Bumbo.Controllers.Manager;
 
 [Authorize(Roles = "Manager")]
 public class ExportController : Controller
@@ -36,7 +35,7 @@ public class ExportController : Controller
             : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
 
         var model = new ExportOverviewViewModel();
-        
+
         var branch = (await _userManager.GetUserAsync(User)).ManagesBranchId;
 
         if (branch == null)
@@ -109,15 +108,15 @@ public class ExportController : Controller
         var monthSelected = SelectedMonth == null
             ? DateTime.Now
             : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
-        
+
         // Get branch id from logged in user
         var branch = (await _userManager.GetUserAsync(User)).ManagesBranchId;
 
         if (branch == null)
         {
             return BadRequest();
-        }        
-        
+        }
+
         return File(_hourExportService.CsvExportForMonth(branch ?? -1, monthSelected), "text/csv", "export-" + SelectedMonth + ".csv");
     }
 }

@@ -1,7 +1,6 @@
 using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories;
 using BumboRepositories.Repositories;
 using BumboServices;
 using BumboServices.Interface;

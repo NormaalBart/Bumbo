@@ -1,7 +1,7 @@
-﻿using Bumbo.Models.EmployeeManager.EmployeeEdit;
+﻿using Bumbo.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bumbo.Models.EmployeeManager.EmployeeCreate
+namespace Bumbo.Models.EmployeeManager.Employee
 {
     public class EmployeeCreateViewModel : EmployeeEditViewModel
     {

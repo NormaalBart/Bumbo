@@ -1,18 +1,19 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Bumbo.Models.EmployeeManager.EmployeeCreate;
+using Bumbo.Models.EmployeeManager.Common;
+using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Models;
 
-namespace Bumbo.Models.EmployeeManager
+namespace Bumbo.Models.EmployeeManager.Employee
 {
 
-    public class EmployeeEditViewModel : BaseEditViewModel
+    public class EmployeeEditViewModel : BaseCreateViewModel
     {
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Functie")]
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        public String Function { get; set; }
+        public string Function { get; set; }
 
         public virtual ICollection<Department> AllowedDepartments { get; set; }
 
