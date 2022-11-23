@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bumbo.Controllers;
+namespace Bumbo.Controllers.Manager;
 
 [Authorize(Roles = "Manager")]
 public class ExportController : Controller
