@@ -52,7 +52,7 @@ public class ImportService: IImportService
             m.BranchId = branchId;
         });
 
-        // _workedShiftRepository.Import(mappedModels);
+        _workedShiftRepository.Import(mappedModels);
     }
 
     private CsvReader CsvFromStream(Stream s)
