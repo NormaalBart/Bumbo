@@ -6,6 +6,7 @@ using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
 using BumboData.Models;
 using BumboRepositories.Utils;
+using BumboServices.Import;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bumbo.Models
@@ -20,23 +21,46 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.FullName))
                 .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.FullName.ToUpper()))
                 .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpper()))
-                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => hasher.HashPassword(null, src.Password)))
+                .ForMember(dest => dest.PasswordHash,
+                    opt => opt.MapFrom(src => hasher.HashPassword(null, src.Password)))
                 .ForMember(dest => dest.ManagesBranchId, opt => opt.MapFrom(src => src.SelectedBranch))
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateOnly()))
-                .ForMember(dest => dest.EmployeeSince, opt => opt.MapFrom(src => src.EmployeeJoinedCompany.ToDateOnly()));
-            CreateMap<Employee, EmployeeCreateViewModel>().ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0))));
-            CreateMap<Employee, EmployeeListItemViewModel>().ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0,0,0)))).ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
+                .ForMember(dest => dest.EmployeeSince,
+                    opt => opt.MapFrom(src => src.EmployeeJoinedCompany.ToDateOnly()));
+            CreateMap<Employee, EmployeeCreateViewModel>()
+                .ForMember(dest => dest.Birthdate,
+                    opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(
+                    dest => dest.EmployeeJoinedCompany,
+                    opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0))));
+            CreateMap<Employee, EmployeeListItemViewModel>()
+                .ForMember(dest => dest.EmployeeJoinedCompany,
+                    opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(
+                    dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<Employee, EmployeeRosterViewModel>();
-            CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));
-            CreateMap<PrognosisViewModel, Prognosis>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateOnly()));
+            CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date,
+                opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));
+            CreateMap<PrognosisViewModel, Prognosis>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateOnly()));
             CreateMap<PlannedShift, ShiftViewModel>();
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
             CreateMap<Branch, BranchViewModel>();
             CreateMap<BranchViewModel, Branch>();
 
-            CreateMap<PlannedShift, EmployeeShiftViewModel>().ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber)).ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street)).ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City)).ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
+            CreateMap<PlannedShift, EmployeeShiftViewModel>()
+                .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber))
+                .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 
+            CreateMap<EmployeeCsvModel, Employee>();
+            CreateMap<WorkedShiftCSVModel, WorkedShift>()
+                .ForMember(dest => dest.StartTime,
+                    opt => opt.MapFrom(src => new DateTime(src.Date.Year, src.Date.Month, src.Date.Day,
+                        src.StartTime.Hour, src.StartTime.Minute, 0)))                
+                .ForMember(dest => dest.EndTime,
+                    opt => opt.MapFrom(src => new DateTime(src.Date.Year, src.Date.Month, src.Date.Day,
+                        src.EndTime.Hour, src.EndTime.Minute, 0)));
         }
     }
 }

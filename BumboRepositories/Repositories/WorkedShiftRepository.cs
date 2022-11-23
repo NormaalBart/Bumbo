@@ -34,5 +34,11 @@ namespace BumboRepositories.Repositories
             return DbSet.Include(i => i.Employee).Where(s =>
                 s.BranchId == branchId && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
         }
+
+        public void Import(List<WorkedShift> list)
+        {
+            DbSet.AddRange(list);
+            Context.SaveChanges();
+        }
     }
 }

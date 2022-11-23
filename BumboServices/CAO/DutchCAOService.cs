@@ -1,3 +1,4 @@
+using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboServices.CAO.Rules;
 using BumboServices.Interface;
@@ -8,14 +9,19 @@ public class DutchCAOService : ICAOService
 {
     private readonly List<ICAORule> _appliedRules;
         
-    public DutchCAOService()
+    public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository)
     {
         // Sets up all CAO rules of the dutch CAO
         // All < 16 year rules
+        var below16Range = new Range(0, 15);
         var below16Rules = new List<ICAORule>()
         {
             // - Maximaal 8 uur werken per dag incl. school
-            new MaxWorkHours(ageRange: new Range(0, 15), 8.0, true),
+            new MaxWorkHours(below16Range, 8.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
+            //  - Maximaal 40 uur per week
+            new MaxWorkHours(below16Range, 40.0, MaxWorkHoursTimeframe.Week),
+            //  - Maximaal 12 uur per schoolweek
+            new MaxWorkHours(below16Range, 12.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository)
             
         };
         
@@ -23,14 +29,16 @@ public class DutchCAOService : ICAOService
         var otherRules = new List<ICAORule>()
         {
             // - Maximaal 9 uur werken per dag incl. school
-            new MaxWorkHours(ageRange:new Range(16, 17), 9.0, true),
+            new MaxWorkHours(ageRange:new Range(16, 17), 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
                 
         };
 
         var generalRules = new List<ICAORule>()
         {
             // Maximaal 12 uur per dienst
-            new MaxWorkHours(ageRange: new Range(0, int.MaxValue), 12.0),
+            new MaxConsecutiveHours(12.0),
+            // Maximaal 60 uur per week
+            new MaxWorkHours(ageRange: new Range(0, int.MaxValue), 60.0, MaxWorkHoursTimeframe.Week)
         };
 
         _appliedRules = below16Rules;
@@ -43,6 +51,8 @@ public class DutchCAOService : ICAOService
      */
     public Dictionary<PlannedShift, ICAORule> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
     {
+        // The given shifts should be all in the same month.
+        // TODO: Throw error otherwise
         
         return new Dictionary<PlannedShift, ICAORule>();
     }

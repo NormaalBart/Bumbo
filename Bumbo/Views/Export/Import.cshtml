@@ -1,0 +1,24 @@
+﻿@using Bumbo.Utils
+@using BumboData.Enums
+@using BumboServices.Surcharges.SurchargeRules
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Bumbo.Models.ExportManager.ImportViewModel
+
+@{
+    ViewData["Title"] = "Importeren";
+}
+
+<h1 class="text-center">Importeren</h1>
+
+<div class="container">
+    <div class="col-md-6">
+        <form asp-action="Import" enctype="multipart/form-data">
+            <label class="fw-bold" asp-for="ImportClockEvents"></label><br/>
+            <input asp-for="ImportClockEvents"/>
+            <br/>
+            <label class="fw-bold" asp-for="ImportEmployees"></label><br/>
+            <input asp-for="ImportEmployees"/>
+            <input class="btn btn-primary" type="submit" value="Importeren"/>
+        </form>
+    </div>
+</div>

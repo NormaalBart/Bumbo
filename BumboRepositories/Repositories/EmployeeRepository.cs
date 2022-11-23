@@ -44,5 +44,11 @@ namespace BumboRepositories.Repositories
         {
             return DbSet.Where(e => e.NormalizedEmail == newEmployee.NormalizedEmail || e.NormalizedUserName == newEmployee.NormalizedUserName).Any();
         }
+
+        public void Import(List<Employee> employees)
+        {
+            DbSet.AddRange(employees);
+            Context.SaveChanges();
+        }
     }
 }
