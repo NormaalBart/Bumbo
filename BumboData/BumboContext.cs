@@ -108,9 +108,9 @@ namespace BumboData
         private void SeedRoles(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Id = RoleType.ADMINISTRATOR.RoleId, Name = RoleType.ADMINISTRATOR.Name, NormalizedName = RoleType.ADMINISTRATOR.NormalizedName },
-                new IdentityRole { Id = RoleType.MANAGER.RoleId, Name = RoleType.MANAGER.Name, NormalizedName = RoleType.MANAGER.NormalizedName },
-                new IdentityRole { Id = RoleType.EMPLOYEE.RoleId, Name = RoleType.EMPLOYEE.Name, NormalizedName = RoleType.EMPLOYEE.NormalizedName });
+                new IdentityRole { Id = RoleType.ADMINISTRATOR.RoleId, Name = RoleType.ADMINISTRATOR.Name, NormalizedName = RoleType.ADMINISTRATOR.NormalizedName, ConcurrencyStamp = "1181a7d7-f073-4d05-b928-cc80f6f5403" },
+                new IdentityRole { Id = RoleType.MANAGER.RoleId, Name = RoleType.MANAGER.Name, NormalizedName = RoleType.MANAGER.NormalizedName, ConcurrencyStamp = "9561f2c3-10ae-4fcf-bba4-2a0fea44eb0f" },
+                new IdentityRole { Id = RoleType.EMPLOYEE.RoleId, Name = RoleType.EMPLOYEE.Name, NormalizedName = RoleType.EMPLOYEE.NormalizedName, ConcurrencyStamp = "7d959d94-90d6-4597-b435-609d47ad20a3" });
 
         }
 
@@ -131,7 +131,9 @@ namespace BumboData
                     LastName = "Piet",
                     UserName = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
                     NormalizedUserName = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
-                    PasswordHash = hasher.HashPassword(null, "admin"),
+                    PasswordHash = "AQAAAAEAACcQAAAAEMhLmHfItvpJ4iRneBRJiYC4WNbOhV7DnEd1p05WZQjfinW62cn/CmI/u3uEvxmghQ==",
+                    SecurityStamp = "08e92cf7-1030-4e42-8abb-659601fdf881",
+                    ConcurrencyStamp = "d2acbf3f-d036-419a-a9a2-3b600593717a",
                     Email = "admin@admin.com",
                     NormalizedEmail = "ADMIN@ADMIN.COM",
                     EmailConfirmed = true,
@@ -151,7 +153,9 @@ namespace BumboData
                     LastName = "Piet",
                     UserName = "3a792773-527d-4bb7-8319-6db070350d38",
                     NormalizedUserName = "3a792773-527d-4bb7-8319-6db070350d38",
-                    PasswordHash = hasher.HashPassword(null, "manager"),
+                    PasswordHash = "AQAAAAEAACcQAAAAEDLx0FkXHJEHBgP85LHKwOyjbYgWvQjyIyiPAUXO8A/+3URtMmx9kYa8oVic+XHg5Q==",
+                    SecurityStamp = "f8fb6fe2-204d-4893-82ec-57f6b84082a0",
+                    ConcurrencyStamp = "dffd73be-bc93-4385-8296-ccadccd635ee",
                     Email = "manager@manager.com",
                     NormalizedEmail = "MANAGER@MANAGER.COM",
                     EmailConfirmed = true,
@@ -170,7 +174,9 @@ namespace BumboData
                     LastName = "Piet",
                     UserName = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                     NormalizedUserName = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                    PasswordHash = hasher.HashPassword(null, "medewerker"),
+                    PasswordHash = "AQAAAAEAACcQAAAAEMOlYiKxVnGRKVf+iPMdNaZzOZnffb8Suz+7VzFUo0m97n0xU73z2tX303VpuaFH8g==",
+                    SecurityStamp = "cc50d2a2-3e96-4d46-ac33-92f239b5e972",
+                    ConcurrencyStamp = "f36c94f7-8d1f-473d-819a-f25868a38aa7",
                     Email = "medewerker@medewerker.com",
                     NormalizedEmail = "MEDEWERKER@MEDEWERKER.COM",
                     EmailConfirmed = true,
@@ -189,7 +195,9 @@ namespace BumboData
                     LastName = "Jan",
                     UserName = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
                     NormalizedUserName = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                    PasswordHash = hasher.HashPassword(null, "medewerker"),
+                    PasswordHash = "AQAAAAEAACcQAAAAENhQWtC9CiEy0jGjDxauqESzgQm9Ghiuzx54cCzCe1pc1oXy+WRmZhPVABRv01PUTw==",
+                    SecurityStamp = "DZ4QIASGBFUBIEZJFGH5VPV3POM2CCBF",
+                    ConcurrencyStamp = "9545f802-f5e7-4708-a99c-9afa83012b8d",
                     Email = "medewerker2@medewerker.com",
                     NormalizedEmail = "MEDEWERKER2@MEDEWERKER.COM",
                     EmailConfirmed = true,
@@ -217,14 +225,14 @@ namespace BumboData
         private void SeedShifts(ModelBuilder modelBuilder)
         {
             var workedShift = new List<WorkedShift>();
-            int id = SeedShiftMonth(workedShift, 1, 1, DateTime.Now);
-            SeedShiftMonth(workedShift, id, 1, DateTime.Now.AddMonths(-1));
+            var random = new Random(0);
+            int id = SeedShiftMonth(random, workedShift, 1, 1, DateTime.Now);
+            SeedShiftMonth(random, workedShift, id, 1, DateTime.Now.AddMonths(-1));
             modelBuilder.Entity<WorkedShift>().HasData(workedShift);
         }
 
-        private int SeedShiftMonth(List<WorkedShift> list, int shiftId, int branchId, DateTime month)
+        private int SeedShiftMonth(Random random, List<WorkedShift> list, int shiftId, int branchId, DateTime month)
         {
-            var random = new Random();
 
             var firstDayOfMonth = new DateTime(month.Year, month.Month, 1);
             var lastDayOfMonth = new DateTime(month.Year, month.Month, DateTime.DaysInMonth(month.Year, month.Month));

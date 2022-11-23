@@ -4,6 +4,7 @@ using BumboData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    partial class BumboContextModelSnapshot : ModelSnapshot
+    [Migration("20221123165211_RemovedShiftGeneratingEveryTime")]
+    partial class RemovedShiftGeneratingEveryTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Branches", (string)null);
+                    b.ToTable("Branches");
 
                     b.HasData(
                         new
@@ -83,7 +85,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
 
                     b.HasData(
                         new
@@ -129,7 +131,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("PrognosisId");
 
-                    b.ToTable("DepartmentPrognosis", (string)null);
+                    b.ToTable("DepartmentPrognosis");
                 });
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
@@ -360,7 +362,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("OpeningHoursOverride", (string)null);
+                    b.ToTable("OpeningHoursOverride");
                 });
 
             modelBuilder.Entity("BumboData.Models.PlannedShift", b =>
@@ -395,7 +397,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("PlannedShifts", (string)null);
+                    b.ToTable("PlannedShifts");
                 });
 
             modelBuilder.Entity("BumboData.Models.Prognosis", b =>
@@ -422,7 +424,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Prognoses", (string)null);
+                    b.ToTable("Prognoses");
                 });
 
             modelBuilder.Entity("BumboData.Models.Standard", b =>
@@ -440,7 +442,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Standards", (string)null);
+                    b.ToTable("Standards");
 
                     b.HasData(
                         new
@@ -491,7 +493,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("BranchId", "DayOfWeek");
 
-                    b.ToTable("StandardOpeningHours", (string)null);
+                    b.ToTable("StandardOpeningHours");
 
                     b.HasData(
                         new
@@ -570,7 +572,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("UnavailableMoments", (string)null);
+                    b.ToTable("UnavailableMoments");
                 });
 
             modelBuilder.Entity("BumboData.Models.WorkedShift", b =>
@@ -606,7 +608,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("WorkedShifts", (string)null);
+                    b.ToTable("WorkedShifts");
 
                     b.HasData(
                         new
@@ -1876,7 +1878,7 @@ namespace BumboData.Migrations
                         new
                         {
                             Id = "administrator",
-                            ConcurrencyStamp = "1181a7d7-f073-4d05-b928-cc80f6f5403",
+                            ConcurrencyStamp = "1181a7d7-f073-4d05-b928-cc80f6f54033",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
