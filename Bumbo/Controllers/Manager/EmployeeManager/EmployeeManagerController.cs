@@ -34,12 +34,19 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         {
             if (!ModelState.IsValid)
             {
+                PopulateUnselectedDepartments(viewModel);
                 return View(viewModel);
             }
             if (selectedDepartments.Count == 0)
             {
                 PopulateUnselectedDepartments(viewModel);
                 ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
+                return View(viewModel);
+            }
+            if(_employeesRepository.GetByEmail(viewModel.Email) != null)
+            {
+                PopulateUnselectedDepartments(viewModel);
+                ModelState.AddModelError("Email", "Dit email is al in gebruik");
                 return View(viewModel);
             }
             var manager = await _userManager.GetUserAsync(User);

@@ -2,6 +2,7 @@
 using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager.Employee;
 using Bumbo.Models.EmployeeManager.Index;
+using Bumbo.Models.EmployeeManager.Manager;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
@@ -18,7 +19,7 @@ namespace Bumbo.Models
             var hasher = new PasswordHasher<Employee>();
             // To use auto mapper, register it here for each model you want to use.
             CreateMap<EmployeeEditViewModel, Employee>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.FullName))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.EmployeeKey))
                 .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.FullName.ToUpper()))
                 .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpper()))
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateOnly()))
@@ -30,6 +31,19 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.EmployeeKey, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.EmployeeSelectedDepartments, opt => opt.MapFrom(src => src.AllowedDepartments));
+            CreateMap<ManagerEditViewModel, Employee>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.EmployeeKey))
+                .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.FullName.ToUpper()))
+                .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpper()))
+                .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateOnly()))
+                .ForMember(dest => dest.ManagesBranchId, opt => opt.MapFrom(src => src.SelectedBranch))
+                .ForMember(dest => dest.EmployeeSince, opt => opt.MapFrom(src => src.EmployeeJoinedCompany.ToDateOnly()));
+            CreateMap<Employee, ManagerEditViewModel>()
+                .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))))
+                .ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0))))
+                .ForMember(dest => dest.EmployeeKey, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.SelectedBranch, opt => opt.MapFrom(src => src.ManagesBranchId))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
             CreateMap<Employee, EmployeeListItemViewModel>().ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<Employee, EmployeeRosterViewModel>();
             CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));

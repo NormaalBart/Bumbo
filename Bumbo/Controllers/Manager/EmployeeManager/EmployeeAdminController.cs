@@ -36,16 +36,19 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
                 viewModel.Branches = _branchRepository.GetList().ToList();
                 return View(viewModel);
             }
+            if (_employeesRepository.GetByEmail(viewModel.Email) != null)
+            {
+                ModelState.AddModelError("Email", "Dit email is al in gebruik");
+                return View(viewModel);
+            }
             var manager = await _userManager.GetUserAsync(User);
             var employee = _mapper.Map<Employee>(viewModel);
-            foreach (var department in _departmentsRepository.GetList())
-            {
-                employee.AllowedDepartments.Add(department);
-            }
+            employee.AllowedDepartments = _departmentsRepository.GetList().ToList();
             employee.DefaultBranchId = viewModel.SelectedBranch;
             employee.ManagesBranchId = viewModel.SelectedBranch;
             employee.Id = Guid.NewGuid().ToString();
             employee.UserName = employee.Id;
+            employee.Function = RoleType.MANAGER.Name;
             employee.NormalizedUserName = employee.UserName;
             await _userManager.CreateAsync(employee, viewModel.Password);
             await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.RoleId);
@@ -57,7 +60,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             var employee = _employeesRepository.Get(id);
             var viewModel = _mapper.Map<ManagerEditViewModel>(employee);
             viewModel.Branches = _branchRepository.GetList().ToList();
-            return View("Views/EmployeeManager/Manager/Edit.cshtml", viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -66,7 +69,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         {
             if (!ModelState.IsValid)
             {
-                return View("Views/EmployeeManager/Manager/Edit.cshtml", viewModel);
+                return View(viewModel);
             }
 
             var employee = _employeesRepository.Get(viewModel.EmployeeKey);

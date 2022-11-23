@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bumbo.Models.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.EmployeeManager.Common
 {
