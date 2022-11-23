@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.EmployeeManager.EmployeeCreate;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using Microsoft.AspNetCore.Identity;
@@ -22,29 +23,47 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
         public IActionResult Create()
         {
-            var viewModel = new EmployeeEditViewModel();
-            return View("Views/EmployeeManager/Manager/Create.cshtml", viewModel);
+            var viewModel = new EmployeeCreateViewModel();
+            PopulateUnselectedDepartments(viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(BaseEditViewModel baseCreateViewModel)
+        public async Task<IActionResult> Create(EmployeeCreateViewModel viewModel, List<int> selectedDepartments)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+            if (selectedDepartments.Count == 0)
+            {
+                PopulateDepartments(viewModel);
+                ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
+                return View("Views/EmployeeManager/Manager/Edit.cshtml", viewModel);
+            }
+            var manager = await _userManager.GetUserAsync(User);
+            var employee = _mapper.Map<Employee>(viewModel);
+            foreach (var departmentId in selectedDepartments)
+            {
+                var department = _departmentsRepository.Get(departmentId);
+                employee.AllowedDepartments.Add(department);
+            }
+            employee.DefaultBranchId = manager.DefaultBranchId;
+            employee.Id = Guid.NewGuid().ToString();
+            employee.UserName = employee.Id;
+            employee.NormalizedUserName = employee.UserName;
+            await _userManager.CreateAsync(employee, viewModel.Password);
+            await _userManager.AddToRoleAsync(employee, RoleType.EMPLOYEE.RoleId);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(string id)
         {
             var employee = _employeesRepository.Get(id);
             var viewModel = _mapper.Map<EmployeeEditViewModel>(employee);
-            viewModel.EmployeeSelectedDepartments.ForEach(department => department.IsSelected = true);
-            foreach (var department in _departmentsRepository.GetList())
-            {
-                if (!viewModel.EmployeeSelectedDepartments.Any(departmentViewModel => departmentViewModel.DepartmentId == department.Id))
-                {
-                    viewModel.EmployeeSelectedDepartments.Add(new EmployeeDepartmentViewModel() { DepartmentId = department.Id, DepartmentName = department.DepartmentName, IsSelected = false });
-                }
-            }
+            viewModel.EmployeeSelectedDepartments.Clear();
+            PopulateDepartments(viewModel);
             return View("Views/EmployeeManager/Manager/Edit.cshtml", viewModel);
         }
 
@@ -54,10 +73,6 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         {
             if (!ModelState.IsValid)
             {
-                if (selectedDepartments.Count == 0)
-                {
-                    ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
-                }
                 PopulateDepartments(employeeCreateEditModel);
                 return View("Views/EmployeeManager/Manager/Edit.cshtml", employeeCreateEditModel);
             }
@@ -83,7 +98,11 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         {
             viewModel.EmployeeSelectedDepartments = _mapper.Map<List<EmployeeDepartmentViewModel>>(_employeesRepository.GetDepartmentsOfEmployee(viewModel.EmployeeKey));
             viewModel.EmployeeSelectedDepartments.ForEach(department => department.IsSelected = true);
+            PopulateUnselectedDepartments(viewModel);
+        }
 
+        private void PopulateUnselectedDepartments(EmployeeEditViewModel viewModel)
+        {
             foreach (var department in _departmentsRepository.GetList())
             {
                 if (!viewModel.EmployeeSelectedDepartments.Any(departmentViewModel => departmentViewModel.DepartmentId == department.Id))

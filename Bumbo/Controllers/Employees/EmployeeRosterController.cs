@@ -11,7 +11,7 @@ using System.Data;
 namespace Bumbo.Controllers.Employees
 {
     
-    [Authorize(Roles = "Employee")]
+    [Authorize(Roles = "employee")]
     public class EmployeeRosterController : Controller
     {
 
