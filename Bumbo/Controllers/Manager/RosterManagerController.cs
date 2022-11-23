@@ -4,6 +4,7 @@ using Bumbo.Models.RosterManager;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
+using BumboServices.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,14 @@ namespace Bumbo.Controllers
     [Authorize(Roles = "Manager")]
     public class RosterManagerController : Controller
     {
-        private UserManager<Employee> _userManager;
-        private IMapper _mapper;
-        private IEmployeeRepository _employeeRepository;
-        private IPrognosisRepository _prognosisRepository;
-        private IPlannedShiftsRepository _shiftRepository;
-        private IUnavailableMomentsRepository _unavailableRepository;
-        public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments)
+        readonly private UserManager<Employee> _userManager;
+        readonly private IMapper _mapper;
+        readonly private IEmployeeRepository _employeeRepository;
+        readonly private IPrognosisRepository _prognosisRepository;
+        readonly private IPlannedShiftsRepository _shiftRepository;
+        readonly private IUnavailableMomentsRepository _unavailableRepository;
+        readonly private IPrognosesService _prognosesServices;
+        public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments, IPrognosesService prognosesService)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -28,10 +30,11 @@ namespace Bumbo.Controllers
             _prognosisRepository = prognosis;
             _shiftRepository = plannedShifts;
             _unavailableRepository = unavailableMoments;
+            _prognosesServices = prognosesService;
         }
             
             
-        public IActionResult Index(string? dateInput)
+        public async Task<IActionResult> IndexAsync(string? dateInput)
         {
 
             if (dateInput == null)
@@ -49,11 +52,11 @@ namespace Bumbo.Controllers
             {
                 emp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, emp.Id)).ToList();
             }
-            
 
-            viewModel.CassierePrognose = _prognosisRepository.GetCassierePrognose(date);
-            viewModel.StockersPrognose = _prognosisRepository.GetStockersPrognose(date);
-            viewModel.FreshPrognose = _prognosisRepository.GetFreshPrognose(date);
+            var employee = await _userManager.GetUserAsync(User);
+            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date,employee.DefaultBranchId);
+            viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, employee.DefaultBranchId);
+            viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date)).ToList();
             viewModel.UpdatePrognosis(shiftsOnDay);
             viewModel.PrognosisDayId = _prognosisRepository.GetIdByDate(date);
