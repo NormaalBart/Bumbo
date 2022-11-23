@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.EmployeeManager.EmployeeCreate
 {
-    public class ManagerCreateViewModel : BaseCreateViewModel
+    public class ManagerEditViewModel : BaseEditViewModel
     {
 
         [Required]
@@ -14,7 +14,7 @@ namespace Bumbo.Models.EmployeeManager.EmployeeCreate
         public List<Branch> Branches { get; set; }
 
 
-        public ManagerCreateViewModel() : base()
+        public ManagerEditViewModel() : base()
         {
             Branches = new List<Branch>();
         }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.EmployeeManager.EmployeeCreate;
+using Bumbo.Models.EmployeeManager.EmployeeEdit;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
@@ -93,7 +94,29 @@ namespace Bumbo.Controllers
             }
 
             resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
-            return View("Views/EmployeeManager/Index.cshtml", resultingListViewModel);
+            return View("Views/EmployeeBase/Index.cshtml", resultingListViewModel);
+        }
+
+        public IActionResult ChangePassword(string id)
+        {
+            var employee = _employeesRepository.Get(id); 
+            var viewModel = new EditPasswordViewModel { EmployeeKey = id, FullName = employee.FullName() };
+            return View("Views/EmployeeBase/ChangePassword.cshtml", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(EditPasswordViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Views/EmployeeBase/ChangePassword.cshtml", viewModel);
+            }
+
+            var user = await _userManager.FindByIdAsync(viewModel.EmployeeKey);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, viewModel.Password);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

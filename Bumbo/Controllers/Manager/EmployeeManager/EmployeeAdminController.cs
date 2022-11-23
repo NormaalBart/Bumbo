@@ -24,7 +24,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             throw new NotImplementedException();
         }
 
-        public IActionResult Create(BaseCreateViewModel baseCreateViewModel)
+        public IActionResult Create(BaseEditViewModel baseCreateViewModel)
         {
             throw new NotImplementedException();
         }
@@ -34,7 +34,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             throw new NotImplementedException();
         }
 
-        public IActionResult Edit(BaseCreateViewModel baseCreateEditModel)
+        public IActionResult Edit(BaseEditViewModel baseCreateEditModel)
         {
             throw new NotImplementedException();
         }

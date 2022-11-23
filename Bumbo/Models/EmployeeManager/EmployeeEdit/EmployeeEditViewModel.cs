@@ -6,7 +6,7 @@ using BumboData.Models;
 namespace Bumbo.Models.EmployeeManager
 {
 
-    public class EmployeeCreateViewModel : BaseCreateViewModel
+    public class EmployeeEditViewModel : BaseEditViewModel
     {
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
@@ -19,7 +19,7 @@ namespace Bumbo.Models.EmployeeManager
         [DisplayName("Kies een of meerdere afdelingen voor deze medewerker.")]
         public List<EmployeeDepartmentViewModel> EmployeeSelectedDepartments { get; set; }
 
-        public EmployeeCreateViewModel() : base()
+        public EmployeeEditViewModel() : base()
         {
             AllowedDepartments = new List<Department>();
             EmployeeSelectedDepartments = new List<EmployeeDepartmentViewModel>();

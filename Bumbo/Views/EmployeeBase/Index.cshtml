@@ -129,7 +129,8 @@
                             </td>
 
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new { item.Id })
+                                @Html.ActionLink("Verander", "Edit", new { item.Id }) | 
+                                @Html.ActionLink("Reset wachtwoord", "ChangePassword", new { item.Id })
                             </td>
                         </tr>
                     }

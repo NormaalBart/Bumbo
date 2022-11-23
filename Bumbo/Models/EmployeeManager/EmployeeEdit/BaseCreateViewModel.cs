@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.EmployeeManager.EmployeeCreate
 {
-    public abstract class BaseCreateViewModel
+    public abstract class BaseEditViewModel
     {
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
@@ -35,11 +35,6 @@ namespace Bumbo.Models.EmployeeManager.EmployeeCreate
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
         [DisplayName("Email")]
         public string Email { get; set; }
-
-        [Required]
-        [DisplayName("Wachtwoord")]
-        [DataType(DataType.Password, ErrorMessage = "Geen valide wachtwoord.")]
-        public String Password { get; set; }
 
         [Required(ErrorMessage = "Het telefoonnummer is verplicht")]
         [DisplayName("Telefoon")]
@@ -72,7 +67,7 @@ namespace Bumbo.Models.EmployeeManager.EmployeeCreate
         {
             get => $"{LastName}, {FirstName} {Preposition}";
         }
-        public BaseCreateViewModel()
+        public BaseEditViewModel()
         {
             this.Active = true;
             this.EmployeeJoinedCompany = DateTime.Now.Date;

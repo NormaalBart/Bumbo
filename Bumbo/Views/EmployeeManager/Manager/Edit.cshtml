@@ -1,4 +1,4 @@
-﻿@model Bumbo.Models.EmployeeManager.EmployeeCreateViewModel
+﻿@model Bumbo.Models.EmployeeManager.EmployeeEditViewModel
 
 
 <h1 class="text-center">Medewerker wijzigen</h1>
@@ -65,7 +65,6 @@
                                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -92,21 +91,34 @@
                     <!--Multiple select list for departments of employee-->
 
                     <div class="form-group text-center">
-                        <label asp-for="EmployeeSelectedDepartments" class="control-label"></label>
-
-                        @foreach (var item in Model.EmployeeSelectedDepartments)
-                        {
-                            <input type="checkbox" name="selectedDepartments" value="@item.DepartmentId" /> @item.DepartmentName
-                        }
-                        <br />
+                        <label asp-for="EmployeeSelectedDepartments" class="control-label"></label><br />
                         <span asp-validation-for="EmployeeSelectedDepartments" class="text-danger"></span>
+                        <table>
+                            @foreach (var item in Model.EmployeeSelectedDepartments.OrderBy(department => department.DepartmentName))
+                            {
+                                <tr>
+                                    <td>
+                                        @if (item.IsSelected)
+                                        {
+                                            <input checked type="checkbox" name="selectedDepartments" value="@item.DepartmentId" />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" name="selectedDepartments" value="@item.DepartmentId" />
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.DepartmentName
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        <br />
                     </div>
                 </div>
 
 
             </div>
-
-
         </form>
     </div>
 </div>

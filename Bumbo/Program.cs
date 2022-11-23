@@ -38,12 +38,16 @@ namespace Bumbo
             });
 
             builder.Services.AddIdentity<Employee, IdentityRole>(
-                options => {
-            options.SignIn.RequireConfirmedAccount = false;
-            }
-            ).AddEntityFrameworkStores<BumboContext>();
-
-
+                options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                }
+            ).AddEntityFrameworkStores<BumboContext>()
+            .AddDefaultTokenProviders();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

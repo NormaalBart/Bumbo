@@ -16,24 +16,29 @@ namespace Bumbo.Models
         {
             var hasher = new PasswordHasher<Employee>();
             // To use auto mapper, register it here for each model you want to use.
-            CreateMap<EmployeeCreateViewModel, Employee>()
+            CreateMap<EmployeeEditViewModel, Employee>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.FullName))
                 .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.FullName.ToUpper()))
                 .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpper()))
-                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => hasher.HashPassword(null, src.Password)))
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateOnly()))
                 .ForMember(dest => dest.EmployeeSince, opt => opt.MapFrom(src => src.EmployeeJoinedCompany.ToDateOnly()))
                 .ForMember(dest => dest.AllowedDepartments, opt => opt.MapFrom(src => src.EmployeeSelectedDepartments));
-            CreateMap<Employee, EmployeeCreateViewModel>()
+            CreateMap<Employee, EmployeeEditViewModel>()
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))))
                 .ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0))))
                 .ForMember(dest => dest.EmployeeKey, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.EmployeeSelectedDepartments, opt => opt.MapFrom(src => src.AllowedDepartments));
-            CreateMap<Employee, EmployeeListItemViewModel>().ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0,0,0)))).ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
+            CreateMap<Employee, EmployeeListItemViewModel>().ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<Employee, EmployeeRosterViewModel>();
             CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<PrognosisViewModel, Prognosis>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateOnly()));
+            CreateMap<Department, EmployeeDepartmentViewModel>()
+                .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.DepartmentName));
+            CreateMap<EmployeeDepartmentViewModel, Department>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DepartmentId))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.DepartmentName));
             CreateMap<PlannedShift, ShiftViewModel>();
             CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
