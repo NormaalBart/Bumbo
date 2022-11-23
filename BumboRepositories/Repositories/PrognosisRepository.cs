@@ -13,84 +13,16 @@ namespace BumboRepositories.Repositories
         {
         }
 
-        public Prognosis GetByDate(DateOnly date)
+        public Prognosis GetByDate(DateOnly date, int branchId)
         {
-            return DbSet.FirstOrDefault(p => p.Date == date);
+            return DbSet.Include(o => o.Branch).FirstOrDefault(p => p.Date == date && p.BranchId == branchId);
         }
 
         public IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date)
         {
             return Context.PlannedShifts.Where(p => p.StartTime.Date == date).Include(p => p.Employee);
         }
-        public double GetCassierePrognose(DateTime date)
-        {
-            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
-            if (prognosis != null)
-            {
-                Standard standard = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.CHECKOUT_EMPLOYEES).SingleOrDefault();
-                if (standard != null)
-                {
-                    Double customerCount = prognosis.CustomerCount;
-                    Double cassierePerCustomersPerHour = standard.Value;
-                    return customerCount / cassierePerCustomersPerHour;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        public double GetFreshPrognose(DateTime date)
-        {
-            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
-            if (prognosis != null)
-            {
-                Standard standard = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.FRESH_EMPLOYEES).SingleOrDefault();
-                if (standard != null)
-                {
-                    Double customerCount = prognosis.CustomerCount;
-                    Double freshEmployeePerCustomersPerHour = standard.Value;
-                    return customerCount / freshEmployeePerCustomersPerHour;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        public double GetStockersPrognose(DateTime date)
-        {
-            Prognosis prognosis = DbSet.Where(o => o.Date == date.ToDateOnly()).Include(o => o.Branch).SingleOrDefault();
-            if (prognosis != null)
-            {
-                Standard coliUnloadTimeInMin = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.COLI_TIME).SingleOrDefault();
-                Standard coliStockTimeInMin = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_STOCKING_TIME).SingleOrDefault();
-                Standard shelfArragementTimeInSec = Context.Standards.Where(o => o.Branch == prognosis.Branch && o.Key == StandardType.SHELF_ARRANGEMENT).SingleOrDefault();
-                if (coliUnloadTimeInMin != null || coliStockTimeInMin != null || shelfArragementTimeInSec != null)
-                {
-                    Double timeSpentOnColiInMin = (coliUnloadTimeInMin.Value + coliStockTimeInMin.Value) * prognosis.ColiCount;
-                    Double timeSpentOnShelfsInMin = (shelfArragementTimeInSec.Value * prognosis.Branch.ShelvingDistance) / 60;
-
-                    return (timeSpentOnColiInMin + timeSpentOnShelfsInMin) / 60;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
-        }
+        
 
 
         public int GetIdByDate(DateTime date)
@@ -118,9 +50,9 @@ namespace BumboRepositories.Repositories
 
                 // First we check if the prognose already exists, in which case we update it.
                 // other wise we add it.
-                if (DbSet.Where(p => p.Date == item.Date).FirstOrDefault() != null)
+                if (DbSet.Where(p => p.Date == item.Date && p.BranchId == branchId).FirstOrDefault() != null)
                 {
-                    var prognosisDay = DbSet.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognosis).FirstOrDefault();
+                    var prognosisDay = DbSet.Where(p => p.Date == item.Date && p.Branch == item.Branch).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
@@ -141,7 +73,7 @@ namespace BumboRepositories.Repositories
             Context.SaveChanges();
         }
 
-        public IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek)
+        public IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek , int branchId)
         {
 
             // This method returns the next 7 days from the given date.
@@ -150,7 +82,7 @@ namespace BumboRepositories.Repositories
 
 
 
-            var nextWeek = DbSet.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7));
+            var nextWeek = DbSet.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7) && p.BranchId == branchId);
             if (nextWeek.Count() == 7)
             {
                 // prevent very rare case scenario where the database has 7 days in a row, but is also somehow wrong or not starting correctly. 
@@ -169,6 +101,7 @@ namespace BumboRepositories.Repositories
                 {
                     Prognosis prognosis = new Prognosis();
                     prognosis.Date = firstDayOfWeek.AddDays(i);
+                    prognosis.BranchId = branchId;
                     prognosis.CustomerCount = 0;
                     prognosis.ColiCount = 0;
                     resultList.Add(prognosis);
@@ -183,11 +116,12 @@ namespace BumboRepositories.Repositories
 
             for (int i = 0; i < 7; i++)
             {
-                var temp = this.GetByDate(firstDayOfWeek.AddDays(i));
+                var temp = this.GetByDate(firstDayOfWeek.AddDays(i),branchId);
                 if (temp == null)
                 {
                     Prognosis prognosis = new Prognosis();
                     prognosis.Date = firstDayOfWeek.AddDays(i);
+                    prognosis.BranchId = branchId;
                     prognosis.CustomerCount = 0;
                     prognosis.ColiCount = 0;
                     resultList.Add(prognosis);
