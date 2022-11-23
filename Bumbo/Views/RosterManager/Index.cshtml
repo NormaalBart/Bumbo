@@ -208,162 +208,126 @@
 </div>
 
 
+<style type="text/css">
+    p, body, td, input, select, button {
+        font-family: -apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+        font-size: 14px;
+    }
 
-@section Head{ 
-    <link type="text/css" rel="stylesheet" href="themes/calendar_g.css"/>
-    <link type="text/css" rel="stylesheet" href="themes/calendar_green.css"/>
-    <link type="text/css" rel="stylesheet" href="themes/calendar_traditional.css"/>
-    <link type="text/css" rel="stylesheet" href="themes/calendar_transparent.css"/>
-    <link type="text/css" rel="stylesheet" href="themes/calendar_white.css"/>
-}
+    body {
+        padding: 0px;
+        margin: 0px;
+        background-color: #ffffff;
+    }
 
-<div style="display: flex">
+    a {
+        color: #1155a3;
+    }
 
-    <div style="margin-right: 10px;">
-        <div id="nav"></div>
-    </div>
+    .space {
+        margin: 10px 0px 10px 0px;
+    }
 
-    <div style="flex-grow: 1;">
+    .header {
+        background: #003267;
+        background: linear-gradient(to right, #011329 0%,#00639e 44%,#011329 100%);
+        padding: 20px 10px;
+        color: white;
+        box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.75);
+    }
 
-        <div class="space">
-            Theme: <select id="theme">
-                <option value="calendar_default">Default</option>
-                <option value="calendar_white">White</option>
-                <option value="calendar_g">Google-Like</option>
-                <option value="calendar_green">Green</option>
-                <option value="calendar_traditional">Traditional</option>
-                <option value="calendar_transparent">Transparent</option>
-            </select>
-        </div>
+        .header a {
+            color: white;
+        }
 
+        .header h1 a {
+            text-decoration: none;
+        }
+
+        .header h1 {
+            padding: 0px;
+            margin: 0px;
+        }
+
+    .main {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .generated {
+        color: #999;
+    }
+
+        .generated a {
+            color: #999;
+        }
+</style>
+
+<!-- DayPilot library -->
+
+
+    <div class="main">
         <div id="dp"></div>
+      
     </div>
 
-</div>
-
-
-<script src="~/lib/daypilot/daypilot-all.min.js" asp-append-version="true"></script>
-<script>
-    const nav = new DayPilot.Navigator("nav", {
-        showMonths: 3,
-        skipMonths: 3,
-        selectMode: "Week",
-        onTimeRangeSelected: args => {
-            dp.update({
-                startDate: args.day
-            });
-            app.loadEvents();
-        }
-    });
-    nav.init();
-
-    const dp = new DayPilot.Calendar("dp", {
-        viewType: "Week",
-        eventDeleteHandling: "Update",
-        onEventDeleted: async (args) => {
-            const id = args.e.id();
-            await DayPilot.Http.delete(`/api/CalendarEvents/${id}`);
-            console.log("Deleted.");
-        },
-        onEventMoved: async (args) => {
-            const id = args.e.id();
-            const data = {
-                id: args.e.id(),
-                start: args.newStart,
-                end: args.newEnd,
-                text: args.e.text()
-            };
-            await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
-            console.log("Moved.");
-        },
-        onEventResized: async (args) => {
-            const id = args.e.id();
-            const data = {
-                id: args.e.id(),
-                start: args.newStart,
-                end: args.newEnd,
-                text: args.e.text()
-            };
-            await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
-            console.log("Resized.");
-        },
-        onTimeRangeSelected: async (args) => {
-            const form = [
-                {name: "Name", id: "text"}
-            ];
-
-            const modal = await DayPilot.Modal.form(form, {});
-            dp.clearSelection();
-
-            if (modal.canceled) {
-                return;
-            }
-
-            const event = {
-                start: args.start,
-                end: args.end,
-                text: modal.result.text
-            };
-            const {data} = await DayPilot.Http.post(`/api/CalendarEvents`, event);
-
-            dp.events.add({
-                start: args.start,
-                end: args.end,
-                id: data.id,
-                text: modal.result.text
-            });
-            console.log("Created.");
-
-        },
-        onEventClick: async (args) => {
-            const form = [
-                {name: "Name", id: "text"}
-            ];
-
-            const modal = await DayPilot.Modal.form(form, args.e.data);
-            if (modal.canceled) {
-                return;
-            }
-
-            const id = args.e.id();
-            const data = {
-                id: args.e.id(),
-                start: args.e.start(),
-                end: args.e.end(),
-                text: modal.result.text
-            };
-            await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
-
-            dp.events.update({
-                ...args.e.data,
-                text: modal.result.text
-            });
-            console.log("Updated.");
-
-        }
-
-    });
-    dp.init();
-
-
-    const app = {
-        elements: {
-            theme: document.querySelector("#theme")
-        },
-        loadEvents() {
-            dp.events.load("/api/CalendarEvents");
-        },
-        init() {
-            app.elements.theme.addEventListener("change", () => {
-                dp.update({
-                    theme: app.elements.theme.value
+    <script>
+        const dp = new DayPilot.Scheduler("dp", {
+            locale: "nl-nl",
+            timeHeaders: [{ "groupBy": "Day" }, { "groupBy": "Hour" }],
+            scale: "Hour",
+            days: 1,
+            startDate: DayPilot.Date.today(),
+            businessWeekends: true,
+            timeRangeSelectedHandling: "Enabled",
+            onTimeRangeSelected: async (args) => {
+                const dp = args.control;
+                const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
+                dp.clearSelection();
+                if (modal.canceled) { return; }
+                dp.events.add({
+                    start: args.start,
+                    end: args.end,
+                    id: DayPilot.guid(),
+                    resource: args.resource,
+                    text: modal.result
                 });
-            });
+            },
+            eventMoveHandling: "Update",
+            onEventMoved: (args) => {
+                args.control.message("Event moved: " + args.e.text());
+            },
+            eventResizeHandling: "Update",
+            onEventResized: (args) => {
+                args.control.message("Event resized: " + args.e.text());
+            },
+            eventDeleteHandling: "Update",
+            onEventDeleted: (args) => {
+                args.control.message("Event deleted: " + args.e.text());
+            },
+            eventClickHandling: "Disabled",
+            eventHoverHandling: "Bubble",
+            bubble: new DayPilot.Bubble({
+                onLoad: (args) => {
+                    // if event object doesn't specify "bubbleHtml" property
+                    // this onLoad handler will be called to provide the bubble HTML
+                    args.html = "Event details";
+                }
+            }),
+            treeEnabled: true,
+        });
+        dp.resources = [
+            { name: "Resource 1", id: "R1" },
+            { name: "Resource 2", id: "R2" },
+            { name: "Resource 3", id: "R3" },
+            { name: "Resource 4", id: "R4" },
+            { name: "Resource 5", id: "R5" },
+            { name: "Resource 6", id: "R6" },
+            { name: "Resource 7", id: "R7" },
+            { name: "Resource 8", id: "R8" },
+            { name: "Resource 9", id: "R9" },
+        ];
+        dp.events.list = [];
+        dp.init();
+    </script>
 
-            app.loadEvents();
-        }
-    };
-    app.init();
-
-
-</script>
