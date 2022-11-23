@@ -68,7 +68,7 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 
             CreateMap<EmployeeCsvModel, Employee>();
-            CreateMap<WorkedShiftCSVModel, WorkedShift>()
+            CreateMap<WorkedShiftCsvModel, WorkedShift>()
                 .ForMember(dest => dest.StartTime,
                     opt => opt.MapFrom(src => new DateTime(src.Date.Year, src.Date.Month, src.Date.Day,
                         src.StartTime.Hour, src.StartTime.Minute, 0)))                

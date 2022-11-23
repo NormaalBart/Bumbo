@@ -4,13 +4,11 @@ using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboServices.Interface;
 using CsvHelper;
-using CsvHelper.TypeConversion;
 
 namespace BumboServices.Import;
 
 public class ImportService: IImportService
 {
-
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IWorkedShiftRepository _workedShiftRepository;
     private readonly IMapper _mapper;
@@ -45,7 +43,7 @@ public class ImportService: IImportService
     {
         var csv = CsvFromStream(file);
 
-        var mappedModels = _mapper.Map<List<WorkedShift>>(csv.GetRecords<WorkedShiftCSVModel>());
+        var mappedModels = _mapper.Map<List<WorkedShift>>(csv.GetRecords<WorkedShiftCsvModel>());
         
         // Set all models as approved and set branch id
         mappedModels.ForEach(m =>

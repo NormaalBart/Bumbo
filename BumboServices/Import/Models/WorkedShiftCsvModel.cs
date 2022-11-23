@@ -2,7 +2,7 @@ using CsvHelper.Configuration.Attributes;
 
 namespace BumboServices.Import;
 
-public class WorkedShiftCSVModel
+public class WorkedShiftCsvModel
 {
     [Name("BID")]
     public string EmployeeId { get; set; }
