@@ -283,6 +283,7 @@
             onTimeRangeSelected: async (args) => {
                 const dp = args.control;
                 const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
+                
                 dp.clearSelection();
                 if (modal.canceled) { return; }
                 dp.events.add({
@@ -317,7 +318,7 @@
             treeEnabled: true,
         });
         dp.resources = [
-            { name: "Resource 1", id: "R1" },
+           { name: "@Model.Employees[1].FullName", id: "R1" },
             { name: "Resource 2", id: "R2" },
             { name: "Resource 3", id: "R3" },
             { name: "Resource 4", id: "R4" },
