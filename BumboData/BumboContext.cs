@@ -43,13 +43,13 @@ namespace BumboData
                 .WithMany(i => i.Managers);
 
             // Disable some cascade deletes, otherwise multiple cascade paths are created
-            
+
             // By deleting a branch, do not also delete all employees
             modelBuilder.Entity<Branch>()
                 .HasMany(e => e.DefaultEmployees)
                 .WithOne(e => e.DefaultBranch)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             modelBuilder.Entity<StandardOpeningHours>().HasKey(e => new { e.BranchId, e.DayOfWeek });
 
             Seed(modelBuilder);
@@ -96,7 +96,7 @@ namespace BumboData
                 new StandardOpeningHours { BranchId = 1, DayOfWeek = DayOfWeek.Saturday, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
 
             modelBuilder.Entity<Standard>().HasData(
-                new Standard { BranchId = 1 , Key = StandardType.CHECKOUT_EMPLOYEES, Value = 30},
+                new Standard { BranchId = 1, Key = StandardType.CHECKOUT_EMPLOYEES, Value = 30 },
                 new Standard { BranchId = 1, Key = StandardType.FRESH_EMPLOYEES, Value = 100 },
                 new Standard { BranchId = 1, Key = StandardType.SHELF_ARRANGEMENT, Value = 30 },
                 new Standard { BranchId = 1, Key = StandardType.SHELF_STOCKING_TIME, Value = 30 },
@@ -118,7 +118,6 @@ namespace BumboData
 
         private void SeedUsers(ModelBuilder modelBuilder)
         {
-            var hasher = new PasswordHasher<Employee>();
             modelBuilder.Entity<Employee>().HasData(
                 // Admin
                 new Employee
@@ -205,7 +204,7 @@ namespace BumboData
                     Housenumber = "15",
                     Function = DepartmentType.FRESH.Name,
                 });
-            
+
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
@@ -219,7 +218,12 @@ namespace BumboData
                 {
                     RoleId = RoleType.EMPLOYEE.RoleId,
                     UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                });
+                }, new IdentityUserRole<string>
+                {
+                    RoleId = RoleType.EMPLOYEE.RoleId,
+                    UserId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                }
+                );
         }
 
         private void SeedShifts(ModelBuilder modelBuilder)
@@ -237,7 +241,7 @@ namespace BumboData
             var firstDayOfMonth = new DateTime(month.Year, month.Month, 1);
             var lastDayOfMonth = new DateTime(month.Year, month.Month, DateTime.DaysInMonth(month.Year, month.Month));
 
-            foreach (var employee in new string[]{ "d916944e-c1aa-44d6-83a0-cb04c5734e6b", "1c5d93f8-2965-47a1-89f2-fc626e06949b" })
+            foreach (var employee in new string[] { "d916944e-c1aa-44d6-83a0-cb04c5734e6b", "1c5d93f8-2965-47a1-89f2-fc626e06949b" })
             {
                 // Add shift for each day of month
                 foreach (var day in Enumerable.Range(firstDayOfMonth.Day, lastDayOfMonth.Day))
