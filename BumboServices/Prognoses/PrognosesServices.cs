@@ -2,6 +2,7 @@
 using BumboData.Models;
 using BumboRepositories.Utils;
 using BumboServices.Interface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,20 +14,22 @@ namespace BumboServices.Prognoses
 {
     public class PrognosesService : IPrognosesService
     {
-        readonly IPrognosisRepository _prognosisRepository;
-        readonly IStandardRepository _standardRepository;
+        private readonly int secondsInMin = 60;
+        private readonly int MinutesInHour = 60;
+        private readonly IPrognosisRepository _prognosisRepository;
+        private readonly IStandardRepository _standardRepository;
         public PrognosesService(IPrognosisRepository prognosisRepository, IStandardRepository standardRepository)
         {
             _prognosisRepository = prognosisRepository;
             _standardRepository = standardRepository;
         }
 
-        public double GetCassierePrognose(DateTime date)
+        public double GetCassierePrognoseAsync(DateTime date, int branchId)
         {
-            Prognosis prognosis = _prognosisRepository.GetByDate(date.ToDateOnly());
+            var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(), branchId);
             if (prognosis != null)
             {
-                Standard standard = _standardRepository.Get(StandardType.CHECKOUT_EMPLOYEES, prognosis.Branch);
+                var standard = _standardRepository.Get(StandardType.CHECKOUT_EMPLOYEES, prognosis.Branch);
                 if (standard != null)
                 {
                     Double customerCount = prognosis.CustomerCount;
@@ -43,12 +46,12 @@ namespace BumboServices.Prognoses
                 return -1;
             }
         }
-        public double GetFreshPrognose(DateTime date)
+        public double GetFreshPrognose(DateTime date, int branchId)
         {
-            Prognosis prognosis = _prognosisRepository.GetByDate(date.ToDateOnly());
+            var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(),branchId);
             if (prognosis != null)
             {
-                Standard standard = _standardRepository.Get(StandardType.FRESH_EMPLOYEES, prognosis.Branch);
+                var standard = _standardRepository.Get(StandardType.FRESH_EMPLOYEES, prognosis.Branch);
                 if (standard != null)
                 {
                     Double customerCount = prognosis.CustomerCount;
@@ -65,20 +68,20 @@ namespace BumboServices.Prognoses
                 return -1;
             }
         }
-        public double GetStockersPrognose(DateTime date)
+        public double GetStockersPrognose(DateTime date, int branchId)
         {
-            Prognosis prognosis = _prognosisRepository.GetByDate(date.ToDateOnly());
+            var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(),branchId);
             if (prognosis != null)
             {
-                Standard coliUnloadTimeInMin = _standardRepository.Get(StandardType.COLI_TIME, prognosis.Branch);
-                Standard coliStockTimeInMin = _standardRepository.Get(StandardType.SHELF_STOCKING_TIME, prognosis.Branch);
-                Standard shelfArragementTimeInSec = _standardRepository.Get(StandardType.SHELF_ARRANGEMENT, prognosis.Branch);
+                var coliUnloadTimeInMin = _standardRepository.Get(StandardType.COLI_TIME, prognosis.Branch);
+                var coliStockTimeInMin = _standardRepository.Get(StandardType.SHELF_STOCKING_TIME, prognosis.Branch);
+                var shelfArragementTimeInSec = _standardRepository.Get(StandardType.SHELF_ARRANGEMENT, prognosis.Branch);
                 if (coliUnloadTimeInMin != null || coliStockTimeInMin != null || shelfArragementTimeInSec != null)
                 {
                     Double timeSpentOnColiInMin = (coliUnloadTimeInMin.Value + coliStockTimeInMin.Value) * prognosis.ColiCount;
-                    Double timeSpentOnShelfsInMin = (shelfArragementTimeInSec.Value * prognosis.Branch.ShelvingDistance) / 60;
+                    Double timeSpentOnShelfsInMin = (shelfArragementTimeInSec.Value * prognosis.Branch.ShelvingDistance) / secondsInMin;
 
-                    return (timeSpentOnColiInMin + timeSpentOnShelfsInMin) / 60;
+                    return (timeSpentOnColiInMin + timeSpentOnShelfsInMin) / MinutesInHour;
                 }
                 else
                 {

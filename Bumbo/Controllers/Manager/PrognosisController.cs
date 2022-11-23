@@ -23,7 +23,7 @@ namespace Bumbo.Controllers
             _prognosisRepository = prognosisService;
         }
         
-        public IActionResult Index(string? dateInput, bool next)
+        public async Task<IActionResult> IndexAsync(string? dateInput, bool next)
         {
             // adds 7 because bool next is false by default.
             DateTime currentDate = DateTime.Now.AddDays(7);
@@ -48,7 +48,8 @@ namespace Bumbo.Controllers
 
             // Returns the week of prognose days.
             PrognosisListViewModel list = new PrognosisListViewModel();
-            list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(_prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly())).ToList();
+            Employee employee = await _userManager.GetUserAsync(User);
+            list.PrognosisList = _mapper.Map<IEnumerable<PrognosisViewModel>>(_prognosisRepository.GetNextWeek(startOfWeek.ToDateOnly(),employee.DefaultBranchId)).ToList();
             list.CopyToWeekNumber = startOfWeek.GetWeekNumber();
             return View(list);
 
@@ -85,8 +86,8 @@ namespace Bumbo.Controllers
             DateTime copyFromDate = OtherUtils.FirstDateOfWeekISO8601(copyFromYear, copyFromWeekNumber);
             DateTime copyToDate = OtherUtils.FirstDateOfWeekISO8601(copyToYear, copyToWeekNumber);
 
-
-            var copyFromPrognoses = _prognosisRepository.GetNextWeek(copyFromDate.ToDateOnly()).ToList();
+            Employee employee = await _userManager.GetUserAsync(User);
+            var copyFromPrognoses = _prognosisRepository.GetNextWeek(copyFromDate.ToDateOnly(),employee.DefaultBranchId).ToList();
             List<Prognosis> updatedNewWeek = new List<Prognosis>();
             for (int i = 0; i < copyFromPrognoses.Count(); i++)
             {
@@ -98,7 +99,6 @@ namespace Bumbo.Controllers
                 updatedNewWeek.Add(newPrognosis);
             }
 
-            Employee employee = await _userManager.GetUserAsync(User);
             _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, updatedNewWeek);
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });

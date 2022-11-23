@@ -12,9 +12,9 @@ namespace BumboRepositories.Repositories
         {
         }
 
-        public Prognosis GetByDate(DateOnly date)
+        public Prognosis GetByDate(DateOnly date, int branchId)
         {
-            return DbSet.Include(o => o.Branch).FirstOrDefault(p => p.Date == date);
+            return DbSet.Include(o => o.Branch).FirstOrDefault(p => p.Date == date && p.BranchId == branchId);
         }
 
         public IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date)
@@ -52,9 +52,9 @@ namespace BumboRepositories.Repositories
 
                 // First we check if the prognose already exists, in which case we update it.
                 // other wise we add it.
-                if (DbSet.Where(p => p.Date == item.Date).FirstOrDefault() != null)
+                if (DbSet.Where(p => p.Date == item.Date && p.Branch == branch).FirstOrDefault() != null)
                 {
-                    var prognosisDay = DbSet.Where(p => p.Date == item.Date).Include(p => p.DepartmentPrognosis).FirstOrDefault();
+                    var prognosisDay = DbSet.Where(p => p.Date == item.Date && p.Branch == item.Branch).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
@@ -77,7 +77,7 @@ namespace BumboRepositories.Repositories
             Context.SaveChanges();
         }
 
-        public IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek)
+        public IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek , int branchId)
         {
 
             // This method returns the next 7 days from the given date.
@@ -86,7 +86,7 @@ namespace BumboRepositories.Repositories
 
 
 
-            var nextWeek = DbSet.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7));
+            var nextWeek = DbSet.Where(p => p.Date >= firstDayOfWeek && p.Date <= firstDayOfWeek.AddDays(7) && p.BranchId == branchId);
             if (nextWeek.Count() == 7)
             {
                 // prevent very rare case scenario where the database has 7 days in a row, but is also somehow wrong or not starting correctly. 
@@ -105,6 +105,7 @@ namespace BumboRepositories.Repositories
                 {
                     Prognosis prognosis = new Prognosis();
                     prognosis.Date = firstDayOfWeek.AddDays(i);
+                    prognosis.BranchId = branchId;
                     prognosis.CustomerCount = 0;
                     prognosis.ColiCount = 0;
                     resultList.Add(prognosis);
@@ -119,11 +120,12 @@ namespace BumboRepositories.Repositories
 
             for (int i = 0; i < 7; i++)
             {
-                var temp = this.GetByDate(firstDayOfWeek.AddDays(i));
+                var temp = this.GetByDate(firstDayOfWeek.AddDays(i),branchId);
                 if (temp == null)
                 {
                     Prognosis prognosis = new Prognosis();
                     prognosis.Date = firstDayOfWeek.AddDays(i);
+                    prognosis.BranchId = branchId;
                     prognosis.CustomerCount = 0;
                     prognosis.ColiCount = 0;
                     resultList.Add(prognosis);

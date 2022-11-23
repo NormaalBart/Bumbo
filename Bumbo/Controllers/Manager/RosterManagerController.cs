@@ -34,7 +34,7 @@ namespace Bumbo.Controllers
         }
             
             
-        public IActionResult Index(string? dateInput)
+        public async Task<IActionResult> IndexAsync(string? dateInput)
         {
 
             if (dateInput == null)
@@ -52,11 +52,11 @@ namespace Bumbo.Controllers
             {
                 emp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, emp.Id)).ToList();
             }
-            
 
-            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognose(date);
-            viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date);
-            viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date);
+            var employee = await _userManager.GetUserAsync(User);
+            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date,employee.DefaultBranchId);
+            viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, employee.DefaultBranchId);
+            viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date)).ToList();
             viewModel.UpdatePrognosis(shiftsOnDay);
             viewModel.PrognosisDayId = _prognosisRepository.GetIdByDate(date);
