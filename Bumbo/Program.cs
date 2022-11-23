@@ -7,6 +7,7 @@ using BumboServices.CAO;
 using BumboServices.Import;
 using BumboServices.Interface;
 using BumboServices.Prognoses;
+using BumboServices.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,8 @@ namespace Bumbo
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddAutoMapper(typeof(MapperServiceProfile));
+            
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IPrognosisRepository, PrognosisRepository>();
