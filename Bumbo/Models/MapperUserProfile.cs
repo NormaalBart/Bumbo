@@ -8,6 +8,7 @@ using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
 using BumboData.Models;
 using BumboRepositories.Utils;
+using BumboServices.Import;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bumbo.Models
@@ -60,8 +61,11 @@ namespace Bumbo.Models
             CreateMap<Branch, BranchViewModel>();
             CreateMap<BranchViewModel, Branch>();
 
-            CreateMap<PlannedShift, EmployeeShiftViewModel>().ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber)).ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street)).ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City)).ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
-
+            CreateMap<PlannedShift, EmployeeShiftViewModel>()
+                .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber))
+                .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City))
+                .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
         }
     }
 }

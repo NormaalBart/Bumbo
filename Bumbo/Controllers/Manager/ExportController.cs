@@ -17,18 +17,23 @@ public class ExportController : Controller
     private readonly IWorkedShiftRepository _workedShiftRepository;
     private readonly IHourExportService _hourExportService;
     private readonly UserManager<Employee> _userManager;
+    private readonly IImportService _importService;
 
     public ExportController(
         IWorkedShiftRepository workedShiftRepository,
         IHourExportService hourExportService,
-        UserManager<Employee> userManager)
+        UserManager<Employee> userManager,
+        ICAOService service,
+        IImportService importService)
     {
         _workedShiftRepository = workedShiftRepository;
         _hourExportService = hourExportService;
         _userManager = userManager;
+        _importService = importService;
     }
 
-    public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery, ExportOverviewSortingOption? SortMode = ExportOverviewSortingOption.HoursAsc)
+    public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery,
+        ExportOverviewSortingOption? SortMode = ExportOverviewSortingOption.HoursAsc)
     {
         var monthSelected = SelectedMonth == null
             ? DateTime.Now
@@ -50,7 +55,7 @@ public class ExportController : Controller
         var selectableMonths = _workedShiftRepository.GetAllApproved(branch ?? -1)
             .Select(s => (s.StartTime.Date.Year, s.StartTime.Date.Month))
             .Distinct()
-            .Select(s => new DateTime(s.Year, s.Month, 1)).ToList();
+            .Select(s => new DateTime(s.Year, s.Month, 1)).OrderBy(s => s.Date).Reverse().ToList();
 
         model.SelectableMonths = selectableMonths;
         model.SelectedMonth = monthSelected;
@@ -69,7 +74,8 @@ public class ExportController : Controller
         // Get all employees that have worked in this month, and get all worked shifts for each employee.
         model.ExportOverviewListItemViewModels = workedShiftsInMonth.GroupBy(i => i.Employee)
             .Select(e => FromWorkedShifts(e.Key, e.ToList(),
-                _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, e.Key.Id, prevMonth.Year, prevMonth.Month))).ToList();
+                _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, e.Key.Id, prevMonth.Year, prevMonth.Month)))
+            .ToList();
 
         // Apply sorting
         model.ExportOverviewListItemViewModels = SortMode switch
@@ -117,6 +123,42 @@ public class ExportController : Controller
             return BadRequest();
         }
 
-        return File(_hourExportService.CsvExportForMonth(branch ?? -1, monthSelected), "text/csv", "export-" + SelectedMonth + ".csv");
+        return File(_hourExportService.CsvExportForMonth(branch ?? -1, monthSelected), "text/csv",
+            "export-" + SelectedMonth + ".csv");
+    }
+
+    public async Task<IActionResult> Import(ImportViewModel? viewModel)
+    {
+        if (viewModel == null ||
+            (viewModel.ImportEmployees == null &&
+             viewModel.ImportClockEvents == null))
+        {
+            return View(new ImportViewModel());
+        }
+        // Import data
+
+        // Only allow manger to import
+        if (!User.IsInRole(RoleType.MANAGER.Name))
+        {
+            // TODO: Change error page
+            return BadRequest();
+        }
+
+        // get manager branch id
+        var manager = await _userManager.GetUserAsync(User);
+
+        if (viewModel.ImportEmployees != null)
+        {
+            _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.ManagesBranchId ?? -1);
+        }
+
+        if (viewModel.ImportClockEvents != null)
+        {
+            _importService.ImportClockEvents(viewModel.ImportClockEvents.OpenReadStream(),
+                manager.ManagesBranchId ?? -1);
+        }
+
+
+        return Redirect("Import");
     }
 }
