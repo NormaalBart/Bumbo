@@ -96,7 +96,7 @@ namespace Bumbo.Controllers
                 updatedNewWeek.Add(newPrognosis);
             }
 
-            _prognosisRepository.AddOrUpdateAll(employee.DefaultBranch, updatedNewWeek);
+            _prognosisRepository.AddOrUpdateAll(employee.DefaultBranchId, updatedNewWeek);
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });
         }

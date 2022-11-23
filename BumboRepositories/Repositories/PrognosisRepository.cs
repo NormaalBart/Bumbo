@@ -50,7 +50,7 @@ namespace BumboRepositories.Repositories
 
                 // First we check if the prognose already exists, in which case we update it.
                 // other wise we add it.
-                if (DbSet.Where(p => p.Date == item.Date && p.Branch == branch).FirstOrDefault() != null)
+                if (DbSet.Where(p => p.Date == item.Date && p.BranchId == branchId).FirstOrDefault() != null)
                 {
                     var prognosisDay = DbSet.Where(p => p.Date == item.Date && p.Branch == item.Branch).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
