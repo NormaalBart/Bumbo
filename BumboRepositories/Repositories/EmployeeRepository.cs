@@ -2,6 +2,7 @@
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories.Repositories
@@ -54,6 +55,11 @@ namespace BumboRepositories.Repositories
         {
             DbSet.AddRange(employees);
             Context.SaveChanges();
+        }
+
+        public IEnumerable<Employee> GetAllThatWorkedOrWasPlannedOnDate(DateTime date, int branchId)
+        {
+            return DbSet.Include(e => e.PlannedShifts.Where(p => p.StartTime.Date == date.Date && p.BranchId == branchId)).Include(e => e.WorkedShifts.Where(w => w.StartTime.Date == date.Date && w.EndTime != null && w.BranchId == branchId)).Where(e => e.PlannedShifts.Any() || e.WorkedShifts.Any());
         }
     }
 }
