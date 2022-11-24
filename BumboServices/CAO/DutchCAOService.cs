@@ -9,8 +9,9 @@ namespace BumboServices.CAO;
 public class DutchCAOService : ICAOService
 {
     private readonly List<ICAORule> _appliedRules;
-        
-    public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository, IWorkedShiftRepository workedShiftRepository)
+
+    public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository,
+        IWorkedShiftRepository workedShiftRepository)
     {
         // Sets up all CAO rules of the dutch CAO
         // All < 16 year rules
@@ -22,9 +23,11 @@ public class DutchCAOService : ICAOService
             //  - Maximaal 40 uur per week
             new MaxWorkHours(below16Range, 40.0, MaxWorkHoursTimeframe.Week),
             //  - Maximaal 12 uur per schoolweek
-            new MaxWorkHours(below16Range, 1.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository)
+            new MaxWorkHours(below16Range, 1.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository),
+            // - Maximaal 5 dagen per week
+            new MaxWorkDaysInWeek(below16Range, 2)
         };
-        
+
         // All 16 and 17 year rules
         var otherRange = new Range(16, 17);
         var otherRules = new List<ICAORule>()
@@ -65,19 +68,19 @@ public class DutchCAOService : ICAOService
 
         // Group shifts by employee
         var grouped = plannedShifts.GroupBy(s => s.Employee).ToList();
-        
+
         // Sum up all rule invalid shifts
-        var res = grouped.SelectMany(g=>
+        var res = grouped.SelectMany(g =>
         {
             // For each employee, go through all rules.
             return _appliedRules.Where(r => r.AppliesTo(g.Key))
                 .Select(r => (r.GetInvalidShifts(g.ToList()), r))
-                .Where(s=>s.Item1.Count != 0).ToList();
+                .Where(s => s.Item1.Count != 0).ToList();
         }).ToList();
 
         // Convert to dictionary for easy readability.
         return res.GroupBy(s => s.r)
-            .Select(g=>(g.Key, g.SelectMany(g=>g.Item1)))
-            .ToDictionary(s=>s.Key, s=>s.Item2);
+            .Select(g => (g.Key, g.SelectMany(g => g.Item1)))
+            .ToDictionary(s => s.Key, s => s.Item2);
     }
 }
