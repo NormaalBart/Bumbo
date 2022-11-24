@@ -9,14 +9,15 @@ namespace BumboRepositories.Repositories
 {
     public class PlannedShiftsRepository : Repository<PlannedShift>, IPlannedShiftsRepository
     {
-        public PlannedShiftsRepository(BumboContext context): base(context)
+        public PlannedShiftsRepository(BumboContext context) : base(context)
         {
         }
 
         public override PlannedShift Create(PlannedShift entity)
-        { 
+        {
             // db complains about foreign key being null
-            entity.Employee = Context.Employees.Where(e => e.Id == (entity.EmployeeId ?? entity.Employee.Id)).FirstOrDefault();
+            entity.Employee = Context.Employees.Where(e => e.Id == (entity.EmployeeId ?? entity.Employee.Id))
+                .FirstOrDefault();
             return base.Create(entity);
         }
 
@@ -33,7 +34,9 @@ namespace BumboRepositories.Repositories
                 diff -= 7;
             var startOfWeek = currentDate.AddDays(diff);
             // check if the employee has worked too much this week 
-            var shiftsThisWeek = DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
+            var shiftsThisWeek = DbSet.Where(p =>
+                p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek &&
+                p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
             if (shiftsThisWeek.Count > 0)
             {
                 double totalHoursThisWeek = 0;
@@ -41,21 +44,25 @@ namespace BumboRepositories.Repositories
                 {
                     totalHoursThisWeek += (shift.EndTime - shift.StartTime).TotalHours;
                 }
+
                 return totalHoursThisWeek;
             }
-            return 0;
 
+            return 0;
         }
 
         public IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId)
         {
             // returns the next 7 days.
-            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= date && p.StartTime <= date.AddDays(7)).Include(p => p.Department).Include(p => p.Branch);
+            return DbSet
+                .Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= date && p.StartTime <= date.AddDays(7))
+                .Include(p => p.Department).Include(p => p.Branch);
         }
 
         public bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift)
         {
-            var overlappingShifts = DbSet.Where(p => p.Employee.Id == plannedShift.Employee.Id && p.StartTime.Date == plannedShift.StartTime.Date).ToList();
+            var overlappingShifts = DbSet.Where(p =>
+                p.Employee.Id == plannedShift.Employee.Id && p.StartTime.Date == plannedShift.StartTime.Date).ToList();
             if (overlappingShifts.Count > 0)
             {
                 foreach (var shift in overlappingShifts)
@@ -64,19 +71,22 @@ namespace BumboRepositories.Repositories
                     {
                         return true;
                     }
-
                 }
             }
+
             return false;
         }
 
         public List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week)
         {
             var cal = new GregorianCalendar();
-            return DbSet.Include(s=>s.Employee).ToList().Where(s => s.StartTime.Year == year &&
-                                             cal.GetWeekOfYear(s.StartTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday) == week).ToList();
+            return DbSet.Include(s => s.Employee).ToList().Where(s => s.BranchId == branchId &&
+                                                                      s.StartTime.Year == year &&
+                                                                      cal.GetWeekOfYear(s.StartTime,
+                                                                          CalendarWeekRule.FirstFourDayWeek,
+                                                                          DayOfWeek.Monday) == week).ToList();
         }
-        
+
         public void Import(List<PlannedShift> list)
         {
             DbSet.AddRange(list);

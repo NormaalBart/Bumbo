@@ -5,5 +5,5 @@ namespace BumboServices.Interface;
 
 public interface ICAOService
 {
-    public Dictionary<ICAORule, IEnumerable<PlannedShift>> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
+    public Dictionary<ICAORule, IEnumerable<PlannedShift>> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts);
 }

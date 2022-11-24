@@ -32,7 +32,9 @@ public class ExportController : Controller
         _userManager = userManager;
         _importService = importService;
         
-        service.VerifyPlannedShiftsWeek(plannedShiftsRepository.GetShiftsByWeek(1, 2021, 34));
+        var val = service.VerifyPlannedShiftsWeek(plannedShiftsRepository.GetShiftsByWeek(1, 2021, 34));
+
+        val = val;
     }
 
     public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery,

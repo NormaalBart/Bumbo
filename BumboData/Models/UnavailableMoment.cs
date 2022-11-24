@@ -11,6 +11,8 @@ public class UnavailableMoment: IEntity
     [Required]
     public Employee Employee { get; set; }
     
+    public string EmployeeId { get; set; }
+
     [Required]
     public DateTime StartTime { get; set; }
     

@@ -1,5 +1,6 @@
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using BumboServices.CAO.Rules;
 using BumboServices.Interface;
 
@@ -21,7 +22,7 @@ public class DutchCAOService : ICAOService
             //  - Maximaal 40 uur per week
             new MaxWorkHours(below16Range, 40.0, MaxWorkHoursTimeframe.Week),
             //  - Maximaal 12 uur per schoolweek
-            new MaxWorkHours(below16Range, 12.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository)
+            new MaxWorkHours(below16Range, 1.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository)
             
         };
         
@@ -29,7 +30,7 @@ public class DutchCAOService : ICAOService
         var otherRules = new List<ICAORule>()
         {
             // - Maximaal 9 uur werken per dag incl. school
-            new MaxWorkHours(ageRange:new Range(16, 17), 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
+            new MaxWorkHours(new Range(16, 17), 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
                 
         };
 
@@ -38,7 +39,7 @@ public class DutchCAOService : ICAOService
             // Maximaal 12 uur per dienst
             new MaxConsecutiveHours(12.0),
             // Maximaal 60 uur per week
-            new MaxWorkHours(ageRange: new Range(0, int.MaxValue), 60.0, MaxWorkHoursTimeframe.Week)
+            new MaxWorkHours(new Range(0, int.MaxValue), 60.0, MaxWorkHoursTimeframe.Week)
         };
 
         _appliedRules = below16Rules;
@@ -52,7 +53,14 @@ public class DutchCAOService : ICAOService
     public Dictionary<ICAORule, IEnumerable<PlannedShift>> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
     {
         // The given shifts should be all in the same month.
-        // TODO: Throw error otherwise
+        var weekNum = plannedShifts.First().StartTime.GetWeekNumber();
+        if (plannedShifts.Any(w => w.StartTime.GetWeekNumber() != weekNum))
+        {
+            // Not all shifts given are in the same week, this is not supported.
+            throw new InvalidDataException();
+        }
+
+        // Group shifts by employee
         var grouped = plannedShifts.GroupBy(s => s.Employee).ToList();
         
         // Sum up all rule invalid shifts
