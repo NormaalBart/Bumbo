@@ -57,7 +57,7 @@ public class ImportService : IImportService
         
         // Uncomment to import as planned shifts, instead of workedshifts.
         // TODO: Create UI for switching between
-        var plannedShifts = mappedModels.Select(s => new PlannedShift()
+        /*var plannedShifts = mappedModels.Select(s => new PlannedShift()
         {
             StartTime = s.StartTime,
             EndTime = (DateTime) s.EndTime,
@@ -66,9 +66,9 @@ public class ImportService : IImportService
             BranchId = s.BranchId
         }).ToList();
 
-        _plannedShiftsRepository.Import(plannedShifts);
+        _plannedShiftsRepository.Import(plannedShifts);*/
 
-        // _workedShiftRepository.Import(mappedModels);
+        _workedShiftRepository.Import(mappedModels);
     }
 
     private CsvReader CsvFromStream(Stream s)

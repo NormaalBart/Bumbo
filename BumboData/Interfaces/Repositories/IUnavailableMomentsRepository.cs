@@ -7,6 +7,6 @@ namespace BumboData.Interfaces.Repositories
         bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime);
         public bool EmployeeSchoolWeek(string employee, int year, int week);
         public List<UnavailableMoment> GetSchoolUnavailableMomentsByWeek(string employee, int year, int week);
-        public List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day)
+        public List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day);
     }
 }

@@ -10,7 +10,7 @@ public class DutchCAOService : ICAOService
 {
     private readonly List<ICAORule> _appliedRules;
         
-    public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository)
+    public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository, IWorkedShiftRepository workedShiftRepository)
     {
         // Sets up all CAO rules of the dutch CAO
         // All < 16 year rules
@@ -23,15 +23,18 @@ public class DutchCAOService : ICAOService
             new MaxWorkHours(below16Range, 40.0, MaxWorkHoursTimeframe.Week),
             //  - Maximaal 12 uur per schoolweek
             new MaxWorkHours(below16Range, 1.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository)
-            
         };
         
         // All 16 and 17 year rules
+        var otherRange = new Range(16, 17);
         var otherRules = new List<ICAORule>()
         {
             // - Maximaal 9 uur werken per dag incl. school
-            new MaxWorkHours(new Range(16, 17), 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
-                
+            new MaxWorkHours(otherRange, 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
+            // - Niet meer dan 40 uur gemiddeld over een periode van 4 weken.
+            // niet meer dan 40 uur gemiddeld per week ???
+            // TODO: Navragen
+            new AvgWorkHoursWeek(otherRange, 40.0, 4, workedShiftRepository)
         };
 
         var generalRules = new List<ICAORule>()
