@@ -24,12 +24,15 @@ public class ExportController : Controller
         IHourExportService hourExportService,
         UserManager<Employee> userManager,
         ICAOService service,
-        IImportService importService)
+        IImportService importService,
+        IPlannedShiftsRepository plannedShiftsRepository)
     {
         _workedShiftRepository = workedShiftRepository;
         _hourExportService = hourExportService;
         _userManager = userManager;
         _importService = importService;
+        
+        service.VerifyPlannedShiftsWeek(plannedShiftsRepository.GetShiftsByWeek(1, 2021, 34));
     }
 
     public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery,
@@ -93,6 +96,7 @@ public class ExportController : Controller
             ExportOverviewSortingOption.DifferenceDesc => model.ExportOverviewListItemViewModels
                 .OrderBy(m => m.GetDifference().HoursWorked).ToList()
         };
+
         return View(model);
     }
 

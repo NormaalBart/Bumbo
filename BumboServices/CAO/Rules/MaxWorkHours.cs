@@ -1,5 +1,6 @@
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboServices.Utils;
 
 namespace BumboServices.CAO.Rules;
 
@@ -54,8 +55,10 @@ public class MaxWorkHours : CAORuleAppliesToAge
 
     private List<PlannedShift> DayImplementation(List<PlannedShift> plannedShifts)
     {
-        return new List<PlannedShift>();
-        // return plannedShifts.GroupBy(s=>s.StartTime.Date).
+        return plannedShifts.GroupBy(s => s.StartTime.Date).Where(group =>
+        {
+            return group.ToList().SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours > _maxHours;
+        }).SelectMany(s=>s.ToList()).ToList();
     }
     
     private List<PlannedShift> MonthImplementation(List<PlannedShift> plannedShifts)

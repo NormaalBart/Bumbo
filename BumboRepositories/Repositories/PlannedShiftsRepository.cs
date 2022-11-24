@@ -1,6 +1,8 @@
-﻿using BumboData;
+﻿using System.Globalization;
+using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories.Repositories
@@ -14,7 +16,7 @@ namespace BumboRepositories.Repositories
         public override PlannedShift Create(PlannedShift entity)
         { 
             // db complains about foreign key being null
-            entity.Employee = Context.Employees.Where(e => e.Id == entity.Employee.Id).FirstOrDefault();
+            entity.Employee = Context.Employees.Where(e => e.Id == (entity.EmployeeId ?? entity.Employee.Id)).FirstOrDefault();
             return base.Create(entity);
         }
 
@@ -66,6 +68,19 @@ namespace BumboRepositories.Repositories
                 }
             }
             return false;
+        }
+
+        public List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week)
+        {
+            var cal = new GregorianCalendar();
+            return DbSet.Include(s=>s.Employee).ToList().Where(s => s.StartTime.Year == year &&
+                                             cal.GetWeekOfYear(s.StartTime, CalendarWeekRule.FirstDay, DayOfWeek.Monday) == week).ToList();
+        }
+        
+        public void Import(List<PlannedShift> list)
+        {
+            DbSet.AddRange(list);
+            Context.SaveChanges();
         }
     }
 }

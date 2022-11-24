@@ -49,11 +49,24 @@ public class DutchCAOService : ICAOService
     /*
      * Returns shift that causes error, and the rule that the error originates from. If the dictionary is empty the planned shifts are valid according to the CAO rules.
      */
-    public Dictionary<PlannedShift, ICAORule> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
+    public Dictionary<ICAORule, IEnumerable<PlannedShift>> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
     {
         // The given shifts should be all in the same month.
         // TODO: Throw error otherwise
+        var grouped = plannedShifts.GroupBy(s => s.Employee).ToList();
         
-        return new Dictionary<PlannedShift, ICAORule>();
+        // Sum up all rule invalid shifts
+        var res = grouped.SelectMany(g=>
+        {
+            // For each employee, go through all rules.
+            return _appliedRules.Where(r => r.AppliesTo(g.Key))
+                .Select(r => (r.GetInvalidShifts(g.ToList()), r))
+                .Where(s=>s.Item1.Count != 0).ToList();
+        }).ToList();
+
+        // Convert to dictionary for easy readability.
+        return res.GroupBy(s => s.r)
+            .Select(g=>(g.Key, g.SelectMany(g=>g.Item1)))
+            .ToDictionary(s=>s.Key, s=>s.Item2);
     }
 }
