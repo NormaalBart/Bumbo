@@ -6,27 +6,27 @@
 
 
 
-<div class="d-flex justify-content-between m-4 border rounded-2">
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date"> Vorige dag </a>
-    </button>
-    
-    <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToShortDateString() </p>
-
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date"> Volgende dag </a>
-    </button>
-
-
-</div>
-
-
-
-<div>
-    <button btn btn-outline-secondary>
-        <a class="text-decoration-none" asp-action="Edit" asp-controller="Prognosis" asp-route-id="@Model.PrognosisDayId">(Edit prognose) Nog te roosterde uren: </a>
-    </button>
-
+<div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
+    <div>
+        <!--Arrow to left, using an online arrow png-->
+        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z" />
+            </svg>
+        </a>
+    </div>
+    <div>
+        <!--Week  number, date information which is in the center.-->
+        <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToShortDateString() </p>
+    </div>
+    <div>
+        <!--Arrow to right, using an online arrow png on the right side of the bar.-->
+        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z" />
+            </svg>
+        </a>
+    </div>
 </div>
   
 <div>
@@ -86,52 +86,48 @@
     </dl>
 </div>
 
+
+
+<script>
+
+    // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
+    function getWidthOfbase(elem, hours) {
+
+
+        let cell = document.querySelector('.roster-table-cell');
+        let width = cell.offsetWidth;
+
+        let finalwidth = width * hours;
+        
+        elem.style.width = finalwidth + 'px';
+        
+
+    }
+
+
+
+</script>
+
+
+<div class="text-center m-3">
+
+    <!-- Trigger/Open The Modal -->
+    <button id="openModalBTN">Voeg dienst toe</button>
+</div>
+
+
 <div>
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <form>
-            <div class="form-group">
-                <button class="btn btn-outline-primary">
-                    <a type="submit" class="text-decoration-none" asp-action="Index" asp-route-department=""> Update rooster </a>
-                </button>
-
-            </div>
-        </form>
-    </div>
-
-    <div class="border border-1" style="background-color: white;">
-
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div style="background-color: yellow ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Kassa afdeling</p>
-            </div>
-            <div style="background-color: green ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Vers afdeling</p>
-            </div>
-            <div style="background-color: saddlebrown ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Vakken vuller afdeling</p>
-            </div>
-            <div style="background-color: white ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder">Niet ingepland</p>
-            </div>
-            <div style=" background-color: red ; padding: 10px; border: 1px solid black;">
-                <p class="fw-bolder"> Niet beschikbaar </p>
-
-            </div>
-
-        </div>
-
-
-
 
         <!--table, 24 long horizontal -->
-        <table class="table" style="background-color: white;">
+        <table class="table roster-table" style="background-color: white;">
             <thead>
-                <tr class="roster-table-cell">
+                <tr class="">
                     <th class="border border-2 border-dark">Naam</th>
                     @for (int i = 0; i < 24; i++)
                     {
 
-                        <th class="border border-2 border-dark">@i</th>
+                    <th class="border border-2 border-dark roster-table-header-cell">@i </th>
+                
                     }
                     <th class="border border-2 border-dark"></th>
                 </tr>
@@ -146,51 +142,47 @@
                 {
                     foreach (var employee in Model.Employees)
                     {
-                        <tr class="roster-table-cell">
-                            <td class="small">
-                                @employee.FullName
-
+                        <tr class="roster-shift-containter" >
+                            <td class="small roster-table-employee-cell">
+                                 @employee.FullName
                             </td>
+
                             @for (int i = 0; i < 24; i++)
                             {
 
-
-                                @if (Model.IsPlanned(employee, i))
+                            
+                                @if (Model.GetShiftOnHourOfEmployee(employee, i) != null)
                                 {
-                                    <td class="roster-table-cell" style=" background-color: yellow ; ">
-                                        @if (i == 8)
-                                        {
-                                            <div style="position:absolute; width: calc(45px * 10); background-color: blue ; padding: 10px; border: 1px solid darkgrey;">
-                                                Shift name
-                                            </div>
-                                        }
-                                     
-                                        @*<div> <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDay.Id" asp-route-dateInput="@Model.Date.AddHours(i)" asp-action="Create"></a> </div>*@
-                                    </td>
+@*
+                                <td class="roster-table-cell-planned">
+                                </td>
+*@
+                                <td id="roster-start" class="roster-table-cell ">
 
-                                }
-                                else
-                                {
+                                    <div id="roster-start-div" class="roster-shift text-center" style="height: 100%;">
+                                        @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName
+                                        <script>
 
-                                    if (Model.IsUnavailable(employee, i))
-                                    {
-                                        <td class="roster-table-cell" style=" background-color: red ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                                    }
-                                    else
-                                    {
-                                        <td class="roster-table-cell" style=" background-color: white ; padding: 10px; border: 1px solid darkgrey;">
+                                            var divs = document.querySelectorAll('div');
+                                            var above_div = divs[divs.length - 1];
 
-                                            @*<div> <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDay.Id" asp-route-dateInput="@Model.Date.AddHours(i)" asp-action="Create"></a> </div>*@
-                                        </td>
-                                    }
+                                            getWidthOfbase(above_div, @Model.GetShiftLength(employee, i));
 
+                                            </script>
+                                    </div>
+
+                                </td>
+
+                            }else{
+                                <td class="roster-table-cell">
+                                </td>
                                 }
 
 
 
                             }
                             <td>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDayId" asp-route-dateInput="@Model.Date.ToShortDateString()" asp-action="Create">+</a>
+                                <a class="text-decoration-none text-black" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDayId" asp-route-dateInput="@Model.Date.ToShortDateString()" asp-action="Create">+</a>
                             </td>
                         </tr>
                     }
@@ -198,6 +190,50 @@
 
             </tbody>
         </table>
+
+    </div>
+
+
+
+<!-- The Modal for creating a new shift -->
+<div id="modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content text-center prognosis-textarea">
+        <span class="close position-absolute">&times;</span>
+        <label> </label>
+        <div class="m-3 text-center align-content-center">
+            <form asp-action="CreateShift">
+                <h2>Voeg een dienst toe</h2>
+                <div class="row">
+                    <span class="col">Medewerker:</span>
+                    <select asp-for="SelectedEmployeeId" class="form-control col">
+                        
+                        @foreach (var employee in Model.Employees)
+                        {
+                            <option value="@employee.Id">@employee.FullName</option>
+                        }
+                    </select>
+
+
+                    @*TODO make it so you can only select department for employee who have them.*@
+                    <span class="col">In afdeling:</span>
+                    <input asp-for="SelectedDepartmentId" class="form-control col" />
+                </div>
+                <div class="row">
+                    <span class="col">Startijd:</span>
+                    <input asp-for="SelectedStartTime" class="form-control col" />
+
+                    <span class="col">Eindtijd:</span>
+                    <input asp-for="SelectedEndTime" class="form-control col" />
+                </div>
+                <label> </label>
+                <span asp-validation-for="Date" class="text-danger"></span>
+                <span asp-validation-for="Date" class="text-danger"></span>
+                <input type="submit" value="Opslaan" class="btn btn-success btn-sm " />
+            </form>
+        </div>
+
 
     </div>
 
@@ -210,221 +246,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<style type="text/css">
-    p, body, td, input, select, button {
-        font-family: -apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-        font-size: 14px;
-    }
-
-    body {
-        padding: 0px;
-        margin: 0px;
-        background-color: #ffffff;
-    }
-
-    a {
-        color: #1155a3;
-    }
-
-    .space {
-        margin: 10px 0px 10px 0px;
-    }
-
-    .header {
-        background: #003267;
-        background: linear-gradient(to right, #011329 0%,#00639e 44%,#011329 100%);
-        padding: 20px 10px;
-        color: white;
-        box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.75);
-    }
-
-        .header a {
-            color: white;
-        }
-
-        .header h1 a {
-            text-decoration: none;
-        }
-
-        .header h1 {
-            padding: 0px;
-            margin: 0px;
-        }
-
-    .main {
-        padding: 10px;
-        margin-top: 10px;
-    }
-
-    .generated {
-        color: #999;
-    }
-
-        .generated a {
-            color: #999;
-        }
-</style>
-
-<!-- DayPilot library -->
-
-
-    <div class="main">
-        <div id="dp"></div>
-      
-    </div>
-
-    <script>
-        const dp = new DayPilot.Scheduler("dp", {
-            locale: "nl-nl",
-            timeHeaders: [{ "groupBy": "Day" }, { "groupBy": "Hour" }],
-            scale: "Hour",
-            days: 1,
-            startDate: DayPilot.Date.today(),
-            businessWeekends: true,
-            timeRangeSelectedHandling: "Enabled",
-            
-            
-            onTimeRangeSelected: async (args) => {
-                const dp = args.control;
-                const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
-                
-                dp.clearSelection();
-               
-                if (modal.canceled) { return; }
-                const event = {
-                start: args.start,
-                end: args.end,
-                text: modal.result.text
-            };
-            const event = {
-                start: args.start,
-                end: args.end,
-                text: modal.result.text
-            };
-            const { data } = await Bumbo.Http.post(`api/rostermanager`, event);
-                dp.events.add({
-                    start: args.start,
-                    end: args.end,
-                    id: DayPilot.guid(),
-                    resource: args.resource,
-                    text: modal.result
-                });
-            },
-
-
-            // time range is selected
-        //onTimeRangeSelected: async (args) => {
-        //    const form = [
-        //        { name: "Name", id: "text" }
-        //    ];
-
-        //    const modal = await DayPilot.Modal.form(form, {});
-        //    dp.clearSelection();
-
-        //    if (modal.canceled) {
-        //        return;
-        //    }
-
-        //    const event = {
-        //        start: args.start,
-        //        end: args.end,
-        //        text: modal.result.text
-        //    };
-        //    const { data } = await DayPilot.Http.post(`/api/CalendarEvents`, event);
-
-        //    dp.events.add({
-        //        start: args.start,
-        //        end: args.end,
-        //        id: data.id,
-        //        text: modal.result.text
-        //    });
-        //    console.log("Created.");
-
-        //},
-            
-            
-            // on event moved 
-        eventMoveHandling: "Update",
-        onEventMoved: async (args) => {
-            const id = args.e.id();
-            const data = {
-                id: args.e.id(),
-                start: args.newStart,
-                end: args.newEnd,
-                text: args.e.text()
-            };
-            await DayPilot.Http.put(`/rostermanager/create/${id}`, data);
-            console.log("Moved.");
-            args.control.message("Event moved: " + args.e.text());
-        },
-
-            
-            // on event resize
-            eventResizeHandling: "Update",
-            onEventResized: async (args) => {
-                const id = args.e.id();
-                const data = {
-                    id: args.e.id(),
-                    start: args.newStart,
-                    end: args.newEnd,
-                    text: args.e.text()
-                };
-                await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
-                console.log("Resized.");
-                args.control.message("Event resized: " + args.e.text());
-            },
-  
-            // on event deletion
-        eventDeleteHandling: "Update",
-            onEventDeleted: async (args) => {
-                const id = args.e.id();
-                
-                await DayPilot.Http.delete(`/api/CalendarEvents/${id}`);
-                console.log("Deleted.");
-                args.control.message("Event deleted: " + args.e.text());
-            },
-
-            
-            eventClickHandling: "Disabled",
-            eventHoverHandling: "Bubble",
-            bubble: new DayPilot.Bubble({
-                onLoad: (args) => {
-                    // if event object doesn't specify "bubbleHtml" property
-                    // this onLoad handler will be called to provide the bubble HTML
-                    args.html = "Event details";
-                }
-            }),
-            treeEnabled: true,
-        });
-        dp.resources = [
-           { name: "d", id: "R1" },
-            { name: "Medewekrer lange naama ", id: "R2" },
-            { name: "Resource 3", id: "R3" },
-            { name: "Resource 4", id: "R4" },
-            { name: "Resource 5", id: "R5" },
-            { name: "Resource 6", id: "R6" },
-            { name: "Resource 7", id: "R7" },
-            { name: "Resource 8", id: "R8" },
-            { name: "Resource 9", id: "R9" },
-        ];
-        dp.events.list = [];
-        dp.init();
-    </script>
 

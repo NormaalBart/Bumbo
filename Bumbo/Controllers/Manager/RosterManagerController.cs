@@ -3,11 +3,13 @@ using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.RosterManager;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Repositories;
 using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace Bumbo.Controllers
 {
@@ -21,7 +23,10 @@ namespace Bumbo.Controllers
         private IPrognosisRepository _prognosisRepository;
         private IPlannedShiftsRepository _shiftRepository;
         private IUnavailableMomentsRepository _unavailableRepository;
-        public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments)
+        private IDepartmentsRepository _departmentsRepository;
+        private IBranchRepository _branchRepository;
+        public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments, IDepartmentsRepository departments, IBranchRepository branches)
+
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -29,6 +34,9 @@ namespace Bumbo.Controllers
             _prognosisRepository = prognosis;
             _shiftRepository = plannedShifts;
             _unavailableRepository = unavailableMoments;
+            _departmentsRepository = departments;
+            _branchRepository = branches;
+            
         }
             
             
@@ -58,6 +66,12 @@ namespace Bumbo.Controllers
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date)).ToList();
             viewModel.UpdatePrognosis(shiftsOnDay);
             viewModel.PrognosisDayId = _prognosisRepository.GetIdByDate(date);
+
+            viewModel.SelectedStartTime = viewModel.Date.AddHours(8);
+            viewModel.SelectedEndTime = viewModel.Date.AddHours(16);
+
+            viewModel.OpeningHour = 6;
+            viewModel.ClosingHour = 20;
             return View(viewModel);
         }
         
@@ -129,29 +143,23 @@ namespace Bumbo.Controllers
             return View(newShift);
         }
 
-
-        // POST: api/CalendarEvents
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CalendarEvent>> PostCalendarEvent(CalendarEvent calendarEvent)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateShift(string selectedEmployeeId, int selectedDepartmentId, string selectedStartTime, string selectedEndTime)
         {
-            //_context.Events.Add(calendarEvent);
-            //await _context.SaveChangesAsync();
+            PlannedShift plannedShift = new PlannedShift();
+            plannedShift.StartTime = DateTime.Parse(selectedStartTime);
+            plannedShift.EndTime = DateTime.Parse(selectedEndTime);
+            plannedShift.Employee = _employeeRepository.Get(selectedEmployeeId);
+            plannedShift.Department = _departmentsRepository.Get(selectedDepartmentId);
+            Employee employee = await _userManager.GetUserAsync(User);
+            plannedShift.Branch = _branchRepository.Get(employee.DefaultBranchId);
+            _shiftRepository.Create(plannedShift);
 
-            return CreatedAtAction("GetCalendarEvent", new { id = calendarEvent.Id }, calendarEvent);
+            return RedirectToAction("Index");
         }
+    
 
-
-
-    }
-
-    public class CalendarEvent
-    {
-        public int Id { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-        public string? Text { get; set; }
-        public string? Color { get; set; }
     }
 
 }

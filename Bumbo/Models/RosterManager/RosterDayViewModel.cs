@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using BumboData.Models;
 
@@ -6,12 +7,6 @@ namespace Bumbo.Models.RosterManager
 {
     public class RosterDayViewModel
     {
-        //[DisplayName("Kassa Afdeling")]
-        //public double? UpdatedCassiereDepartment => Math.Round((double)(PrognosisDay.CassiereDepartment - this.UpdatePrognosisWithoutPlannedHours(DepartmentEnum.Cassiere)), 2);
-        //[DisplayName("Vers Afdeling")]
-        //public double? UpdatedFreshDepartment => Math.Round((double)(PrognosisDay.FreshDepartment - this.UpdatePrognosisWithoutPlannedHours(DepartmentEnum.Fresh)), 2);
-        //[DisplayName("VakkenVullers Afdeling")]
-        //public double? UpdatedStockersDepartment => Math.Round((double)(PrognosisDay.StockersDepartment - UpdatePrognosisWithoutPlannedHours(DepartmentEnum.Stocker)), 2);
 
         public int PrognosisDayId { get; set; }
         public DateTime Date { get; set; }
@@ -24,6 +19,19 @@ namespace Bumbo.Models.RosterManager
         public double StockersPrognose { get; set; }
         
         public List<EmployeeRosterViewModel> Employees { get; set; }
+
+        // selected employee in modal for adding new employee
+        public int SelectedEmployeeId { get; set; }
+        public int SelectedDepartmentId { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime SelectedStartTime { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime SelectedEndTime { get; set; }
+
+        // business hours
+        public int OpeningHour { get; set; }
+        public int ClosingHour { get; set; }
+
 
         public RosterDayViewModel()
         {
@@ -107,6 +115,35 @@ namespace Bumbo.Models.RosterManager
             FreshPrognose = Math.Round(FreshPrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
             StockersPrognose = Math.Round(StockersPrognose, 2);
             
+        }
+
+
+        public ShiftViewModel? GetShiftOnHourOfEmployee(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return null;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                return shifts.First();
+            }
+            return null;
+        }
+
+        public double GetShiftLength(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return 0;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                return shifts.First().EndTime.Hour - shifts.First().StartTime.Hour + (shifts.First().EndTime.Minute * 0.01);
+            }
+            return 0;
         }
 
     }
