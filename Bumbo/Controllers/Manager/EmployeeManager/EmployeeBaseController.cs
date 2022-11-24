@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager.Common;
 using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.BranchController;
+using Bumbo.Models.EmployeeManager.Index;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -21,11 +23,56 @@ namespace Bumbo.Controllers.Admin
         }
 
         // GET: BranchController
-        public ActionResult Index()
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort)
         {
-            var branches = _branchRepository.GetAllActiveBranches();
-            List<BranchViewModel> result = _mapper.Map<List<BranchViewModel>>(branches);
-            return View(result);
+
+            var resultingListViewModel = new BranchListIndexViewModel();
+            var branches = _branchRepository.GetList();
+
+            if (!includeInactive && !includeActive)
+            {
+                branches = branches.Where(e => !e.Inactive);
+                resultingListViewModel.IncludeActive = true;
+            }
+            else if (!includeInactive && includeActive)
+            {
+                branches = branches.Where(e => !e.Inactive);
+            }
+            else if (includeInactive && !includeActive)
+            {
+                branches = branches.Where(e => e.Inactive);
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // search in branches if any of the columns contains the searchstring
+                resultingListViewModel.SearchString = searchString;
+                searchString = searchString.ToLower();
+                branches = branches.Where(e => e.Name.ToLower().StartsWith(searchString));
+            }
+
+            switch (currentSort)
+            {
+                // case for each sortingoption, with asc and desc
+                case BranchSortingOption.Name_Asc:
+                    branches = branches.OrderBy(e => e.Name);
+                    break;
+                case BranchSortingOption.Name_Desc:
+                    branches = branches.OrderByDescending(e => e.Name);
+                    break;
+                case BranchSortingOption.Employees_Asc:
+                    branches = branches.OrderBy(e => e.DefaultEmployees.Count());
+                    break;
+                case BranchSortingOption.Employees_Desc:
+                    branches = branches.OrderByDescending(e => e.DefaultEmployees.Count());
+                    break;
+                default:
+                    branches = branches.OrderBy(e => e.Name);
+                    break;
+            }
+
+            resultingListViewModel.Branches = _mapper.Map<IEnumerable<ListIndexBranchViewModel>>(branches).ToList();
+            return View(resultingListViewModel);
         }
 
         // GET: BranchController/Create
@@ -37,11 +84,11 @@ namespace Bumbo.Controllers.Admin
         // POST: BranchController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(BranchViewModel branchModel)
+        public ActionResult Create(BranchCreateViewModel branchModel)
         {
             if (ModelState.IsValid)
             {
-                Branch branch = _mapper.Map<Branch>(branchModel);
+                var branch = _mapper.Map<Branch>(branchModel);
                 branch.StandardOpeningHours = new List<StandardOpeningHours>();
                 foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
                 {
@@ -61,14 +108,14 @@ namespace Bumbo.Controllers.Admin
             {
                 return RedirectToAction("Index");
             }
-            BranchViewModel branchViewModel = _mapper.Map<BranchViewModel>(branch);
+            BranchCreateViewModel branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
             return View(branchViewModel);
         }
 
         // POST: BranchController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(BranchViewModel branchViewModel)
+        public ActionResult Edit(BranchCreateViewModel branchViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -92,9 +139,9 @@ namespace Bumbo.Controllers.Admin
             var branch = _branchRepository.Get(id);
             if (branch == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
-            BranchViewModel branchViewModel = _mapper.Map<BranchViewModel>(branch);
+            var branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
             return View(branchViewModel);
         }
 
@@ -102,7 +149,7 @@ namespace Bumbo.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult SetInactive(int id, IFormCollection collection)
         {
-            _branchRepository.SetInactive(id); 
+            _branchRepository.SetInactive(id);
             return RedirectToAction(nameof(Index));
         }
     }

@@ -1,0 +1,43 @@
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using Bumbo.Models.EmployeeManager.Index;
+using BumboData.Enums;
+
+namespace Bumbo.Models.BranchController
+{
+    public class BranchListIndexViewModel
+    {
+        public List<ListIndexBranchViewModel> Branches { get; set; }
+        [DisplayName("Toon actieve branches")]
+        public bool IncludeActive { get; set; }
+        [DisplayName("Toon inactieve branches")]
+        public bool IncludeInactive { get; set; }
+        public string SearchString { get; set; }
+
+        [DisplayName("Sorteeroptie")]
+        public BranchSortingOption CurrentSort { get; set; }
+
+        public List<BranchSortingOption> AvailableSortOptions { get; set; }
+
+
+
+        public BranchListIndexViewModel()
+        {
+            Branches = new List<ListIndexBranchViewModel>();
+            // available sort options fill with all options from enum
+            AvailableSortOptions = new List<BranchSortingOption>();
+            foreach (var option in Enum.GetValues(typeof(BranchSortingOption)))
+            {
+                AvailableSortOptions.Add((BranchSortingOption)option);
+
+            }
+
+        }
+
+        public string GetSortingDisplayName(BranchSortingOption sortoption)
+        {
+            return sortoption.GetAttribute<DisplayAttribute>().Name;
+        }
+
+    }
+}

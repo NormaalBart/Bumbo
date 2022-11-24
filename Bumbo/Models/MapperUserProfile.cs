@@ -56,10 +56,12 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DepartmentId))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.DepartmentName));
             CreateMap<PlannedShift, ShiftViewModel>();
-            CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<PlannedShift, RosterShiftCreateViewModel>();
-            CreateMap<Branch, BranchViewModel>();
-            CreateMap<BranchViewModel, Branch>();
+            CreateMap<RosterShiftCreateViewModel, PlannedShift>();
+            CreateMap<ListIndexBranchViewModel, Branch>();
+            CreateMap<Branch, ListIndexBranchViewModel>()
+                .ForMember(dest => dest.Employees, opt => opt.MapFrom(src => src.DefaultEmployees.Count))
+                .ForMember(dest => dest.Managers, opt => opt.MapFrom(src => string.Join(", ", src.Managers.Select(model => model.FullName()).OrderBy(str => str).ToList())));
 
             CreateMap<PlannedShift, EmployeeShiftViewModel>()
                 .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber))
