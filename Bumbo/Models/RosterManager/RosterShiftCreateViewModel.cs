@@ -21,6 +21,10 @@ namespace Bumbo.Models.RosterManager
         [DataType(DataType.Time)]
         public DateTime EndTime { get; set; }
 
+        public int ShiftLengthHours 
+        { get { return 5; }  
+            }
+
 
         public List<Department> DepartmentsList { get; set; }
 

@@ -7,6 +7,7 @@ using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bumbo.Controllers
 {
@@ -68,7 +69,8 @@ namespace Bumbo.Controllers
             viewModel.StartTime = viewModel.Date.AddHours(8);
             viewModel.EndTime = viewModel.Date.AddHours(16);
             viewModel.PrognosisId = prognosisId;
-            viewModel.DepartmentsList = _employeeRepository.Get(employeeId).AllowedDepartments.ToList();
+
+            viewModel.DepartmentsList = _employeeRepository.GetDepartmentsOfEmployee(employeeId).ToList();
             
             return View(viewModel);
         }
@@ -128,7 +130,28 @@ namespace Bumbo.Controllers
         }
 
 
+        // POST: api/CalendarEvents
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<CalendarEvent>> PostCalendarEvent(CalendarEvent calendarEvent)
+        {
+            //_context.Events.Add(calendarEvent);
+            //await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetCalendarEvent", new { id = calendarEvent.Id }, calendarEvent);
+        }
+
+
 
     }
-    
+
+    public class CalendarEvent
+    {
+        public int Id { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public string? Text { get; set; }
+        public string? Color { get; set; }
+    }
+
 }

@@ -159,3 +159,10 @@ input[type="search"] {
 p {
     margin-bottom: 0;
 }
+
+
+.roster-table-cell {
+    width: 45px;
+    padding: 10px;
+    border: 1px solid darkgrey;
+}

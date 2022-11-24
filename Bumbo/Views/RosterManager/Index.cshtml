@@ -126,13 +126,14 @@
         <!--table, 24 long horizontal -->
         <table class="table" style="background-color: white;">
             <thead>
-                <tr style="width: 4%;">
-                    <th>Werknemer Naam</th>
-                    @for (int i = 7; i < 25; i++)
+                <tr class="roster-table-cell">
+                    <th class="border border-2 border-dark">Naam</th>
+                    @for (int i = 0; i < 24; i++)
                     {
 
-                        <th>@i</th>
+                        <th class="border border-2 border-dark">@i</th>
                     }
+                    <th class="border border-2 border-dark"></th>
                 </tr>
             </thead>
 
@@ -145,44 +146,39 @@
                 {
                     foreach (var employee in Model.Employees)
                     {
-                        <tr style="width: 4%;">
-                            <td>
+                        <tr class="roster-table-cell">
+                            <td class="small">
                                 @employee.FullName
 
                             </td>
-                            @for (int i = 7; i < 24; i++)
+                            @for (int i = 0; i < 24; i++)
                             {
 
 
                                 @if (Model.IsPlanned(employee, i))
                                 {
-                                    // TODO: Redo code
-                                    @*switch (Model.GetEmployeeDepartmentShift(employee, i))
-                                    {
-                                        case DepartmentEnum.Cassiere:
-                                            <td style="width: 4%; background-color: yellow ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                                            break;
-                                        case DepartmentEnum.Fresh:
-                                            <td style="width: 4%; background-color: green ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                                            break;
-                                        case DepartmentEnum.Stocker:
-                                            <td style="width: 4%; background-color: saddlebrown ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                                            break;
-                                        default:
-                                            <td style="width: 4%; background-color: white ; padding: 10px; border: 1px solid darkgrey;"> </td>
-                                            break;
-                                    }*@
+                                    <td class="roster-table-cell" style=" background-color: yellow ; ">
+                                        @if (i == 8)
+                                        {
+                                            <div style="position:absolute; width: calc(45px * 10); background-color: blue ; padding: 10px; border: 1px solid darkgrey;">
+                                                Shift name
+                                            </div>
+                                        }
+                                     
+                                        @*<div> <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDay.Id" asp-route-dateInput="@Model.Date.AddHours(i)" asp-action="Create"></a> </div>*@
+                                    </td>
+
                                 }
                                 else
                                 {
 
                                     if (Model.IsUnavailable(employee, i))
                                     {
-                                        <td style=" width: 4%; background-color: red ; padding: 10px; border: 1px solid darkgrey;"> </td>
+                                        <td class="roster-table-cell" style=" background-color: red ; padding: 10px; border: 1px solid darkgrey;"> </td>
                                     }
                                     else
                                     {
-                                        <td style=" width: 4%; background-color: white ; padding: 10px; border: 1px solid darkgrey;">
+                                        <td class="roster-table-cell" style=" background-color: white ; padding: 10px; border: 1px solid darkgrey;">
 
                                             @*<div> <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDay.Id" asp-route-dateInput="@Model.Date.AddHours(i)" asp-action="Create"></a> </div>*@
                                         </td>
@@ -194,7 +190,7 @@
 
                             }
                             <td>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDayId" asp-route-dateInput="@Model.Date.ToShortDateString()" asp-action="Create">Voeg dienst toe</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDayId" asp-route-dateInput="@Model.Date.ToShortDateString()" asp-action="Create">+</a>
                             </td>
                         </tr>
                     }
@@ -206,6 +202,29 @@
     </div>
 
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <style type="text/css">
@@ -280,12 +299,26 @@
             startDate: DayPilot.Date.today(),
             businessWeekends: true,
             timeRangeSelectedHandling: "Enabled",
+            
+            
             onTimeRangeSelected: async (args) => {
                 const dp = args.control;
                 const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
                 
                 dp.clearSelection();
+               
                 if (modal.canceled) { return; }
+                const event = {
+                start: args.start,
+                end: args.end,
+                text: modal.result.text
+            };
+            const event = {
+                start: args.start,
+                end: args.end,
+                text: modal.result.text
+            };
+            const { data } = await Bumbo.Http.post(`api/rostermanager`, event);
                 dp.events.add({
                     start: args.start,
                     end: args.end,
@@ -294,18 +327,81 @@
                     text: modal.result
                 });
             },
-            eventMoveHandling: "Update",
-            onEventMoved: (args) => {
-                args.control.message("Event moved: " + args.e.text());
-            },
+
+
+            // time range is selected
+        //onTimeRangeSelected: async (args) => {
+        //    const form = [
+        //        { name: "Name", id: "text" }
+        //    ];
+
+        //    const modal = await DayPilot.Modal.form(form, {});
+        //    dp.clearSelection();
+
+        //    if (modal.canceled) {
+        //        return;
+        //    }
+
+        //    const event = {
+        //        start: args.start,
+        //        end: args.end,
+        //        text: modal.result.text
+        //    };
+        //    const { data } = await DayPilot.Http.post(`/api/CalendarEvents`, event);
+
+        //    dp.events.add({
+        //        start: args.start,
+        //        end: args.end,
+        //        id: data.id,
+        //        text: modal.result.text
+        //    });
+        //    console.log("Created.");
+
+        //},
+            
+            
+            // on event moved 
+        eventMoveHandling: "Update",
+        onEventMoved: async (args) => {
+            const id = args.e.id();
+            const data = {
+                id: args.e.id(),
+                start: args.newStart,
+                end: args.newEnd,
+                text: args.e.text()
+            };
+            await DayPilot.Http.put(`/rostermanager/create/${id}`, data);
+            console.log("Moved.");
+            args.control.message("Event moved: " + args.e.text());
+        },
+
+            
+            // on event resize
             eventResizeHandling: "Update",
-            onEventResized: (args) => {
+            onEventResized: async (args) => {
+                const id = args.e.id();
+                const data = {
+                    id: args.e.id(),
+                    start: args.newStart,
+                    end: args.newEnd,
+                    text: args.e.text()
+                };
+                await DayPilot.Http.put(`/api/CalendarEvents/${id}`, data);
+                console.log("Resized.");
                 args.control.message("Event resized: " + args.e.text());
             },
-            eventDeleteHandling: "Update",
-            onEventDeleted: (args) => {
+  
+            // on event deletion
+        eventDeleteHandling: "Update",
+            onEventDeleted: async (args) => {
+                const id = args.e.id();
+                
+                await DayPilot.Http.delete(`/api/CalendarEvents/${id}`);
+                console.log("Deleted.");
                 args.control.message("Event deleted: " + args.e.text());
             },
+
+            
             eventClickHandling: "Disabled",
             eventHoverHandling: "Bubble",
             bubble: new DayPilot.Bubble({
@@ -318,8 +414,8 @@
             treeEnabled: true,
         });
         dp.resources = [
-           { name: "@Model.Employees[1].FullName", id: "R1" },
-            { name: "Resource 2", id: "R2" },
+           { name: "d", id: "R1" },
+            { name: "Medewekrer lange naama ", id: "R2" },
             { name: "Resource 3", id: "R3" },
             { name: "Resource 4", id: "R4" },
             { name: "Resource 5", id: "R5" },
