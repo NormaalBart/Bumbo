@@ -23,9 +23,11 @@ public class DutchCAOService : ICAOService
             //  - Maximaal 40 uur per week
             new MaxWorkHours(below16Range, 40.0, MaxWorkHoursTimeframe.Week),
             //  - Maximaal 12 uur per schoolweek
-            new MaxWorkHours(below16Range, 1.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository),
+            new MaxWorkHours(below16Range, 12.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository),
             // - Maximaal 5 dagen per week
-            new MaxWorkDaysInWeek(below16Range, 2)
+            new MaxWorkDaysInWeek(below16Range, 5),
+            // - Maximaal tot 19:00
+            new MaxShiftEndTime(below16Range, new TimeOnly(19, 00))
         };
 
         // All 16 and 17 year rules
