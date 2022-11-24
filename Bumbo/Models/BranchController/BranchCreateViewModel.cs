@@ -14,7 +14,6 @@ namespace Bumbo.Models.BranchController
         [DisplayName("Mannagers")]
         public string? Managers { get; set; }
 
-        [Required]
         [DisplayName("Aantal medewerkers")]
         public int Employees { get; set; }
 
@@ -34,10 +33,18 @@ namespace Bumbo.Models.BranchController
         [DisplayName("Spiegelmeters")]
         public int ShelvingDistance { get; set; }
 
+        [Required]
+        public List<OpeningHouersViewModel> OpeningHours { get; set; }
+
         [DisplayName("Adres")]
         public string FormattedStreet
         {
             get => $"{Street} {HouseNumber} te {City}";
+        }
+
+        public BranchCreateViewModel()
+        {
+            OpeningHours = new List<OpeningHouersViewModel>();
         }
     }
 }

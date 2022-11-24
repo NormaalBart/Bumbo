@@ -78,7 +78,12 @@ namespace Bumbo.Controllers.Admin
         // GET: BranchController/Create
         public ActionResult Create()
         {
-            return View();
+            var viewModel = new BranchCreateViewModel();
+            foreach (DayOfWeek dayOfWeek in Enum.GetValues(typeof(DayOfWeek)))
+            {
+                viewModel.OpeningHours.Add(new OpeningHouersViewModel { DayOfWeek = dayOfWeek, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
+            }
+            return View(viewModel);
         }
 
         // POST: BranchController/Create
@@ -89,11 +94,6 @@ namespace Bumbo.Controllers.Admin
             if (ModelState.IsValid)
             {
                 var branch = _mapper.Map<Branch>(branchModel);
-                branch.StandardOpeningHours = new List<StandardOpeningHours>();
-                foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
-                {
-                    branch.StandardOpeningHours.Add(new StandardOpeningHours { DayOfWeek = day, OpenTime = new TimeOnly(8, 00), CloseTime = new TimeOnly(20, 00) });
-                }
                 _branchRepository.Create(branch);
                 return RedirectToAction(nameof(Index));
             }
