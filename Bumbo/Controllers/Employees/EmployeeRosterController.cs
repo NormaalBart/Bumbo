@@ -6,11 +6,10 @@ using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace Bumbo.Controllers.Employees
 {
-    
+
     [Authorize(Roles = "Employee")]
     public class EmployeeRosterController : Controller
     {

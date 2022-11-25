@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using BumboData.Enums;
 
 namespace Bumbo.Models.ExportManager;
