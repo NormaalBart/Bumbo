@@ -1,6 +1,7 @@
 ﻿using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories.Repositories
@@ -30,6 +31,7 @@ namespace BumboRepositories.Repositories
             if (diff > 0)
                 diff -= 7;
             var startOfWeek = currentDate.AddDays(diff);
+            DateTime start = currentDate.GetMondayOfTheWeek();
             // check if the employee has worked too much this week 
             var shiftsThisWeek = DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
             if (shiftsThisWeek.Count > 0)
@@ -66,6 +68,11 @@ namespace BumboRepositories.Repositories
                 }
             }
             return false;
+        }
+
+        public IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId)
+        {
+            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date).Include(p => p.Department).Include(p => p.Branch);
         }
     }
 }

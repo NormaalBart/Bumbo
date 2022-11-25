@@ -4,7 +4,13 @@
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
 
-
+<!-- if modelstate that returned is not valid, say that saving failed-->
+@if (Model.ErrorMessage != null)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden omdat @Model.ErrorMessage
+    </div>
+}
 
 <div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
     <div>
@@ -89,6 +95,13 @@
 
 
 <script>
+    // list of all shifts on screen.
+    var listshifts = new Array; 
+
+    function getList(value) {
+        listshifts.push(value);
+    }
+
 
     // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
     function getWidthOfbase(elem, hours, minutepercstart, minutepercend) {
@@ -123,14 +136,19 @@
         // We move the div right using the minute percentages.
         elem.style.marginLeft = startoffset + 'px';
 
-
+        elem.add
     }
 
 
-    // Window resize event
+    function myFunction(shift){
+        getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
+    }
+
+    // Everytime the screen is resized, we resize every shift that's in the list along with it.
     window.addEventListener("resize", function () {
-        reloadroster();
+        listshifts.forEach(myFunction);
     });
+
 
 
 
@@ -147,22 +165,17 @@
 <div>
 
         <!--table, 24 long horizontal -->
-        <table class="table roster-table" style="background-color: white;">
+    <table class="table roster-table" style="background-color: white;">
             <thead>
                 <tr class="">
                     <th class="border border-2 border-dark">Naam</th>
+                    @*Important note: The text in the header blocks must be equal characters long.*@
                     @for (int i = 0; i < 24; i++)
                     {
-                        if (i < 10)
-                    {
-                        <th class="border border-2 border-dark roster-table-header-cell">0:@i </th>
-                    }else{
-                        <th class="border border-2 border-dark roster-table-header-cell">:@i </th>
-
-                    }
+     
+                    <th class=" small border border-2 border-dark roster-table-header-cell">@Model.GetHeaderTimeString(i) </th>
                    
                     }
-                    <th class="border border-2 border-dark"></th>
                 </tr>
             </thead>
 
@@ -186,13 +199,10 @@
                             
                                 @if (Model.GetShiftOnHourOfEmployee(employee, i) != null)
                                 {
-@*
-                                <td class="roster-table-cell-planned">
-                                </td>
-*@
-                                <td id="roster-start" class="roster-table-cell ">
 
-                                    <div id="roster-start-div" class="roster-shift text-center" style="height: 100%;">
+                                <td id="roster-start" class="roster-table-cell ">
+                                 
+                                    <div id="roster-start-div " class="roster-shift text-center" style="height: 100%;">
                                         @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName
                                         <script>
                                             // gets the div above, and passes it to a function which then sets the div length based on the shift length.
@@ -200,6 +210,11 @@
                                             var above_div = divs[divs.length - 1];
 
                                             getWidthOfbase(above_div, @Model.GetShiftLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
+
+                                            // we add this shift to the list of shifts:
+                                            var shift = { element: above_div, shiftlength: @Model.GetShiftLength(employee, i), shiftstartperc: @Model.GetShiftStartPercentage(employee, i), shiftendperc: @Model.GetShiftEndPercentage(employee, i) };
+                          
+                                            listshifts.push(shift);
 
                                             </script>
                                     </div>
@@ -214,9 +229,7 @@
 
 
                             }
-                            <td>
-                                <a class="text-decoration-none text-black" asp-area="" asp-controller="RosterManager" asp-route-employeeId="@employee.Id" asp-route-prognosisId="@Model.PrognosisDayId" asp-route-dateInput="@Model.Date.ToShortDateString()" asp-action="Create">+</a>
-                            </td>
+                         
                         </tr>
                     }
                 }
@@ -237,6 +250,7 @@
         <label> </label>
         <div class="m-3 text-center align-content-center">
             <form asp-action="CreateShift">
+                <input type="hidden" asp-for="Date" />
                 <h2>Voeg een dienst toe</h2>
                 <div class="row">
                     <span class="col">Medewerker:</span>

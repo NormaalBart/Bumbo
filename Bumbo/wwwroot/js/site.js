@@ -35,6 +35,6 @@ window.onclick = function (event) {
 
 
 
-function{
-    $('.roster-table').DataTable().ajax.reload();
+function reloadroster(){
+    window.location.reload();
 }

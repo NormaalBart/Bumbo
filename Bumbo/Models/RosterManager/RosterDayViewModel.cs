@@ -29,9 +29,8 @@ namespace Bumbo.Models.RosterManager
         [DataType(DataType.Time)]
         public DateTime SelectedEndTime { get; set; }
 
-        // business hours
-        public int OpeningHour { get; set; }
-        public int ClosingHour { get; set; }
+        public string ErrorMessage { get; set; }
+
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 
@@ -190,6 +189,16 @@ namespace Bumbo.Models.RosterManager
         {
             double shiftpercentage = (minute / 60) * 100;
             return (int)Math.Floor(shiftpercentage);
+        }
+
+        // It's important that this display time is always the same amount of characters long.
+        public string GetHeaderTimeString(int time)
+        {
+            if (time < 10)
+            {
+                return "0" + time + ":00";
+            }
+            return time + ":00";
         }
 
     }
