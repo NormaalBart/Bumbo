@@ -37,6 +37,8 @@ namespace Bumbo.Models
 
             CreateMap<PlannedShift, EmployeeShiftViewModel>().ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber)).ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street)).ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City)).ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 
+            CreateMap<Department, DepartmentRosterViewModel>();
+            CreateMap<DepartmentRosterViewModel, Department>();
         }
     }
 }

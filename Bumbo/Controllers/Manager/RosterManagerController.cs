@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bumbo.Models.EmployeeManager;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.RosterManager;
 using BumboData.Interfaces.Repositories;
@@ -72,6 +73,13 @@ namespace Bumbo.Controllers
 
             viewModel.OpeningHour = 6;
             viewModel.ClosingHour = 20;
+
+            viewModel.Departments = new List<DepartmentRosterViewModel>();
+            foreach (var dep in _departmentsRepository.GetList().ToList())
+            {
+                
+                viewModel.Departments.Add(new DepartmentRosterViewModel() { Id = dep.Id, DepartmentName = dep.DepartmentName});
+            }
             return View(viewModel);
         }
         

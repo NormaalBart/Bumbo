@@ -91,15 +91,17 @@
 <script>
 
     // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
-    function getWidthOfbase(elem, hours) {
+    function getWidthOfbase(elem, hours, minuteperc) {
 
 
         let cell = document.querySelector('.roster-table-cell');
         let width = cell.offsetWidth;
 
-        let finalwidth = width * hours;
+        let finalwidth = (width * hours);
+        let startoffset = (width * (minuteperc * 0.01));
         
         elem.style.width = finalwidth + 'px';
+        élem.style.left = -1 *(width * (minuteperc * 0.01));
         
 
     }
@@ -166,7 +168,7 @@
                                             var divs = document.querySelectorAll('div');
                                             var above_div = divs[divs.length - 1];
 
-                                            getWidthOfbase(above_div, @Model.GetShiftLength(employee, i));
+                                            getWidthOfbase(above_div, @Model.GetShiftLength(employee, i), @Model.GetShiftStartPercentage(employee, i));
 
                                             </script>
                                     </div>
@@ -218,7 +220,14 @@
 
                     @*TODO make it so you can only select department for employee who have them.*@
                     <span class="col">In afdeling:</span>
-                    <input asp-for="SelectedDepartmentId" class="form-control col" />
+                   
+                     <select asp-for="SelectedDepartmentId" class="form-control col">
+                        
+                        @foreach (var dep in Model.Departments)
+                        {
+                            <option value="@dep.Id">@dep.DepartmentName</option>
+                        }
+                    </select>
                 </div>
                 <div class="row">
                     <span class="col">Startijd:</span>

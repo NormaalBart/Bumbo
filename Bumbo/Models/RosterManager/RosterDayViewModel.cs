@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using BumboData.Models;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Bumbo.Models.RosterManager
 {
@@ -31,6 +32,8 @@ namespace Bumbo.Models.RosterManager
         // business hours
         public int OpeningHour { get; set; }
         public int ClosingHour { get; set; }
+
+        public List<DepartmentRosterViewModel> Departments { get; set; }
 
 
         public RosterDayViewModel()
@@ -141,7 +144,24 @@ namespace Bumbo.Models.RosterManager
             List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
             if (shifts.Count > 0)
             {
-                return shifts.First().EndTime.Hour - shifts.First().StartTime.Hour + (shifts.First().EndTime.Minute * 0.01);
+                return shifts.First().EndTime.Hour - shifts.First().StartTime.Hour;
+            }
+            return 0;
+        }
+
+        public int GetShiftStartPercentage(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return 0;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                // convert minutes into percentage of hour
+                int minute = shifts.First().StartTime.Minute;
+                return (minute / 60) * 100;
+
             }
             return 0;
         }
