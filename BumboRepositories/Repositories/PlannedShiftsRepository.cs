@@ -58,7 +58,11 @@ namespace BumboRepositories.Repositories
                 {
                     if (plannedShift.StartTime < shift.EndTime && plannedShift.EndTime > shift.StartTime)
                     {
-                        return true;
+                        if (plannedShift.Id != shift.Id)
+                        {
+                            return true;
+                        }
+                        
                     }
 
                 }
@@ -69,6 +73,12 @@ namespace BumboRepositories.Repositories
         public IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId)
         {
             return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date).Include(p => p.Department).Include(p => p.Branch);
+        }
+
+
+        public PlannedShift GetPlannedShiftById(int shiftId)
+        {
+            return DbSet.Where(p => p.Id == shiftId).Include(p => p.Department).Include(p => p.Branch).Include(p => p.Employee).FirstOrDefault();
         }
     }
 }

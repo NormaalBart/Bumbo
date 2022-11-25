@@ -21,13 +21,15 @@ namespace Bumbo.Models.RosterManager
         
         public List<EmployeeRosterViewModel> Employees { get; set; }
 
-        // selected employee in modal for adding new employee
+        // selected stuff for creating a new shift
         public int SelectedEmployeeId { get; set; }
         public int SelectedDepartmentId { get; set; }
         [DataType(DataType.Time)]
         public DateTime SelectedStartTime { get; set; }
         [DataType(DataType.Time)]
         public DateTime SelectedEndTime { get; set; }
+
+        public int SelectedShiftId { get; set; }
 
         public string ErrorMessage { get; set; }
 

@@ -9,5 +9,7 @@ namespace BumboData.Interfaces.Repositories
         IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId);
 
         IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId);
+
+        PlannedShift GetPlannedShiftById(int shiftId);
     }
 }

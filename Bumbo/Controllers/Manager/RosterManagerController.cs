@@ -126,7 +126,42 @@ namespace Bumbo.Controllers.Manager
 
             return RedirectToAction("Index", "RosterManager", new { dateInput = date });
         }
-    
+
+        public async Task<IActionResult> EditShift(string selectedEmployeeId, int selectedDepartmentId, string selectedStartTime, string selectedEndTime, string date, int selectedShiftId)
+        {
+
+            PlannedShift plannedShift = _shiftRepository.GetPlannedShiftById(selectedShiftId);
+
+            // Passed start time and end time are only time values, so we add the passed date as well.
+            plannedShift.StartTime = DateTime.Parse(date).AddHours(DateTime.Parse(selectedStartTime).Hour).AddMinutes(DateTime.Parse(selectedStartTime).Minute);
+            plannedShift.EndTime = DateTime.Parse(date).AddHours(DateTime.Parse(selectedEndTime).Hour).AddMinutes(DateTime.Parse(selectedEndTime).Minute);
+
+
+            int maxHoursInWeekAllowed = 40; // TODO
+
+            // overlapping shifts
+            if (_shiftRepository.ShiftOverlapsWithOtherShifts(plannedShift))
+            {
+                return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker is al ingepland for deze tijden." });
+            }
+            // check availability employee
+            if (!_unavailableRepository.IsEmployeeAvailable(plannedShift.Employee.Id, plannedShift.StartTime, plannedShift.EndTime))
+            {
+                return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd." });
+            }
+            // check if CAO rules are met.
+            if (_shiftRepository.GetHoursPlannedInWorkWeek(plannedShift.Employee.Id, plannedShift.StartTime.Date) + (plannedShift.EndTime - plannedShift.StartTime).TotalHours > maxHoursInWeekAllowed)
+            {
+                return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker heeft al te veel gewerkt deze week." });
+            }
+
+
+            _shiftRepository.Update(plannedShift);
+
+            return RedirectToAction("Index", "RosterManager", new { dateInput = date });
+        }
+
+
 
     }
 

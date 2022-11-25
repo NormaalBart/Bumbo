@@ -183,14 +183,15 @@ p {
 /*Rooster manager*/
 
 .roster-table-employee-cell {
-    padding: 10px;
-    height: 10px;
+
+    background-color: grey !important;
 }
 
 .roster-table-header-cell {
     padding: 10px;
-    background-color: red;
+    background-color: grey !important;
     width: auto;
+
 }
 
 .roster-table-row{

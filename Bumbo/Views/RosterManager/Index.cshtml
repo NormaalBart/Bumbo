@@ -93,14 +93,12 @@
 </div>
 
 
-
 <script>
+    'use strict';
+
     // list of all shifts on screen.
     var listshifts = new Array; 
-
-    function getList(value) {
-        listshifts.push(value);
-    }
+    
 
 
     // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
@@ -149,6 +147,22 @@
         listshifts.forEach(myFunction);
     });
 
+        
+
+
+
+    function onShiftClick(shiftinfo){
+        var editmodal = document.getElementById("modal");
+        editmodal.style.display = "block";
+        var createmodal = document.getElementById("createshiftmodal");
+        createmodal.style.display = "none";
+        var editmodal = document.getElementById("editshiftmodal");
+        
+        
+        document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
+    }
+
+
 
 
 
@@ -165,15 +179,15 @@
 <div>
 
         <!--table, 24 long horizontal -->
-    <table class="table roster-table" style="background-color: white;">
+    <table class="table roster-table table-hover" style="background-color: white;">
             <thead>
                 <tr class="">
-                    <th class="border border-2 border-dark">Naam</th>
+                <th class="border border-2 border-dark roster-table-employee-cell">Naam</th>
                     @*Important note: The text in the header blocks must be equal characters long.*@
                     @for (int i = 0; i < 24; i++)
                     {
      
-                    <th class=" small border border-2 border-dark roster-table-header-cell">@Model.GetHeaderTimeString(i) </th>
+                    <th class="small border border-2 border-dark roster-table-header-cell">@Model.GetHeaderTimeString(i) </th>
                    
                     }
                 </tr>
@@ -203,7 +217,14 @@
                                 <td id="roster-start" class="roster-table-cell ">
                                  
                                     <div id="roster-start-div " class="roster-shift text-center" style="height: 100%;">
-                                        <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
+                                        @*If the shift is very short, we use a different string not make it ugly.*@
+                                        @if (Model.GetShiftLength(employee, i) < 2)
+                                        {
+                                            <p class="align-self-center">  @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName </p>
+                                        }else{
+                                            <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
+                                        }
+                                        
                                        
                                         <script>
                                             // gets the div above, and passes it to a function which then sets the div length based on the shift length.
@@ -213,9 +234,18 @@
                                             getWidthOfbase(above_div, @Model.GetShiftLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
 
                                             // we add this shift to the list of shifts:
-                                            var shift = { element: above_div, shiftlength: @Model.GetShiftLength(employee, i), shiftstartperc: @Model.GetShiftStartPercentage(employee, i), shiftendperc: @Model.GetShiftEndPercentage(employee, i) };
+                                            var shift = { element: above_div, shiftlength: @Model.GetShiftLength(employee, i), shiftstartperc: @Model.GetShiftStartPercentage(employee, i), shiftendperc: @Model.GetShiftEndPercentage(employee, i), shiftid: @Model.GetShiftOnHourOfEmployee(employee, i).Id };
                           
                                             listshifts.push(shift);
+
+                                            // possibly in the future 
+                                            // shiftid, employeename, employeeid, departmentname, departmentid, starttime, endtime 
+                                            // pass these values along with the function to auto fill the modal.
+                                           
+
+                                            var shiftinfo = { shiftid: shift.shiftid};
+                                    
+                                            above_div.addEventListener("click", onShiftClick.bind(this, shiftinfo), false);
 
                                             </script>
                                     </div>
@@ -249,7 +279,7 @@
     <div class="modal-content text-center prognosis-textarea">
         <span class="close position-absolute">&times;</span>
         <label> </label>
-        <div class="m-3 text-center align-content-center">
+        <div id="createshiftmodal" class="m-3 text-center align-content-center">
             <form asp-action="CreateShift">
                 <input type="hidden" asp-for="Date" />
                 <h2>Voeg een dienst toe</h2>
@@ -269,6 +299,88 @@
                    
                      <select asp-for="SelectedDepartmentId" class="form-control col">
                         
+                        @foreach (var dep in Model.Departments)
+                        {
+                            <option value="@dep.Id">@dep.DepartmentName</option>
+                        }
+                    </select>
+                </div>
+                <div class="row">
+                    <span class="col">Startijd:</span>
+                    <input asp-for="SelectedStartTime" class="form-control col" />
+
+                    <span class="col">Eindtijd:</span>
+                    <input asp-for="SelectedEndTime" class="form-control col" />
+                </div>
+                <label> </label>
+                <input type="submit" value="Opslaan" class="btn btn-success btn-sm " />
+            </form>
+        </div>
+
+        <div id="editshiftmodal" class="m-3 text-center align-content-center">
+            <form  asp-action="EditShift">
+                <input type="hidden" asp-for="Date" />
+                <input id="shiftIdInput" type="hidden" asp-for="SelectedShiftId" />
+                <h2>Wijzig een dienst</h2>
+                <div class="row">
+                    <span class="col">Medewerker:</span>
+                    <input  disabled asp-for="SelectedEmployeeId" value="" class="form-control col">
+
+                    @*TODO make it so you can only select department for employee who have them.*@
+                    <span class="col">In afdeling:</span>
+
+                    <select  asp-for="SelectedDepartmentId" class="form-control col">
+
+                        @foreach (var dep in Model.Departments)
+                        {
+                            <option value="@dep.Id">@dep.DepartmentName</option>
+                        }
+                    </select>
+                </div>
+                <div class="row">
+                    <span class="col">Startijd:</span>
+                    <input id="starttimeinput" asp-for="SelectedStartTime" class="form-control col" />
+
+                    <span class="col">Eindtijd:</span>
+                    <input id="endtimeinput" asp-for="SelectedEndTime" class="form-control col" />
+                </div>
+                <label> </label>
+                <input type="submit" value="Opslaan" class="btn btn-success btn-sm " />
+            </form>
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- The Modal for editing a shift -->
+<div id="editmodal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content text-center prognosis-textarea">
+        <span class="close position-absolute">&times;</span>
+        <label> </label>
+        <div class="m-3 text-center align-content-center">
+            <form asp-action="CreateShift">
+                <input type="hidden" asp-for="Date" />
+                <h2>Voeg een dienst toe</h2>
+                <div class="row">
+                    <span class="col">Medewerker:</span>
+                    <select asp-for="SelectedEmployeeId" class="form-control col">
+
+                        @foreach (var employee in Model.Employees)
+                        {
+                            <option value="@employee.Id">@employee.FullName</option>
+                        }
+                    </select>
+
+
+                    @*TODO make it so you can only select department for employee who have them.*@
+                    <span class="col">In afdeling:</span>
+
+                    <select asp-for="SelectedDepartmentId" class="form-control col">
+
                         @foreach (var dep in Model.Departments)
                         {
                             <option value="@dep.Id">@dep.DepartmentName</option>
