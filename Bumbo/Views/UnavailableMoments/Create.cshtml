@@ -1,7 +1,15 @@
 ﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsCreateViewModel
-
-
+@{
+    ViewData["Title"] = "Afwezigheid toevoegen";
+}
 <h1 class="text-center">Afwezigheid toevoegen</h1>
+
+@{
+    if (Model.Error != null)
+    {
+        <p class="text-center alert-danger">@Model.Error</p>
+    }
+}
 
 
 <div class="container ">
@@ -12,11 +20,11 @@
                 <div class="col border border-3 border-dark employee-create-box">
                     <div class="col">
                         <div class="row border border-3 border-dark p-1">
-                            <div class="form-group col-4">
+                            <div class="form-group col-6">
                                 <input asp-for="StartTime" class="form-control" asp-format="{0:yyyy-MM-dd HH:mm}" />
                                 <span asp-validation-for="StartTime" class="text-danger"></span>
                             </div>
-                            <div class="form-group col-4">
+                            <div class="form-group col-6">
                                 <input asp-for="EndTime" class="form-control" asp-format="{0:yyyy-MM-dd HH:mm}" />
                                 <span asp-validation-for="EndTime" class="text-danger"></span>
                             </div>
@@ -25,8 +33,8 @@
                                 <h5>Rede van afwezigheid:</h5>
                                 
                                 <tr>
-                                    <td> <input type="radio" name="selectedDepartments" value="SCHOOL" /> School
-                                    <td> <input type="radio" name="selectedDepartments" value="OTHER" checked="checked" /> Anders
+                                    @Html.RadioButtonFor(model => model.UnavailableMomentType, "SCHOOL")school
+                                    @Html.RadioButtonFor(model => model.UnavailableMomentType, "OTHER")anders
                                 </tr>
 
                             </div>

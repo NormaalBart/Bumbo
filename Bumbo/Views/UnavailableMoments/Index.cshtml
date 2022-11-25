@@ -1,17 +1,21 @@
 ﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsListViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Afwezigheid";
 }
+<div class="row">
+    <h1 class="col-8">Afwezigheid</h1>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+    <p class="col-4">
+        <a asp-action="Create" class="btn btn-success btn-lg">+ Nieuw moment</a>
+    </p>
+</div>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                Dag
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
             </th>
@@ -27,20 +31,24 @@
     <tbody>
         @foreach (var item in Model.UnavailableMoments)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @item.StartTime.Day<br/>
+                    @item.StartTime.ToString("MMM")
+                </td>
+                <td>
+                    @item.StartTime.ToString("hh:mm")
+                </td>
+                <td>
+                    @item.EndTime.ToString("hh:mm")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Verwijder</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

@@ -7,7 +7,6 @@
         {
             UnavailableMoments = unavailableMoments;
         }
-        public DateTime Date { get; set; }
 
     }
 }

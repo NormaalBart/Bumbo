@@ -1,5 +1,4 @@
-﻿using BumboData.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.UnavailableMoments
@@ -17,6 +16,8 @@ namespace Bumbo.Models.UnavailableMoments
         public DateTime EndTime { get; set; }
 
         [Required]
-        public UnavailableMomentType Type { get; set; }
+        public string UnavailableMomentType { get; set; }
+
+        public string? Error { get; set; }
     }
 }
