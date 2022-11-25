@@ -35,13 +35,6 @@ window.onclick = function (event) {
 
 
 
-
-function getWidthOfbase(elem, hours) {
-    
-    let cell = document.querySelector('.roster-table-cell');
-    let width = cell.offsetWidth;
-
-    elem.offsetWidth = width * hours;
-
-   
+function{
+    $('.roster-table').DataTable().ajax.reload();
 }

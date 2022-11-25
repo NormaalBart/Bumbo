@@ -230,7 +230,7 @@ p {
 .roster-shift {
     position: absolute;
     top: 0px;
-    margin-left: -10px;
+    margin-left: 0px;
     z-index: 1001;
     background-color: #A9A9A9;
     border: solid;

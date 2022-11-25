@@ -149,6 +149,11 @@ namespace Bumbo.Models.RosterManager
             return 0;
         }
 
+
+        // These 2 methods return a percentage of the start and end time so the off set can be set in the frontend
+        // there's probably a better way of doing these, possibly by returning a time span
+        // and then calculating the percentages in the view. But for now this works perfectly fine
+        // No need to overcomplicate this.
         public int GetShiftStartPercentage(EmployeeRosterViewModel employee, int hour)
         {
             if (employee.PlannedShifts == null)
@@ -159,11 +164,32 @@ namespace Bumbo.Models.RosterManager
             if (shifts.Count > 0)
             {
                 // convert minutes into percentage of hour
-                int minute = shifts.First().StartTime.Minute;
-                return (minute / 60) * 100;
+                return this.CalculateMinutePercentage(shifts.First().StartTime.Minute);
 
             }
             return 0;
+        }
+
+        public int GetShiftEndPercentage(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return 0;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                // convert minutes into percentage of hour
+                return this.CalculateMinutePercentage(shifts.First().EndTime.Minute);
+
+            }
+            return 0;
+        }
+
+        private int CalculateMinutePercentage(double minute)
+        {
+            double shiftpercentage = (minute / 60) * 100;
+            return (int)Math.Floor(shiftpercentage);
         }
 
     }

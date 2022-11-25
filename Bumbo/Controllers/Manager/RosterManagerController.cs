@@ -22,7 +22,9 @@ namespace Bumbo.Controllers.Manager
         readonly private IPlannedShiftsRepository _shiftRepository;
         readonly private IUnavailableMomentsRepository _unavailableRepository;
         readonly private IPrognosesService _prognosesServices;
-        public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments, IPrognosesService prognosesService)
+        readonly private IDepartmentsRepository _departmentsRepository;
+        readonly private IBranchRepository _branchRepository;
+        public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts, IUnavailableMomentsRepository unavailableMoments, IPrognosesService prognosesService, IDepartmentsRepository departments, IBranchRepository branches)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -31,6 +33,8 @@ namespace Bumbo.Controllers.Manager
             _shiftRepository = plannedShifts;
             _unavailableRepository = unavailableMoments;
             _prognosesServices = prognosesService;
+            _departmentsRepository = departments;
+            _branchRepository = branches;
         }
 
 

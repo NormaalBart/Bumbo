@@ -91,20 +91,46 @@
 <script>
 
     // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
-    function getWidthOfbase(elem, hours, minuteperc) {
+    function getWidthOfbase(elem, hours, minutepercstart, minutepercend) {
 
+
+        // So what we do here is we get the normal width of the first cell in the table
+        // we'll use this as a template for the width.
+        // We calculate the final width of the div
+        // using the width of a normal cell, times the amount of hours.
+        // We then calculate the offset of the div, using the time percentages.
+        
 
         let cell = document.querySelector('.roster-table-cell');
         let width = cell.offsetWidth;
 
         let finalwidth = (width * hours);
-        let startoffset = (width * (minuteperc * 0.01));
-        
-        elem.style.width = finalwidth + 'px';
-        élem.style.left = -1 *(width * (minuteperc * 0.01));
+
+        // this is the offset of the div caused by any minutes in the shift.
+        let startoffset = (width * (minutepercstart * 0.01));
+        let endoffset = (width * (minutepercend * 0.01));
         
 
+        // We set the width of the div using the calculated values.
+        elem.style.width = finalwidth - startoffset + endoffset + 'px';
+
+        
+              // For some reason there's a 8 px weirdness going on.
+
+              // I can't find out why but this works.
+        startoffset = startoffset - 8;
+
+        // We move the div right using the minute percentages.
+        elem.style.marginLeft = startoffset + 'px';
+
+
     }
+
+
+    // Window resize event
+    window.addEventListener("resize", function () {
+        reloadroster();
+    });
 
 
 
@@ -127,9 +153,14 @@
                     <th class="border border-2 border-dark">Naam</th>
                     @for (int i = 0; i < 24; i++)
                     {
+                        if (i < 10)
+                    {
+                        <th class="border border-2 border-dark roster-table-header-cell">0:@i </th>
+                    }else{
+                        <th class="border border-2 border-dark roster-table-header-cell">:@i </th>
 
-                    <th class="border border-2 border-dark roster-table-header-cell">@i </th>
-                
+                    }
+                   
                     }
                     <th class="border border-2 border-dark"></th>
                 </tr>
@@ -164,11 +195,11 @@
                                     <div id="roster-start-div" class="roster-shift text-center" style="height: 100%;">
                                         @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName
                                         <script>
-
+                                            // gets the div above, and passes it to a function which then sets the div length based on the shift length.
                                             var divs = document.querySelectorAll('div');
                                             var above_div = divs[divs.length - 1];
 
-                                            getWidthOfbase(above_div, @Model.GetShiftLength(employee, i), @Model.GetShiftStartPercentage(employee, i));
+                                            getWidthOfbase(above_div, @Model.GetShiftLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
 
                                             </script>
                                     </div>
