@@ -203,7 +203,8 @@
                                 <td id="roster-start" class="roster-table-cell ">
                                  
                                     <div id="roster-start-div " class="roster-shift text-center" style="height: 100%;">
-                                        @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName
+                                        <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
+                                       
                                         <script>
                                             // gets the div above, and passes it to a function which then sets the div length based on the shift length.
                                             var divs = document.querySelectorAll('div');

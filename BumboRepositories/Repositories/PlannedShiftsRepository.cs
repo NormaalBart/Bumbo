@@ -26,12 +26,8 @@ namespace BumboRepositories.Repositories
 
         public double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate)
         {
-            // start of week, calculated by getting the difference between the date and monday.
-            int diff = DayOfWeek.Monday - currentDate.DayOfWeek;
-            if (diff > 0)
-                diff -= 7;
-            var startOfWeek = currentDate.AddDays(diff);
-            DateTime start = currentDate.GetMondayOfTheWeek();
+            // start of week
+            DateTime startOfWeek = currentDate.GetMondayOfTheWeek();
             // check if the employee has worked too much this week 
             var shiftsThisWeek = DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
             if (shiftsThisWeek.Count > 0)

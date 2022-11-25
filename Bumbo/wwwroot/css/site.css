@@ -232,7 +232,8 @@ p {
     top: 0px;
     margin-left: 0px;
     z-index: 1001;
-    background-color: #A9A9A9;
+    /*background color of a planned shift div*/
+    background: linear-gradient(to bottom right, #99ccff, #e6f2ff);
     border: solid;
     border-color: darkslategrey;
     border-width: 1px;
