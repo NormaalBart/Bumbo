@@ -105,6 +105,11 @@ namespace Bumbo.Controllers.Manager
 
             int maxHoursInWeekAllowed = 40; // TODO
 
+            // time is valid
+            if (plannedShift.StartTime > plannedShift.EndTime)
+            {
+                return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "eindtijd niet na de starttijd mag komen." });
+            }
             // overlapping shifts
             if (_shiftRepository.ShiftOverlapsWithOtherShifts(plannedShift))
             {
@@ -139,6 +144,11 @@ namespace Bumbo.Controllers.Manager
 
             int maxHoursInWeekAllowed = 40; // TODO
 
+            // time is valid
+            if (plannedShift.StartTime > plannedShift.EndTime)
+            {
+                return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "eindtijd niet na de starttijd mag komen." });
+            }
             // overlapping shifts
             if (_shiftRepository.ShiftOverlapsWithOtherShifts(plannedShift))
             {

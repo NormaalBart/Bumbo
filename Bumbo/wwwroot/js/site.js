@@ -17,6 +17,8 @@ var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on the button, open the modal
 btn.onclick = function () {
+    // This code is partially for the roster, as it checks for create and edit sections
+    // It then disables the edit section and enables the create.
     modal.style.display = "block";
     var createmodal = document.getElementById("createshiftmodal");
     createmodal.style.display = "block";

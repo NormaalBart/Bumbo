@@ -147,25 +147,19 @@
         listshifts.forEach(myFunction);
     });
 
-        
-
-
-
+    // When you click on a shift, this function is called.
+    // This sets the modal to be in edit mode.
+    // and sets the id of the shift.
     function onShiftClick(shiftinfo){
-        var editmodal = document.getElementById("modal");
-        editmodal.style.display = "block";
+        var modal = document.getElementById("modal");
+        modal.style.display = "block";
         var createmodal = document.getElementById("createshiftmodal");
         createmodal.style.display = "none";
         var editmodal = document.getElementById("editshiftmodal");
-        
+        editmodal.style.display = "block";
         
         document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
     }
-
-
-
-
-
 </script>
 
 

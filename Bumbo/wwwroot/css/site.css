@@ -187,6 +187,8 @@ p {
     background-color: grey !important;
 }
 
+
+/*This is the top header row which contains the time collumns*/
 .roster-table-header-cell {
     padding: 10px;
     background-color: grey !important;
@@ -212,14 +214,6 @@ p {
    
 }
 
-.roster-table-cell-planned {
-    width: 45px;
-    height: 45px;
-    padding: 10px;
-    border: 1px solid darkslategrey;
-    background-color: darkslategrey !important;
-}
-
 .roster-table-cell-closed{
     width: 45px;
     height: 45px;
@@ -228,6 +222,7 @@ p {
     background-color: lightslategrey !important;
 }
 
+/* Div which is the planned shift in the roster*/
 .roster-shift {
     position: absolute;
     top: 0px;
@@ -240,6 +235,7 @@ p {
     border-width: 1px;
 }
 
+/* Prevents planned shift div going everywhere */
 .roster-shift-containter {
     position: relative;
 }
