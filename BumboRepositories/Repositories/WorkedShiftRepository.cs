@@ -11,9 +11,9 @@ namespace BumboRepositories.Repositories
         {
         }
         
-        public IEnumerable<WorkedShift> GetAllApproved()
+        public IEnumerable<WorkedShift> GetAllApproved(int branchId)
         {
-            return DbSet.Where(s => s.Approved).ToList();
+            return DbSet.Where(s => s.Approved && s.BranchId == branchId).ToList();
         }
 
         public WorkedShift LastWorkedShiftWithNoEndTime(Employee employee)
@@ -23,16 +23,22 @@ namespace BumboRepositories.Repositories
                 .FirstOrDefault();
         }
 
-        public List<WorkedShift> GetWorkedShiftsInMonth(string employee, int year, int month)
+        public List<WorkedShift> GetWorkedShiftsInMonth(int branchId, string employeeId, int year, int month)
         {
             return DbSet.Include(i => i.Employee).Where(s =>
-                s.Employee.Id == employee && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
+                s.BranchId == branchId && employeeId == s.EmployeeId && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
         }
 
-        public List<WorkedShift> GetWorkedShiftsInMonth(int year, int month)
+        public List<WorkedShift> GetWorkedShiftsInMonth(int branchId, int year, int month)
         {
-            return DbSet.Include(i => i.Employee)
-                .Where(s => s.StartTime.Year == year && s.StartTime.Month == month).ToList();
+            return DbSet.Include(i => i.Employee).Where(s =>
+                s.BranchId == branchId && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
+        }
+
+        public void Import(List<WorkedShift> list)
+        {
+            DbSet.AddRange(list);
+            Context.SaveChanges();
         }
     }
 }

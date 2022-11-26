@@ -41,9 +41,6 @@ namespace BumboData.Migrations
                     b.Property<bool>("Inactive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ManagerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -56,8 +53,6 @@ namespace BumboData.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ManagerId");
 
                     b.ToTable("Branches");
 
@@ -190,6 +185,9 @@ namespace BumboData.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("ManagesBranchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -228,6 +226,8 @@ namespace BumboData.Migrations
 
                     b.HasIndex("DefaultBranchId");
 
+                    b.HasIndex("ManagesBranchId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -245,7 +245,7 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "ce19d8bf-569b-425d-9f0a-0a276359889f",
+                            ConcurrencyStamp = "d2acbf3f-d036-419a-a9a2-3b600593717a",
                             DefaultBranchId = 1,
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
@@ -256,13 +256,13 @@ namespace BumboData.Migrations
                             LastName = "Piet",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEL7EoGROpy+hf9MLK9HvJASJJkLz9nzjk+SQPXNglHjhCqTUj3iHqGfDwtLgKoltjw==",
+                            NormalizedUserName = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMhLmHfItvpJ4iRneBRJiYC4WNbOhV7DnEd1p05WZQjfinW62cn/CmI/u3uEvxmghQ==",
                             PhoneNumberConfirmed = false,
                             Postalcode = "1234AA",
-                            SecurityStamp = "7dbb85a8-2f28-4c84-8161-6054ebd4f7d0",
+                            SecurityStamp = "08e92cf7-1030-4e42-8abb-659601fdf881",
                             TwoFactorEnabled = false,
-                            UserName = "admin"
+                            UserName = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2"
                         },
                         new
                         {
@@ -270,7 +270,7 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "91f78210-57fa-449c-977b-4792e9754f3c",
+                            ConcurrencyStamp = "dffd73be-bc93-4385-8296-ccadccd635ee",
                             DefaultBranchId = 1,
                             Email = "manager@manager.com",
                             EmailConfirmed = true,
@@ -280,14 +280,15 @@ namespace BumboData.Migrations
                             Housenumber = "10",
                             LastName = "Piet",
                             LockoutEnabled = false,
+                            ManagesBranchId = 1,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
-                            NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAIUvOL4tP9lmhUz8uohPTRJfo6vFY6ZDJlCd4iWlOvwXn8wMOST04mouQ6QJ64S0Q==",
+                            NormalizedUserName = "3a792773-527d-4bb7-8319-6db070350d38",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDLx0FkXHJEHBgP85LHKwOyjbYgWvQjyIyiPAUXO8A/+3URtMmx9kYa8oVic+XHg5Q==",
                             PhoneNumberConfirmed = false,
                             Postalcode = "1234AA",
-                            SecurityStamp = "5e1900c7-3011-4b65-9bd1-66ff3620ccd9",
+                            SecurityStamp = "f8fb6fe2-204d-4893-82ec-57f6b84082a0",
                             TwoFactorEnabled = false,
-                            UserName = "manager"
+                            UserName = "3a792773-527d-4bb7-8319-6db070350d38"
                         },
                         new
                         {
@@ -295,7 +296,7 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "4f0bca4b-d492-4a2b-aec6-1388e93637ae",
+                            ConcurrencyStamp = "f36c94f7-8d1f-473d-819a-f25868a38aa7",
                             DefaultBranchId = 1,
                             Email = "medewerker@medewerker.com",
                             EmailConfirmed = true,
@@ -306,13 +307,13 @@ namespace BumboData.Migrations
                             LastName = "Piet",
                             LockoutEnabled = false,
                             NormalizedEmail = "MEDEWERKER@MEDEWERKER.COM",
-                            NormalizedUserName = "MEDEWERKER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIc49m81fV0LxA2QDE9Y+z9dzK8ATkdqRe0xhL/LN9rAgqhg30SYypdwQo/krALX8Q==",
+                            NormalizedUserName = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMOlYiKxVnGRKVf+iPMdNaZzOZnffb8Suz+7VzFUo0m97n0xU73z2tX303VpuaFH8g==",
                             PhoneNumberConfirmed = false,
                             Postalcode = "1234AA",
-                            SecurityStamp = "d467b96c-f9ff-4731-ae5e-530f298ed1aa",
+                            SecurityStamp = "cc50d2a2-3e96-4d46-ac33-92f239b5e972",
                             TwoFactorEnabled = false,
-                            UserName = "medewerker"
+                            UserName = "d916944e-c1aa-44d6-83a0-cb04c5734e6b"
                         },
                         new
                         {
@@ -320,7 +321,7 @@ namespace BumboData.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Birthdate = new DateTime(2004, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "0a9ace75-6bea-412d-a41d-cbbc4a476029",
+                            ConcurrencyStamp = "9545f802-f5e7-4708-a99c-9afa83012b8d",
                             DefaultBranchId = 1,
                             Email = "medewerker2@medewerker.com",
                             EmailConfirmed = true,
@@ -331,13 +332,13 @@ namespace BumboData.Migrations
                             LastName = "Jan",
                             LockoutEnabled = false,
                             NormalizedEmail = "MEDEWERKER2@MEDEWERKER.COM",
-                            NormalizedUserName = "MEDEWERKER2",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPZ8KJ1qk1XihWB0HtruuqWo1ZIVrp4OU+6xRMTRoeAtzbhiCEtOst4i4im6yLUeOw==",
+                            NormalizedUserName = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            PasswordHash = "AQAAAAEAACcQAAAAENhQWtC9CiEy0jGjDxauqESzgQm9Ghiuzx54cCzCe1pc1oXy+WRmZhPVABRv01PUTw==",
                             PhoneNumberConfirmed = false,
                             Postalcode = "1234AA",
-                            SecurityStamp = "a4d6aa01-b0e2-4303-9a69-3ffe28f33546",
+                            SecurityStamp = "DZ4QIASGBFUBIEZJFGH5VPV3POM2CCBF",
                             TwoFactorEnabled = false,
-                            UserName = "medewerker2"
+                            UserName = "1c5d93f8-2965-47a1-89f2-fc626e06949b"
                         });
                 });
 
@@ -497,50 +498,50 @@ namespace BumboData.Migrations
                         {
                             BranchId = 1,
                             DayOfWeek = 0,
-                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 23, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 23, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 1,
-                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 23, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 23, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 2,
-                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 23, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 23, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 3,
-                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 23, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 23, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 4,
-                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 23, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 23, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 5,
-                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 23, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 23, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 6,
-                            CloseTime = new DateTime(2022, 11, 21, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 11, 21, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 11, 23, 20, 0, 0, 0, DateTimeKind.Local),
+                            OpenTime = new DateTime(2022, 11, 23, 8, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -614,9 +615,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 1, 8, 47, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 1, 17, 32, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 1, 5, 30, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 1, 14, 48, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -624,9 +625,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 2, 14, 36, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 2, 22, 39, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 2, 3, 16, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 2, 11, 53, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -634,9 +635,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 3, 20, 22, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 3, 22, 1, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 3, 19, 26, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 3, 16, 50, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -644,9 +645,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 4, 3, 5, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 4, 15, 32, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 4, 2, 23, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 4, 10, 55, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -654,9 +655,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 5, 12, 3, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 11, 5, 1, 4, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 11, 5, 6, 58, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 5, 3, 26, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -664,9 +665,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 6, 15, 6, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 6, 22, 29, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 6, 10, 4, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 6, 15, 1, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -674,9 +675,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 7, 17, 45, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 7, 20, 46, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 7, 10, 34, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 7, 2, 16, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -684,9 +685,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 8, 10, 24, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 8, 16, 36, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 8, 2, 0, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 8, 9, 8, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -694,9 +695,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 9, 14, 2, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 9, 18, 43, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 9, 10, 4, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 9, 3, 51, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -704,9 +705,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 10, 14, 25, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 10, 20, 5, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 10, 12, 12, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 10, 13, 36, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -714,9 +715,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 11, 21, 26, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 11, 19, 12, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 11, 18, 48, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 11, 3, 38, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -724,9 +725,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 12, 13, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 12, 16, 47, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 12, 11, 3, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 12, 9, 38, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -734,9 +735,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 13, 17, 46, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 13, 15, 27, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 13, 10, 11, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 13, 14, 42, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -744,9 +745,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 14, 8, 23, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 14, 17, 55, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 14, 5, 47, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 14, 16, 46, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -754,9 +755,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 15, 11, 45, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 15, 18, 13, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 15, 10, 6, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 15, 10, 39, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -764,9 +765,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 16, 19, 29, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 16, 15, 37, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 16, 17, 52, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 16, 1, 36, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -774,9 +775,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 17, 7, 38, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 17, 15, 5, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 17, 6, 31, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 17, 4, 54, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -784,9 +785,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 18, 0, 40, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 18, 21, 28, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 18, 0, 25, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 18, 2, 35, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -794,9 +795,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 19, 13, 4, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 19, 19, 3, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 19, 10, 12, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 19, 13, 33, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -804,9 +805,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 20, 17, 25, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 20, 22, 22, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 20, 14, 35, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 20, 14, 56, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -814,9 +815,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 21, 4, 3, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 11, 21, 2, 33, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 11, 21, 12, 3, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 21, 5, 29, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -824,9 +825,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 22, 18, 44, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 22, 14, 6, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 22, 12, 2, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 22, 9, 49, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -834,9 +835,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 23, 19, 19, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 23, 14, 49, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 23, 5, 43, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 23, 8, 55, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -844,9 +845,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 24, 21, 21, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 24, 13, 3, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 24, 18, 32, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 24, 11, 10, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -854,9 +855,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 25, 16, 42, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 25, 22, 4, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 25, 16, 6, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 25, 16, 33, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -864,9 +865,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 26, 15, 43, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 26, 14, 33, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 26, 12, 40, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 26, 3, 48, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -874,9 +875,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 27, 15, 18, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 27, 18, 11, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 27, 8, 12, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 27, 13, 58, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -884,9 +885,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 28, 21, 0, 0, 0, DateTimeKind.Unspecified),
-                            Sick = false,
-                            StartTime = new DateTime(2022, 11, 28, 3, 2, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 11, 28, 22, 58, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 11, 28, 0, 30, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -894,9 +895,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 29, 21, 1, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 29, 22, 34, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 29, 12, 27, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 29, 13, 16, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -904,9 +905,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 11, 30, 12, 11, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 30, 22, 52, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 30, 0, 34, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 30, 6, 24, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -914,9 +915,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 1, 10, 21, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 1, 20, 10, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 1, 6, 38, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 1, 5, 7, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -924,9 +925,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 2, 17, 35, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 2, 11, 20, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 2, 10, 27, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 2, 10, 46, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -934,9 +935,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 3, 17, 1, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 3, 2, 11, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 3, 8, 51, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 3, 0, 40, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -944,9 +945,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 4, 21, 28, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 4, 18, 7, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 4, 9, 23, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 4, 11, 15, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -954,9 +955,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 5, 8, 11, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 5, 16, 52, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 5, 6, 20, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 5, 11, 38, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -964,9 +965,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 6, 17, 34, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 6, 10, 11, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 6, 11, 27, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 6, 5, 15, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -974,9 +975,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 7, 7, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 7, 14, 0, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 7, 3, 25, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 7, 9, 37, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -984,9 +985,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 8, 9, 49, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 8, 19, 26, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 8, 5, 14, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 8, 19, 9, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -994,9 +995,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 9, 18, 36, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 9, 22, 35, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 9, 9, 36, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 9, 16, 27, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1004,9 +1005,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 10, 12, 13, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 10, 20, 31, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 10, 1, 48, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 10, 12, 58, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1014,9 +1015,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 11, 20, 55, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 11, 15, 22, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 11, 9, 55, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 11, 0, 32, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1024,9 +1025,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 12, 2, 46, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 12, 11, 48, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 12, 0, 24, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 12, 6, 46, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1034,9 +1035,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 13, 20, 53, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 13, 14, 32, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 13, 14, 34, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 13, 10, 9, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1044,9 +1045,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 14, 22, 28, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 14, 10, 54, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 14, 11, 58, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 14, 4, 47, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1054,9 +1055,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 15, 19, 12, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 11, 15, 2, 44, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 11, 15, 15, 12, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 15, 3, 8, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1064,9 +1065,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 16, 20, 31, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 16, 11, 5, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 16, 6, 4, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 16, 10, 45, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1074,9 +1075,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 17, 21, 14, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 17, 12, 41, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 17, 18, 1, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 17, 2, 50, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1084,9 +1085,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 18, 21, 28, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 11, 18, 11, 8, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 11, 18, 10, 58, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 11, 18, 0, 33, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1094,9 +1095,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 19, 20, 44, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 19, 14, 47, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 19, 11, 12, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 19, 2, 16, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1104,9 +1105,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 20, 18, 45, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 20, 10, 17, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 20, 9, 23, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 20, 5, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1114,9 +1115,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 21, 10, 50, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 21, 21, 11, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 21, 5, 27, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 21, 16, 31, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1124,9 +1125,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 22, 11, 45, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 22, 21, 53, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 22, 6, 18, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 22, 17, 52, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1134,9 +1135,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 23, 10, 10, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 23, 21, 15, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 23, 6, 47, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 23, 13, 20, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1144,9 +1145,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 24, 8, 8, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 24, 6, 36, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 24, 5, 17, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 24, 6, 11, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1154,9 +1155,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 25, 17, 12, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 25, 19, 14, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 25, 1, 11, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 25, 18, 21, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1164,9 +1165,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 26, 8, 51, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 26, 22, 9, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 26, 1, 41, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 26, 11, 39, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1174,9 +1175,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 27, 22, 9, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 27, 22, 2, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 27, 12, 11, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 27, 1, 8, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1184,9 +1185,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 28, 7, 5, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 28, 13, 50, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 28, 2, 41, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 28, 0, 30, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1194,9 +1195,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 29, 8, 24, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 29, 17, 49, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 29, 3, 50, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 29, 2, 9, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1204,9 +1205,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 11, 30, 14, 38, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 11, 30, 13, 43, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 11, 30, 12, 22, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 11, 30, 4, 10, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1214,9 +1215,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 1, 16, 28, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 1, 11, 21, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 1, 6, 53, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 1, 4, 23, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1224,9 +1225,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 2, 17, 32, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 2, 17, 22, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 2, 2, 49, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 2, 8, 46, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1234,9 +1235,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 3, 18, 21, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 3, 13, 2, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 3, 15, 22, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 3, 9, 5, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1244,9 +1245,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 4, 17, 54, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 4, 16, 27, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 4, 14, 49, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 4, 6, 41, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1254,9 +1255,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 5, 22, 28, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 5, 20, 24, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 5, 12, 32, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 5, 16, 24, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1264,9 +1265,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 6, 15, 20, 0, 0, DateTimeKind.Unspecified),
-                            Sick = false,
-                            StartTime = new DateTime(2022, 10, 6, 15, 3, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 6, 13, 58, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 6, 11, 44, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1274,9 +1275,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 7, 21, 9, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 7, 22, 26, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 7, 15, 9, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 7, 10, 9, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1284,9 +1285,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 8, 13, 32, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 8, 22, 51, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 8, 13, 9, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 8, 18, 3, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1294,9 +1295,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 9, 21, 25, 0, 0, DateTimeKind.Unspecified),
-                            Sick = false,
-                            StartTime = new DateTime(2022, 10, 9, 17, 36, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 9, 22, 40, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 9, 13, 5, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1304,9 +1305,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 10, 6, 29, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 10, 21, 30, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 10, 5, 33, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 10, 17, 41, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1314,9 +1315,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 11, 8, 35, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 11, 19, 46, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 11, 5, 32, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 11, 10, 22, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1324,9 +1325,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 12, 17, 47, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 12, 9, 4, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 12, 8, 37, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 12, 8, 31, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1334,9 +1335,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 13, 11, 24, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 13, 20, 38, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 13, 5, 13, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 13, 18, 45, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1344,9 +1345,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 14, 20, 41, 0, 0, DateTimeKind.Unspecified),
-                            Sick = false,
-                            StartTime = new DateTime(2022, 10, 14, 16, 33, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 14, 17, 55, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 14, 12, 37, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1354,9 +1355,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 15, 6, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 15, 16, 15, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 15, 3, 58, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 15, 10, 31, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1364,9 +1365,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 16, 11, 36, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 10, 16, 4, 20, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 16, 16, 57, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 16, 11, 36, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1374,9 +1375,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 17, 12, 7, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 17, 16, 40, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 17, 11, 3, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 17, 13, 58, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1384,9 +1385,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 18, 20, 7, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 18, 15, 55, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 18, 19, 1, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 18, 1, 37, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1394,9 +1395,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 19, 17, 20, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 19, 20, 4, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 19, 4, 14, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 19, 2, 46, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1404,9 +1405,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 20, 10, 27, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 20, 20, 13, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 20, 7, 10, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 20, 18, 46, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1414,9 +1415,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 21, 12, 5, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 21, 15, 28, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 21, 5, 42, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 21, 11, 12, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1424,9 +1425,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 22, 13, 16, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 22, 10, 4, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 22, 2, 11, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 22, 9, 9, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1434,9 +1435,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 23, 22, 45, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 23, 20, 56, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 23, 19, 44, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 23, 19, 14, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1444,9 +1445,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 24, 4, 23, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 24, 20, 35, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 24, 1, 8, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 24, 17, 23, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1454,9 +1455,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 25, 19, 27, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 25, 20, 37, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 25, 19, 24, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 25, 18, 22, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1464,9 +1465,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 26, 17, 6, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 26, 21, 1, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 26, 6, 5, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 26, 18, 6, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1474,9 +1475,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 27, 22, 11, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 27, 10, 20, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 27, 19, 36, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 27, 2, 31, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1484,9 +1485,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 28, 7, 19, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 28, 22, 15, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 28, 3, 25, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 28, 12, 18, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1494,9 +1495,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 29, 12, 8, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 29, 21, 0, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 29, 11, 38, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 29, 16, 24, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1504,9 +1505,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 30, 15, 19, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 30, 15, 3, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 30, 14, 37, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 30, 4, 23, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1514,9 +1515,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
-                            EndTime = new DateTime(2022, 10, 31, 5, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 31, 14, 56, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 31, 3, 37, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 31, 13, 13, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1524,9 +1525,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 1, 18, 23, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 1, 18, 10, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 1, 12, 49, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 1, 15, 37, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1534,9 +1535,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 2, 21, 6, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 10, 2, 5, 36, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 2, 17, 56, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 2, 16, 15, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1544,9 +1545,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 3, 21, 44, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 10, 3, 17, 32, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 3, 16, 40, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 3, 14, 28, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1554,9 +1555,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 4, 20, 34, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 4, 19, 7, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 4, 10, 45, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 4, 2, 35, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1564,9 +1565,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 5, 12, 41, 0, 0, DateTimeKind.Unspecified),
-                            Sick = false,
-                            StartTime = new DateTime(2022, 10, 5, 7, 26, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 5, 18, 33, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 5, 4, 55, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1574,9 +1575,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 6, 15, 49, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 6, 12, 12, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 6, 6, 56, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 6, 12, 5, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1584,9 +1585,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 7, 16, 36, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 7, 8, 20, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 7, 4, 13, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 7, 5, 55, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1594,9 +1595,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 8, 21, 40, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 8, 10, 25, 0, 0, DateTimeKind.Unspecified),
                             Sick = true,
-                            StartTime = new DateTime(2022, 10, 8, 12, 19, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 8, 7, 1, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1604,9 +1605,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 9, 15, 31, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 9, 21, 31, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 9, 13, 42, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 9, 6, 45, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1614,9 +1615,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 10, 16, 45, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 10, 2, 3, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 10, 11, 24, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 10, 1, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1624,9 +1625,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 11, 21, 28, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 11, 16, 43, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 11, 12, 42, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 11, 8, 24, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1634,9 +1635,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 12, 18, 17, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 12, 18, 7, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 12, 15, 14, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 12, 0, 23, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1644,9 +1645,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 13, 16, 11, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 13, 16, 44, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 13, 0, 41, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 13, 15, 20, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1654,9 +1655,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 14, 10, 24, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 14, 18, 7, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 14, 5, 7, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 14, 16, 14, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1664,9 +1665,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 15, 18, 34, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 15, 21, 22, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 15, 18, 7, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 15, 8, 32, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1674,9 +1675,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 16, 18, 30, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 16, 12, 45, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 16, 7, 53, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 16, 10, 38, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1684,9 +1685,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 17, 14, 4, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 17, 20, 24, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 17, 7, 10, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 17, 19, 39, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1694,9 +1695,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 18, 19, 4, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 18, 17, 36, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 18, 17, 31, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 18, 17, 21, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1704,9 +1705,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 19, 18, 24, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 19, 16, 45, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 19, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 19, 15, 11, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1714,9 +1715,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 20, 9, 2, 0, 0, DateTimeKind.Unspecified),
-                            Sick = true,
-                            StartTime = new DateTime(2022, 10, 20, 3, 43, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 20, 16, 47, 0, 0, DateTimeKind.Unspecified),
+                            Sick = false,
+                            StartTime = new DateTime(2022, 10, 20, 6, 35, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1724,9 +1725,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 21, 15, 4, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 21, 18, 45, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 21, 5, 58, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 21, 16, 15, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1734,9 +1735,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 22, 20, 4, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 22, 4, 23, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 22, 11, 40, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 22, 4, 14, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1744,9 +1745,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 23, 17, 14, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 23, 11, 9, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 23, 13, 41, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 23, 4, 53, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1754,9 +1755,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 24, 15, 52, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 24, 11, 28, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 24, 10, 22, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 24, 2, 39, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1764,9 +1765,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 25, 5, 36, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 25, 15, 19, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 25, 5, 13, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 25, 13, 13, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1774,9 +1775,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 26, 20, 19, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 26, 16, 8, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 26, 18, 35, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 26, 15, 9, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1784,9 +1785,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 27, 13, 3, 0, 0, DateTimeKind.Unspecified),
-                            Sick = false,
-                            StartTime = new DateTime(2022, 10, 27, 12, 51, 0, 0, DateTimeKind.Unspecified)
+                            EndTime = new DateTime(2022, 10, 27, 11, 33, 0, 0, DateTimeKind.Unspecified),
+                            Sick = true,
+                            StartTime = new DateTime(2022, 10, 27, 9, 48, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1794,9 +1795,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 28, 21, 29, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 28, 14, 17, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 28, 12, 58, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 28, 12, 51, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1804,9 +1805,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 29, 13, 57, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 29, 19, 43, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 29, 5, 38, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 29, 18, 25, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1814,9 +1815,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 30, 16, 34, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 30, 11, 53, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 30, 11, 55, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 30, 9, 20, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -1824,9 +1825,9 @@ namespace BumboData.Migrations
                             Approved = true,
                             BranchId = 1,
                             EmployeeId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
-                            EndTime = new DateTime(2022, 10, 31, 17, 12, 0, 0, DateTimeKind.Unspecified),
+                            EndTime = new DateTime(2022, 10, 31, 2, 6, 0, 0, DateTimeKind.Unspecified),
                             Sick = false,
-                            StartTime = new DateTime(2022, 10, 31, 16, 32, 0, 0, DateTimeKind.Unspecified)
+                            StartTime = new DateTime(2022, 10, 31, 1, 42, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -1875,21 +1876,21 @@ namespace BumboData.Migrations
                         new
                         {
                             Id = "administrator",
-                            ConcurrencyStamp = "58e1b38c-aa1b-4ba6-80a7-4930fcc6cbb7",
+                            ConcurrencyStamp = "1181a7d7-f073-4d05-b928-cc80f6f5403",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "manager",
-                            ConcurrencyStamp = "189c9bed-50c7-4710-a9d7-cf7068fe4a6f",
+                            ConcurrencyStamp = "9561f2c3-10ae-4fcf-bba4-2a0fea44eb0f",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "employee",
-                            ConcurrencyStamp = "6f3b49c2-f806-4079-adca-12854f2985b1",
+                            ConcurrencyStamp = "7d959d94-90d6-4597-b435-609d47ad20a3",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         });
@@ -1996,6 +1997,11 @@ namespace BumboData.Migrations
                         {
                             UserId = "d916944e-c1aa-44d6-83a0-cb04c5734e6b",
                             RoleId = "employee"
+                        },
+                        new
+                        {
+                            UserId = "1c5d93f8-2965-47a1-89f2-fc626e06949b",
+                            RoleId = "employee"
                         });
                 });
 
@@ -2016,16 +2022,6 @@ namespace BumboData.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("BumboData.Models.Branch", b =>
-                {
-                    b.HasOne("BumboData.Models.Employee", "Manager")
-                        .WithMany("ManagedBranches")
-                        .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
@@ -2055,7 +2051,13 @@ namespace BumboData.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("BumboData.Models.Branch", "ManagesBranch")
+                        .WithMany("Managers")
+                        .HasForeignKey("ManagesBranchId");
+
                     b.Navigation("DefaultBranch");
+
+                    b.Navigation("ManagesBranch");
                 });
 
             modelBuilder.Entity("BumboData.Models.OpeningHoursOverride", b =>
@@ -2229,6 +2231,8 @@ namespace BumboData.Migrations
                 {
                     b.Navigation("DefaultEmployees");
 
+                    b.Navigation("Managers");
+
                     b.Navigation("OpeningHoursOverrides");
 
                     b.Navigation("Prognoses");
@@ -2240,8 +2244,6 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
                 {
-                    b.Navigation("ManagedBranches");
-
                     b.Navigation("PlannedShifts");
 
                     b.Navigation("UnavailableMoments");

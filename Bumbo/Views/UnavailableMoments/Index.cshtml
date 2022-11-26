@@ -4,9 +4,13 @@
     ViewData["Title"] = "Afwezigheid";
 }
 <div class="row">
-    <h1 class="col-8">Afwezigheid</h1>
-
-    <p class="col-4">
+    <h1 class="col-5">Afwezigheid</h1>
+    
+    <div class="col-3">
+        <!-- Trigger/Open The Modal -->
+        <button id="openPrognoseModalbtn">Schoolrooster kopieren tussen dagen</button>
+    </div>
+    <p class="col-3">
         <a asp-action="Create" class="btn btn-success btn-lg">+ Nieuw moment</a>
     </p>
 </div>
@@ -52,3 +56,30 @@
         }
     </tbody>
 </table>
+
+
+<div id="prognoseModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content text-center prognosis-textarea">
+        <span class="close position-absolute">&times;</span>
+        <label> </label>
+        <div class="m-3 text-center align-content-center">
+            <form asp-action="CopyFromDay">
+                <h2>Kopieer schoolrooster van dag</h2>
+                <div class="row">
+                    <span class="col">Dag</span>
+                    <input asp-for="CopyFrom" class="form-control" asp-format="{0:yyyy-MM-dd}" />
+                    <span asp-validation-for="CopyFrom" class="text-danger"></span>
+                </div>
+                <span>Kopieren naar</span>
+
+                <div class="row">
+                    <span class="col">Week</span>
+                    <input asp-for="CopyTo" class="form-control" asp-format="{0:yyyy-MM-dd}" />
+                    <span asp-validation-for="CopyTo" class="text-danger"></span>
+                </div>
+                <input type="submit" value="Kopiëren" class="btn btn-success btn-sm " />
+            </form>
+        </div>
+    </div>
+</div>

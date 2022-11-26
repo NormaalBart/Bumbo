@@ -100,5 +100,34 @@ namespace Bumbo.Controllers.Employees
             if (lijstje.Count() > 0) { return "Je hebt deze tijd al eerder ingevuld."; }
             return null;
         }
+
+        public async Task<IActionResult> CopyFromDay(UnavailableMomentsListViewModel unavailableMomentViewModel)
+        {
+            ModelState.Clear();
+            TryValidateModel(unavailableMomentViewModel);
+            if (ModelState.IsValid)
+            {
+                List<UnavailableMoment> newMoments = new List<UnavailableMoment>();
+                var oldMoments = _unavailableMomentsRepository.GetAll(_userManager.GetUserId(User))
+                    .Where(e => e.StartTime.Date == unavailableMomentViewModel.CopyFrom.Date).ToList();
+                var diff = unavailableMomentViewModel.CopyTo - unavailableMomentViewModel.CopyFrom;
+                foreach (var moment in oldMoments)
+                {
+                    var newMoment = new UnavailableMoment();
+                    DateTime? newStartTime = moment.StartTime + diff;
+                    if (newStartTime != null) newMoment.StartTime = (DateTime)newStartTime;
+                    DateTime? newEndTime = moment.EndTime + diff;
+                    if (newEndTime != null) newMoment.EndTime = (DateTime)newEndTime;
+                    newMoment.Employee = await _userManager.GetUserAsync(User);
+                    newMoment.Type = moment.Type;
+                    newMoments.Add(newMoment);
+                }
+                newMoments.ForEach(e =>
+                {
+                    if (UnavailableMomentValid(e) == null) _unavailableMomentsRepository.Create(e);
+                });
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

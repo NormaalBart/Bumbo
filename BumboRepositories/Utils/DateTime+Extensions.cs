@@ -24,9 +24,6 @@ public static class DateTime_Extensions
         var startOfWeek = currentDate.AddDays(diff);
         return startOfWeek;
     }
-
-
-
 }
 
 public static class OtherUtils
