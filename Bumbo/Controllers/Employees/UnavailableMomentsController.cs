@@ -102,7 +102,7 @@ namespace Bumbo.Controllers.Employees
                 return "Start tijd kan niet na de eindtijd zijn.";
             }
 
-            var overlappingMoments = _unavailableMomentsRepository.getOverlappingMoments(unavailableMoment);
+            var overlappingMoments = _unavailableMomentsRepository.GetOverlappingMoments(unavailableMoment);
             if (overlappingMoments.Count() > 0)
             {
                 return "Je hebt deze tijd al eerder ingevuld.";

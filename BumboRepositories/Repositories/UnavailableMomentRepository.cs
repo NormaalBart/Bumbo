@@ -15,7 +15,7 @@ namespace BumboRepositories.Repositories
         {
             return DbSet.Where(e => e.Employee.Id == employeeId).ToList();
         }
-        public IEnumerable<UnavailableMoment> getOverlappingMoments(UnavailableMoment unavailableMoment)
+        public IEnumerable<UnavailableMoment> GetOverlappingMoments(UnavailableMoment unavailableMoment)
         {
             return DbSet.Where(u=>unavailableMoment.Employee.Id == u.Employee.Id)
                 .Where(e => (unavailableMoment.StartTime < e.EndTime &&
