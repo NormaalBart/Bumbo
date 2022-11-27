@@ -182,17 +182,24 @@ p {
 
 /*Rooster manager*/
 
-.roster-table-employee-cell {
 
+
+.roster-table-employee-cell {
     background-color: grey !important;
+    width: 30px;
+    height: 45px;
 }
 
 
 /*This is the top header row which contains the time collumns*/
 .roster-table-header-cell {
-    padding: 10px;
     background-color: grey !important;
-    width: auto;
+    white-space: nowrap;
+    font-size: 9px;
+}
+
+.roster-body {
+    width: 100%;
 
 }
 
@@ -201,17 +208,19 @@ p {
 }
 
 .roster-table-cell {
-    width: 45px;
     height: 45px;
     padding: 10px;
     border: 1px solid darkgrey;
     background-color: lightgray;
 }
 
-.roster-table{
+.roster-table {
     background-color: dimgray;
-    position:relative;
-   
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+
+
 }
 
 .roster-table-cell-closed{
@@ -238,6 +247,7 @@ p {
 /* Prevents planned shift div going everywhere */
 .roster-shift-containter {
     position: relative;
+
 }
 
 

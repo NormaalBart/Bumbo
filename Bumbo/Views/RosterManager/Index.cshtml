@@ -1,7 +1,10 @@
 ﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
 
+<body class="roster-body">
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
+
+
 
 <!-- if modelstate that returned is not valid, say that saving failed-->
 @if (Model.ErrorMessage != null)
@@ -129,21 +132,24 @@
 
               // I can't find out why but this works.
         startoffset = startoffset - 8;
+        
 
         // We move the div right using the minute percentages.
         elem.style.marginLeft = startoffset + 'px';
 
-        elem.add
+        
     }
 
 
-    function myFunction(shift){
+    function resize(shift){
         getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
     }
 
+
+
     // Everytime the screen is resized, we resize every shift that's in the list along with it.
     window.addEventListener("resize", function () {
-        listshifts.forEach(myFunction);
+        listshifts.forEach(resize);
         console.log(screen.width);
     });
 
@@ -182,18 +188,18 @@
 </div>
 
 
-<div>
+<div class="table-responsive-sm">
 
         <!--table, 24 long horizontal -->
     <table class="table roster-table table-hover" style="background-color: white;">
             <thead>
                 <tr class="">
-                <th class="border border-2 border-dark roster-table-employee-cell">Naam</th>
+                <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Naam</th>
                     @*Important note: The text in the header blocks must be equal characters long.*@
                     @for (int i = 0; i < 24; i++)
                     {
      
-                    <th class="small border border-2 border-dark roster-table-header-cell">@Model.GetHeaderTimeString(i) </th>
+                        <th class="small border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
                    
                     }
                 </tr>
@@ -261,6 +267,7 @@
 
                             }else{
                                 <td class="roster-table-cell">
+                                    
                                 </td>
                                 }
 
@@ -398,3 +405,4 @@
 
 
 
+</body>
