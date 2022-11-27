@@ -27,7 +27,7 @@ public abstract class CAORuleAppliesToAge: ICAORule
     public bool AppliesTo(Employee employee)
     {
         // Check if age matches range
-        return _range.Start.Value >= employee.Birthdate.Age() && 
+        return employee.Birthdate.Age() >= _range.Start.Value  && 
                employee.Birthdate.Age() <= _range.End.Value;
     }
 

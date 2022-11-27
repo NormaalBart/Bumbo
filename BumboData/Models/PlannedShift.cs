@@ -16,10 +16,16 @@ public class PlannedShift: IEntity
 
     [Required]
     public Employee Employee { get; set; }
+    
+    public string EmployeeId { get; set; }
 
     [Required]
     public Department Department { get; set; }
     
+    public int DepartmentId { get; set; }
+
     [Required]
     public Branch Branch { get; set; }
+    
+    public int BranchId { get; set; }
 }

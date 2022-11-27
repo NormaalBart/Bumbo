@@ -1,6 +1,5 @@
 ﻿using BumboData.Enums;
 using BumboData.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace BumboData.Models;
 
@@ -11,10 +10,12 @@ public class UnavailableMoment : IEntity
 
     [Required]
     public Employee Employee { get; set; }
+    
+    public string EmployeeId { get; set; }
 
     [Required]
     public DateTime StartTime { get; set; }
-
+    
     [Required]
     public DateTime EndTime { get; set; }
 
