@@ -23,18 +23,12 @@ public class ExportController : Controller
         IWorkedShiftRepository workedShiftRepository,
         IHourExportService hourExportService,
         UserManager<Employee> userManager,
-        ICAOService service,
-        IImportService importService,
-        IPlannedShiftsRepository plannedShiftsRepository)
+        IImportService importService)
     {
         _workedShiftRepository = workedShiftRepository;
         _hourExportService = hourExportService;
         _userManager = userManager;
         _importService = importService;
-        
-        var val = service.VerifyPlannedShiftsWeek(plannedShiftsRepository.GetShiftsByWeek(1, 2021, 34));
-
-        val = val;
     }
 
     public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery,
