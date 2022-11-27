@@ -38,7 +38,7 @@ namespace Bumbo.Controllers.Employees
             UnavailableMomentsViewModel unAvailableMoments = new UnavailableMomentsViewModel();
             unAvailableMoments.StartTime = DateTime.Now;
             unAvailableMoments.EndTime = DateTime.Now.AddHours(5);
-            unAvailableMoments.Type = UnavailableMomentType.OTHER;
+            unAvailableMoments.Type = UnavailableMomentType.Other;
             return View(unAvailableMoments);
         }
 

@@ -1,6 +1,11 @@
-﻿namespace BumboData.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BumboData.Enums;
 
 public enum UnavailableMomentType
 {
-    SCHOOL, OTHER
+    [Display(Name = "School")]
+    School, 
+    [Display(Name = "Anders")]
+    Other
 }
