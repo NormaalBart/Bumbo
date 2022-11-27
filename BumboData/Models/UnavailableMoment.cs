@@ -1,13 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BumboData.Enums;
 using BumboData.Interfaces;
 
 namespace BumboData.Models;
 
-public class UnavailableMoment: IEntity
+public class UnavailableMoment : IEntity
 {
     [Key]
     public int Id { get; set; }
-    
+
     [Required]
     public Employee Employee { get; set; }
     

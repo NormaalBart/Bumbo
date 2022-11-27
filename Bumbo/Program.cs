@@ -20,10 +20,11 @@ namespace Bumbo
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(typeof(MapperServiceProfile));
-            
+
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IPrognosisRepository, PrognosisRepository>();
@@ -34,7 +35,6 @@ namespace Bumbo
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
             builder.Services.AddScoped<IStandardRepository, StandardRepository>();
             builder.Services.AddScoped<IPrognosesService, PrognosesService>();
-
             builder.Services.AddScoped<IHourExportService, HourExportService>();
             builder.Services.AddScoped<ICAOService, DutchCAOService>();
             builder.Services.AddScoped<IImportService, ImportService>();
