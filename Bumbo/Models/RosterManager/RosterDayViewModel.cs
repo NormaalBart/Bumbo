@@ -19,7 +19,10 @@ namespace Bumbo.Models.RosterManager
         [DisplayName("VakkenVullers Afdeling")]
         public double StockersPrognose { get; set; }
         
-        public List<EmployeeRosterViewModel> Employees { get; set; }
+        // All employees who are already rostered.
+        public List<EmployeeRosterViewModel> RosteredEmployees { get; set; }
+        // all employees who are available to be chosen when planning a new shift.
+        public List<EmployeeRosterViewModel> AvailableEmployees { get; set; }
 
         // selected stuff for creating a new shift
         public int SelectedEmployeeId { get; set; }
@@ -39,7 +42,8 @@ namespace Bumbo.Models.RosterManager
 
         public RosterDayViewModel()
         {
-            Employees = new List<EmployeeRosterViewModel>();
+            RosteredEmployees = new List<EmployeeRosterViewModel>();
+            AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
 
 

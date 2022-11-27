@@ -51,13 +51,17 @@ namespace Bumbo.Controllers.Manager
             DateTime date = dateonly.ToDateTime(new TimeOnly(0,0,0));
             RosterDayViewModel viewModel = new RosterDayViewModel();
             viewModel.Date = date;
-            var employeeList = _employeeRepository.GetList();
-            var e = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(employeeList);
-            viewModel.Employees = e.ToList();
+            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList());
+            
 
-            foreach (var emp in viewModel.Employees)
+            foreach (var emp in employeeList)
             {
                 emp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetShiftsOnDayForEmployeeOnDate(date, emp.Id)).ToList();
+                if (emp.PlannedShifts.Count > 0)
+                {
+                    viewModel.RosteredEmployees.Add(emp);
+                }
+                viewModel.AvailableEmployees.Add(emp);
             }
 
             var employee = await _userManager.GetUserAsync(User);
