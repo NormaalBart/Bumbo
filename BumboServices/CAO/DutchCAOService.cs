@@ -6,12 +6,10 @@ using BumboServices.Interface;
 
 namespace BumboServices.CAO;
 
-public class DutchCAOService : ICAOService
+public class DutchCAOService : BaseCAOService
 {
-    private readonly List<ICAORule> _appliedRules;
-
     public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository,
-        IWorkedShiftRepository workedShiftRepository)
+        IPlannedShiftsRepository plannedShiftsRepository)
     {
         // Sets up all CAO rules of the dutch CAO
         // All < 16 year rules
@@ -39,7 +37,7 @@ public class DutchCAOService : ICAOService
             // - Niet meer dan 40 uur gemiddeld over een periode van 4 weken.
             // niet meer dan 40 uur gemiddeld per week ???
             // TODO: Navragen
-            new AvgWorkHoursWeek(otherRange, 40.0, 4, workedShiftRepository)
+            new AvgWorkHoursWeek(otherRange, 40.0, 4, plannedShiftsRepository)
         };
 
         var generalRules = new List<ICAORule>()
@@ -50,39 +48,8 @@ public class DutchCAOService : ICAOService
             new MaxWorkHours(new Range(0, int.MaxValue), 60.0, MaxWorkHoursTimeframe.Week)
         };
 
-        _appliedRules = below16Rules;
+        _appliedRules.AddRange(below16Rules);
         _appliedRules.AddRange(otherRules);
         _appliedRules.AddRange(generalRules);
-    }
-
-    /*
-     * Returns shift that causes error, and the rule that the error originates from. If the dictionary is empty the planned shifts are valid according to the CAO rules.
-     */
-    public Dictionary<ICAORule, IEnumerable<PlannedShift>> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
-    {
-        // The given shifts should be all in the same month.
-        var weekNum = plannedShifts.First().StartTime.GetWeekNumber();
-        if (plannedShifts.Any(w => w.StartTime.GetWeekNumber() != weekNum))
-        {
-            // Not all shifts given are in the same week, this is not supported.
-            throw new InvalidDataException();
-        }
-
-        // Group shifts by employee
-        var grouped = plannedShifts.GroupBy(s => s.Employee).ToList();
-
-        // Sum up all rule invalid shifts
-        var res = grouped.SelectMany(g =>
-        {
-            // For each employee, go through all rules.
-            return _appliedRules.Where(r => r.AppliesTo(g.Key))
-                .Select(r => (r.GetInvalidShifts(g.ToList()), r))
-                .Where(s => s.Item1.Count != 0).ToList();
-        }).ToList();
-
-        // Convert to dictionary for easy readability.
-        return res.GroupBy(s => s.r)
-            .Select(g => (g.Key, g.SelectMany(g => g.Item1)))
-            .ToDictionary(s => s.Key, s => s.Item2);
     }
 }

@@ -40,12 +40,5 @@ namespace BumboRepositories.Repositories
             DbSet.AddRange(list);
             Context.SaveChanges();
         }
-
-        // Returns all worked shifts found in between timestamps.
-        public List<WorkedShift> GetWorkedShiftsInBetween(int branchId, string employeeId, DateTime from, DateTime until)
-        {
-            return DbSet.Where(s => s.BranchId == branchId && s.EmployeeId == employeeId
-                                                           && s.StartTime >= from && s.EndTime <= until).ToList();
-        }
     }
 }

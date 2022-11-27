@@ -9,8 +9,5 @@ namespace BumboData.Interfaces.Repositories
         List<WorkedShift> GetWorkedShiftsInMonth(int branchId, string employee, int year, int month);
         List<WorkedShift> GetWorkedShiftsInMonth(int branchId, int year, int month);
         void Import(List<WorkedShift> list);
-
-        public List<WorkedShift> GetWorkedShiftsInBetween(int branchId, string employeeId, DateTime from,
-            DateTime until);
     }
 }
