@@ -16,9 +16,9 @@ namespace BumboRepositories.Repositories
         }
         public IEnumerable<UnavailableMoment> getOverlappingMoments(UnavailableMoment unavailableMoment)
         {
-            return GetAll(unavailableMoment.Employee.Id).Where(e => e.StartTime <= unavailableMoment.StartTime && e.EndTime >= unavailableMoment.StartTime
-                || e.StartTime >= unavailableMoment.StartTime && e.EndTime <= unavailableMoment.StartTime
-                || e.StartTime >= unavailableMoment.StartTime && e.EndTime <= unavailableMoment.EndTime);
+            return DbSet.Where(u=>unavailableMoment.Employee.Id == u.Employee.Id)
+                .Where(e => (unavailableMoment.StartTime < e.EndTime &&
+                            e.StartTime < unavailableMoment.EndTime)).ToList();
         }
 
         public bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime)
