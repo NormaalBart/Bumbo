@@ -6,9 +6,9 @@ using Bumbo.Models.EmployeeManager.Manager;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
+using Bumbo.Models.UnavailableMoments;
 using BumboData.Models;
 using BumboRepositories.Utils;
-using BumboServices.Import;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bumbo.Models
@@ -56,6 +56,10 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DepartmentId))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.DepartmentName));
             CreateMap<PlannedShift, ShiftViewModel>();
+
+            CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
+            CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
+
             CreateMap<Branch, BranchViewModel>();
             CreateMap<BranchViewModel, Branch>();
 
