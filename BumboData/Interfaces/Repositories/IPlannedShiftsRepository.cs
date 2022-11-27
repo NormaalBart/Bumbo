@@ -9,6 +9,8 @@ namespace BumboData.Interfaces.Repositories
         IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId);
         public List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week);
         public void Import(List<PlannedShift> list);
-        public List<PlannedShift> GetPlannedShiftsInBetween(int branchId, string employeeId, DateTime from, DateTime until)
+
+        public List<PlannedShift> GetPlannedShiftsInBetween(int branchId, string employeeId, DateTime from,
+            DateTime until);
     }
 }

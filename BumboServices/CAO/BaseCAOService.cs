@@ -7,7 +7,7 @@ namespace BumboServices.CAO;
 
 public abstract class BaseCAOService: ICAOService
 {
-    protected readonly List<ICAORule> _appliedRules;
+    protected readonly List<ICAORule> _appliedRules = new List<ICAORule>();
 
     /*
      * Returns shift that causes error, and the rule that the error originates from. If the dictionary is empty the planned shifts are valid according to the CAO rules.
