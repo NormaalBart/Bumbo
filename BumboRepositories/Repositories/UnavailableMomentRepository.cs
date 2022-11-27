@@ -6,8 +6,19 @@ namespace BumboRepositories.Repositories
 {
     public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnavailableMomentsRepository
     {
-        public UnavailableMomentRepository(BumboContext context): base(context)
+        public UnavailableMomentRepository(BumboContext context) : base(context)
         {
+        }
+
+        public IEnumerable<UnavailableMoment> GetAll(string employeeId)
+        {
+            return DbSet.Where(e => e.Employee.Id == employeeId).ToList();
+        }
+        public IEnumerable<UnavailableMoment> getOverlappingMoments(UnavailableMoment unavailableMoment)
+        {
+            return DbSet.Where(u=>unavailableMoment.Employee.Id == u.Employee.Id)
+                .Where(e => (unavailableMoment.StartTime < e.EndTime &&
+                            e.StartTime < unavailableMoment.EndTime)).ToList();
         }
 
         public bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime)

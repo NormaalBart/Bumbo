@@ -1,0 +1,35 @@
+﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsViewModel
+
+@{
+    ViewData["Title"] = "Verwijder moment";
+}
+
+
+<h3>Wil je dit moment echt verwijderen?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-6 text-end">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class = "col-sm-6">
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+        <dt class="col-sm-6 text-end">
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd class = "col-sm-6">
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+        <dt class="col-sm-6 text-end">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class = "col-sm-6">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+    </dl>
+    <form asp-action="Delete" class="text-center">
+    <input type="submit" value="Verwijder" class="btn btn-danger btn-sm" />
+    <a class="btn btn-success btn-sm" asp-action="Index">Terug naar de lijst</a>
+</form>
+</div>
