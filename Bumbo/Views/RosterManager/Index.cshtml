@@ -266,13 +266,14 @@
 
 
 
-<!-- The Modal for creating a new shift -->
+
 <div id="modal" class="modal">
 
     <!-- Modal content -->
     <div class="modal-content text-center prognosis-textarea">
         <span class="close position-absolute">&times;</span>
         <label> </label>
+        <!-- The Modal for creating a new shift -->
         <div id="createshiftmodal" class="m-3 text-center align-content-center">
             <form asp-action="CreateShift">
                 <input type="hidden" asp-for="Date" />
@@ -311,6 +312,7 @@
             </form>
         </div>
 
+        <!--This is the modal for editing a shift.-->
         <div id="editshiftmodal" class="m-3 text-center align-content-center">
             <form  asp-action="EditShift">
                 <input type="hidden" asp-for="Date" />
@@ -347,63 +349,6 @@
     </div>
 
 </div>
-
-<!-- The Modal for editing a shift -->
-<div id="editmodal" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content text-center prognosis-textarea">
-        <span class="close position-absolute">&times;</span>
-        <label> </label>
-        <div class="m-3 text-center align-content-center">
-            <form asp-action="CreateShift">
-                <input type="hidden" asp-for="Date" />
-                <h2>Voeg een dienst toe</h2>
-                <div class="row">
-                    <span class="col">Medewerker:</span>
-                    <select asp-for="SelectedEmployeeId" class="form-control col">
-
-                        @foreach (var employee in Model.Employees)
-                        {
-                            <option value="@employee.Id">@employee.FullName</option>
-                        }
-                    </select>
-
-
-                    @*TODO make it so you can only select department for employee who have them.*@
-                    <span class="col">In afdeling:</span>
-
-                    <select asp-for="SelectedDepartmentId" class="form-control col">
-
-                        @foreach (var dep in Model.Departments)
-                        {
-                            <option value="@dep.Id">@dep.DepartmentName</option>
-                        }
-                    </select>
-                </div>
-                <div class="row">
-                    <span class="col">Startijd:</span>
-                    <input asp-for="SelectedStartTime" class="form-control col" />
-
-                    <span class="col">Eindtijd:</span>
-                    <input asp-for="SelectedEndTime" class="form-control col" />
-                </div>
-                <label> </label>
-                <span asp-validation-for="Date" class="text-danger"></span>
-                <span asp-validation-for="Date" class="text-danger"></span>
-                <input type="submit" value="Opslaan" class="btn btn-success btn-sm " />
-            </form>
-        </div>
-
-
-    </div>
-
-</div>
-
-
-
-
-
 
 
 

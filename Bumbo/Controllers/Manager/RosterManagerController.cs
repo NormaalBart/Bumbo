@@ -121,7 +121,7 @@ namespace Bumbo.Controllers.Manager
                 return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd." });
             }
             // check if CAO rules are met.
-            if (_shiftRepository.GetHoursPlannedInWorkWeek(plannedShift.Employee.Id, plannedShift.StartTime.Date) + (plannedShift.EndTime - plannedShift.StartTime).TotalHours > maxHoursInWeekAllowed)
+            if (_shiftRepository.GetHoursPlannedInWorkWeek(plannedShift.Employee.Id, plannedShift.StartTime.Date, 0) + (plannedShift.EndTime - plannedShift.StartTime).TotalHours > maxHoursInWeekAllowed)
             {
                 return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker heeft al te veel gewerkt deze week." });
             }
@@ -141,6 +141,7 @@ namespace Bumbo.Controllers.Manager
             plannedShift.StartTime = DateTime.Parse(date).AddHours(DateTime.Parse(selectedStartTime).Hour).AddMinutes(DateTime.Parse(selectedStartTime).Minute);
             plannedShift.EndTime = DateTime.Parse(date).AddHours(DateTime.Parse(selectedEndTime).Hour).AddMinutes(DateTime.Parse(selectedEndTime).Minute);
 
+            plannedShift.Department = _departmentsRepository.GetById(selectedDepartmentId);
 
             int maxHoursInWeekAllowed = 40; // TODO
 
@@ -160,7 +161,7 @@ namespace Bumbo.Controllers.Manager
                 return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd." });
             }
             // check if CAO rules are met.
-            if (_shiftRepository.GetHoursPlannedInWorkWeek(plannedShift.Employee.Id, plannedShift.StartTime.Date) + (plannedShift.EndTime - plannedShift.StartTime).TotalHours > maxHoursInWeekAllowed)
+            if (_shiftRepository.GetHoursPlannedInWorkWeek(plannedShift.Employee.Id, plannedShift.StartTime.Date, selectedShiftId) + (plannedShift.EndTime - plannedShift.StartTime).TotalHours > maxHoursInWeekAllowed)
             {
                 return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker heeft al te veel gewerkt deze week." });
             }

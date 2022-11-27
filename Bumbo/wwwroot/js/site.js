@@ -29,7 +29,6 @@ btn.onclick = function () {
 // When the user clicks on <span> (x), close the modal
 span.onclick = function () {
     modal.style.display = "none";
-    selectedshiftidedit = 0;
 
 }
 
@@ -37,25 +36,10 @@ span.onclick = function () {
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
-        selectedshiftidedit = 0;
     }
 } 
 
 
 
-// Get the edit modal
-var editmodal = document.getElementById("editmodal");
 
-// Get the button that opens the modal
-var editmodalbtn = document.getElementById("openEditModalBtn");
-
-// Get the <span> element that closes the modal
-var editspan = document.getElementsByClassName("close")[0];
-
-
-
-// When the user clicks on <span> (x), close the modal
-editspan.onclick = function () {
-    modal.style.display = "none";
-}
 

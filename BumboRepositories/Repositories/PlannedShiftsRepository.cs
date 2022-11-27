@@ -24,12 +24,12 @@ namespace BumboRepositories.Repositories
             return Context.PlannedShifts.Include(p => p.Employee);
         }
 
-        public double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate)
+        public double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate, int newShiftId)
         {
             // start of week
             DateTime startOfWeek = currentDate.GetMondayOfTheWeek();
-            // check if the employee has worked too much this week 
-            var shiftsThisWeek = DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
+            // check if the employee has worked too much this week, excluding the shift that's being edited rn.
+            var shiftsThisWeek = DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6) && p.Id != newShiftId).ToList();
             if (shiftsThisWeek.Count > 0)
             {
                 double totalHoursThisWeek = 0;
