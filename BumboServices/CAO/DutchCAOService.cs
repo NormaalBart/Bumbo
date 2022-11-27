@@ -1,8 +1,5 @@
 using BumboData.Interfaces.Repositories;
-using BumboData.Models;
-using BumboRepositories.Utils;
 using BumboServices.CAO.Rules;
-using BumboServices.Interface;
 
 namespace BumboServices.CAO;
 
@@ -35,8 +32,6 @@ public class DutchCAOService : BaseCAOService
             // - Maximaal 9 uur werken per dag incl. school
             new MaxWorkHours(otherRange, 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
             // - Niet meer dan 40 uur gemiddeld over een periode van 4 weken.
-            // niet meer dan 40 uur gemiddeld per week ???
-            // TODO: Navragen
             new AvgWorkHoursWeek(otherRange, 40.0, 4, plannedShiftsRepository)
         };
 
