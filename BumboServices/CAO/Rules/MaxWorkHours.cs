@@ -103,6 +103,7 @@ public class MaxWorkHours : CAORuleAppliesToAge
     private List<PlannedShift> SchoolWeekImplementation(List<PlannedShift> plannedShifts)
     {
         var employId = plannedShifts.First().EmployeeId;
+        
         // Check if all employees are the same, and if not throw error
         if (plannedShifts.Any(s => s.EmployeeId != employId))
         {

@@ -6,9 +6,9 @@ namespace BumboData.Interfaces.Repositories
     {
         bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime);
         IEnumerable<UnavailableMoment> GetAll(string employeeId);
-        IEnumerable<UnavailableMoment> GetOverlappingMoments(UnavailableMoment unavailableMoment);
-        public bool EmployeeSchoolWeek(string employee, int year, int week);
-        public List<UnavailableMoment> GetSchoolUnavailableMomentsByWeek(string employee, int year, int week);
-        public List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day);
+        IEnumerable<UnavailableMoment> GetOverlappingMoments(UnavailableMoment unavailableMoment); 
+        bool EmployeeSchoolWeek(string employee, int year, int week);
+        List<UnavailableMoment> GetSchoolUnavailableMomentsByWeek(string employee, int year, int week);
+        List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day);
     }
 }

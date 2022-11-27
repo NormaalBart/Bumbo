@@ -28,6 +28,13 @@ public class AvgWorkHoursWeek : CAORuleAppliesToAge
 
         var employId = plannedShifts.First().EmployeeId;
         var branchId = plannedShifts.First().BranchId;
+
+        if (plannedShifts.Any(s => s.BranchId != branchId) ||
+            plannedShifts.Any(s => s.EmployeeId != employId))
+        {
+            // Should in theory never happen, but added check just in case.
+            throw new InvalidDataException();
+        }
         
         // Last shift, from there on we need to subtract the amount of weeks which we are going to look at.
         var firstShiftDateInGivenList = plannedShifts.Min(s => s.StartTime.Date);
