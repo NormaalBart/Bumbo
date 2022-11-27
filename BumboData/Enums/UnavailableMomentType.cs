@@ -1,4 +1,4 @@
-﻿namespace BumboData.Models;
+﻿namespace BumboData.Enums;
 
 public enum UnavailableMomentType
 {

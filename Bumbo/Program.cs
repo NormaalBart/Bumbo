@@ -1,7 +1,6 @@
 using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories;
 using BumboRepositories.Repositories;
 using BumboServices;
 using BumboServices.CAO;
@@ -36,11 +35,6 @@ namespace Bumbo
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
             builder.Services.AddScoped<IStandardRepository, StandardRepository>();
             builder.Services.AddScoped<IPrognosesService, PrognosesService>();
-            builder.Services.AddScoped<IHourExportService, HourExportService>();
-
-            builder.Services.AddScoped<IUnavailableMomentsCreate, UnavailableMomentCreateRepository>();
-
-
             builder.Services.AddScoped<IHourExportService, HourExportService>();
             builder.Services.AddScoped<ICAOService, DutchCAOService>();
             builder.Services.AddScoped<IImportService, ImportService>();

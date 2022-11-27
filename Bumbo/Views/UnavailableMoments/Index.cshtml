@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Afwezigheid";
 }
+
 <div class="row">
     <h1 class="col-5">Afwezigheid</h1>
     
@@ -14,69 +15,82 @@
         <a asp-action="Create" class="btn btn-success btn-lg">+ Nieuw moment</a>
     </p>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Dag
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.UnavailableMoments)
-        {
+
+@if (Model.UnavailableMoments.Count > 0){
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @item.StartTime.Day<br/>
-                    @item.StartTime.ToString("MMM")
-                </td>
-                <td>
-                    @item.StartTime.ToString("hh:mm")
-                </td>
-                <td>
-                    @item.EndTime.ToString("hh:mm")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Verwijder</a>
-                </td>
+                <th>
+                    Dag
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnavailableMoments[0].EndTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
+                </th>
+                <th></th>
             </tr>
-        }
+        </thead>
+    <tbody>
+    @foreach (var item in Model.UnavailableMoments)
+    {
+        <tr>
+            <td>
+                @item.StartTime.Day<br />
+                @item.StartTime.ToString("MMM")
+            </td>
+            <td>
+                @item.StartTime.ToString("HH:mm")
+            </td>
+            <td>
+                @item.EndTime.ToString("HH:mm")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Verwijder</a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+}
+else
+{
+    <p class="text-center text-info">Je hebt nog geen onbeschikbare momenten. Voeg er een toe door op de voeg toe knop te drukken bovenaan het scherm.</p>
+}
+
 
 
 <div id="prognoseModal" class="modal">
     <!-- Modal content -->
-    <div class="modal-content text-center prognosis-textarea">
+    <div class="modal-content">
         <span class="close position-absolute">&times;</span>
         <label> </label>
-        <div class="m-3 text-center align-content-center">
+        <div class="m-3 align-content-center">
             <form asp-action="CopyFromDay">
-                <h2>Kopieer schoolrooster van dag</h2>
+                <h2 class="text-center">Kopieer schoolrooster van dag</h2>
                 <div class="row">
-                    <span class="col">Dag</span>
-                    <input asp-for="CopyFrom" class="form-control" asp-format="{0:yyyy-MM-dd}" />
-                    <span asp-validation-for="CopyFrom" class="text-danger"></span>
+                    <span class="col-4 text-end">Dag</span>
+                    <input asp-for="CopyFrom" class="col-5 asp-format="{0:yyyy-MM-dd}" />
+                    <span asp-validation-for="CopyFrom" class="text-danger col-2"></span>
                 </div>
-                <span>Kopieren naar</span>
+                
+                <div class="row">
+                    <span class="col-2"></span>
+                    <span class="col-6">Kopieren naar</span>
+                </div>
+                
 
                 <div class="row">
-                    <span class="col">Week</span>
-                    <input asp-for="CopyTo" class="form-control" asp-format="{0:yyyy-MM-dd}" />
-                    <span asp-validation-for="CopyTo" class="text-danger"></span>
+                    <span class="col-4 text-end">Dag</span>
+                    <input asp-for="CopyTo" class="col-5" asp-format="{0:yyyy-MM-dd}" />
+                    <span asp-validation-for="CopyTo" class="text-danger col-"4"></span>
                 </div>
                 <input type="submit" value="Kopiëren" class="btn btn-success btn-sm " />
             </form>

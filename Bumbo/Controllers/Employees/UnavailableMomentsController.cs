@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bumbo.Models.UnavailableMoments;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -29,50 +30,33 @@ namespace Bumbo.Controllers.Employees
             var viewModel = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(Databaseresult).ToList();
             var sortedViewModel = viewModel.OrderBy(e => e.StartTime).Where(e => e.EndTime >= DateTime.Now).ToList();
             UnavailableMomentsListViewModel unavailableMomentsListViewModel = new UnavailableMomentsListViewModel(sortedViewModel);
-            foreach (UnavailableMomentsViewModel vm in unavailableMomentsListViewModel.UnavailableMoments)
-            {
-                if (vm.Type.CompareTo(UnavailableMomentType.OTHER.ToString()) == 0)
-                {
-                    vm.Type = "Anders";
-                }
-                else
-                {
-                    vm.Type = "School";
-                }
-            }
             return View(unavailableMomentsListViewModel);
         }
 
         public IActionResult Create()
         {
-            UnavailableMomentsCreateViewModel unAvailableMoments = new UnavailableMomentsCreateViewModel();
+            UnavailableMomentsViewModel unAvailableMoments = new UnavailableMomentsViewModel();
             unAvailableMoments.StartTime = DateTime.Now;
             unAvailableMoments.EndTime = DateTime.Now.AddHours(5);
-            unAvailableMoments.UnavailableMomentType = "OTHER";
+            unAvailableMoments.Type = UnavailableMomentType.OTHER;
             return View(unAvailableMoments);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UnavailableMomentsCreateViewModel unavailableMomentViewModel)
+        public async Task<IActionResult> Create(UnavailableMomentsViewModel unavailableMomentViewModel)
         {
-            ModelState.Clear();
-            TryValidateModel(unavailableMomentViewModel);
-            if (ModelState.IsValid)
+            var newUnavailableMoment = _mapper.Map<UnavailableMomentsViewModel, UnavailableMoment>(unavailableMomentViewModel);
+            newUnavailableMoment.Type = unavailableMomentViewModel.Type;
+            newUnavailableMoment.Employee = await _userManager.GetUserAsync(User);
+            var errorMesssage = UnavailableMomentValid(newUnavailableMoment);
+            if (errorMesssage != null)
             {
-                var newUnavailableMoment = _mapper.Map<UnavailableMomentsCreateViewModel, UnavailableMoment>(unavailableMomentViewModel);
-                newUnavailableMoment.Type = (UnavailableMomentType)Enum.Parse(typeof(UnavailableMomentType), unavailableMomentViewModel.UnavailableMomentType);
-                newUnavailableMoment.Employee = await _userManager.GetUserAsync(User);
-                var errorMesssage = UnavailableMomentValid(newUnavailableMoment);
-                if (errorMesssage != null)
-                {
-                    unavailableMomentViewModel.Error = errorMesssage;
-                    return View(unavailableMomentViewModel);
-                }
-                _unavailableMomentsRepository.Create(newUnavailableMoment);
-                return RedirectToAction("Index");
+                ModelState.AddModelError("Invalid Moment", errorMesssage);
+                return View(unavailableMomentViewModel);
             }
-            return View(unavailableMomentViewModel);
+            _unavailableMomentsRepository.Create(newUnavailableMoment);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int id)
@@ -92,41 +76,35 @@ namespace Bumbo.Controllers.Employees
         }
         private string? UnavailableMomentValid(UnavailableMoment unavailableMoment)
         {
-            // TODO check if the time doesn't overlap with another unavailable moment
             if (unavailableMoment == null) { return "Er is iets fout gegaan, probeer het opnieuw."; }
             if (unavailableMoment.StartTime >= unavailableMoment.EndTime) { return "Start tijd kan niet na de eindtijd zijn."; }
-            var lijstje = _unavailableMomentsRepository.GetAll(_userManager.GetUserId(User))
-                .Where(e => e.StartTime < unavailableMoment.StartTime && e.EndTime > unavailableMoment.StartTime);
-            if (lijstje.Count() > 0) { return "Je hebt deze tijd al eerder ingevuld."; }
+            var overlappingMoments = _unavailableMomentsRepository.getOverlappingMoments(unavailableMoment);
+            if (overlappingMoments.Count() > 0) { return "Je hebt deze tijd al eerder ingevuld."; }
             return null;
         }
 
         public async Task<IActionResult> CopyFromDay(UnavailableMomentsListViewModel unavailableMomentViewModel)
         {
-            ModelState.Clear();
-            TryValidateModel(unavailableMomentViewModel);
-            if (ModelState.IsValid)
+            List<UnavailableMoment> newMoments = new List<UnavailableMoment>();
+            var oldMoments = _unavailableMomentsRepository.GetAll(_userManager.GetUserId(User))
+                .Where(e => e.StartTime.Date == unavailableMomentViewModel.CopyFrom.Date).ToList();
+            var diff = unavailableMomentViewModel.CopyTo - unavailableMomentViewModel.CopyFrom;
+            foreach (var moment in oldMoments)
             {
-                List<UnavailableMoment> newMoments = new List<UnavailableMoment>();
-                var oldMoments = _unavailableMomentsRepository.GetAll(_userManager.GetUserId(User))
-                    .Where(e => e.StartTime.Date == unavailableMomentViewModel.CopyFrom.Date).ToList();
-                var diff = unavailableMomentViewModel.CopyTo - unavailableMomentViewModel.CopyFrom;
-                foreach (var moment in oldMoments)
-                {
-                    var newMoment = new UnavailableMoment();
-                    DateTime? newStartTime = moment.StartTime + diff;
-                    if (newStartTime != null) newMoment.StartTime = (DateTime)newStartTime;
-                    DateTime? newEndTime = moment.EndTime + diff;
-                    if (newEndTime != null) newMoment.EndTime = (DateTime)newEndTime;
-                    newMoment.Employee = await _userManager.GetUserAsync(User);
-                    newMoment.Type = moment.Type;
-                    newMoments.Add(newMoment);
-                }
-                newMoments.ForEach(e =>
-                {
-                    if (UnavailableMomentValid(e) == null) _unavailableMomentsRepository.Create(e);
-                });
+                var newMoment = new UnavailableMoment();
+                DateTime? newStartTime = moment.StartTime + diff;
+                if (newStartTime != null) newMoment.StartTime = (DateTime)newStartTime;
+                DateTime? newEndTime = moment.EndTime + diff;
+                if (newEndTime != null) newMoment.EndTime = (DateTime)newEndTime;
+                newMoment.Employee = await _userManager.GetUserAsync(User);
+                newMoment.Type = moment.Type;
+                newMoments.Add(newMoment);
             }
+            newMoments.ForEach(e =>
+            {
+                if (UnavailableMomentValid(e) == null) _unavailableMomentsRepository.Create(e);
+            });
+
             return RedirectToAction("Index");
         }
     }

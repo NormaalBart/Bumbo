@@ -6,6 +6,6 @@ namespace BumboData.Interfaces.Repositories
     {
         bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime);
         IEnumerable<UnavailableMoment> GetAll(string employeeId);
-        // void Add(UnavailableMoment unavailableMoment);
+        IEnumerable<UnavailableMoment> getOverlappingMoments(UnavailableMoment unavailableMoment);
     }
 }

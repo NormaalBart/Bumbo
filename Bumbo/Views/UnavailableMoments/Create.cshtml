@@ -1,15 +1,14 @@
-﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsCreateViewModel
+﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsViewModel
+@using BumboData.Enums
 @{
     ViewData["Title"] = "Afwezigheid toevoegen";
 }
 <h1 class="text-center">Afwezigheid toevoegen</h1>
 
-@{
-    if (Model.Error != null)
-    {
-        <p class="text-center alert-danger">@Model.Error</p>
-    }
-}
+
+<p class="text-center alert-danger">@Html.ValidationMessage("Invalid Moment")</p>
+
+
 
 
 <div class="container ">
@@ -30,11 +29,11 @@
                             </div>
 
                             <div class="form-group text-center">
-                                <h5>Rede van afwezigheid:</h5>
+                                <h5>Reden van afwezigheid:</h5>
                                 
                                 <tr>
-                                    @Html.RadioButtonFor(model => model.UnavailableMomentType, "SCHOOL")school
-                                    @Html.RadioButtonFor(model => model.UnavailableMomentType, "OTHER")anders
+                                    @Html.RadioButtonFor(model => model.Type, UnavailableMomentType.SCHOOL)school
+                                    @Html.RadioButtonFor(model => model.Type, UnavailableMomentType.OTHER)anders
                                 </tr>
 
                             </div>
