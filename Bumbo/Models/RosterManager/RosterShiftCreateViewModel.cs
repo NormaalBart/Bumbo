@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using BumboData.Models;
 
 namespace Bumbo.Models.RosterManager
 {
@@ -13,11 +13,11 @@ namespace Bumbo.Models.RosterManager
         public DateTime Date { get; set; }
 
         [Required]
-        [DisplayName("Start time")]
+        [DisplayName("Start tijd")]
         [DataType(DataType.Time)]
         public DateTime StartTime { get; set; }
         [Required]
-        [DisplayName("Start time")]
+        [DisplayName("Eind tijd")]
         [DataType(DataType.Time)]
         public DateTime EndTime { get; set; }
 

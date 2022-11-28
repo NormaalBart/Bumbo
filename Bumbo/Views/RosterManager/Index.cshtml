@@ -24,7 +24,7 @@
 
 <div>
     <button btn btn-outline-secondary>
-        <a class="text-decoration-none" asp-action="Edit" asp-controller="Prognosis" asp-route-id="@Model.PrognosisDayId">(Edit prognose) Nog te roosterde uren: </a>
+        <a class="text-decoration-none" asp-action="Edit" asp-controller="Prognosis" asp-route-id="@Model.PrognosisDayId">(Pas prognose aan) Nog te roosterde uren: </a>
     </button>
 
 </div>
@@ -40,7 +40,7 @@
             <dd>
                 @if (Model.CassierePrognose == -1)
                 {
-                    <span>Geen Info</span>
+                    <span>Geen informatie</span>
                 }
                 else
                 {
@@ -72,7 +72,7 @@
             <dd>
                 @if (Model.StockersPrognose == -1)
                 {
-                    <span>Geen Info</span>
+                    <span>Geen informatie</span>
                 }
                 else
                 {

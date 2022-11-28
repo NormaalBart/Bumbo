@@ -8,12 +8,12 @@ namespace Bumbo.Models.AccountController
 
         [Required(ErrorMessage = "Er moet een email worden opgegeven.")]
         [EmailAddress]
-        [DisplayName("Email")]
-        public string EmailAddress { get; set; }    
+        [DisplayName("E-mail")]
+        public string EmailAddress { get; set; }
 
         [Required(ErrorMessage = "Er moet een wachtwoord worden opgegeven.")]
         [DataType(DataType.Password)]
         [DisplayName("Wachtwoord")]
-        public string Password { get; set; }    
+        public string Password { get; set; }
     }
 }
