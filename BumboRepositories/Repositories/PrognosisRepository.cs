@@ -52,7 +52,7 @@ namespace BumboRepositories.Repositories
                 // other wise we add it.
                 if (DbSet.Where(p => p.Date == item.Date && p.BranchId == branchId).FirstOrDefault() != null)
                 {
-                    var prognosisDay = DbSet.Where(p => p.Date == item.Date && p.Branch == item.Branch).Include(p => p.DepartmentPrognosis).FirstOrDefault();
+                    var prognosisDay = DbSet.Where(p => p.Date == item.Date && p.BranchId == branchId).Include(p => p.DepartmentPrognosis).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
                     item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();

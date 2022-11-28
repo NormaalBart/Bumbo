@@ -94,7 +94,7 @@ input[type="search"] {
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 1002; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -177,3 +177,79 @@ p {
         height: 100%;
     }
 }
+}
+
+
+/*Rooster manager*/
+
+
+
+.roster-table-employee-cell {
+    background-color: grey !important;
+    width: 30px;
+    height: 45px;
+}
+
+
+/*This is the top header row which contains the time collumns*/
+.roster-table-header-cell {
+    background-color: grey !important;
+    white-space: nowrap;
+    font-size: 9px;
+}
+
+.roster-body {
+    width: 100%;
+
+}
+
+.roster-table-row{
+    height: 20px;
+}
+
+.roster-table-cell {
+    height: 45px;
+    border: 1px solid darkgrey;
+    background-color: lightgray;
+    width: 50px !important;
+    padding: 0px !important;
+}
+
+.roster-table {
+    background-color: dimgray;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.roster-table-cell-closed{
+    width: 45px;
+    height: 45px;
+    padding: 10px;
+    border: 1px solid lightslategrey;
+    background-color: lightslategrey !important;
+}
+
+/* Div which is the planned shift in the roster*/
+.roster-shift {
+    position: absolute;
+    top: 0px;
+    z-index: 1001;
+    /*background color of a planned shift div*/
+    background: linear-gradient(to bottom right, #99ccff, #e6f2ff);
+    border: solid;
+    border-color: darkslategrey;
+    border-width: 1px;
+}
+
+/* Prevents planned shift div going everywhere */
+.roster-shift-containter {
+    position: relative;
+
+}
+
+
+.roster-table-addbtn {
+    background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
+}
+
