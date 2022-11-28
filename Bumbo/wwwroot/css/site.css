@@ -234,7 +234,6 @@ p {
 .roster-shift {
     position: absolute;
     top: 0px;
-    margin-left: 0px;
     z-index: 1001;
     /*background color of a planned shift div*/
     background: linear-gradient(to bottom right, #99ccff, #e6f2ff);
