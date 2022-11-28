@@ -46,17 +46,16 @@ namespace Bumbo.Controllers.Manager
             {
                 dateInput = DateTime.Today.ToString();
             }
-            // we make sure that the passed date is definitely without time.
-            DateOnly dateonly = DateTime.Parse(dateInput).ToDateOnly();
-            DateTime date = dateonly.ToDateTime(new TimeOnly(0,0,0));
+            DateTime date = DateTime.Parse(dateInput).Date;
             RosterDayViewModel viewModel = new RosterDayViewModel();
             viewModel.Date = date;
             var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList());
-            
+
+            var employee = await _userManager.GetUserAsync(User);
 
             foreach (var emp in employeeList)
             {
-                emp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetShiftsOnDayForEmployeeOnDate(date, emp.Id)).ToList();
+                emp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetShiftsOnDayForEmployeeOnDate(date, emp.Id, employee.DefaultBranchId)).ToList();
                 if (emp.PlannedShifts.Count > 0)
                 {
                     viewModel.RosteredEmployees.Add(emp);
@@ -64,7 +63,7 @@ namespace Bumbo.Controllers.Manager
                 viewModel.AvailableEmployees.Add(emp);
             }
 
-            var employee = await _userManager.GetUserAsync(User);
+           
             viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, employee.DefaultBranchId);
             viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, employee.DefaultBranchId);
             viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
@@ -125,11 +124,9 @@ namespace Bumbo.Controllers.Manager
             {
                 return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd." });
             }
+
             // check if CAO rules are met.
-            if (_shiftRepository.GetHoursPlannedInWorkWeek(plannedShift.Employee.Id, plannedShift.StartTime.Date, 0) + (plannedShift.EndTime - plannedShift.StartTime).TotalHours > maxHoursInWeekAllowed)
-            {
-                return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker heeft al te veel gewerkt deze week." });
-            }
+           // TODO insert CAO rules services.
 
 
             _shiftRepository.Create(plannedShift);
@@ -165,11 +162,10 @@ namespace Bumbo.Controllers.Manager
             {
                 return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd." });
             }
+
             // check if CAO rules are met.
-            if (_shiftRepository.GetHoursPlannedInWorkWeek(plannedShift.Employee.Id, plannedShift.StartTime.Date, selectedShiftId) + (plannedShift.EndTime - plannedShift.StartTime).TotalHours > maxHoursInWeekAllowed)
-            {
-                return RedirectToAction("Index", "RosterManager", new { dateInput = date, errormessage = "Medewerker heeft al te veel gewerkt deze week." });
-            }
+
+            // TODO insert CAO rules services.
 
 
             _shiftRepository.Update(plannedShift);

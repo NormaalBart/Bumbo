@@ -6,10 +6,9 @@ namespace BumboData.Interfaces.Repositories
     {
         bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift);
 
-        double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate, int newShiftId);
         IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId);
 
-        IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId);
+        IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId, int branchId);
 
         PlannedShift GetPlannedShiftById(int shiftId);
 

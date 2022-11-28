@@ -26,27 +26,6 @@ namespace BumboRepositories.Repositories
             return Context.PlannedShifts.Include(p => p.Employee);
         }
 
-        public double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate, int newShiftId)
-        {
-
-            // start of week
-            DateTime startOfWeek = currentDate.GetMondayOfTheWeek();
-            var shiftsThisWeek = DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek && p.StartTime.Date <= startOfWeek.AddDays(6) && p.Id != newShiftId).ToList();
-            // check if the employee has worked too much this week, excluding the shift that's being edited rn.
-
-            if (shiftsThisWeek.Count > 0)
-            {
-                double totalHoursThisWeek = 0;
-                foreach (var shift in shiftsThisWeek)
-                {
-                    totalHoursThisWeek += (shift.EndTime - shift.StartTime).TotalHours;
-                }
-
-                return totalHoursThisWeek;
-            }
-
-            return 0;
-        }
 
         public IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId)
         {
@@ -79,9 +58,9 @@ namespace BumboRepositories.Repositories
         }
 
 
-        public IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId)
+        public IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId, int branchId)
         {
-            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date).Include(p => p.Department).Include(p => p.Branch);
+            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date && p.BranchId == branchId).Include(p => p.Department).Include(p => p.Branch);
         }
 
 

@@ -140,7 +140,11 @@ namespace Bumbo.Models.RosterManager
             return null;
         }
 
-        public double GetShiftLength(EmployeeRosterViewModel employee, int hour)
+        //<summary>
+        // Returns the length in amount of hours of the shift of given employee starting on given hour.
+        // Returned value does not include minutes. 
+        //</summary>
+        public int GetShiftHourLength(EmployeeRosterViewModel employee, int hour)
         {
             if (employee.PlannedShifts == null)
             {
@@ -200,15 +204,9 @@ namespace Bumbo.Models.RosterManager
         // It's important that this display time is always the same amount of characters long.
         public string GetHeaderTimeString(int time)
         {
-            if (time < 10)
-            {
-                return "0" + time + ":00";
-            }
-            return time + ":00";
+            TimeOnly timeOnly = new TimeOnly(time, 0);
+            return timeOnly.ToString();
         }
-
-    
-
 
     }
 }

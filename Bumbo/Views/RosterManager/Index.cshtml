@@ -247,7 +247,7 @@
 
                                         <div id="roster-start-div " class="roster-shift text-center" style="height: 100%;" runat="server">
                                         @*If the shift is very short, we use a different string not make it ugly.*@
-                                        @if (Model.GetShiftLength(employee, i) < 2)
+                                        @if (Model.GetShiftHourLength(employee, i) < 2)
                                         {
                                             <p class="align-self-center">  @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName </p>
                                         }else{
@@ -260,10 +260,10 @@
                                             var divs = document.querySelectorAll('div');
                                             var above_div = divs[divs.length - 1];
 
-                                            getWidthOfbase(above_div, @Model.GetShiftLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
+                                            getWidthOfbase(above_div, @Model.GetShiftHourLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
 
                                             // we add this shift to the list of shifts:
-                                                var shift = { element: above_div, shiftlength: @Model.GetShiftLength(employee, i), shiftstartperc: @Model.GetShiftStartPercentage(employee, i), shiftendperc: @Model.GetShiftEndPercentage(employee, i), shiftid: @Model.GetShiftOnHourOfEmployee(employee, i).Id, shiftStartTime: '@Model.GetShiftOnHourOfEmployee(employee, i).StartTime.ToString("HH:mm")', shiftEndTime: '@Model.GetShiftOnHourOfEmployee(employee, i).EndTime.ToString("HH:mm")'};
+                                                var shift = { element: above_div, shiftlength: @Model.GetShiftHourLength(employee, i), shiftstartperc: @Model.GetShiftStartPercentage(employee, i), shiftendperc: @Model.GetShiftEndPercentage(employee, i), shiftid: @Model.GetShiftOnHourOfEmployee(employee, i).Id, shiftStartTime: '@Model.GetShiftOnHourOfEmployee(employee, i).StartTime.ToString("HH:mm")', shiftEndTime: '@Model.GetShiftOnHourOfEmployee(employee, i).EndTime.ToString("HH:mm")'};
                           
                                             listshifts.push(shift);
 
