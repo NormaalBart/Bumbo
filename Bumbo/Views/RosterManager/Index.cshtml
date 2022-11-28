@@ -28,7 +28,7 @@
 @if (Model.InvalidShifts.Count > 0)
 {
     <div class="alert alert-danger text-left" role="alert">
-        <strong>Oeps!</strong> Er zijn CAO overtredingen:
+        <i class="bi-exclamation-triangle-fill"></i><strong> Oeps!</strong> Er zijn CAO overtredingen, deze zullen verholpen moeten worden voordat een nieuwe shift aangemaakt kan worden.
         <ul>
             @foreach (var modelInvalidShift in Model.InvalidShifts)
             {
@@ -194,13 +194,12 @@
         editmodal.style.display = "block";
         
         document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
-            document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
+        document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
             
-            document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
+        document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
            
-            document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
-            document.getElementById("employeeIdInput").value = shiftinfo.shiftEmployeeId;
-        
+        document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
+        document.getElementById("employeeIdInput").value = shiftinfo.shiftEmployeeId;
     }
 
     function onRowClick() {
@@ -219,7 +218,7 @@
 <div class="text-center m-3">
 
     <!-- Trigger/Open The Modal -->
-    <button id="openModalBTN">Voeg dienst toe</button>
+    <button id="openModalBTN" class="btn btn-primary">Voeg dienst toe</button>
 </div>
 
 
@@ -255,9 +254,12 @@
                         var shift = Model.GetShiftOnHourOfEmployee(employee, i);
                         @if (shift != null)
                         {
-                            var invalidPair = Model.InvalidShifts.FirstOrDefault(s=>s.Value.Any(s=>s.Id == shift.Id));
-                            var background = invalidPair.Key != null ? "background: red;" : "";
-                            var error = invalidPair.Key != null ? invalidPair.Key.GetErrorMessage() : "";
+                            var invalidPairs = shift.ValidatesRules;
+                            var showError = invalidPairs.Any();
+                            // Red background when shift is invalid.
+                            var background = showError ? "background: red;" : "";
+                            var error = showError ? string.Join(" | ", invalidPairs.Select(s=>s.GetErrorMessage())) : "";
+                            
                             <td id="roster-start" class="roster-table-cell" title="@error">
                                 <div id="roster-start-div " class="roster-shift text-center" style="height: 100%; @background" runat="server">
                                     @*If the shift is very short, we use a different string not make it ugly.*@
@@ -268,6 +270,11 @@
                                     else
                                     {
                                         <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
+                                    }
+                                    
+                                    @if (showError)
+                                    {
+                                        <i class="bi-exclamation-triangle"></i>
                                     }
 
                                     <script>
@@ -286,12 +293,13 @@
                                             // shiftid, employeename, employeeid, departmentname, departmentid, starttime, endtime 
                                             // pass these values along with the function to auto fill the modal.
 
-
-
-
-                                            var shiftinfo = { shiftid: shift.shiftid, shiftStartHour: shift.shiftStartTime, shiftEndTimeHour: shift.shiftEndTime, shiftDepartmentId: '@Model.GetShiftOnHourOfEmployee(employee, i).Department.Id', shiftEmployeeId: '@employee.Id' };
-                                           
-
+                                            var shiftinfo = { 
+                                                shiftid: shift.shiftid, 
+                                                shiftStartHour: shift.shiftStartTime, 
+                                                shiftEndTimeHour: shift.shiftEndTime, 
+                                                shiftDepartmentId: '@Model.GetShiftOnHourOfEmployee(employee, i).Department.Id', 
+                                                shiftEmployeeId: '@employee.Id',
+                                            };
 
                                             above_div.addEventListener("click", onShiftClick.bind(this, shiftinfo), false);
                                                 above_div.addEventListener('click', () => {
@@ -384,7 +392,6 @@
                             <option value="@employee.Id">@employee.FullName</option>
                         }
                     </select>
-
 
                     @*TODO make it so you can only select department for employee who have them.*@
                     <span class="col">In afdeling:</span>

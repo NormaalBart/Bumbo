@@ -45,7 +45,6 @@ namespace Bumbo.Controllers.Manager
             _caoService = caoService;
         }
 
-
         public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
         {
             // Only manager can 
@@ -60,26 +59,46 @@ namespace Bumbo.Controllers.Manager
             }
 
             var date = DateTime.Parse(dateInput).Date;
-            var viewModel = new RosterDayViewModel();
-            viewModel.Date = date;
-
-            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList());
-
+            var viewModel = new RosterDayViewModel
+            {
+                Date = date
+            };
             var manager = await _userManager.GetUserAsync(User);
+
+            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList(e=>e.DefaultBranchId == (manager.ManagesBranchId ?? -1)));
+            
+            // Start CAO
+            // Filter shifts to only display that of today
+            viewModel.InvalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.ManagesBranchId ?? -1);
+            // Setup invalid shifts
+            var invalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.ManagesBranchId ?? -1);
 
             foreach (var emp in employeeList)
             {
                 emp.PlannedShifts = _mapper
-                    .Map<IEnumerable<ShiftViewModel>>(
-                        _shiftRepository.GetShiftsOnDayForEmployeeOnDate(date, emp.Id, manager.DefaultBranchId))
+                    .Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetShiftsOnDayForEmployeeOnDate(date, emp.Id, manager.DefaultBranchId))
                     .ToList();
                 if (emp.PlannedShifts.Count > 0)
                 {
+                    emp.PlannedShifts.ForEach(shift =>
+                    {
+                        // Add invalid shift validated rules to the viewmodel.
+                        shift.ValidatesRules.AddRange(invalidShifts.Where(s =>
+                                s.Value.Any(s => s.Id == shift.Id))
+                            .Select(s => s.Key));
+                    });
+
                     viewModel.RosteredEmployees.Add(emp);
                 }
 
                 viewModel.AvailableEmployees.Add(emp);
             }
+
+            // Sort by the amount of rules violated.
+            viewModel.RosteredEmployees = viewModel.RosteredEmployees
+                .OrderByDescending(e => e.PlannedShifts.Sum(s => s.ValidatesRules.Count)).ToList();
+
+            viewModel.InvalidShifts = invalidShifts;
 
             viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, manager.DefaultBranchId);
             viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, manager.DefaultBranchId);
@@ -91,7 +110,6 @@ namespace Bumbo.Controllers.Manager
 
             viewModel.SelectedStartTime = viewModel.Date.AddHours(8);
             viewModel.SelectedEndTime = viewModel.Date.AddHours(16);
-
 
             viewModel.Departments = new List<DepartmentRosterViewModel>();
             foreach (var dep in _departmentsRepository.GetList().ToList())
@@ -105,19 +123,19 @@ namespace Bumbo.Controllers.Manager
                 viewModel.ErrorMessage = errormessage;
             }
 
-            // Check if CAO rules are met
-            // Get all shifts of this week for context for the cao service
-            var allShiftsWeek = _shiftRepository.GetShiftsByWeek(manager.ManagesBranchId ?? -1,
-                date.Year, date.GetWeekNumber());
-            var invalidShifts = _caoService.VerifyPlannedShiftsWeek(allShiftsWeek);
-            // Filter shifts to only display that of today
-            viewModel.InvalidShifts = invalidShifts
-                .Select(s => (s.Key, s.Value.Where(s => s.StartTime.Date == date.Date)))
-                .ToDictionary(d => d.Key, d => d.Item2);
-
             return View(viewModel);
         }
 
+        private Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidPlannedShiftsFollowigCAO(DateTime day,
+            int branchNr)
+        {
+            var allShiftsWeek = _shiftRepository.GetShiftsByWeek(branchNr, day.Year, day.GetWeekNumber());
+            return _caoService.VerifyPlannedShiftsWeek(allShiftsWeek)
+                // convert to return day only
+                .Select(s => (s.Key, s.Value.Where(s => s.StartTime.Date == day.Date)))
+                .ToDictionary(d => d.Key, d => d.Item2);
+            ;
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -166,18 +184,19 @@ namespace Bumbo.Controllers.Manager
                     new {dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd."});
             }
 
-            // check if CAO rules are met.
-            // TODO insert CAO rules services.
-
-
-            // allShiftsWeek.Add(plannedShift);
-            // var caoResponse = _caoService.VerifyPlannedShiftsWeek(allShiftsWeek);
-            //
-            // if (caoResponse.Count != 0)
-            // {
-            //     return RedirectToAction("Index", "RosterManager",
-            //         new {dateInput = date, errormessage = "CAO Regels overtreden", invalidShifts = caoResponse});
-            // }
+            var dateDt = DateTime.Parse(date);
+            // First check if all shifts present follow the cao, prevent creating new shifts when cao is validated.
+            var invalid = InvalidPlannedShiftsFollowigCAO(dateDt, manager.ManagesBranchId ?? -1);
+            if (invalid.Count > 0)
+            {
+                return RedirectToAction("Index", "RosterManager",
+                    new
+                    {
+                        dateInput = date,
+                        errormessage =
+                            "er nog CAO overtreding(en) zijn op deze dag, los deze eerst op voordat je een nieuwe shift toe voegt."
+                    });
+            }
 
             _shiftRepository.Create(plannedShift);
 
@@ -196,8 +215,6 @@ namespace Bumbo.Controllers.Manager
                 .AddMinutes(DateTime.Parse(selectedEndTime).Minute);
 
             plannedShift.Department = _departmentsRepository.GetById(selectedDepartmentId);
-
-            int maxHoursInWeekAllowed = 40; // TODO
 
             // time is valid
             if (plannedShift.StartTime > plannedShift.EndTime)
@@ -220,11 +237,6 @@ namespace Bumbo.Controllers.Manager
                 return RedirectToAction("Index", "RosterManager",
                     new {dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd."});
             }
-
-            // check if CAO rules are met.
-
-            // TODO insert CAO rules services.
-
 
             _shiftRepository.Update(plannedShift);
 

@@ -13,6 +13,12 @@ public static class DateTime_Extensions
     {
         return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
     }
+    
+    public static DateTime StartOfWeek(this DateTime dt, DayOfWeek startOfWeek)
+    {
+        int diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
+        return dt.AddDays(-1 * diff).Date;
+    }
 
     public static DateTime GetMondayOfTheWeek(this DateTime currentDate)
     {
@@ -24,6 +30,9 @@ public static class DateTime_Extensions
         var startOfWeek = currentDate.AddDays(diff);
         return startOfWeek;
     }
+
+
+
 }
 
 public static class OtherUtils
