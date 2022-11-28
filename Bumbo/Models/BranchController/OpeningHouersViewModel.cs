@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.BranchController
 {
-    public class OpeningHouersViewModel
+    public class OpeningHouersViewModel : IValidatableObject
     {
 
         public int BranchId { get; set; }
@@ -11,11 +11,23 @@ namespace Bumbo.Models.BranchController
         public DayOfWeek DayOfWeek { get; set; }
 
         [Required]
+        [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
         [DisplayName("Openingstijd")]
-        public TimeOnly OpenTime { get; set; }
+        public TimeSpan OpenTime { get; set; }
 
         [Required]
+        [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
         [DisplayName("Sluitingstijd")]
-        public TimeOnly CloseTime { get; set; }
+        public TimeSpan CloseTime { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (OpenTime > CloseTime)
+            {
+                yield return new ValidationResult("Openingstijd is later dan de sluitingstijd", new string[]{ "OpenTime" });
+            }
+        }
     }
 }

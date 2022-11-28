@@ -21,10 +21,13 @@
                         <h5 class="text-center">Bedrijfsinformatie</h5>
                         <div class="row border border-3 border-dark p-1">
                             <div class="form-group col-4">
+                                <label asp-for="Name" class="control-label"></label>
                                 <input asp-for="Name" class="form-control" placeholder="Naam" />
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
+                                <label asp-for="ShelvingDistance" class="control-label"></label>
+
                                 <input asp-for="ShelvingDistance" class="form-control" placeholder="Spiegelmeters" />
                                 <span asp-validation-for="ShelvingDistance" class="text-danger"></span>
                             </div>
@@ -34,14 +37,17 @@
                         <div class="row border border-3 border-dark p-1">
                             <h5 class="text-center">Plaats</h5>
                             <div class="form-group col-4">
+                                <label asp-for="City" class="control-label"></label>
                                 <input asp-for="City" class="form-control" placeholder="Stad" />
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
+                                <label asp-for="Street" class="control-label"></label>
                                 <input asp-for="Street" class="form-control" placeholder="Straat" />
                                 <span asp-validation-for="Street" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
+                                <label asp-for="HouseNumber" class="control-label"></label>
                                 <input asp-for="HouseNumber" class="form-control" placeholder="Huisnummer" />
                                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
                             </div>
@@ -53,25 +59,33 @@
                         <div class="row border border-3 border-dark p-1">
                             <table>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].DayOfWeek)</th>
+                                    <th width=200px>Dag</th>
                                     <th>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
                                     <th>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
+                                    <th></th>
                                 </tr>
-                                @foreach (var openingHour in Model.OpeningHours)
-                                {
+                            </table>
+                            @for (int i = 0; i < Model.OpeningHours.Count; i++)
+                            {
+                                @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
+                                <table>
                                     <tr>
-                                        <th>
-                                            @Html.DisplayFor(model => openingHour.DayOfWeek)
+                                        <th width=200px>
+                                            @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
                                         </th>
                                         <th>
-                                            @Html.DisplayFor(model => openingHour.OpenTime)
+                                            @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
                                         </th>
                                         <th>
-                                            @Html.DisplayFor(model => openingHour.CloseTime)
+                                            @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
                                         </th>
                                     </tr>
-                                }
-                            </table>
+                                </table>
+                                <div class="text-center">
+                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
+                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
