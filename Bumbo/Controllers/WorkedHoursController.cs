@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bumbo.Models.ApproveWorkedHours;
 using Bumbo.Models.RosterManager;
+using Bumbo.Models.WorkedHours;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -20,12 +21,14 @@ namespace Bumbo.Controllers
         readonly private IMapper _mapper;
         readonly private IEmployeeRepository _employeeRepository;
         readonly private IWorkedShiftRepository _workedShiftRepository;
-        public WorkedHoursController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IWorkedShiftRepository workedShiftRepository)
+        readonly private IPlannedShiftsRepository _plannedShiftRepository;
+        public WorkedHoursController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee, IWorkedShiftRepository workedShiftRepository, IPlannedShiftsRepository plannedShiftsRepository)
         {
             _userManager = userManager;
             _mapper = mapper;
             _employeeRepository = employee;
             _workedShiftRepository = workedShiftRepository;
+            _plannedShiftRepository = plannedShiftsRepository;
         }
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> IndexAsync(string? dateInput)
@@ -35,7 +38,7 @@ namespace Bumbo.Controllers
                 dateInput = DateTime.Today.ToString();
             }
             DateTime date = DateTime.Parse(dateInput);
-            var viewModel = new ApproveWorkedHoursViewModel();
+            var viewModel = new IndexWorkedHoursViewModel();
             viewModel.Date = date;
             var employee = await _userManager.GetUserAsync(User);
             var employeeList = _employeeRepository.GetAllThatWorkedOrWasPlannedOnDate(date, employee.DefaultBranchId);
@@ -50,13 +53,22 @@ namespace Bumbo.Controllers
             {
                 dateInput = DateTime.Today.ToString();
             }
-            DateTime date = DateTime.Parse(dateInput);
-            var viewModel = new ApproveWorkedHoursViewModel();
+            DateTime date = DateTime.Parse(dateInput).GetMondayOfTheWeek();
+            var viewModel = new EmployeeWorkedHoursListViewModel();
             viewModel.Date = date;
             var employee = await _userManager.GetUserAsync(User);
-            var employeeList = _employeeRepository.GetAllThatWorkedOrWasPlannedOnDate(date, employee.DefaultBranchId);
-            var e = _mapper.Map<IEnumerable<EmployeeWorkedHoursViewModel>>(employeeList);
-            viewModel.Employees = e.ToList();
+            var employeeList = new List<EmployeeWorkedHoursListItemViewModel>();
+            //for adding all the days in the week
+            for (int i = 0; i < 7; i++)
+            {
+                var temp = new EmployeeWorkedHoursListItemViewModel();
+                temp.Date = date.AddDays(i);
+                temp.WorkedShifts = _mapper.Map<IEnumerable<WorkedShiftViewModel>>(_workedShiftRepository.GetOfEmployeeOnDayThatIsComplete(temp.Date, employee.Id)).ToList();
+                temp.PlannedShifts = _mapper.Map<IEnumerable<ShiftViewModel>>(_plannedShiftRepository.GetOfEmployeeOnDay(temp.Date, employee.Id)).ToList();
+                employeeList.Add(temp);
+            }
+
+            viewModel.employeeWorkedHoursListItemViewModels = employeeList;
             return View(viewModel);
         }
 

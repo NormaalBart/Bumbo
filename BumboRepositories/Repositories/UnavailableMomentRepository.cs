@@ -1,4 +1,10 @@
-﻿namespace BumboRepositories.Repositories
+﻿using BumboData;
+using BumboData.Enums;
+using BumboData.Interfaces.Repositories;
+using BumboData.Models;
+using BumboRepositories.Utils;
+
+namespace BumboRepositories.Repositories
 {
     public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnavailableMomentsRepository
     {

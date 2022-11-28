@@ -86,6 +86,10 @@ namespace BumboRepositories.Repositories
                                                                           CalendarWeekRule.FirstFourDayWeek,
                                                                           DayOfWeek.Monday) == week).ToList();
         }
+        public IEnumerable<PlannedShift> GetOfEmployeeOnDay(DateTime date, string employeeId)
+        {
+            return DbSet.Where(p => p.EmployeeId == employeeId && p.StartTime.Date == date.Date);
+        }
 
         public void Import(List<PlannedShift> list)
         {

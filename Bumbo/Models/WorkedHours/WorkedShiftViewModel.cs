@@ -13,5 +13,7 @@ namespace Bumbo.Models.ApproveWorkedHours
         public Boolean Approved { get; set; }
 
         public Boolean Sick { get; set; }
+
+
     }
 }
