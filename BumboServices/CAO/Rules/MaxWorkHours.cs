@@ -126,6 +126,14 @@ public class MaxWorkHours : CAORuleAppliesToAge
 
     public override string GetErrorMessage()
     {
-        throw new NotImplementedException();
+        var timeframe = _timeframe switch
+        {
+            MaxWorkHoursTimeframe.Day => "dag",
+            MaxWorkHoursTimeframe.Week => "week",
+            MaxWorkHoursTimeframe.SchoolWeek => "schoolweek",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        
+        return "Overschreven maximaal aantal uren per "  + timeframe + " is " + _maxHours + " uur" + (_includeSchool ? " inclusief school." : ".");
     }
 }
