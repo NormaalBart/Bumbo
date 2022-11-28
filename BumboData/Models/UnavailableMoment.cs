@@ -1,4 +1,5 @@
-﻿using BumboData.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using BumboData.Enums;
 using BumboData.Interfaces;
 
 namespace BumboData.Models;
