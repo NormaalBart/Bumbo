@@ -131,15 +131,14 @@
         let endoffset = (width * (minutepercend * 0.01));
         
 
+            // The longer a shift is, there's a small offset where it sticks out.
+            // TODO actually solve this issue.
+            let weirdOffset = (hours * 0.25);
+        
         // We set the width of the div using the calculated values.
-        elem.style.width = finalwidth - startoffset + endoffset + 'px';
-
+            elem.style.width = finalwidth - startoffset + endoffset - weirdOffset + 'px';
         
-              // For some reason there's a 8 px weirdness going on.
-
-              // I can't find out why but this works.
-        startoffset = startoffset - 8;
-        
+    
 
         // We move the div right using the minute percentages.
         elem.style.marginLeft = startoffset + 'px';
