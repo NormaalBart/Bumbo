@@ -1,5 +1,7 @@
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
+using BumboServices.Utils;
 
 namespace BumboServices.CAO.Rules;
 
@@ -7,7 +9,6 @@ public enum MaxWorkHoursTimeframe
 {
     Day,
     Week,
-    Month,
     SchoolWeek
 }
 
@@ -42,11 +43,15 @@ public class MaxWorkHours : CAORuleAppliesToAge
 
     public override List<PlannedShift> GetInvalidShifts(List<PlannedShift> plannedShifts)
     {
+        if (plannedShifts.Count == 0)
+        {
+            return new List<PlannedShift>();
+        }
+        
         return _timeframe switch
         {
             MaxWorkHoursTimeframe.Day => DayImplementation(plannedShifts),
             MaxWorkHoursTimeframe.Week => WeekImplementation(plannedShifts),
-            MaxWorkHoursTimeframe.Month => MonthImplementation(plannedShifts),
             MaxWorkHoursTimeframe.SchoolWeek => SchoolWeekImplementation(plannedShifts),
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -54,25 +59,71 @@ public class MaxWorkHours : CAORuleAppliesToAge
 
     private List<PlannedShift> DayImplementation(List<PlannedShift> plannedShifts)
     {
-        return new List<PlannedShift>();
-        // return plannedShifts.GroupBy(s=>s.StartTime.Date).
+        var employId = plannedShifts.First().EmployeeId;
+        
+        return plannedShifts.GroupBy(s => s.StartTime.Date).Where(group =>
+        {
+            var schoolHours = 0.0;
+
+            if (_includeSchool)
+            {
+                // Get school hours for that day
+                schoolHours = _unavailableMoments.GetSchoolUnavailableMomentsByDay(employId, group.Key.ToDateOnly())
+                    .SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours;
+            }
+
+            return (group.ToList().SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours + schoolHours) > _maxHours;
+        }).SelectMany(s => s.ToList()).ToList();
     }
-    
-    private List<PlannedShift> MonthImplementation(List<PlannedShift> plannedShifts)
-    {
-        return new List<PlannedShift>();
-    }
-    
+
     private List<PlannedShift> WeekImplementation(List<PlannedShift> plannedShifts)
     {
+        
+        var schoolHours = 0.0;
+
+        if (_includeSchool)
+        {
+            var employId = plannedShifts.First().EmployeeId;
+            var date = plannedShifts.First().StartTime;
+
+            schoolHours = _unavailableMoments.GetSchoolUnavailableMomentsByWeek(employId, date.Year, date.GetWeekNumber())
+                    .SumTimeSpan(s=>s.EndTime - s.StartTime).TotalHours;
+        }
+
+        // Check if all the shifts given (since the list is always 1 week worth of shifts) don't exceed the max hours.
+        if ((plannedShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours + schoolHours) > _maxHours)
+        {
+            // And if it exceeds, all shifts are thus invalid.
+            return plannedShifts;
+        }
+
         return new List<PlannedShift>();
     }
-    
+
     private List<PlannedShift> SchoolWeekImplementation(List<PlannedShift> plannedShifts)
     {
+        var employId = plannedShifts.First().EmployeeId;
+        
+        // Check if all employees are the same, and if not throw error
+        if (plannedShifts.Any(s => s.EmployeeId != employId))
+        {
+            throw new InvalidDataException();
+        }
+
+        // First check if current week has any school scheduled.
+        var date = plannedShifts.First().StartTime;
+        var schoolWeek = _unavailableMoments.EmployeeSchoolWeek(employId, date.Year, date.GetWeekNumber());
+
+        if (schoolWeek)
+        {
+            // This implementation only applies to when the employee has a school week,
+            // it behaves just like the normal week implementation.
+            return WeekImplementation(plannedShifts);
+        }
+
         return new List<PlannedShift>();
     }
-    
+
     public override string GetErrorMessage()
     {
         throw new NotImplementedException();
