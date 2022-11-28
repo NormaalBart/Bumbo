@@ -1,4 +1,5 @@
 ﻿using BumboData;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -49,14 +50,14 @@ namespace BumboRepositories.Repositories
             // Tolist is required, weeknumber function can't be converted to SQL.
             return DbSet.ToList().Any(s =>
                 s.EmployeeId == employee && s.StartTime.Year == year && s.StartTime.GetWeekNumber() == week &&
-                s.Type == UnavailableMomentType.SCHOOL);
+                s.Type == UnavailableMomentType.School);
         }
 
         public List<UnavailableMoment> GetSchoolUnavailableMomentsByWeek(string employee, int year, int week)
         {
             return DbSet.ToList().Where(s =>
                 s.EmployeeId == employee && s.StartTime.Year == year && s.StartTime.GetWeekNumber() == week &&
-                s.Type == UnavailableMomentType.SCHOOL).ToList();
+                s.Type == UnavailableMomentType.Other).ToList();
         }
 
         public List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day)
