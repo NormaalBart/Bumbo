@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using BumboData.Enums;
 
 namespace Bumbo.Models.EmployeeManager.Index
 {
@@ -12,7 +12,6 @@ namespace Bumbo.Models.EmployeeManager.Index
         [DisplayName("Toon medewerkers niet in dients")]
         public bool IncludeInactive { get; set; }
         public string SearchString { get; set; }
-
         public EmployeeSortingOption CurrentSort { get; set; }
 
         public List<EmployeeSortingOption> AvailableSortOptions { get; set; }

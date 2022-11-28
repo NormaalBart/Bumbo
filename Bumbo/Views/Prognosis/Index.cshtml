@@ -1,7 +1,7 @@
 ﻿@model Bumbo.Models.PrognosisManager.PrognosisListViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Prognose";
 }
 
 <!-- if modelstate that returned is not valid, say that saving failed-->
@@ -51,11 +51,11 @@
             <th >
                 @Html.DisplayNameFor(model => model.PrognosisList[0].Date)
             </th>
-            <th >
-                @Html.DisplayNameFor(model => model.PrognosisList[0].ColiCount)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.PrognosisList[0].CustomerCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrognosisList[0].ColiCount)
             </th>
 
         </tr>
@@ -82,15 +82,15 @@
                     <input type="hidden" asp-for="PrognosisList[i].Date" />
                 </td>
                 <td>
-                    <div class="form-group  text-center">
-                        <input asp-for="PrognosisList[i].ColiCount" class="form-control" value="@Model.PrognosisList[i].ColiCount" />
-                        <span asp-validation-for="PrognosisList[i].ColiCount" class="text-danger"></span>
-                    </div>
-                </td>
-                <td>
                     <div class="form-group text-center">
                     <input asp-for="PrognosisList[i].CustomerCount" class="form-control" value="@Model.PrognosisList[i].CustomerCount" />
                         <span asp-validation-for="PrognosisList[i].CustomerCount" class="text-danger"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group  text-center">
+                        <input asp-for="PrognosisList[i].ColiCount" class="form-control" value="@Model.PrognosisList[i].ColiCount" />
+                        <span asp-validation-for="PrognosisList[i].ColiCount" class="text-danger"></span>
                     </div>
                 </td>
             </tr>

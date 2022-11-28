@@ -1,15 +1,12 @@
 using BumboData.Interfaces.Repositories;
-using BumboData.Models;
 using BumboServices.CAO.Rules;
-using BumboServices.Interface;
 
 namespace BumboServices.CAO;
 
-public class DutchCAOService : ICAOService
+public class DutchCAOService : BaseCAOService
 {
-    private readonly List<ICAORule> _appliedRules;
-        
-    public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository)
+    public DutchCAOService(IUnavailableMomentsRepository unavailableMomentsRepository,
+        IPlannedShiftsRepository plannedShiftsRepository)
     {
         // Sets up all CAO rules of the dutch CAO
         // All < 16 year rules
@@ -21,16 +18,21 @@ public class DutchCAOService : ICAOService
             //  - Maximaal 40 uur per week
             new MaxWorkHours(below16Range, 40.0, MaxWorkHoursTimeframe.Week),
             //  - Maximaal 12 uur per schoolweek
-            new MaxWorkHours(below16Range, 12.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository)
-            
+            new MaxWorkHours(below16Range, 12.0, MaxWorkHoursTimeframe.SchoolWeek, false, unavailableMomentsRepository),
+            // - Maximaal 5 dagen per week
+            new MaxWorkDaysInWeek(below16Range, 5),
+            // - Maximaal tot 19:00
+            new MaxShiftEndTime(below16Range, new TimeOnly(19, 00))
         };
-        
+
         // All 16 and 17 year rules
+        var otherRange = new Range(16, 17);
         var otherRules = new List<ICAORule>()
         {
             // - Maximaal 9 uur werken per dag incl. school
-            new MaxWorkHours(ageRange:new Range(16, 17), 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
-                
+            new MaxWorkHours(otherRange, 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
+            // - Niet meer dan 40 uur gemiddeld over een periode van 4 weken.
+            new AvgWorkHoursWeek(otherRange, 40.0, 4, plannedShiftsRepository)
         };
 
         var generalRules = new List<ICAORule>()
@@ -38,22 +40,11 @@ public class DutchCAOService : ICAOService
             // Maximaal 12 uur per dienst
             new MaxConsecutiveHours(12.0),
             // Maximaal 60 uur per week
-            new MaxWorkHours(ageRange: new Range(0, int.MaxValue), 60.0, MaxWorkHoursTimeframe.Week)
+            new MaxWorkHours(new Range(0, int.MaxValue), 60.0, MaxWorkHoursTimeframe.Week)
         };
 
-        _appliedRules = below16Rules;
+        _appliedRules.AddRange(below16Rules);
         _appliedRules.AddRange(otherRules);
         _appliedRules.AddRange(generalRules);
-    }
-
-    /*
-     * Returns shift that causes error, and the rule that the error originates from. If the dictionary is empty the planned shifts are valid according to the CAO rules.
-     */
-    public Dictionary<PlannedShift, ICAORule> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
-    {
-        // The given shifts should be all in the same month.
-        // TODO: Throw error otherwise
-        
-        return new Dictionary<PlannedShift, ICAORule>();
     }
 }
