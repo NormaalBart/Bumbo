@@ -26,30 +26,6 @@ namespace BumboRepositories.Repositories
             return Context.PlannedShifts.Include(p => p.Employee);
         }
 
-        public double GetHoursPlannedInWorkWeek(string employeeId, DateTime currentDate)
-        {
-            // start of week, calculated by getting the difference between the date and monday.
-            int diff = DayOfWeek.Monday - currentDate.DayOfWeek;
-            if (diff > 0)
-                diff -= 7;
-            var startOfWeek = currentDate.AddDays(diff);
-            // check if the employee has worked too much this week 
-            var shiftsThisWeek = DbSet.Where(p =>
-                p.Employee.Id == employeeId && p.StartTime.Date >= startOfWeek &&
-                p.StartTime.Date <= startOfWeek.AddDays(6)).ToList();
-            if (shiftsThisWeek.Count > 0)
-            {
-                double totalHoursThisWeek = 0;
-                foreach (var shift in shiftsThisWeek)
-                {
-                    totalHoursThisWeek += (shift.EndTime - shift.StartTime).TotalHours;
-                }
-
-                return totalHoursThisWeek;
-            }
-
-            return 0;
-        }
 
         public IEnumerable<PlannedShift> GetWeekOfShiftsAfterDateForEmployee(DateTime date, string employeeId)
         {
@@ -69,7 +45,11 @@ namespace BumboRepositories.Repositories
                 {
                     if (plannedShift.StartTime < shift.EndTime && plannedShift.EndTime > shift.StartTime)
                     {
-                        return true;
+                        if (plannedShift.Id != shift.Id)
+                        {
+                            return true;
+                        }
+                        
                     }
                 }
             }
@@ -77,6 +57,17 @@ namespace BumboRepositories.Repositories
             return false;
         }
 
+
+        public IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId, int branchId)
+        {
+            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date && p.BranchId == branchId).Include(p => p.Department).Include(p => p.Branch);
+        }
+
+
+        public PlannedShift GetPlannedShiftById(int shiftId)
+        {
+            return DbSet.Where(p => p.Id == shiftId).Include(p => p.Department).Include(p => p.Branch).Include(p => p.Employee).FirstOrDefault();
+        }
         public List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week)
         {
             var cal = new GregorianCalendar();
