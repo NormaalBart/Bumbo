@@ -1,10 +1,4 @@
-﻿using BumboData;
-using BumboData.Enums;
-using BumboData.Interfaces.Repositories;
-using BumboData.Models;
-using BumboRepositories.Utils;
-
-namespace BumboRepositories.Repositories
+﻿namespace BumboRepositories.Repositories
 {
     public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnavailableMomentsRepository
     {
@@ -18,7 +12,7 @@ namespace BumboRepositories.Repositories
         }
         public IEnumerable<UnavailableMoment> GetOverlappingMoments(UnavailableMoment unavailableMoment)
         {
-            return DbSet.Where(u=>unavailableMoment.Employee.Id == u.Employee.Id)
+            return DbSet.Where(u => unavailableMoment.Employee.Id == u.Employee.Id)
                 .Where(e => (unavailableMoment.StartTime < e.EndTime &&
                             e.StartTime < unavailableMoment.EndTime)).ToList();
         }
@@ -57,7 +51,7 @@ namespace BumboRepositories.Repositories
         {
             return DbSet.ToList().Where(s =>
                 s.EmployeeId == employee && s.StartTime.Year == year && s.StartTime.GetWeekNumber() == week &&
-                s.Type == UnavailableMomentType.Other).ToList();
+                s.Type == UnavailableMomentType.School).ToList();
         }
 
         public List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day)

@@ -32,7 +32,7 @@ namespace Bumbo.Models.EmployeeManager.Common
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [EmailAddress(ErrorMessage = "Veld moet een valide email address zijn.")]
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        [DisplayName("Email")]
+        [DisplayName("E-mail")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Het telefoonnummer is verplicht")]
@@ -55,7 +55,7 @@ namespace Bumbo.Models.EmployeeManager.Common
         public string HouseNumber { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
-        [DataType(DataType.Date, ErrorMessage = "Veld is niet valid.")]
+        [DataType(DataType.Date, ErrorMessage = "Veld is niet valide.")]
         [DisplayName("In dienst sinds (De datum waarop deze medewerker in het bedrijf is begonnen)")]
         public DateTime EmployeeJoinedCompany { get; set; }
 
