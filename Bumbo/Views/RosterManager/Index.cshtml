@@ -1,10 +1,17 @@
 ﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
 
+@{
+    if (Model.ErrorMessage != null){
+        ViewData["Title"] = "Rooster (1)";
+    }else{
+        ViewData["Title"] = "Rooster";
+    }
+    
+}
+
 <body class="roster-body">
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
-
-
 
 <!-- if modelstate that returned is not valid, say that saving failed-->
 @if (Model.ErrorMessage != null)
@@ -197,7 +204,7 @@
 <div class="table-responsive-sm">
 
         <!--table, 24 long horizontal -->
-    <table class="table roster-table table-hover" style="background-color: white;">
+        <table class="table roster-table table-hover" style="background-color: white;">
             <thead>
                 <tr class="">
                 <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Naam</th>
@@ -279,9 +286,15 @@
                                 </td>
 
                             }else{
-                                <td class="roster-table-cell">
-                                    
-                                </td>
+                                if (Model.IsPlanned(employee, i))
+                                    {
+                                        <td class="roster-table-cell">
+                                        </td>
+                                    }else{
+                                        <td class="roster-table-cell roster-table-cell-empty">
+                                        </td>
+                                    }
+                              
                                 }
 
 
@@ -293,18 +306,14 @@
                     
                     <!--Add new shift row.-->
                     
-                    <tr class="roster-shift-containter" id="AddShiftRow" >
-                            <td class="roster-table-employee-cell text-center">
-                                 +
+                    <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" >
+                            <td colspan="25" class="roster-table-employee-cell text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                            </svg>
+                            Dienst toevoegen
                             </td>
 
-                    @for (int i = 0; i < 24; i++)
-                    {
-
-                        <td class="roster-table-cell">
-                        </td>
-  
-                    }
                     </tr>
         
                 }
@@ -325,11 +334,25 @@
 
 <script>
  
+    
     var rows = document.querySelectorAll('tr');
     var lastrow = rows[rows.length - 1];
     lastrow.addEventListener('click', () => {
         onRowClick();
     });
+
+
+
+
+        const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
+        
+        emptycells.forEach(cell => {
+            cell.addEventListener('click', function handleClick(event) {
+                onRowClick();
+            });
+        });
+
+
 </script>
 
 <div id="modal" class="modal">

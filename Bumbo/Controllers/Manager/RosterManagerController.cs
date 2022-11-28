@@ -86,8 +86,9 @@ namespace Bumbo.Controllers.Manager
             if (errormessage != null)
             {
                 viewModel.ErrorMessage = errormessage;
+          
             }
-            
+
             return View(viewModel);
         }
 

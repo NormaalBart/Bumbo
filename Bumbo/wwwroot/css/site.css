@@ -250,4 +250,7 @@ p {
 }
 
 
+.roster-table-addbtn {
+    background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
+}
 
