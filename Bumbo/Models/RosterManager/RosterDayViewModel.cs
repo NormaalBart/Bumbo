@@ -25,7 +25,7 @@ namespace Bumbo.Models.RosterManager
         public List<EmployeeRosterViewModel> AvailableEmployees { get; set; }
 
         // selected stuff for creating a new shift
-        public int SelectedEmployeeId { get; set; }
+        public string SelectedEmployeeId { get; set; }
         public int SelectedDepartmentId { get; set; }
         [DataType(DataType.Time)]
         public DateTime SelectedStartTime { get; set; }
@@ -207,6 +207,7 @@ namespace Bumbo.Models.RosterManager
             return time + ":00";
         }
 
+    
 
 
     }

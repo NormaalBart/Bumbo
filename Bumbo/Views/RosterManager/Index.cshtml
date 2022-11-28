@@ -39,13 +39,13 @@
   
 <div>
 
-    <dl class="row border">
-        <div class="border col-sm d-flex justify-content-center flex-nowrap">
+    <div class="row border ">
+        <div class="border col-sm d-flex justify-content-center flex-nowrap ">
 
-            <dt>
+            <div>
                 @Html.DisplayNameFor(model => model.CassierePrognose) :
-            </dt>
-            <dd>
+            </div>
+            <div>
                 @if (Model.CassierePrognose == -1)
                 {
                     <span>Geen Info</span>
@@ -54,14 +54,14 @@
                 {
                     <span>@Model.CassierePrognose Uren</span>
                 }
-            </dd>
+            </div>
         </div>
-
+        
         <div class="border col-sm d-flex justify-content-center flex-nowrap">
-            <dt>
+                <div>
                 @Html.DisplayNameFor(model => model.FreshPrognose) :
-            </dt>
-            <dd>
+            </div>
+                <div>
                 @if (Model.FreshPrognose == -1)
                 {
                     <span>Geen Info</span>
@@ -70,14 +70,14 @@
                 {
                     <span>@Model.FreshPrognose Uren</span>
                 }
-            </dd>
+            </div>
         </div>
 
         <div class="border col-sm d-flex justify-content-center flex-nowrap">
-            <dt>
+            <div>
                 @Html.DisplayNameFor(model => model.StockersPrognose) :
-            </dt>
-            <dd>
+            </div>
+                <div>
                 @if (Model.StockersPrognose == -1)
                 {
                     <span>Geen Info</span>
@@ -86,12 +86,12 @@
                 {
                     <span>@Model.StockersPrognose Uren</span>
                 }
-            </dd>
+            </div>
         </div>
 
 
 
-    </dl>
+    </div>
 </div>
 
 
@@ -150,7 +150,6 @@
     // Everytime the screen is resized, we resize every shift that's in the list along with it.
     window.addEventListener("resize", function () {
         listshifts.forEach(resize);
-        console.log(screen.width);
     });
 
 
@@ -166,6 +165,13 @@
         editmodal.style.display = "block";
         
         document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
+            document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
+            
+            document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
+           
+            document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
+            document.getElementById("employeeIdInput").value = shiftinfo.shiftEmployeeId;
+        
     }
 
     function onRowClick() {
@@ -228,8 +234,8 @@
                                 {
 
                                 <td id="roster-start" class="roster-table-cell ">
-                                 
-                                    <div id="roster-start-div " class="roster-shift text-center" style="height: 100%;">
+
+                                        <div id="roster-start-div " class="roster-shift text-center" style="height: 100%;" runat="server">
                                         @*If the shift is very short, we use a different string not make it ugly.*@
                                         @if (Model.GetShiftLength(employee, i) < 2)
                                         {
@@ -247,19 +253,26 @@
                                             getWidthOfbase(above_div, @Model.GetShiftLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
 
                                             // we add this shift to the list of shifts:
-                                            var shift = { element: above_div, shiftlength: @Model.GetShiftLength(employee, i), shiftstartperc: @Model.GetShiftStartPercentage(employee, i), shiftendperc: @Model.GetShiftEndPercentage(employee, i), shiftid: @Model.GetShiftOnHourOfEmployee(employee, i).Id };
+                                                var shift = { element: above_div, shiftlength: @Model.GetShiftLength(employee, i), shiftstartperc: @Model.GetShiftStartPercentage(employee, i), shiftendperc: @Model.GetShiftEndPercentage(employee, i), shiftid: @Model.GetShiftOnHourOfEmployee(employee, i).Id, shiftStartTime: '@Model.GetShiftOnHourOfEmployee(employee, i).StartTime.ToString("HH:mm")', shiftEndTime: '@Model.GetShiftOnHourOfEmployee(employee, i).EndTime.ToString("HH:mm")'};
                           
                                             listshifts.push(shift);
 
                                             // possibly in the future 
                                             // shiftid, employeename, employeeid, departmentname, departmentid, starttime, endtime 
                                             // pass these values along with the function to auto fill the modal.
+
+
+
+
+                                                var shiftinfo = { shiftid: shift.shiftid, shiftStartHour: shift.shiftStartTime, shiftEndTimeHour: shift.shiftEndTime, shiftDepartmentId: '@Model.GetShiftOnHourOfEmployee(employee, i).Department.Id', shiftEmployeeId: '@employee.Id' };
                                            
 
-                                            var shiftinfo = { shiftid: shift.shiftid};
-                                    
-                                            above_div.addEventListener("click", onShiftClick.bind(this, shiftinfo), false);
 
+                                            above_div.addEventListener("click", onShiftClick.bind(this, shiftinfo), false);
+                                                above_div.addEventListener('click', () => {
+                                                    onShiftClick.bind(this, shiftinfo);
+                                                    
+                                                });
                                             </script>
                                     </div>
 
@@ -372,12 +385,18 @@
                 <h2>Wijzig een dienst</h2>
                 <div class="row">
                     <span class="col">Medewerker:</span>
-                    <input  disabled asp-for="SelectedEmployeeId" value="" class="form-control col">
+                       
+                        <select id="employeeIdInput" asp-for="SelectedEmployeeId" class="form-control col">
 
+                            @foreach (var employee in Model.AvailableEmployees)
+                            {
+                                <option value="@employee.Id">@employee.FullName</option>
+                            }
+                        </select>
                     @*TODO make it so you can only select department for employee who have them.*@
                     <span class="col">In afdeling:</span>
 
-                    <select  asp-for="SelectedDepartmentId" class="form-control col">
+                    <select id="departmentIdInput" asp-for="SelectedDepartmentId" class="form-control col">
 
                         @foreach (var dep in Model.Departments)
                         {
