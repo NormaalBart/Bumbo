@@ -93,6 +93,44 @@
                             }
                         </div>
                     </div>
+                    <div class="p-3">
+                        <h3 class="text-center">Speciale openingstijden</h3>
+                        <div class="btn-warning text-center">
+                            @Html.ActionLink("Voeg toe", "AddSpecialOpeningHour", "Branch", new { id = Model.Id })
+                        </div>
+                        @if (Model.SpecialOpeningHours.Count != 0)
+                        {
+                            <div class="row border border-3 border-dark p-1">
+                                <table>
+                                    <tr>
+                                        <th width=200px>Dag</th>
+                                        <th width=200px>Openingstijd</th>
+                                        <th width=200px>Sluitingstijd</th>
+                                        <th width=200px>Actie</th>
+                                    </tr>
+                                </table>
+                                @for (int i = 0; i < Model.SpecialOpeningHours.Count; i++)
+                                {
+                                    <table>
+                                        <tr>
+                                            <th width=200px>
+                                                @Html.DisplayFor(model => model.SpecialOpeningHours[i].Date)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayFor(model => model.SpecialOpeningHours[i].OpenTime)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayFor(model => model.SpecialOpeningHours[i].CloseTime)
+                                            </th>
+                                            <th>
+                                                @Html.ActionLink("Verwijder", "DeleteSpecialOpeningHour", new { date = Model.SpecialOpeningHours[i].Date, id = Model.Id } )
+                                            </th>
+                                        </tr>
+                                    </table>
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </form>

@@ -54,7 +54,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branches", (string)null);
 
                     b.HasData(
                         new
@@ -83,7 +83,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
 
                     b.HasData(
                         new
@@ -129,7 +129,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("PrognosisId");
 
-                    b.ToTable("DepartmentPrognosis");
+                    b.ToTable("DepartmentPrognosis", (string)null);
                 });
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
@@ -359,7 +359,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("OpeningHoursOverride");
+                    b.ToTable("OpeningHoursOverride", (string)null);
                 });
 
             modelBuilder.Entity("BumboData.Models.PlannedShift", b =>
@@ -394,7 +394,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("PlannedShifts");
+                    b.ToTable("PlannedShifts", (string)null);
                 });
 
             modelBuilder.Entity("BumboData.Models.Prognosis", b =>
@@ -421,7 +421,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Prognoses");
+                    b.ToTable("Prognoses", (string)null);
                 });
 
             modelBuilder.Entity("BumboData.Models.Standard", b =>
@@ -439,7 +439,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Standards");
+                    b.ToTable("Standards", (string)null);
 
                     b.HasData(
                         new
@@ -493,7 +493,7 @@ namespace BumboData.Migrations
 
                     b.HasKey("BranchId", "DayOfWeek");
 
-                    b.ToTable("StandardOpeningHours");
+                    b.ToTable("StandardOpeningHours", (string)null);
 
                     b.HasData(
                         new
@@ -579,7 +579,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("UnavailableMoments");
+                    b.ToTable("UnavailableMoments", (string)null);
                 });
 
             modelBuilder.Entity("BumboData.Models.WorkedShift", b =>
@@ -615,7 +615,7 @@ namespace BumboData.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("WorkedShifts");
+                    b.ToTable("WorkedShifts", (string)null);
 
                     b.HasData(
                         new

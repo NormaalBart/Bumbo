@@ -152,7 +152,8 @@ namespace Bumbo.Controllers.Admin
                 if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                 {
                     return RedirectToAction(nameof(Index));
-                } else
+                }
+                else
                 {
                     return RedirectToAction("Login", "Account");
                 }
@@ -203,6 +204,38 @@ namespace Bumbo.Controllers.Admin
         {
             _branchRepository.SetActive(id);
             return RedirectToAction(nameof(Index));
+        }
+ 
+        public ActionResult AddSpecialOpeningHour(int id)
+        {
+            var viewModel = new OpeningHoursOverrideViewModel { BranchId = id};
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddSpecialOpeningHour(OpeningHoursOverrideViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+            var branch = _branchRepository.Get(viewModel.BranchId);
+            if(branch == null)
+            {
+                // We have no idea what the branch of the user is. Let accountcontroller figure it out and redirect him.
+                return RedirectToAction("Login", "Account");
+            }
+            var openingHour = _mapper.Map<OpeningHoursOverride>(viewModel);
+            branch.OpeningHoursOverrides.Add(openingHour);
+            _branchRepository.Update(branch);
+            return RedirectToAction(nameof(Edit), new { Id = viewModel.BranchId });
+        }
+
+        public ActionResult DeleteSpecialOpeningHour(DateTime date, int id)
+        {
+            _branchRepository.RemoveSpecialOpeningHour(id, DateOnly.FromDateTime(date));
+            return RedirectToAction(nameof(Edit), new { Id = id});
         }
     }
 }

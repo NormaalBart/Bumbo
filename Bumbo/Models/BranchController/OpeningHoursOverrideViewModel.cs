@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.BranchController
 {
-    public class OpeningHoursOverrideViewModel
+    public class OpeningHoursOverrideViewModel : IValidatableObject
     {
 
         public int BranchId { get; set; }
@@ -11,7 +11,8 @@ namespace Bumbo.Models.BranchController
         [Required]
         [DataType(DataType.Date)]
         [DisplayName("Datum")]
-        public DateOnly Date{ get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
+        public DateTime Date { get; set; }
 
         [Required]
         [DataType(DataType.Time)]
@@ -27,9 +28,13 @@ namespace Bumbo.Models.BranchController
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (OpenTime > CloseTime)
+            if (OpenTime >= CloseTime)
             {
-                yield return new ValidationResult("Openingstijd is later dan de sluitingstijd", new string[] { "OpenTime" });
+                yield return new ValidationResult("Openingstijd is later of gelijk aan de sluitingstijd", new string[] { "OpenTime" });
+            }
+            if (Date.CompareTo(new DateTime()) <= 0)
+            {
+                yield return new ValidationResult("Datum kan niet in het verleden of vandaag zijn", new string[] { "Date" });
             }
         }
 

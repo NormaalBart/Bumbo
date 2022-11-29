@@ -8,5 +8,6 @@ namespace BumboData.Interfaces.Repositories
         List<Branch> GetUnmanagedBranches();
         void SetInactive(int id);
         void SetActive(int id);
+        void RemoveSpecialOpeningHour(int id, DateOnly date);
     }
 }

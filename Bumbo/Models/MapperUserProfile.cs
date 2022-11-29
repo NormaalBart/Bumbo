@@ -72,7 +72,8 @@ namespace Bumbo.Models
                     }
                 });
             CreateMap<Branch, BranchEditViewModel>()
-                .ForMember(dest => dest.OpeningHours, opt => opt.MapFrom(src => src.StandardOpeningHours));
+                .ForMember(dest => dest.OpeningHours, opt => opt.MapFrom(src => src.StandardOpeningHours))
+                .ForMember(dest => dest.SpecialOpeningHours, opt => opt.MapFrom(src => src.OpeningHoursOverrides));
             CreateMap<BranchEditViewModel, Branch>()
                 .ForMember(dest => dest.StandardOpeningHours, opt => opt.MapFrom(src => src.OpeningHours))
                 .AfterMap((src, dest) =>
@@ -88,7 +89,14 @@ namespace Bumbo.Models
             CreateMap<StandardOpeningHours, OpeningHoursViewModel>()
                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => src.OpenTime.HasValue ? new TimeSpan(src.OpenTime.Value.Ticks) : TimeSpan.MinValue))
                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => src.CloseTime.HasValue ? new TimeSpan(src.CloseTime.Value.Ticks) : TimeSpan.MinValue));
-
+            CreateMap<OpeningHoursOverrideViewModel, OpeningHoursOverride>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.Date)))
+                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeOnly(src.OpenTime.Ticks)))
+                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeOnly(src.CloseTime.Ticks)));
+            CreateMap<OpeningHoursOverride, OpeningHoursOverrideViewModel>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime(TimeOnly.MinValue)))
+               .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeSpan(src.OpenTime.Ticks)))
+               .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeSpan(src.CloseTime.Ticks)));
 
             CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
             CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();

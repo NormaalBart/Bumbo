@@ -36,12 +36,12 @@ namespace Bumbo.Models.BranchController
 
             if (CloseTime == null)
             {
-                yield return new ValidationResult("Openingstijd mag niet leeg zijn als de winkel open is", new string[] { "CloseTime" });
+                yield return new ValidationResult("Sluitingstijd mag niet leeg zijn als de winkel open is", new string[] { "CloseTime" });
             }
 
-            if (OpenTime > CloseTime)
+            if (OpenTime >= CloseTime)
             {
-                yield return new ValidationResult("Openingstijd is later dan de sluitingstijd", new string[] { "OpenTime" });
+                yield return new ValidationResult("Openingstijd is later of gelijk aan de sluitingstijd", new string[] { "OpenTime" });
             }
         }
     }
