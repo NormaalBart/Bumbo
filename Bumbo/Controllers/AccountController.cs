@@ -13,12 +13,14 @@ namespace Bumbo.Controllers
         private SignInManager<Employee> _signInManager;
         private UserManager<Employee> _userManager;
         private IEmployeeRepository _employeeRepository;
+        private readonly IBranchRepository _branchRepository;
 
-        public AccountController(SignInManager<Employee> signInManager, UserManager<Employee> userManager, IEmployeeRepository employeeRepository)
+        public AccountController(SignInManager<Employee> signInManager, UserManager<Employee> userManager, IEmployeeRepository employeeRepository, IBranchRepository branchRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _employeeRepository = employeeRepository;
+            _branchRepository = branchRepository;
         }
 
         public async Task<IActionResult> Login()
@@ -30,6 +32,11 @@ namespace Bumbo.Controllers
                 {
                     return await RedirectToPageAsync(employee);
                 }
+            }
+            if(TempData["InactiveBranch"] is not null)
+            {
+                ModelState.AddModelError("InactiveBranch", (string)TempData["InactiveBranch"]);
+                TempData["InactiveBranch"] = null;
             }
             return View();
         }
@@ -61,6 +68,13 @@ namespace Bumbo.Controllers
 
         private async Task<IActionResult> RedirectToPageAsync(Employee employee)
         {
+            var branch = employee.DefaultBranch == null ? _branchRepository.Get(employee.DefaultBranchId) : employee.DefaultBranch;
+            if(branch.Inactive)
+            {
+                await _signInManager.SignOutAsync();
+                TempData["InactiveBranch"] = "Deze branch is inactief";
+                return RedirectToAction(nameof(Login));
+            }
             //User does not have roles yet assigned, so have to get from database.
             var roles = await _userManager.GetRolesAsync(employee);
             if (roles.Contains(RoleType.ADMINISTRATOR.Name))

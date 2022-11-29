@@ -14,7 +14,9 @@
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                 <form asp-action="login" method="post">
-
+                    <div class="form-outline mb-4 btn-warning">
+                        @Html.ValidationMessage("InactiveBranch")
+                    </div>
                     <!-- Email input -->
                     <div class="form-outline mb-4">
                         <label asp-for="EmailAddress"></label>
