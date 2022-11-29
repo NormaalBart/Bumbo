@@ -280,7 +280,7 @@ namespace BumboData
 
             builder.Properties<TimeOnly>()
                 .HaveConversion<TimeOnlyConverter>()
-                .HaveColumnType("date");
+                .HaveColumnType("datetime");
         }
 
         /// <summary>
