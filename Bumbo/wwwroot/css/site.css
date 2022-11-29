@@ -253,3 +253,55 @@ p {
     background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
 }
 
+
+
+.roster-overview-iteminfo {
+    font-size: 9px;
+}
+
+.roster-overview {
+    background-color: darkgrey;
+}
+
+.roster-overview-date {
+    background-color: green;
+    height: 100px;
+}
+
+.roster-overview-date span {
+    height: inherit;
+    padding: 40px;
+}
+
+.roster-overview-date {
+
+    padding: 70px 25px;
+    width: 100%;
+    background: #1abc9c;
+    text-align: center;
+}
+
+    /* Month list */
+    .roster-overview-date ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+        .roster-overview-date ul li {
+            color: white;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+    /* Previous button inside month header */
+    .roster-overview-date .prev {
+        float: left;
+        padding-top: 10px;
+    }
+
+    /* Next button */
+    .roster-overview-date .next {
+        float: right;
+        padding-top: 10px;
+    }

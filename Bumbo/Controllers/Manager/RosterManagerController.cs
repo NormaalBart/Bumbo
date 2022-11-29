@@ -4,10 +4,12 @@ using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
 using BumboServices.Interface;
+using Itenso.TimePeriod;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Numerics;
 
 namespace Bumbo.Controllers.Manager
@@ -90,6 +92,37 @@ namespace Bumbo.Controllers.Manager
 
             return View(viewModel);
         }
+
+        public async Task<IActionResult> OverView(string? dateInput)
+        {
+            var employee = await _userManager.GetUserAsync(User);
+            DateTime date = DateTime.Now;
+            if (dateInput != null)
+            {
+                date = DateTime.Parse(dateInput).Date;
+            }
+
+            OverviewList overviewList = new OverviewList();
+            
+            for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+            {
+                OverviewItem item = new OverviewItem();
+                item.Date = new DateTime(date.Year, date.Month, i);
+                // gets the sum of the prognosis hours of departments
+                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(date, employee.DefaultBranchId)
+                                        + _prognosesServices.GetStockersPrognose(date, employee.DefaultBranchId)
+                                        + _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
+                // gets the sum of total planned hours on day
+                item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId, date);
+                overviewList.Days.Add(item);
+            }
+            overviewList.Date = date;
+
+
+
+            return View(overviewList);
+        }
+
 
         
         [HttpPost]

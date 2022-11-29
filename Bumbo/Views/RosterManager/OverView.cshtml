@@ -1,0 +1,47 @@
+﻿@model Bumbo.Models.RosterManager.OverviewList
+
+@{
+    ViewData["Title"] = "Roosterbeheer";
+}
+<body class="roster-overview">
+
+    <div class="roster-overview-date">
+  <ul>
+    <li class="prev">&#10094;</li>
+    <li class="next">&#10095;</li>
+    <li> @Model.Date.ToString("MMMM")<br><span style="font-size:18px"> @Model.Date.ToString("YYYY") </span></li>
+  </ul>
+</div>
+
+
+
+   @for (int week = 0; week < 5; week++)
+        { 
+        <div class="row">
+            @for (int day = 0; day < 7; day++)
+            {
+                <div class="col">
+
+                @if (@Model.GetDay(week, day) != null)
+                {
+                    <div class="border border-1 text-center m-2">
+                        <div class="m-3">
+                            <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
+
+                            <div class="roster-overview-iteminfo">
+                                <p>Prognose: @Model.GetDay(week, day).PrognosisHours</p>
+                                <p>Ingeplande uren:  @Model.GetDay(week, day).RosteredHours</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+                     
+                </div>
+                }
+
+        </div>
+        }
+
+
+
+</body>

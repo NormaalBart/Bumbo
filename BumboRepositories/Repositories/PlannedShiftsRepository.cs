@@ -90,5 +90,11 @@ namespace BumboRepositories.Repositories
             return DbSet.Where(s => s.BranchId == branchId && s.EmployeeId == employeeId
                                                            && s.StartTime >= from && s.EndTime <= until).ToList();
         }
+
+        public double GetTotalHoursPlannedOnDay(int branchId, DateTime date)
+        {
+            return 100;
+            return DbSet.Where(s => s.BranchId == branchId && s.StartTime.Date == date).Sum(s => s.EndTime.Subtract(s.StartTime).TotalHours);
+        }
     }
 }
