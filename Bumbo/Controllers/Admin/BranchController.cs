@@ -5,23 +5,27 @@ using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers.Admin
 {
 
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator,Manager")]
     public class BranchController : Controller
     {
+        private readonly UserManager<Employee> _userManager;
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
 
-        public BranchController(IMapper mapper, IBranchRepository branchRepository)
+        public BranchController(UserManager<Employee> userManager, IMapper mapper, IBranchRepository branchRepository)
         {
+            _userManager = userManager;
             _mapper = mapper;
             _branchRepository = branchRepository;
         }
 
+        [Authorize(Roles = "Administrator")]
         // GET: BranchController
         public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort)
         {
@@ -75,6 +79,7 @@ namespace Bumbo.Controllers.Admin
             return View(resultingListViewModel);
         }
 
+        [Authorize(Roles = "Administrator")]
         // GET: BranchController/Create
         public ActionResult Create()
         {
@@ -86,6 +91,7 @@ namespace Bumbo.Controllers.Admin
             return View(viewModel);
         }
 
+        [Authorize(Roles = "Administrator")]
         // POST: BranchController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -97,7 +103,7 @@ namespace Bumbo.Controllers.Admin
                 var openingHours = branch.StandardOpeningHours;
                 branch.StandardOpeningHours = new List<StandardOpeningHours>();
                 branch = _branchRepository.Create(branch);
-                foreach(var openingHour in openingHours)
+                foreach (var openingHour in openingHours)
                 {
                     openingHour.Branch = branch;
                     openingHour.BranchId = branch.Id;
@@ -107,6 +113,13 @@ namespace Bumbo.Controllers.Admin
                 return RedirectToAction(nameof(Index));
             }
             return View(branchModel);
+        }
+
+        [Authorize(Roles = "Manager")]
+        public async Task<ActionResult> EditManager()
+        {
+            var manager = await _userManager.GetUserAsync(User);
+            return RedirectToAction(nameof(Edit), new { Id = manager.DefaultBranchId });
         }
 
         // GET: BranchController/Edit/5
@@ -144,6 +157,7 @@ namespace Bumbo.Controllers.Admin
             }
         }
 
+        [Authorize(Roles = "Administrator")]
         public ActionResult SetInactive(int id)
         {
             var branch = _branchRepository.Get(id);
@@ -155,6 +169,7 @@ namespace Bumbo.Controllers.Admin
             return View(branchViewModel);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SetInactive(int id, IFormCollection collection)
@@ -163,6 +178,7 @@ namespace Bumbo.Controllers.Admin
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Administrator")]
         public ActionResult SetActive(int id)
         {
             var branch = _branchRepository.Get(id);
@@ -174,6 +190,7 @@ namespace Bumbo.Controllers.Admin
             return View(branchViewModel);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SetActive(int id, IFormCollection collection)
