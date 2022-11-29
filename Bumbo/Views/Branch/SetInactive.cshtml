@@ -2,7 +2,7 @@
 @model BranchCreateViewModel
 
 @{
-    ViewData["Title"] = "SetInactive";
+    ViewData["Title"] = "Zet inactief";
 }
 
 <h3>Weet je zeker dat je deze branch inactief wilt zetten?</h3>
@@ -27,6 +27,6 @@
     
     <form asp-action="SetInactive">
         <input type="submit" value="Zet inactief" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">Terug naar lijst</a>
     </form>
 </div>

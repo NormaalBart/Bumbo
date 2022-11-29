@@ -6,7 +6,7 @@ namespace Bumbo.Models.PrognosisManager
     public class PrognosisViewModel
     {
         public int Id { get; set; }
- 
+
         [DisplayName("Aantal Collies")]
         [Required]
         [Range(0, 100000, ErrorMessage = "Aantal Collies moet tussen 0 en 100.000 liggen")]

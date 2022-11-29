@@ -131,13 +131,15 @@ public class HourExportService : IHourExportService
         {
             EmployeeId = employee.Id,
             EmployeeName = employee.FullName(),
-            Hours = Math.Round(model.HoursWorked.TotalHours, 2, MidpointRounding.AwayFromZero),
+            Hours = Math.Round(model.HoursWorked.TotalHours + 
+                                (model.Surcharges[SurchargeType.Sick] / 100 * SurchargeType.Sick.SurchargePercentage()).TotalHours, 2, MidpointRounding.AwayFromZero),
             SurchargePercentage = "0%"
         });
 
         // Only add rows that have more than the value of 0
         list.AddRange(model.Surcharges
-            .Where(s=>s.Value.Ticks != 0)
+                // Don't include sick as seperate entry in export.
+            .Where(s=>s.Value.Ticks != 0 && s.Key != SurchargeType.Sick)
             .Select(surcharge => new ExportCsvRowModel()
         {
             EmployeeId = employee.Id,

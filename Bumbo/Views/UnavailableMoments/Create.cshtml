@@ -1,0 +1,57 @@
+﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsViewModel
+@using BumboData.Enums
+@{
+    ViewData["Title"] = "Afwezigheid toevoegen";
+}
+<h1 class="text-center">Afwezigheid toevoegen</h1>
+
+
+<p class="text-center alert-danger">@Html.ValidationMessage("Invalid Moment")</p>
+
+
+
+
+<div class="container ">
+    <div >
+        <form asp-action="Create" id="CreateForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col border border-3 border-dark employee-create-box">
+                    <div class="col">
+                        <div class="row border border-3 border-dark p-1">
+                            <div class="form-group col-6">
+                                <input asp-for="StartTime" class="form-control" asp-format="{0:yyyy-MM-dd HH:mm}" />
+                                <span asp-validation-for="StartTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-6">
+                                <input asp-for="EndTime" class="form-control" asp-format="{0:yyyy-MM-dd HH:mm}" />
+                                <span asp-validation-for="EndTime" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <h5>Reden van afwezigheid:</h5>
+                                
+                                <tr>
+                                    @Html.RadioButtonFor(model => model.Type, UnavailableMomentType.School)School
+                                    @Html.RadioButtonFor(model => model.Type, UnavailableMomentType.Other)Anders
+                                </tr>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <input type="submit" value="Voeg toe!" form="CreateForm" class="btn btn-success btn-lg" />
+</div>
+
+<div class ="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

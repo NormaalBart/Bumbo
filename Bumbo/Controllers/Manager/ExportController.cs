@@ -23,7 +23,6 @@ public class ExportController : Controller
         IWorkedShiftRepository workedShiftRepository,
         IHourExportService hourExportService,
         UserManager<Employee> userManager,
-        ICAOService service,
         IImportService importService)
     {
         _workedShiftRepository = workedShiftRepository;
@@ -93,6 +92,7 @@ public class ExportController : Controller
             ExportOverviewSortingOption.DifferenceDesc => model.ExportOverviewListItemViewModels
                 .OrderBy(m => m.GetDifference().HoursWorked).ToList()
         };
+
         return View(model);
     }
 

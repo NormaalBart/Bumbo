@@ -1,17 +1,13 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using BumboData.Models;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Bumbo.Models.RosterManager
 {
     public class RosterDayViewModel
     {
-        //[DisplayName("Kassa Afdeling")]
-        //public double? UpdatedCassiereDepartment => Math.Round((double)(PrognosisDay.CassiereDepartment - this.UpdatePrognosisWithoutPlannedHours(DepartmentEnum.Cassiere)), 2);
-        //[DisplayName("Vers Afdeling")]
-        //public double? UpdatedFreshDepartment => Math.Round((double)(PrognosisDay.FreshDepartment - this.UpdatePrognosisWithoutPlannedHours(DepartmentEnum.Fresh)), 2);
-        //[DisplayName("VakkenVullers Afdeling")]
-        //public double? UpdatedStockersDepartment => Math.Round((double)(PrognosisDay.StockersDepartment - UpdatePrognosisWithoutPlannedHours(DepartmentEnum.Stocker)), 2);
 
         public int PrognosisDayId { get; set; }
         public DateTime Date { get; set; }
@@ -23,11 +19,31 @@ namespace Bumbo.Models.RosterManager
         [DisplayName("VakkenVullers Afdeling")]
         public double StockersPrognose { get; set; }
         
-        public List<EmployeeRosterViewModel> Employees { get; set; }
+        // All employees who are already rostered.
+        public List<EmployeeRosterViewModel> RosteredEmployees { get; set; }
+        // all employees who are available to be chosen when planning a new shift.
+        public List<EmployeeRosterViewModel> AvailableEmployees { get; set; }
+
+        // selected stuff for creating a new shift
+        public string SelectedEmployeeId { get; set; }
+        public int SelectedDepartmentId { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime SelectedStartTime { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime SelectedEndTime { get; set; }
+
+        public int SelectedShiftId { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+
+        public List<DepartmentRosterViewModel> Departments { get; set; }
+
 
         public RosterDayViewModel()
         {
-            Employees = new List<EmployeeRosterViewModel>();
+            RosteredEmployees = new List<EmployeeRosterViewModel>();
+            AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
 
 
@@ -107,6 +123,89 @@ namespace Bumbo.Models.RosterManager
             FreshPrognose = Math.Round(FreshPrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
             StockersPrognose = Math.Round(StockersPrognose, 2);
             
+        }
+
+
+        public ShiftViewModel? GetShiftOnHourOfEmployee(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return null;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                return shifts.First();
+            }
+            return null;
+        }
+
+        //<summary>
+        // Returns the length in amount of hours of the shift of given employee starting on given hour.
+        // Returned value does not include minutes. 
+        //</summary>
+        public int GetShiftHourLength(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return 0;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                return shifts.First().EndTime.Hour - shifts.First().StartTime.Hour;
+            }
+            return 0;
+        }
+
+
+        // These 2 methods return a percentage of the start and end time so the off set can be set in the frontend
+        // there's probably a better way of doing these, possibly by returning a time span
+        // and then calculating the percentages in the view. But for now this works perfectly fine
+        // No need to overcomplicate this.
+        public int GetShiftStartPercentage(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return 0;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                // convert minutes into percentage of hour
+                return this.CalculateMinutePercentage(shifts.First().StartTime.Minute);
+
+            }
+            return 0;
+        }
+
+        public int GetShiftEndPercentage(EmployeeRosterViewModel employee, int hour)
+        {
+            if (employee.PlannedShifts == null)
+            {
+                return 0;
+            }
+            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
+            if (shifts.Count > 0)
+            {
+                // convert minutes into percentage of hour
+                return this.CalculateMinutePercentage(shifts.First().EndTime.Minute);
+
+            }
+            return 0;
+        }
+
+        private int CalculateMinutePercentage(double minute)
+        {
+            double shiftpercentage = (minute / 60) * 100;
+            return (int)Math.Floor(shiftpercentage);
+        }
+
+        // It's important that this display time is always the same amount of characters long.
+        public string GetHeaderTimeString(int time)
+        {
+            TimeOnly timeOnly = new TimeOnly(time, 0);
+            return timeOnly.ToString();
         }
 
     }

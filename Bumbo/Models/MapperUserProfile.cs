@@ -6,9 +6,9 @@ using Bumbo.Models.EmployeeManager.Manager;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
+using Bumbo.Models.UnavailableMoments;
 using BumboData.Models;
 using BumboRepositories.Utils;
-using BumboServices.Import;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bumbo.Models
@@ -56,8 +56,6 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DepartmentId))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.DepartmentName));
             CreateMap<PlannedShift, ShiftViewModel>();
-            CreateMap<PlannedShift, RosterShiftCreateViewModel>();
-            CreateMap<RosterShiftCreateViewModel, PlannedShift>();
             CreateMap<ListIndexBranchViewModel, Branch>();
             CreateMap<Branch, ListIndexBranchViewModel>()
                 .ForMember(dest => dest.Employees, opt => opt.MapFrom(src => src.DefaultEmployees.Count))
@@ -81,11 +79,21 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
                 .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeSpan(src.OpenTime.Ticks)))
                 .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeSpan(src.CloseTime.Ticks)));
+
+            CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
+            CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
+
+            CreateMap<PlannedShift, EmployeeShiftViewModel>().ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber)).ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street)).ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City)).ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
+
+            CreateMap<Department, DepartmentRosterViewModel>();
+            CreateMap<DepartmentRosterViewModel, Department>();
+
             CreateMap<PlannedShift, EmployeeShiftViewModel>()
                 .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
+
         }
     }
 }
