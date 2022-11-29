@@ -31,6 +31,9 @@ namespace Bumbo.Models.BranchController
         [DisplayName("Straat")]
         public String Street { get; set; }
 
+        public bool Inactive { get; set; }
+
+
         [DisplayName("Adres")]
         public string FormattedStreet
         {

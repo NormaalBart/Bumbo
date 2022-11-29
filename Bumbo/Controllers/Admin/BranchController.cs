@@ -162,5 +162,24 @@ namespace Bumbo.Controllers.Admin
             _branchRepository.SetInactive(id);
             return RedirectToAction(nameof(Index));
         }
+
+        public ActionResult SetActive(int id)
+        {
+            var branch = _branchRepository.Get(id);
+            if (branch == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            var branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
+            return View(branchViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SetActive(int id, IFormCollection collection)
+        {
+            _branchRepository.SetActive(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

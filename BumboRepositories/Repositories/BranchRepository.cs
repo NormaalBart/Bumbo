@@ -43,5 +43,15 @@ namespace BumboRepositories.Repositories
                 Update(branch);
             }
         }
+
+        public void SetActive(int id)
+        {
+            var branch = Get(id);
+            if (branch != null)
+            {
+                branch.Inactive = false;
+                Update(branch);
+            }
+        }
     }
 }

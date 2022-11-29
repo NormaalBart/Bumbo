@@ -110,9 +110,18 @@
                             </td>
                             <td>
                                 @Html.ActionLink("Verander", "Edit", new {  id=item.Id }) |
-                                <div class="btn btn-warning">
-                                    @Html.ActionLink("Zet inactief", "SetInactive", new {  id=item.Id })
-                                </div>
+                                @if (item.Inactive)
+                                {
+                                    <div class="btn btn-info">
+                                        @Html.ActionLink("Zet actief", "SetActive", new {  id=item.Id })
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="btn btn-warning">
+                                        @Html.ActionLink("Zet inactief", "SetInactive", new {  id=item.Id })
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }

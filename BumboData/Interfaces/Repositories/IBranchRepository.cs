@@ -7,5 +7,6 @@ namespace BumboData.Interfaces.Repositories
         IEnumerable<Branch> GetAllActiveBranches();
         List<Branch> GetUnmanagedBranches();
         void SetInactive(int id);
+        void SetActive(int id);
     }
 }
