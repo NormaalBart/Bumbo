@@ -31,16 +31,16 @@ namespace Bumbo.Controllers.Admin
 
             if (!includeInactive && !includeActive)
             {
-                branches = branches.Where(e => !e.Inactive);
+                branches = branches.Where(e => !e.Inactive).ToList();
                 resultingListViewModel.IncludeActive = true;
             }
             else if (!includeInactive && includeActive)
             {
-                branches = branches.Where(e => !e.Inactive);
+                branches = branches.Where(e => !e.Inactive).ToList();
             }
             else if (includeInactive && !includeActive)
             {
-                branches = branches.Where(e => e.Inactive);
+                branches = branches.Where(e => e.Inactive).ToList();
             }
 
             if (!string.IsNullOrEmpty(searchString))
