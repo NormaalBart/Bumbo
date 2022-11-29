@@ -133,7 +133,8 @@ namespace Bumbo.Controllers.Admin
             }
             try
             {
-                Branch branch = _mapper.Map<Branch>(branchViewModel);
+                var branch = _branchRepository.Get(branchViewModel.Id);
+                _mapper.Map<BranchCreateViewModel, Branch>(branchViewModel, branch);
                 _branchRepository.Update(branch);
                 return RedirectToAction(nameof(Index));
             }

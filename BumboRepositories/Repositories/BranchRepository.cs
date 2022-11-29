@@ -24,6 +24,11 @@ namespace BumboRepositories.Repositories
             return DbSet.Where(branch => branch.Managers.Count == 0).ToList();
         }
 
+        public override Branch? Get(int id)
+        {
+            return DbSet.Include(Branch => Branch.StandardOpeningHours).FirstOrDefault(branch => branch.Id == id);
+        }
+
         public override IEnumerable<Branch> GetList()
         {
             return DbSet.Include(branch => branch.Managers).Include(branch => branch.DefaultEmployees).ToList();

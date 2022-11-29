@@ -1,55 +1,109 @@
 ﻿@using Bumbo.Models.BranchController
 @model BranchCreateViewModel
 
-@{
-    ViewData["Title"] = "Edit";
+
+<h1 class="text-center">Branch aanmaken</h1>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+    </div>
 }
 
-<h1>Edit</h1>
-
-<h4>Verander de branch @Model.Name</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            @Html.HiddenFor(branch => branch.Id)
+<div class="container ">
+    <div>
+        <form asp-action="Edit" id="EditForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShelvingDistance" class="control-label"></label>
-                <input asp-for="ShelvingDistance" class="form-control" />
-                <span asp-validation-for="ShelvingDistance" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" />
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HouseNumber" class="control-label"></label>
-                <input asp-for="HouseNumber" class="form-control" />
-                <span asp-validation-for="HouseNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Street" class="control-label"></label>
-                <input asp-for="Street" class="form-control" />
-                <span asp-validation-for="Street" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="row">
+                <div class="col border border-3 border-dark employee-create-box">
+                    <!--Branch informatie column-->
+                    @Html.HiddenFor(model => model.Id)
+                    <div class="col">
+                        <h5 class="text-center">Bedrijfsinformatie</h5>
+                        <div class="row border border-3 border-dark p-1">
+                            <div class="form-group col-4">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" placeholder="Naam" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-4">
+                                <label asp-for="ShelvingDistance" class="control-label"></label>
+
+                                <input asp-for="ShelvingDistance" class="form-control" placeholder="Spiegelmeters" />
+                                <span asp-validation-for="ShelvingDistance" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row border border-3 border-dark p-1">
+                            <h5 class="text-center">Plaats</h5>
+                            <div class="form-group col-4">
+                                <label asp-for="City" class="control-label"></label>
+                                <input asp-for="City" class="form-control" placeholder="Stad" />
+                                <span asp-validation-for="City" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-4">
+                                <label asp-for="Street" class="control-label"></label>
+                                <input asp-for="Street" class="form-control" placeholder="Straat" />
+                                <span asp-validation-for="Street" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-4">
+                                <label asp-for="HouseNumber" class="control-label"></label>
+                                <input asp-for="HouseNumber" class="form-control" placeholder="Huisnummer" />
+                                <span asp-validation-for="HouseNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col border border-3 border-dark employee-create-box">
+                    <div class="p-3">
+                        <div class="row border border-3 border-dark p-1">
+                            <table>
+                                <tr>
+                                    <th width=200px>Dag</th>
+                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
+                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
+                                    <th></th>
+                                </tr>
+                            </table>
+                            @for (int i = 0; i < Model.OpeningHours.Count; i++)
+                            {
+                                @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
+                                <table>
+                                    <tr>
+                                        <th width=200px>
+                                            @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
+                                        </th>
+                                        <th>
+                                            @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
+                                        </th>
+                                        <th>
+                                            @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
+                                        </th>
+                                    </tr>
+                                </table>
+                                <div class="text-center">
+                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
+                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <input type="submit" value="Veranderingen Opslaan!" form="EditForm" class="btn btn-success btn-lg" />
+</div>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

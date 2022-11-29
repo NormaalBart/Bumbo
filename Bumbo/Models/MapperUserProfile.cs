@@ -62,12 +62,25 @@ namespace Bumbo.Models
             CreateMap<Branch, ListIndexBranchViewModel>()
                 .ForMember(dest => dest.Employees, opt => opt.MapFrom(src => src.DefaultEmployees.Count))
                 .ForMember(dest => dest.Managers, opt => opt.MapFrom(src => string.Join(", ", src.Managers.Select(model => model.FullName()).OrderBy(str => str).ToList())));
+            CreateMap<Branch, BranchCreateViewModel>()
+                .ForMember(dest => dest.OpeningHours, opt => opt.MapFrom(src => src.StandardOpeningHours));
             CreateMap<BranchCreateViewModel, Branch>()
-                .ForMember(dest => dest.StandardOpeningHours, opt => opt.MapFrom(src => src.OpeningHours));
+                .ForMember(dest => dest.StandardOpeningHours, opt => opt.MapFrom(src => src.OpeningHours))
+                .AfterMap((src, dest) =>
+                {
+                    foreach(var standardOpeningHour in dest.StandardOpeningHours)
+                    {
+                        standardOpeningHour.BranchId = dest.Id;
+                    }
+                });
             CreateMap<OpeningHouersViewModel, StandardOpeningHours>()
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
                 .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeOnly(src.OpenTime.Ticks)))
                 .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeOnly(src.CloseTime.Ticks)));
+            CreateMap<StandardOpeningHours, OpeningHouersViewModel>()
+                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
+                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeSpan(src.OpenTime.Ticks)))
+                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeSpan(src.CloseTime.Ticks)));
             CreateMap<PlannedShift, EmployeeShiftViewModel>()
                 .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street))
