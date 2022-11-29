@@ -40,7 +40,7 @@ public class ExportController : Controller
 
         var model = new ExportOverviewViewModel();
 
-        var branch = (await _userManager.GetUserAsync(User)).ManagesBranchId;
+        var branch = (await _userManager.GetUserAsync(User)).DefaultBranchId;
 
         if (branch == null)
         {
@@ -48,10 +48,10 @@ public class ExportController : Controller
         }
 
         var workedShiftsInMonth =
-            _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, monthSelected.Year, monthSelected.Month);
+            _workedShiftRepository.GetWorkedShiftsInMonth(branch, monthSelected.Year, monthSelected.Month);
 
         // Get all months available, where at least 1 shift has taken place in.
-        var selectableMonths = _workedShiftRepository.GetAllApproved(branch ?? -1)
+        var selectableMonths = _workedShiftRepository.GetAllApproved(branch)
             .Select(s => (s.StartTime.Date.Year, s.StartTime.Date.Month))
             .Distinct()
             .Select(s => new DateTime(s.Year, s.Month, 1)).OrderBy(s => s.Date).Reverse().ToList();
@@ -73,7 +73,7 @@ public class ExportController : Controller
         // Get all employees that have worked in this month, and get all worked shifts for each employee.
         model.ExportOverviewListItemViewModels = workedShiftsInMonth.GroupBy(i => i.Employee)
             .Select(e => FromWorkedShifts(e.Key, e.ToList(),
-                _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, e.Key.Id, prevMonth.Year, prevMonth.Month)))
+                _workedShiftRepository.GetWorkedShiftsInMonth(branch, e.Key.Id, prevMonth.Year, prevMonth.Month)))
             .ToList();
 
         // Apply sorting
@@ -116,14 +116,14 @@ public class ExportController : Controller
             : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
 
         // Get branch id from logged in user
-        var branch = (await _userManager.GetUserAsync(User)).ManagesBranchId;
+        var branch = (await _userManager.GetUserAsync(User)).DefaultBranchId;
 
         if (branch == null)
         {
             return BadRequest();
         }
 
-        return File(_hourExportService.CsvExportForMonth(branch ?? -1, monthSelected), "text/csv",
+        return File(_hourExportService.CsvExportForMonth(branch, monthSelected), "text/csv",
             "export-" + SelectedMonth + ".csv");
     }
 
@@ -149,13 +149,13 @@ public class ExportController : Controller
 
         if (viewModel.ImportEmployees != null)
         {
-            _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.ManagesBranchId ?? -1);
+            _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.DefaultBranchId);
         }
 
         if (viewModel.ImportClockEvents != null)
         {
             _importService.ImportClockEvents(viewModel.ImportClockEvents.OpenReadStream(),
-                manager.ManagesBranchId ?? -1);
+                manager.DefaultBranchId);
         }
 
 

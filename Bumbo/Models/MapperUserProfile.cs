@@ -37,13 +37,13 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.FullName.ToUpper()))
                 .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpper()))
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateOnly()))
-                .ForMember(dest => dest.ManagesBranchId, opt => opt.MapFrom(src => src.SelectedBranch))
+                .ForMember(dest => dest.DefaultBranchId, opt => opt.MapFrom(src => src.SelectedBranch))
                 .ForMember(dest => dest.EmployeeSince, opt => opt.MapFrom(src => src.EmployeeJoinedCompany.ToDateOnly()));
             CreateMap<Employee, ManagerEditViewModel>()
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))))
                 .ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0))))
                 .ForMember(dest => dest.EmployeeKey, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.SelectedBranch, opt => opt.MapFrom(src => src.ManagesBranchId))
+                .ForMember(dest => dest.SelectedBranch, opt => opt.MapFrom(src => src.DefaultBranchId))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
             CreateMap<Employee, EmployeeListItemViewModel>().ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<Employee, EmployeeRosterViewModel>();
