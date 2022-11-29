@@ -25,6 +25,6 @@ public class MaxConsecutiveHours: ICAORule
 
     public string GetErrorMessage()
     {
-        return "Te veel uren achter elkaar gepland.";
+        return $"Te lange dienst gepland, dit mag maximaal {_maxHours} uur zijn.";
     }
 }
