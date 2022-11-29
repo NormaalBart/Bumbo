@@ -1,8 +1,7 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using BumboData.Models;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Bumbo.Models.RosterManager
 {
@@ -18,7 +17,7 @@ namespace Bumbo.Models.RosterManager
         public double FreshPrognose { get; set; }
         [DisplayName("VakkenVullers Afdeling")]
         public double StockersPrognose { get; set; }
-        
+
         // All employees who are already rostered.
         public List<EmployeeRosterViewModel> RosteredEmployees { get; set; }
         // all employees who are available to be chosen when planning a new shift.
@@ -39,6 +38,14 @@ namespace Bumbo.Models.RosterManager
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        public DateTime CopyFromWeek { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        public DateTime CopyToWeek { get; set; }
+        public int CopiedShifts { get; set; }
 
         public RosterDayViewModel()
         {
@@ -67,7 +74,7 @@ namespace Bumbo.Models.RosterManager
             }
             return false;
         }
-        
+
         public bool IsUnavailable(EmployeeRosterViewModel employee, int hour)
         {
 
@@ -119,10 +126,10 @@ namespace Bumbo.Models.RosterManager
                     StockersPrognose = StockersPrognose - timespan.TotalHours;
                 }*/
             }
-            CassierePrognose = Math.Round(CassierePrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
-            FreshPrognose = Math.Round(FreshPrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
+            CassierePrognose = Math.Round(CassierePrognose, 2); //moet dit omhoog afgerond worden? of is dit goed zo?
+            FreshPrognose = Math.Round(FreshPrognose, 2); //moet dit omhoog afgerond worden? of is dit goed zo?
             StockersPrognose = Math.Round(StockersPrognose, 2);
-            
+
         }
 
 

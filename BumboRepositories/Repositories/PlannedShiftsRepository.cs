@@ -1,9 +1,8 @@
-﻿using System.Globalization;
-using BumboData;
+﻿using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Utils;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace BumboRepositories.Repositories
 {
@@ -49,7 +48,7 @@ namespace BumboRepositories.Repositories
                         {
                             return true;
                         }
-                        
+
                     }
                 }
             }
@@ -83,12 +82,16 @@ namespace BumboRepositories.Repositories
             DbSet.AddRange(list);
             Context.SaveChanges();
         }
-        
+
         // Returns all worked shifts found in between timestamps.
         public List<PlannedShift> GetPlannedShiftsInBetween(int branchId, string employeeId, DateTime from, DateTime until)
         {
             return DbSet.Where(s => s.BranchId == branchId && s.EmployeeId == employeeId
                                                            && s.StartTime >= from && s.EndTime <= until).ToList();
+        }
+        public List<PlannedShift> GetPlannedShiftsInBetween(int branchId, DateTime from, DateTime until)
+        {
+            return DbSet.Where(s => s.BranchId == branchId && s.StartTime >= from && s.StartTime <= until).ToList();
         }
     }
 }

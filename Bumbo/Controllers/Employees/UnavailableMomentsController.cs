@@ -121,9 +121,9 @@ namespace Bumbo.Controllers.Employees
             {
                 var newMoment = new UnavailableMoment();
                 DateTime? newStartTime = moment.StartTime + diff;
-                if (newStartTime != null) newMoment.StartTime = (DateTime) newStartTime;
+                if (newStartTime != null) newMoment.StartTime = (DateTime)newStartTime;
                 DateTime? newEndTime = moment.EndTime + diff;
-                if (newEndTime != null) newMoment.EndTime = (DateTime) newEndTime;
+                if (newEndTime != null) newMoment.EndTime = (DateTime)newEndTime;
                 newMoment.Employee = await _userManager.GetUserAsync(User);
                 newMoment.Type = moment.Type;
                 newMoments.Add(newMoment);

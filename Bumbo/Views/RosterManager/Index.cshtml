@@ -6,12 +6,18 @@
     }else{
         ViewData["Title"] = "Rooster";
     }
-    
+
 }
 
 <body class="roster-body">
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
+
+@if (Model.CopiedShifts != 0)
+{
+    <p class="alert-success text-center">@Model.CopiedShifts diensten succesvol gekopiëerd naar een andere week.</p>
+}
+
 
 <!-- if modelstate that returned is not valid, say that saving failed-->
 @if (Model.ErrorMessage != null)
@@ -201,6 +207,9 @@
 
     <!-- Trigger/Open The Modal -->
     <button id="openModalBTN">Voeg dienst toe</button>
+
+    <!-- Trigger/Open The Second Modal, to copy between weeks -->
+    <button id="openModal2BTN">Rooster kopieren tussen weken</button>
 </div>
 
 
@@ -447,6 +456,39 @@
 
 </div>
 
+<div id="modal2" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close closeSecondModal position-absolute">&times;</span>
+        <label> </label>
+        <div class="m-3 align-content-center">
+            <form asp-action="CopyFromWeek">
+                <h2 class="text-center">Kopieer rooster van week naar week</h2>
+                <div class="row">
+                    <span class="col-6">Willekeurige dag in de week</span>
+                    <input asp-for="CopyFromWeek" class="col-auto" asp-format="{0:yyyy-MM-dd}" />
+                </div>
+                <div class="row">
+                    <span asp-validation-for="CopyFromWeek" class="text-danger col"></span>
+                </div>
+
+                <div class="row">
+                    <span class="col fw-light">Kopieren naar</span>
+                </div>
+
+
+                <div class="row">
+                    <span class="col-6">Willekeurige dag in de andere week</span>
+                    <input asp-for="CopyToWeek" class="col-auto" asp-format="{0:yyyy-MM-dd}" />
+                </div>
+                <div class="row">
+                    <span asp-validation-for="CopyToWeek" class="text-danger col"></span>
+                </div>
+                <input type="submit" value="Kopiëren" class="btn btn-success btn-sm " />
+            </form>
+        </div>
+    </div>
+</div>
 
 
 

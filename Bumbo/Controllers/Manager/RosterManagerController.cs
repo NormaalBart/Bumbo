@@ -7,8 +7,6 @@ using BumboServices.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Numerics;
 
 namespace Bumbo.Controllers.Manager
 {
@@ -39,9 +37,8 @@ namespace Bumbo.Controllers.Manager
         }
 
 
-        public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
+        public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage, int copiedShifts = 0)
         {
-
             if (dateInput == null)
             {
                 dateInput = DateTime.Today.ToString();
@@ -49,6 +46,9 @@ namespace Bumbo.Controllers.Manager
             DateTime date = DateTime.Parse(dateInput).Date;
             RosterDayViewModel viewModel = new RosterDayViewModel();
             viewModel.Date = date;
+            viewModel.CopyFromWeek = date;
+            viewModel.CopyToWeek = date.AddDays(7);
+            viewModel.CopiedShifts = copiedShifts;
             var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList());
 
             var employee = await _userManager.GetUserAsync(User);
@@ -63,7 +63,7 @@ namespace Bumbo.Controllers.Manager
                 viewModel.AvailableEmployees.Add(emp);
             }
 
-           
+
             viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, employee.DefaultBranchId);
             viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, employee.DefaultBranchId);
             viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
@@ -78,20 +78,20 @@ namespace Bumbo.Controllers.Manager
             viewModel.Departments = new List<DepartmentRosterViewModel>();
             foreach (var dep in _departmentsRepository.GetList().ToList())
             {
-                
-                viewModel.Departments.Add(new DepartmentRosterViewModel() { Id = dep.Id, DepartmentName = dep.DepartmentName});
+
+                viewModel.Departments.Add(new DepartmentRosterViewModel() { Id = dep.Id, DepartmentName = dep.DepartmentName });
             }
 
             if (errormessage != null)
             {
                 viewModel.ErrorMessage = errormessage;
-          
+
             }
 
             return View(viewModel);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateShift(string selectedEmployeeId, int selectedDepartmentId, string selectedStartTime, string selectedEndTime, string date)
@@ -126,7 +126,7 @@ namespace Bumbo.Controllers.Manager
             }
 
             // check if CAO rules are met.
-           // TODO insert CAO rules services.
+            // TODO insert CAO rules services.
 
 
             _shiftRepository.Create(plannedShift);
@@ -173,7 +173,35 @@ namespace Bumbo.Controllers.Manager
             return RedirectToAction("Index", "RosterManager", new { dateInput = date });
         }
 
-
+        public async Task<IActionResult> CopyFromWeekAsync(string date, DateTime copyFromWeek, DateTime copyToWeek)
+        {
+            var beginOfTheWeek = new DateTime().AddYears(copyFromWeek.Year - 1).AddDays(copyFromWeek.DayOfYear - 1);
+            beginOfTheWeek = beginOfTheWeek.GetMondayOfTheWeek();
+            var endOfTheWeek = beginOfTheWeek.AddDays(7);
+            var employee = await _userManager.GetUserAsync(User);
+            var shifts = _shiftRepository.GetPlannedShiftsInBetween(employee.DefaultBranchId, beginOfTheWeek, endOfTheWeek);
+            var diff = copyToWeek - copyFromWeek;
+            int numberOfCopiedShifts = 0;
+            foreach (var shift in shifts)
+            {
+                var oldShift = _shiftRepository.GetPlannedShiftById(shift.Id);
+                var newShift = new PlannedShift();
+                newShift.StartTime = oldShift.StartTime + diff;
+                newShift.EndTime = oldShift.EndTime + diff;
+                newShift.Branch = oldShift.Branch;
+                newShift.BranchId = oldShift.BranchId;
+                newShift.Employee = oldShift.Employee;
+                newShift.EmployeeId = oldShift.EmployeeId;
+                newShift.Department = oldShift.Department;
+                newShift.DepartmentId = oldShift.DepartmentId;
+                if (!_shiftRepository.ShiftOverlapsWithOtherShifts(newShift))
+                {
+                    _shiftRepository.Create(newShift);
+                    numberOfCopiedShifts++;
+                }
+            }
+            return RedirectToAction("Index", "RosterManager", new { dateInput = date, copiedShifts = numberOfCopiedShifts });
+        }
 
     }
 

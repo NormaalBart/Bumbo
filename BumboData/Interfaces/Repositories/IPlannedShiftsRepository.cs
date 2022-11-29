@@ -2,7 +2,7 @@
 
 namespace BumboData.Interfaces.Repositories
 {
-    public interface IPlannedShiftsRepository: IRepository<PlannedShift>
+    public interface IPlannedShiftsRepository : IRepository<PlannedShift>
     {
         bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift);
 
@@ -13,9 +13,10 @@ namespace BumboData.Interfaces.Repositories
         PlannedShift GetPlannedShiftById(int shiftId);
 
 
-        List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week); 
+        List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week);
         void Import(List<PlannedShift> list);
         List<PlannedShift> GetPlannedShiftsInBetween(int branchId, string employeeId, DateTime from, DateTime until);
 
+        List<PlannedShift> GetPlannedShiftsInBetween(int branchId, DateTime from, DateTime until);
     }
 }
