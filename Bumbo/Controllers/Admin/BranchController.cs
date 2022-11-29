@@ -130,14 +130,14 @@ namespace Bumbo.Controllers.Admin
             {
                 return RedirectToAction(nameof(Index));
             }
-            BranchCreateViewModel branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
+            var branchViewModel = _mapper.Map<BranchEditViewModel>(branch);
             return View(branchViewModel);
         }
 
         // POST: BranchController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(BranchCreateViewModel branchViewModel)
+        public ActionResult Edit(BranchEditViewModel branchViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -147,7 +147,7 @@ namespace Bumbo.Controllers.Admin
             try
             {
                 var branch = _branchRepository.Get(branchViewModel.Id);
-                _mapper.Map<BranchCreateViewModel, Branch>(branchViewModel, branch);
+                _mapper.Map<BranchEditViewModel, Branch>(branchViewModel, branch);
                 _branchRepository.Update(branch);
                 if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                 {

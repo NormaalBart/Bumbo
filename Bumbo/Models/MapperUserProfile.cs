@@ -66,19 +66,29 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.StandardOpeningHours, opt => opt.MapFrom(src => src.OpeningHours))
                 .AfterMap((src, dest) =>
                 {
-                    foreach(var standardOpeningHour in dest.StandardOpeningHours)
+                    foreach (var standardOpeningHour in dest.StandardOpeningHours)
+                    {
+                        standardOpeningHour.BranchId = dest.Id;
+                    }
+                });
+            CreateMap<Branch, BranchEditViewModel>()
+                .ForMember(dest => dest.OpeningHours, opt => opt.MapFrom(src => src.StandardOpeningHours));
+            CreateMap<BranchEditViewModel, Branch>()
+                .ForMember(dest => dest.StandardOpeningHours, opt => opt.MapFrom(src => src.OpeningHours))
+                .AfterMap((src, dest) =>
+                {
+                    foreach (var standardOpeningHour in dest.StandardOpeningHours)
                     {
                         standardOpeningHour.BranchId = dest.Id;
                     }
                 });
             CreateMap<OpeningHoursViewModel, StandardOpeningHours>()
-                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
-                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeOnly(src.OpenTime.Ticks)))
-                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeOnly(src.CloseTime.Ticks)));
+                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => src.OpenTime.HasValue ? new TimeOnly(src.OpenTime.Value.Ticks) : TimeOnly.MinValue))
+                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => src.CloseTime.HasValue ? new TimeOnly(src.CloseTime.Value.Ticks) : TimeOnly.MinValue));
             CreateMap<StandardOpeningHours, OpeningHoursViewModel>()
-                .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
-                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeSpan(src.OpenTime.Ticks)))
-                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeSpan(src.CloseTime.Ticks)));
+               .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => src.OpenTime.HasValue ? new TimeSpan(src.OpenTime.Value.Ticks) : TimeSpan.MinValue))
+               .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => src.CloseTime.HasValue ? new TimeSpan(src.CloseTime.Value.Ticks) : TimeSpan.MinValue));
+
 
             CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
             CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();

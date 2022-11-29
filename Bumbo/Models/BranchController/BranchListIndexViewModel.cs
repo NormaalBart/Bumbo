@@ -8,9 +8,9 @@ namespace Bumbo.Models.BranchController
     public class BranchListIndexViewModel
     {
         public List<ListIndexBranchViewModel> Branches { get; set; }
-        [DisplayName("Toon actieve branches")]
+        [DisplayName("Toon actieve filialen")]
         public bool IncludeActive { get; set; }
-        [DisplayName("Toon inactieve branches")]
+        [DisplayName("Toon inactieve filialen")]
         public bool IncludeInactive { get; set; }
         public string SearchString { get; set; }
 

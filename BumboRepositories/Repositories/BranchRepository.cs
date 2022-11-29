@@ -26,7 +26,7 @@ namespace BumboRepositories.Repositories
 
         public override Branch? Get(int id)
         {
-            return DbSet.Include(Branch => Branch.StandardOpeningHours).FirstOrDefault(branch => branch.Id == id);
+            return DbSet.Include(branch => branch.StandardOpeningHours).Include(branch => branch.OpeningHoursOverrides).FirstOrDefault(branch => branch.Id == id);
         }
 
         public override IEnumerable<Branch> GetList()
