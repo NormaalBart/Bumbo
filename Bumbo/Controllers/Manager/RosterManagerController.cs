@@ -47,12 +47,6 @@ namespace Bumbo.Controllers.Manager
 
         public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
         {
-            // Only manager can 
-            if (!User.IsInRole(RoleType.MANAGER.Name))
-            {
-                return BadRequest();
-            }
-
             if (dateInput == null)
             {
                 dateInput = DateTime.Today.ToString();
@@ -142,13 +136,7 @@ namespace Bumbo.Controllers.Manager
         public async Task<IActionResult> CreateShift(string selectedEmployeeId, int selectedDepartmentId,
             string selectedStartTime, string selectedEndTime, string date)
         {
-            // Only manager can 
-            if (!User.IsInRole(RoleType.MANAGER.Name))
-            {
-                return BadRequest();
-            }
-
-            PlannedShift plannedShift = new PlannedShift();
+            var plannedShift = new PlannedShift();
 
             // Passed start time and end time are only time values, so we add the passed date as well.
             plannedShift.StartTime = DateTime.Parse(date).AddHours(DateTime.Parse(selectedStartTime).Hour)
@@ -194,7 +182,7 @@ namespace Bumbo.Controllers.Manager
                     {
                         dateInput = date,
                         errormessage =
-                            "er nog CAO overtreding(en) zijn op deze dag, los deze eerst op voordat je een nieuwe shift toe voegt."
+                            "er zijn nog CAO overtreding(en) zijn op deze dag, los deze eerst op voordat je een nieuwe shift toe voegt."
                     });
             }
 

@@ -29,7 +29,6 @@ public class MaxWorkDaysInWeek : CAORuleAppliesToAge
 
     public override string GetErrorMessage()
     {
-        return "Medewerker is voor te veel dagen in de week ingepland, dit mag maximaal " + _maxWorkDays +
-               " dagen zijn.";
+        return $"Medewerker is voor te veel dagen in de week ingepland, dit mag maximaal {_maxWorkDays} dagen zijn.";
     }
 }

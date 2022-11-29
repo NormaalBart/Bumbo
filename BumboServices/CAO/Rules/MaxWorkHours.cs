@@ -134,6 +134,7 @@ public class MaxWorkHours : CAORuleAppliesToAge
             _ => throw new ArgumentOutOfRangeException()
         };
         
-        return "Overschreven maximaal aantal uren per "  + timeframe + " is " + _maxHours + " uur" + (_includeSchool ? " inclusief school." : ".");
+        return
+            $"Overschreven maximaal aantal uren per {timeframe} is {_maxHours} uur{(_includeSchool ? " inclusief school." : ".")}";
     }
 }

@@ -20,6 +20,6 @@ public class MaxShiftEndTime : CAORuleAppliesToAge
 
     public override string GetErrorMessage()
     {
-        return "Shift eindigt te laat, dit mag maximaal " + _maxShiftEndTime.ToString() + " zijn.";
+        return $"Shift eindigt te laat, dit mag maximaal {_maxShiftEndTime} zijn.";
     }
 }
