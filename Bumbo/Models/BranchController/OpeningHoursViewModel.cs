@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.BranchController
 {
-    public class OpeningHouersViewModel : IValidatableObject
+    public class OpeningHoursViewModel : IValidatableObject
     {
 
         public int BranchId { get; set; }

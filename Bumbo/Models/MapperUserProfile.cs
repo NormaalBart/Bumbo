@@ -71,11 +71,11 @@ namespace Bumbo.Models
                         standardOpeningHour.BranchId = dest.Id;
                     }
                 });
-            CreateMap<OpeningHouersViewModel, StandardOpeningHours>()
+            CreateMap<OpeningHoursViewModel, StandardOpeningHours>()
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
                 .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeOnly(src.OpenTime.Ticks)))
                 .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeOnly(src.CloseTime.Ticks)));
-            CreateMap<StandardOpeningHours, OpeningHouersViewModel>()
+            CreateMap<StandardOpeningHours, OpeningHoursViewModel>()
                 .ForMember(dest => dest.DayOfWeek, opt => opt.MapFrom(src => src.DayOfWeek))
                 .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeSpan(src.OpenTime.Ticks)))
                 .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeSpan(src.CloseTime.Ticks)));
