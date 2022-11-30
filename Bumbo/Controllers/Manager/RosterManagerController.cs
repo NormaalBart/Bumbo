@@ -141,6 +141,7 @@ namespace Bumbo.Controllers.Manager
                 item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(item.Date, employee.DefaultBranchId)
                                         + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId)
                                         + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId);
+                item.PrognosisHours = Math.Round(item.PrognosisHours);
                 if (item.PrognosisHours < 0)
                 {
                     item.PrognosisHours = 0;
@@ -155,6 +156,14 @@ namespace Bumbo.Controllers.Manager
                 {
                     item.IsToday = false;
                 }
+
+                // check for cAO violations
+                var invalidshifts = InvalidPlannedShiftsFollowigCAO(item.Date, employee.ManagesBranchId ?? -1);
+                if (invalidshifts.Count > 0)
+                {
+                    item.IsViolatingCAO = true;
+                }
+
                 overviewList.Days.Add(item);
             }
             overviewList.Date = date;

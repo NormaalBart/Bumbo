@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Bumbo.Models.RosterManager
 {
@@ -9,6 +12,7 @@ namespace Bumbo.Models.RosterManager
         public double PrognosisHours { get; set; }
         public double RosteredHours { get; set; }
         public bool IsToday { get; set; }
+        public bool IsViolatingCAO { get; set; }
 
 
         public bool ItemIsToday(DateTime date)
@@ -39,6 +43,11 @@ namespace Bumbo.Models.RosterManager
                 return true;
             }
             return false;
+        }
+        public string GetDayName()
+        {
+            // Get dutch culture
+            return CultureInfo.GetCultureInfo("nl-NL").DateTimeFormat.GetDayName(Date.DayOfWeek);
         }
 
     }

@@ -34,17 +34,20 @@
     </div>
 
 
-    <div class="text-center d-xxl-flex justify-content-center gap-1">
-            <p>Er zijn </p> <p class="text-warning fw-bolder">@Model.GetTotalNumberOfItemsNotSufficientlyRostered() </p> <p> dagen met een rooster dat </p> <p class="fw-bold"> niet </p> <p>  de prognose haalt.</p>
+    <div class="text-center justify-content-center gap-1">
+        <span>Er zijn </span> <span class="text-warning fw-bolder">@Model.GetTotalNumberOfItemsNotSufficientlyRostered() </span> <span> dagen met een rooster dat </span> <span class="fw-bold"> niet </span> <span>  de prognose haalt.</span>
       
 
     </div>
 
-    <div class="text-center d-xxl-flex justify-content-center gap-1">
-        <p>Er zijn </p> <p class="text-secondary fw-bolder">@Model.GetTotalNumberOfItemsWithoutRoster() </p> <p> dagen </p> <p class="fw-bold"> zonder </p> <p>  rooster.</p>
+    <div class="text-center justify-content-center gap-1">
+        <span>Er zijn </span> <span class="text-secondary fw-bolder">@Model.GetTotalNumberOfItemsWithoutRoster() </span> <span> dagen </span> <span class="fw-bold"> zonder </span> <span>  rooster.</span>
     </div>
-    <div class="text-center d-xxl-flex justify-content-center gap-1">
-        <p>En er zijn </p> <p class="text-success fw-bolder">@Model.GetTotalNumberOfItemsSufficientlyRostered()</p> <p> dagen met een </p> <p class="fw-bold"> voldoende </p> <p>  rooster.</p>
+    <div class="text-center  justify-content-center gap-1">
+        <span>Er zijn </span> <span class="text-success fw-bolder">@Model.GetTotalNumberOfItemsSufficientlyRostered()</span> <span> dagen met een </span> <span class="fw-bold"> voldoende </span> <span>  rooster.</span>
+    </div>
+    <div class="text-center  justify-content-center gap-1">
+        <i class="bi-exclamation-triangle-fill alert-danger border border-1 border-dark"></i>   <span>En er zijn </span> <span class="text-danger fw-bolder">@Model.GetTotalNumberOfDaysWithCAOViolations()</span> <span> dagen met een rooster met een</span> <span class="fw-bold"> CAO overtreding. </span>
     </div>
 
    @for (int week = 0; week < 5; week++)
@@ -56,23 +59,31 @@
 
                 @if (@Model.GetDay(week, day) != null)
                 {
+                        <div class="@(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "") @(Model.GetDay(week, day).IsViolatingCAO ? "roster-overview-cao" : "")">
 
-                        <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@Model.GetDay(week, day).Date.Date">
+                            <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@Model.GetDay(week, day).Date.Date">
 
 
-                            <div class="text-center m-2 roster-overview-box @(Model.GetDay(week, day).IsSufficientlyRostered() ? "roster-overview-SufficientRostering" : "") @(Model.GetDay(week, day).IsInsufficientlyRostered() ? "roster-overview-InsufficientRostering" : "") ">
-                                <div>
-                                    <div class="m-3 @(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "")">
-                                        <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
+                                <div title="@(Model.GetDay(week, day).IsViolatingCAO ? "Deze dag heeft een CAO overtreding" : "")" class="text-center m-2 roster-overview-box @(Model.GetDay(week, day).IsSufficientlyRostered() ? "roster-overview-SufficientRostering" : "") @(Model.GetDay(week, day).IsInsufficientlyRostered() ? "roster-overview-InsufficientRostering" : "") ">
+                                    <div>
+                                        <div class="m-2 ">
+                                            @if (Model.GetDay(week, day).IsViolatingCAO)
+                                            {
+                                                <i class="bi-exclamation-triangle-fill alert-danger border border-1 border-dark"></i>
+                                            }
 
-                                        <div class="roster-overview-iteminfo">
-                                            <p>Prognose: @Model.GetDay(week, day).PrognosisHours</p>
-                                            <p>Ingeplande uren:  @Model.GetDay(week, day).RosteredHours</p>
+                                            <p>@Model.GetDay(week, day).GetDayName()</p>
+                                            <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
+
+                                            <div class="roster-overview-iteminfo">
+                                                <p>Prognose: @Model.GetDay(week, day).PrognosisHours</p>
+                                                <p>Ingeplande uren:  @Model.GetDay(week, day).RosteredHours</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                        </div>
+                        </a>
                     </div>
-                    </a>
                 }
                      
                 </div>

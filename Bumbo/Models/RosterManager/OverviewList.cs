@@ -15,7 +15,7 @@
         {
             int index = (weekNr * 7) + dayNr;
 
-            if (index + 1 < Days.Count)
+            if (index + 1 <= Days.Count)
             {
                 OverviewItem day = Days[index];
 
@@ -64,6 +64,11 @@
                 }
             }
             return total;
+        }
+
+        public int GetTotalNumberOfDaysWithCAOViolations()
+        {
+            return Days.Where(d => d.IsViolatingCAO).Count();
         }
 
     }

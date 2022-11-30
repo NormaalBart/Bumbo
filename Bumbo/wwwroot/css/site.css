@@ -256,12 +256,19 @@ p {
 
 
 .roster-overview-iteminfo {
-    font-size: 9px;
+    font-size: 11px;
 }
 
-.roster-overview {
-  
+.roster-overview-box {
+    height: 140px;
+    min-width: 140px;
+
 }
+
+    .roster-overview-box:hover {
+        filter: brightness(80%);
+
+    }
 
 .roster-overview-date {
     padding: 25px 25px;
@@ -272,9 +279,17 @@ p {
 
 
 .roster-overview-today {
-    background-color: #1abc9c;
-
+    border-bottom: 3px solid blue !important;
+    margin: 0px !important;
+    width: 100%;
 }
+
+
+.roster-overview-cao {
+    background-color: red;
+    border: 2px solid white;
+}
+
 
 .roster-overview-SufficientRostering {
     border: 5px solid;
@@ -285,7 +300,7 @@ p {
 .roster-overview-InsufficientRostering {
     border: 5px solid;
     background: linear-gradient(to bottom right, yellow, #FFD700) !important;
-    border-image: linear-gradient(45deg, #FFFF99, #FFFF66) 1 !important;
+    border-image: linear-gradient(45deg, #e6c300, #ccad00) 1 !important;
 }
 
 .roster-overview-box {
@@ -293,3 +308,4 @@ p {
     border-image: linear-gradient(45deg, #808080, #696969) 1;
     background: linear-gradient(to bottom right, #909090, #888888);
 }
+
