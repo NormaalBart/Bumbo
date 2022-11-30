@@ -15,8 +15,8 @@
         <div class="col-md-2 col-sm-12" style="height: 100%;">
             @foreach (var modelSelectableMonth in Model.SelectableMonths)
             {
-                if (modelSelectableMonth.Month == Model.SelectedMonth.Month
-                    && modelSelectableMonth.Year == Model.SelectedMonth.Year)
+                if (modelSelectableMonth.Month == Model.SelectedMonth?.Month
+                    && modelSelectableMonth.Year == Model.SelectedMonth?.Year)
                 {
                     <a class="btn my-1 w-100 btn-primary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
                 }
@@ -92,6 +92,14 @@
                     }
                 }
             </table>
+            @if (Model.ExportOverviewListItemViewModels.Count > 0)
+            {
+                <div class="py-3 d-flex justify-content-between">
+                    <a class="btn btn-primary @(Model.Page <= 1 ? "hidden" : "")" asp-action="Overview" asp-route-Page="@(Model.Page - 1)" asp-route-SearchQuery="@Model.SearchQuery" asp-route-SelectedMonth="@Model.SelectedMonthUrlFormatted()">Vorige</a>
+                    <p>Pagina @Model.Page/@Model.MaxPage</p>
+                    <a class="btn btn-primary @(Model.Page == Model.MaxPage ? "hidden" : "")" asp-action="Overview" asp-route-Page="@(Model.Page + 1)" asp-route-SearchQuery="@Model.SearchQuery" asp-route-SelectedMonth="@Model.SelectedMonthUrlFormatted()">Volgende</a>
+                </div>
+            }
         </div>
         <div class="col-md-2 d-flex justify-content-center order-sm-0 order-0">
             <div>
@@ -99,10 +107,9 @@
                 <form asp-action="Overview" method="get">
                     <div class="form-group w-100">
                         <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
-                        <h5><label asp-for="SortMode" class="control-label"></label></h5>
-                        <select asp-for="SortMode" class="form-control" value="@Model.SortMode" asp-items="@Html.GetEnumSelectList<ExportOverviewSortingOption>()"></select>
+                        @Html.HiddenFor(m => m.SelectedMonth)
                         <input class="btn btn-primary my-2" type="submit" value="Zoeken"><br/>
-                        <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
+                        <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth?.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
                     </div>
                 </form>
             </div>
