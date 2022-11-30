@@ -13,10 +13,5 @@ namespace Bumbo.Models.WorkedHours
         {
             employeeWorkedHoursListItemViewModels = new List<EmployeeWorkedHoursListItemViewModel>();
         }
-
-        public int GetWeekNumber(DateTime date)
-        {
-            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-        }
     }
 }

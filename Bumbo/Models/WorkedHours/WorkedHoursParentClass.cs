@@ -1,9 +1,10 @@
 ﻿using Bumbo.Models.ApproveWorkedHours;
 using Bumbo.Models.RosterManager;
+using BumboServices.Utils;
 
 namespace Bumbo.Models.WorkedHours
 {
-    public class WorkedHoursParrentClass
+    public class WorkedHoursParentClass
     {
         private const string formatTime = "HH:mm";
         public List<ShiftViewModel> PlannedShifts { get; set; }
@@ -47,24 +48,13 @@ namespace Bumbo.Models.WorkedHours
 
         public string CalculateDifference()
         {
-            TimeSpan totalPlannendTime = new TimeSpan();
-            TimeSpan totalWorkedTime = new TimeSpan();
-            foreach (var plannedShift in PlannedShifts)
-            {
-                TimeSpan timeSpan = plannedShift.EndTime - plannedShift.StartTime;
-                totalPlannendTime += timeSpan;
-            }
-            foreach (var workedShift in WorkedShifts)
-            {
-                TimeSpan timeSpan = workedShift.EndTime - workedShift.StartTime;
-                totalWorkedTime += timeSpan;
-            }
-
-            TimeSpan diff = totalWorkedTime - totalPlannendTime;
+            TimeSpan totalPlannedTime = PlannedShifts.SumTimeSpan(s => s.EndTime - s.StartTime);
+            TimeSpan totalWorkedTime = WorkedShifts.SumTimeSpan(s => s.EndTime - s.StartTime);
+            TimeSpan diff = totalWorkedTime - totalPlannedTime;
             return diff.ToString();
         }
 
-        public WorkedHoursParrentClass()
+        public WorkedHoursParentClass()
         {
             PlannedShifts = new List<ShiftViewModel>();
             WorkedShifts = new List<WorkedShiftViewModel>();

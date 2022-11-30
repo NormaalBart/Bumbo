@@ -45,7 +45,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<WorkedShift> GetOfEmployeeOnDayThatIsComplete(DateTime date, string employeeId)
         {
-            return DbSet.Where(w => w.EmployeeId == employeeId && w.StartTime.Date == date.Date && w.EndTime !=null);
+            return DbSet.Where(w => w.EmployeeId == employeeId && w.StartTime.Date == date.Date && w.EndTime !=null).ToList();
         }
     }
 }

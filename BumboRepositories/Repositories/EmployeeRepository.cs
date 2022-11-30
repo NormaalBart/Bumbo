@@ -59,7 +59,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<Employee> GetAllThatWorkedOrWasPlannedOnDate(DateTime date, int branchId)
         {
-            return DbSet.Include(e => e.PlannedShifts.Where(p => p.StartTime.Date == date.Date && p.BranchId == branchId)).Include(e => e.WorkedShifts.Where(w => w.StartTime.Date == date.Date && w.EndTime != null && w.BranchId == branchId)).Where(e => e.PlannedShifts.Any() || e.WorkedShifts.Any());
+            return DbSet.Include(e => e.PlannedShifts.Where(p => p.StartTime.Date == date.Date && p.BranchId == branchId)).Include(e => e.WorkedShifts.Where(w => w.StartTime.Date == date.Date && w.EndTime != null && w.BranchId == branchId)).Where(e => e.PlannedShifts.Any() || e.WorkedShifts.Any()).ToList();
         }
     }
 }

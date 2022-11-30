@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Bumbo.Models.ApproveWorkedHours
 {
-    public class EmployeeWorkedHoursViewModel : WorkedHoursParrentClass
+    public class EmployeeWorkedHoursViewModel : WorkedHoursParentClass
     {
 
 

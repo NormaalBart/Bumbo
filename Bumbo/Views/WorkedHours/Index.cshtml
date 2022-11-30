@@ -1,5 +1,8 @@
 ﻿@model Bumbo.Models.ApproveWorkedHours.IndexWorkedHoursViewModel
 
+@using Bumbo.Utils;
+
+
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren accorderen</h1>
 
 
@@ -9,7 +12,7 @@
         <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date"> Vorige dag </a>
     </button>
 
-    <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToShortDateString() </p>
+    <p>Week @Model.Date.GetWeekNumber() | @Model.Date.ToShortDateString() </p>
 
     <button class="btn btn-outline-primary">
         <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date"> Volgende dag </a>

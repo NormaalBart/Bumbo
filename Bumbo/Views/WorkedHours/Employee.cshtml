@@ -1,5 +1,5 @@
 ﻿@model Bumbo.Models.WorkedHours.EmployeeWorkedHoursListViewModel
-
+@using Bumbo.Utils;
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren bekijken</h1>
 
 
@@ -8,7 +8,7 @@
         <a class="text-decoration-none" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(-7).Date"> Vorige week</a>
     </button>
 
-    <p>Week @Model.GetWeekNumber(Model.Date)</p>
+    <p>Week @Model.Date.GetWeekNumber()</p>
 
     <button class="btn btn-outline-primary">
         <a class="text-decoration-none" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(7).Date"> Volgende week</a>
