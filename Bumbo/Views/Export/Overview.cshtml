@@ -50,7 +50,11 @@
                                     @viewModel.Employee.FullName()
                                     @if (hasUnapprovedShifts)
                                     {
-                                        <i class="bi-exclamation-triangle"></i>
+                                        <i class="ms-1 bi-exclamation-triangle" title="Er zijn nog uren die niet goedgekeurd zijn." data-toggle="tooltip" data-placement="top"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="ms-1 bi-check-circle" style="color: green" title="Alle uren zijn goedgekeurd." data-toggle="tooltip" data-placement="top"></i>
                                     }
                                 </p>
                             </td>
@@ -148,6 +152,10 @@
 
 @section Scripts {
     <script>
+    
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
     
     let select = $('#select-year')
     select.on('change', function() {
