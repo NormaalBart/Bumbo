@@ -337,3 +337,12 @@ p {
 .red {
     background-color: red;
 }
+
+.roster-overview-warning {
+    display: none;
+}
+
+.roster-overview-loading{
+    width: 30px;
+    height: 30px;
+}

@@ -158,19 +158,37 @@ namespace Bumbo.Controllers.Manager
                 }
 
                 // check for cAO violations
-                var invalidshifts = InvalidPlannedShiftsFollowigCAO(item.Date, employee.ManagesBranchId ?? -1);
-                if (invalidshifts.Count > 0)
-                {
-                    item.IsViolatingCAO = true;
-                }
+                //var invalidshifts = InvalidPlannedShiftsFollowigCAO(item.Date, employee.ManagesBranchId ?? -1);
+                //if (invalidshifts.Count > 0)
+                //{
+                //    item.IsViolatingCAO = true;
+                //}
 
                 overviewList.Days.Add(item);
             }
             overviewList.Date = date;
-
+            
 
 
             return View(overviewList);
+        }
+
+        public async Task<IActionResult>DayHasInvalidShifts(string date)
+        {
+            DateTime requestedDate = DateTime.Parse(date);
+            var employee = await _userManager.GetUserAsync(User);
+            
+            // check for cAO violations
+            var invalidshifts = InvalidPlannedShiftsFollowigCAO(requestedDate, employee.ManagesBranchId ?? -1);
+            // if there are invalid shifts, we return true otherwise false
+            if (invalidshifts.Count > 0)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
         }
 
 

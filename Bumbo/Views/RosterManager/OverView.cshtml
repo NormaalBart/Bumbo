@@ -5,6 +5,11 @@
 }
 <body class="roster-overview">
 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+
+
     <div class="roster-overview-date">
 
 
@@ -91,28 +96,63 @@
 
                 @if (@Model.GetDay(week, day) != null)
                 {
-                        <div class="@(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "") @(Model.GetDay(week, day).IsViolatingCAO ? "roster-overview-cao" : "")">
+                        <div class="roster-item-container @(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "") @(Model.GetDay(week, day).IsViolatingCAO ? "roster-overview-cao" : "")">
 
                             <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@Model.GetDay(week, day).Date.Date">
 
 
                                 <div title="@(Model.GetDay(week, day).IsViolatingCAO ? "Deze dag heeft een CAO overtreding" : "")" class="text-center m-2 roster-overview-box @(Model.GetDay(week, day).IsSufficientlyRostered() ? "roster-overview-SufficientRostering" : "") @(Model.GetDay(week, day).IsInsufficientlyRostered() ? "roster-overview-InsufficientRostering" : "") ">
-                                    <div>
-                                        <div class="m-2 ">
-                                            @if (Model.GetDay(week, day).IsViolatingCAO)
-                                            {
-                                                <i class="bi-exclamation-triangle-fill alert-danger border border-1 border-dark"></i>
-                                            }
 
-                                            <p>@Model.GetDay(week, day).GetDayName()</p>
-                                            <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
 
-                                            <div class="roster-overview-iteminfo">
-                                                <p>Prognose: @Model.GetDay(week, day).PrognosisHours</p>
-                                                <p>Ingeplande uren:  @Model.GetDay(week, day).RosteredHours</p>
-                                            </div>
+                                    <div class="m-2 ">
+                                        <img class="roster-overview-loading" src="~/images/loading.gif" alt="loading gif" />
+                                        <span class="bi-exclamation-triangle-fill alert-danger border border-1 border-dark roster-overview-warning"></span>
+
+
+                                        <p>@Model.GetDay(week, day).GetDayName()</p>
+                                        <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
+
+                                        <div class="roster-overview-iteminfo">
+                                            <p>Prognose: @Model.GetDay(week, day).PrognosisHours</p>
+                                            <p>Ingeplande uren:  @Model.GetDay(week, day).RosteredHours</p>
                                         </div>
                                     </div>
+
+                                    <script>
+
+                                        $(function () {
+                                            $.ajax({
+                                                type: "GET",
+                                                url: '@Url.Action("DayHasInvalidShifts", "RosterManager")',
+                                                data: {
+                                                    date: '@Model.GetDay(week, day).Date.ToString()'
+                                                },
+                                                success: function (data) {
+                                                    //handle the data
+                                                    console.log(data);
+                                                    if(data){
+                                                        var index = (@week * 7) + @day;
+                                                        var itemContainer = $('.roster-item-container').eq(index);
+                                                        console.log(index);
+                                                        itemContainer[0].classList.add("roster-overview-cao");
+
+                                                        var itemBox = $('.roster-overview-box').eq(index);
+                                                         itemBox[0].title = "Deze dag heeft een CAO overtreding";
+
+                                                         // We show the triangle, we can't use style for now due to a bug so we use classes.
+                                                        var itemTriangle = $('.roster-overview-warning').eq(index);
+                                                        itemTriangle[0].style.display = "block";
+
+                                                        var loading = $('.roster-overview-loading').eq(index);
+                                                        loading[0].style.display = "none";
+                                                    }
+                                                   
+                                                }
+                                            });
+                                        });
+                                    </script>
+
+
                         </div>
                         </a>
                     </div>
