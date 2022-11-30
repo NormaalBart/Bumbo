@@ -73,7 +73,8 @@ public class ExportController : Controller
         var prevMonth = new DateTime(monthSelected.Ticks).AddMonths(-1);
         
         // Apply pagination on the employees
-        var employees = workedShiftsInMonth.GroupBy(i => i.Employee);
+        var employees = workedShiftsInMonth.GroupBy(i => i.Employee)
+            .OrderByDescending(e=>e.Count(s => !s.Approved)).ToList();
 
         // Pagination
         model.MaxPage = (employees.Count() + _pageSize - 1) / _pageSize;
