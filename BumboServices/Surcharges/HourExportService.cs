@@ -103,7 +103,8 @@ public class HourExportService : IHourExportService
             _workedShiftRepository.GetWorkedShiftsInMonth(branchId, month.Year, month.Month);
 
         var exportModels = workedShiftsInMonth.GroupBy(s => s.Employee)
-            .Select(s => (s.Key, WorkedShiftsToExportOverview(s.ToList()))).ToList();
+            .Select(s => (s.Key, WorkedShiftsToExportOverview(s.ToList())))
+            .Where(s=>s.Item2.HoursWorked.Ticks > 0).ToList();
 
         var ms = new MemoryStream();
         using (var writer = new StreamWriter(ms))

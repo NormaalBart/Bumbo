@@ -43,9 +43,16 @@
                 {
                     @foreach (var viewModel in Model.ExportOverviewListItemViewModels)
                     {
-                        <tr class="my-1 card">
+                        var hasUnapprovedShifts = viewModel.UnapprovedShifts?.Any() ?? false;
+                        <tr class="my-1 card @(hasUnapprovedShifts ? "bg-warning" : "")">
                             <td class="card-header">
-                                <p class="fw-bold text-center">@viewModel.Employee.FullName()</p>
+                                <p class="fw-bold text-center">
+                                    @viewModel.Employee.FullName()
+                                    @if (hasUnapprovedShifts)
+                                    {
+                                        <i class="bi-exclamation-triangle"></i>
+                                    }
+                                </p>
                             </td>
                             <td class="card-body row">
                                 @for (var i = 0; i < 3; i++)
@@ -94,6 +101,23 @@
                                         </div>
                                     </div>
                                 }
+
+                                @if (hasUnapprovedShifts)
+                                {
+                                    <div class="alert-warning rounded mt-2">
+                                        <p class="fw-bold mt-2">Diens(ten) gevonden die nog niet zijn goedgekeurd.</p>
+                                        <p class="mb-2">Deze worden pas opgenomen in de export, zodra ze zijn goedgekeurd.</p>
+                                        <ul>
+                                            @foreach (var unapprovedShift in viewModel.UnapprovedShifts)
+                                            {
+                                                <li>
+                                                    @* TODO: Link to page where manager can approve shift *@
+                                                    <a asp-controller="ClockIn">@unapprovedShift.StartTime.Date.ToString("dd-MM-yyyy")</a>: @unapprovedShift.StartTime.TimeOfDay.ToString("hh\\:mm") - @unapprovedShift.EndTime?.TimeOfDay.ToString("hh\\:mm")
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }
@@ -106,8 +130,10 @@
                 <form asp-action="Overview" method="get">
                     <div class="form-group w-100">
                         <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
-                        @Html.HiddenFor(m=>m.SelectedMonth)
-                        <h5><label asp-for="SortMode" class="control-label"></label></h5>
+                        @Html.HiddenFor(m => m.SelectedMonth)
+                        <h5>
+                            <label asp-for="SortMode" class="control-label"></label>
+                        </h5>
                         <select asp-for="SortMode" class="form-control" value="@Model.SortMode" asp-items="@Html.GetEnumSelectList<ExportOverviewSortingOption>()"></select>
                         <input class="btn btn-primary my-2" type="submit" value="Zoeken"><br/>
                         <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
@@ -119,6 +145,7 @@
 </div>
 
 @* Show / hide months according to selected year *@
+
 @section Scripts {
     <script>
     

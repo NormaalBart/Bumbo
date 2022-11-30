@@ -51,13 +51,13 @@ public class ExportController : Controller
             _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, monthSelected.Year, monthSelected.Month);
 
         // Get all months available, where at least 1 shift has taken place in.
-        var selectableMonths = _workedShiftRepository.GetAllApproved(branch ?? -1)
-            .Select(s => (s.StartTime.Date.Year, s.StartTime.Date.Month))
-            .Distinct()
-            .Select(s => new DateTime(s.Year, s.Month, 1)).OrderBy(s => s.Date).Reverse().ToList();
+        var selectableMonths = _workedShiftRepository.GetList(s => s.BranchId == branch)
+            .GroupBy(s=>(s.StartTime.Year, s.StartTime.Date.Month))
+            .Select(s => new DateTime(s.Key.Year, s.Key.Month, 1))
+            .OrderBy(s => s.Date).Reverse().ToList();
 
         model.SelectableMonths = selectableMonths;
-        model.SelectableYears = selectableMonths.GroupBy(s => s.Year).Select(s=>s.Key).ToList();
+        model.SelectableYears = selectableMonths.GroupBy(s => s.Year).Select(s => s.Key).ToList();
         model.SelectedMonth = monthSelected;
         model.SortMode = SortMode;
         model.SearchQuery = SearchQuery;
@@ -74,7 +74,8 @@ public class ExportController : Controller
         // Get all employees that have worked in this month, and get all worked shifts for each employee.
         model.ExportOverviewListItemViewModels = workedShiftsInMonth.GroupBy(i => i.Employee)
             .Select(e => FromWorkedShifts(e.Key, e.ToList(),
-                _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, e.Key.Id, prevMonth.Year, prevMonth.Month)))
+                _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, e.Key.Id, prevMonth.Year, prevMonth.Month),
+                e.ToList().Where(s => !s.Approved).ToList()))
             .ToList();
 
         // Apply sorting
@@ -94,19 +95,25 @@ public class ExportController : Controller
                 .OrderBy(m => m.GetDifference().HoursWorked).ToList()
         };
 
+        // Sort by most amount of unapproved shifts
+        model.ExportOverviewListItemViewModels =
+            model.ExportOverviewListItemViewModels.OrderByDescending(s => s.UnapprovedShifts.Count).ToList();
+
         return View(model);
     }
 
     private ExportOverviewListItemViewModel FromWorkedShifts(
         Employee employee,
         List<WorkedShift> workedShiftsCurrentMonth,
-        List<WorkedShift> prevMonthWorkedShifts)
+        List<WorkedShift> prevMonthWorkedShifts,
+        List<WorkedShift> unapprovedShifts)
     {
         return new ExportOverviewListItemViewModel()
         {
             Employee = employee,
             CurrentMonth = _hourExportService.WorkedShiftsToExportOverview(workedShiftsCurrentMonth),
             PrevMonth = _hourExportService.WorkedShiftsToExportOverview(prevMonthWorkedShifts),
+            UnapprovedShifts = unapprovedShifts
         };
     }
 
