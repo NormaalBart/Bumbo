@@ -69,6 +69,7 @@ public class AvgWorkHoursWeek : CAORuleAppliesToAge
 
     public override string GetErrorMessage()
     {
-        throw new NotImplementedException();
+        return
+            $"Gemiddeld aantal uren gewerkt in de afgelopen {_amountOfPrevWeeks} weken overschreven, dit mag maximaal {_maxAvg} uur zijn.";
     }
 }

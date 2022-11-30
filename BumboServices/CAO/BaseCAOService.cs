@@ -15,6 +15,11 @@ public abstract class BaseCAOService: ICAOService
     public Dictionary<ICAORule, IEnumerable<PlannedShift>> VerifyPlannedShiftsWeek(List<PlannedShift> plannedShifts)
     {
         // The given shifts should be all in the same month.
+        if (plannedShifts.Count == 0)
+        {
+            return new Dictionary<ICAORule, IEnumerable<PlannedShift>>();
+        }
+        
         var weekNum = plannedShifts.First().StartTime.GetWeekNumber();
         if (plannedShifts.Any(w => w.StartTime.GetWeekNumber() != weekNum))
         {
