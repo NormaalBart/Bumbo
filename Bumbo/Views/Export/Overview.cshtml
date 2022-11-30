@@ -22,8 +22,8 @@
 
             @foreach (var modelSelectableMonth in Model.SelectableMonths)
             {
-                if (modelSelectableMonth.Month == Model.SelectedMonth?.Month
-                    && modelSelectableMonth.Year == Model.SelectedMonth?.Year)
+                if (modelSelectableMonth.Month == Model.SelectedMonth.Month
+                    && modelSelectableMonth.Year == Model.SelectedMonth.Year)
                 {
                     <a class="@modelSelectableMonth.Year selectable-month btn my-1 w-100 btn-primary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
                 }
@@ -144,7 +144,7 @@
                         @Html.HiddenFor(m => m.SelectedMonth)
                         @Html.HiddenFor(m => m.SelectedMonth)
                         <input class="btn btn-primary my-2" type="submit" value="Zoeken"><br/>
-                        <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth?.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
+                        <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
                     </div>
                 </form>
             </div>
