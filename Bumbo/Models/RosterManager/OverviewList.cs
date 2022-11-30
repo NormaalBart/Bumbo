@@ -22,8 +22,49 @@
                 return Days[index];
             }
             return null;
-           
-
         }
+
+        // returns total number of items that are not sufficiently rostered.
+        public int GetTotalNumberOfItemsNotSufficientlyRostered()
+        {
+            int total = 0;
+            foreach (OverviewItem day in Days)
+            {
+                if (!day.IsSufficientlyRostered() && day.RosteredHours != 0)
+                {
+                    total++;
+                }
+            }
+            return total;
+        }
+
+        // returns total number of items that are without roster
+        public int GetTotalNumberOfItemsWithoutRoster()
+        {
+            int total = 0;
+            foreach (OverviewItem day in Days)
+            {
+                if (day.RosteredHours == 0)
+                {
+                    total++;
+                }
+            }
+            return total;
+        }
+
+        // returns total number of items that sufficiently roster
+        public int GetTotalNumberOfItemsSufficientlyRostered()
+        {
+            int total = 0;
+            foreach (OverviewItem day in Days)
+            {
+                if (day.IsSufficientlyRostered())
+                {
+                    total++;
+                }
+            }
+            return total;
+        }
+
     }
 }

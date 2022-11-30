@@ -33,6 +33,20 @@
 
     </div>
 
+
+    <div class="text-center d-xxl-flex justify-content-center gap-1">
+            <p>Er zijn </p> <p class="text-warning fw-bolder">@Model.GetTotalNumberOfItemsNotSufficientlyRostered() </p> <p> dagen met een rooster dat </p> <p class="fw-bold"> niet </p> <p>  de prognose haalt.</p>
+      
+
+    </div>
+
+    <div class="text-center d-xxl-flex justify-content-center gap-1">
+        <p>Er zijn </p> <p class="text-secondary fw-bolder">@Model.GetTotalNumberOfItemsWithoutRoster() </p> <p> dagen </p> <p class="fw-bold"> zonder </p> <p>  rooster.</p>
+    </div>
+    <div class="text-center d-xxl-flex justify-content-center gap-1">
+        <p>En er zijn </p> <p class="text-success fw-bolder">@Model.GetTotalNumberOfItemsSufficientlyRostered()</p> <p> dagen met een </p> <p class="fw-bold"> voldoende </p> <p>  rooster.</p>
+    </div>
+
    @for (int week = 0; week < 5; week++)
         { 
         <div class="row">

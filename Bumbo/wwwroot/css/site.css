@@ -260,7 +260,7 @@ p {
 }
 
 .roster-overview {
-    background-color: darkgrey;
+  
 }
 
 .roster-overview-date {
@@ -278,17 +278,18 @@ p {
 
 .roster-overview-SufficientRostering {
     border: 5px solid;
-    background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
+    background: linear-gradient(to bottom right, mediumspringgreen, springgreen) !important;
     border-image: linear-gradient(45deg, #568203, #018749) 1 !important;
 }
 
 .roster-overview-InsufficientRostering {
     border: 5px solid;
-    background: linear-gradient(to bottom right, yellow, #FFD700);
+    background: linear-gradient(to bottom right, yellow, #FFD700) !important;
     border-image: linear-gradient(45deg, #FFFF99, #FFFF66) 1 !important;
 }
 
 .roster-overview-box {
     border: 5px solid;
-    border-image: linear-gradient(45deg, #808080, #696969) 1 ;
+    border-image: linear-gradient(45deg, #808080, #696969) 1;
+    background: linear-gradient(to bottom right, #909090, #888888);
 }
