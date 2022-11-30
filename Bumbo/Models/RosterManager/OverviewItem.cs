@@ -20,5 +20,26 @@ namespace Bumbo.Models.RosterManager
             return false;
         }
 
+
+        // if the rostered hours are more than the prognosis hours, return true.
+        public bool IsSufficientlyRostered()
+        {
+            if (RosteredHours >= PrognosisHours && RosteredHours > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        // if there are rostered hours, but it is not enough we return true
+        public bool IsInsufficientlyRostered()
+        {
+            if (RosteredHours <= PrognosisHours && RosteredHours > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

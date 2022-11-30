@@ -6,14 +6,32 @@
 <body class="roster-overview">
 
     <div class="roster-overview-date">
-  <ul>
-    <li class="prev">&#10094;</li>
-    <li class="next">&#10095;</li>
-    <li> @Model.Date.ToString("MMMM")<br><span style="font-size:18px"> @Model.Date.ToString("yyyy") </span></li>
-  </ul>
-</div>
 
 
+    <div class=" d-flex justify-content-between m-2 align-items-center">
+        <div>
+            <!--Arrow to left, using an online arrow png-->
+            <a class="text-decoration-none text-black" asp-action="OverView" asp-route-dateInput="@Model.Date.AddMonths(-1).Date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z" />
+                </svg>
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            @Model.Date.ToString("MMMM")<br><span style="font-size:18px"> @Model.Date.ToString("yyyy") </span>
+        </div>
+        <div>
+            <!--Arrow to right, using an online arrow png on the right side of the bar.-->
+            <a class="text-decoration-none text-black" asp-action ="OverView" asp-route-dateInput="@Model.Date.AddMonths(1).Date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    </div>
 
    @for (int week = 0; week < 5; week++)
         { 
@@ -25,17 +43,22 @@
                 @if (@Model.GetDay(week, day) != null)
                 {
 
+                        <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@Model.GetDay(week, day).Date.Date">
 
-                        <div class="border border-1 text-center m-2   ">
-                            <div class="m-3 @(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "")">
-                            <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
 
-                            <div class="roster-overview-iteminfo">
-                                <p>Prognose: @Model.GetDay(week, day).PrognosisHours</p>
-                                <p>Ingeplande uren:  @Model.GetDay(week, day).RosteredHours</p>
-                            </div>
-                        </div>
+                            <div class="text-center m-2 roster-overview-box @(Model.GetDay(week, day).IsSufficientlyRostered() ? "roster-overview-SufficientRostering" : "") @(Model.GetDay(week, day).IsInsufficientlyRostered() ? "roster-overview-InsufficientRostering" : "") ">
+                                <div>
+                                    <div class="m-3 @(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "")">
+                                        <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
+
+                                        <div class="roster-overview-iteminfo">
+                                            <p>Prognose: @Model.GetDay(week, day).PrognosisHours</p>
+                                            <p>Ingeplande uren:  @Model.GetDay(week, day).RosteredHours</p>
+                                        </div>
+                                    </div>
+                                </div>
                     </div>
+                    </a>
                 }
                      
                 </div>

@@ -264,49 +264,31 @@ p {
 }
 
 .roster-overview-date {
-    background-color: green;
-    height: 100px;
-}
-
-.roster-overview-date span {
-    height: inherit;
-    padding: 40px;
-}
-
-.roster-overview-date {
-
-    padding: 70px 25px;
+    padding: 25px 25px;
     width: 100%;
     background: #1abc9c;
     text-align: center;
 }
 
-    /* Month list */
-    .roster-overview-date ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-
-        .roster-overview-date ul li {
-            color: white;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-    /* Previous button inside month header */
-    .roster-overview-date .prev {
-        float: left;
-        padding-top: 10px;
-    }
-
-    /* Next button */
-    .roster-overview-date .next {
-        float: right;
-        padding-top: 10px;
-    }
 
 .roster-overview-today {
     background-color: #1abc9c;
 
+}
+
+.roster-overview-SufficientRostering {
+    border: 5px solid;
+    background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
+    border-image: linear-gradient(45deg, #568203, #018749) 1 !important;
+}
+
+.roster-overview-InsufficientRostering {
+    border: 5px solid;
+    background: linear-gradient(to bottom right, yellow, #FFD700);
+    border-image: linear-gradient(45deg, #FFFF99, #FFFF66) 1 !important;
+}
+
+.roster-overview-box {
+    border: 5px solid;
+    border-image: linear-gradient(45deg, #808080, #696969) 1 ;
 }

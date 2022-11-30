@@ -93,8 +93,11 @@ namespace BumboRepositories.Repositories
 
         public double GetTotalHoursPlannedOnDay(int branchId, DateTime date)
         {
-            return 100;
-            return DbSet.Where(s => s.BranchId == branchId && s.StartTime.Date == date).Sum(s => s.EndTime.Subtract(s.StartTime).TotalHours);
+
+            var shiftsOnDay = DbSet.Where(s => s.BranchId == branchId && s.StartTime.Date == date.Date).Select(s => (s.EndTime - s.StartTime).TotalHours).ToList();
+            return Math.Round(shiftsOnDay.Sum());
+
+
         }
     }
 }

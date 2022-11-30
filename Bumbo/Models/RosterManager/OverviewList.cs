@@ -15,17 +15,13 @@
         {
             int index = (weekNr * 7) + dayNr;
 
-            try
+            if (index + 1 < Days.Count)
             {
                 OverviewItem day = Days[index];
 
                 return Days[index];
             }
-            catch (Exception)
-            {
-
-                return null;
-            }
+            return null;
            
 
         }

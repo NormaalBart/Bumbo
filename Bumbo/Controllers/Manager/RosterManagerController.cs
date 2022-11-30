@@ -109,12 +109,15 @@ namespace Bumbo.Controllers.Manager
                 OverviewItem item = new OverviewItem();
                 item.Date = new DateTime(date.Year, date.Month, i);
                 // gets the sum of the prognosis hours of departments
-                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(date, employee.DefaultBranchId)
-                                        + _prognosesServices.GetStockersPrognose(date, employee.DefaultBranchId)
-                                        + _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
+                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(item.Date, employee.DefaultBranchId)
+                                        + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId)
+                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId);
+                if (item.PrognosisHours < 0)
+                {
+                    item.PrognosisHours = 0;
+                }
                 // gets the sum of total planned hours on day
-                item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId, date);
-
+                item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId, item.Date);
                 if (item.Date == DateTime.Now.Date)
                 {
                     item.IsToday = true;
