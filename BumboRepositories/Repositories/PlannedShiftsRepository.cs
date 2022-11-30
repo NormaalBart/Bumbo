@@ -82,6 +82,10 @@ namespace BumboRepositories.Repositories
                                     s.StartTime <= endWeekDate).Include(s => s.Employee)
                 .ToList();
         }
+        public IEnumerable<PlannedShift> GetOfEmployeeOnDay(DateTime date, string employeeId)
+        {
+            return DbSet.Where(p => p.EmployeeId == employeeId && p.StartTime.Date == date.Date).ToList();
+        }
 
         public void Import(List<PlannedShift> list)
         {
