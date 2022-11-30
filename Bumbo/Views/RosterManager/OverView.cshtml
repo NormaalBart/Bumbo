@@ -96,7 +96,7 @@
 
                 @if (@Model.GetDay(week, day) != null)
                 {
-                        <div class="roster-item-container @(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "")">
+                        <div class="roster-item-container @(Model.GetDay(week, day).ItemIsToday() ? "roster-overview-today" : "")">
 
                             <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@Model.GetDay(week, day).Date.Date">
 

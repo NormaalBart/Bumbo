@@ -4,14 +4,9 @@ using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
 using BumboServices.Interface;
-using Itenso.TimePeriod;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using System.Numerics;
-using BumboData.Enums;
 using BumboServices.CAO.Rules;
 
 namespace Bumbo.Controllers.Manager
@@ -149,14 +144,6 @@ namespace Bumbo.Controllers.Manager
                 }
                 // gets the sum of total planned hours on day
                 item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId, item.Date);
-                if (item.Date == DateTime.Now.Date)
-                {
-                    item.IsToday = true;
-                }
-                else
-                {
-                    item.IsToday = false;
-                }
 
                 overviewList.Days.Add(item);
             }

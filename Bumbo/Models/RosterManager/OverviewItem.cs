@@ -11,12 +11,11 @@ namespace Bumbo.Models.RosterManager
         public DateTime Date { get; set; }
         public double PrognosisHours { get; set; }
         public double RosteredHours { get; set; }
-        public bool IsToday { get; set; }
 
 
-        public bool ItemIsToday(DateTime date)
+        public bool ItemIsToday()
         {
-            if (date == DateTime.Now)
+            if (Date == DateTime.Now)
             {
                 return true;
             }
