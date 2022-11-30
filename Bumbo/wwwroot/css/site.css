@@ -305,7 +305,35 @@ p {
 
 .roster-overview-box {
     border: 5px solid;
-    border-image: linear-gradient(45deg, #808080, #696969) 1;
-    background: linear-gradient(to bottom right, #909090, #888888);
+    border-image: linear-gradient(45deg, #888888, #909090) 1;
+    background: linear-gradient(to bottom right, #C0C0C0, #C8C8C8);
 }
 
+
+.helpmenu{
+    display: none;
+}
+
+.dot {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.grey {
+    background-color: #bbb;
+
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.green {
+    background-color: green;
+}
+
+.red {
+    background-color: red;
+}

@@ -34,6 +34,38 @@
     </div>
 
 
+
+
+    <button class="btn btn-primary" onclick="toggleMenu()">Open index help menu voor kleuren</button>
+
+    <div id="helpmenu" class="helpmenu ">
+        <div class="m-1 ">
+            <span class="dot grey"></span> <span >Grijze blokken: Dagen zonder rooster.</span>
+        </div>
+        <div class="m-1">
+            <span class="dot yellow"></span> <span>Gele blokken: Dagen met rooster die prognose niet haalt.</span>
+        </div>
+        <div class="m-1">
+            <span class="dot green"></span> <span>Groene blokken: Dagen met rooster die prognose wel behaalt.</span>
+        </div>
+        <div class="m-1">
+            <span class="dot red"></span> <span>Rood: Dag heeft CAO overtredingen.</span>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+
+            var menu = document.getElementById("helpmenu");
+            if(menu.style.display === "none") {
+            menu.style.display = "block";
+            }
+            else {
+            menu.style.display = "none";
+            }
+        }
+        </script>
+
     <div class="text-center justify-content-center gap-1">
         <span>Er zijn </span> <span class="text-warning fw-bolder">@Model.GetTotalNumberOfItemsNotSufficientlyRostered() </span> <span> dagen met een rooster dat </span> <span class="fw-bold"> niet </span> <span>  de prognose haalt.</span>
       
