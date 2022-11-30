@@ -114,6 +114,15 @@ namespace Bumbo.Controllers.Manager
                                         + _prognosesServices.GetFreshPrognose(date, employee.DefaultBranchId);
                 // gets the sum of total planned hours on day
                 item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId, date);
+
+                if (item.Date == DateTime.Now.Date)
+                {
+                    item.IsToday = true;
+                }
+                else
+                {
+                    item.IsToday = false;
+                }
                 overviewList.Days.Add(item);
             }
             overviewList.Date = date;

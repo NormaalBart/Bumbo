@@ -305,3 +305,8 @@ p {
         float: right;
         padding-top: 10px;
     }
+
+.roster-overview-today {
+    background-color: #1abc9c;
+
+}

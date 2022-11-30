@@ -9,7 +9,7 @@
   <ul>
     <li class="prev">&#10094;</li>
     <li class="next">&#10095;</li>
-    <li> @Model.Date.ToString("MMMM")<br><span style="font-size:18px"> @Model.Date.ToString("YYYY") </span></li>
+    <li> @Model.Date.ToString("MMMM")<br><span style="font-size:18px"> @Model.Date.ToString("yyyy") </span></li>
   </ul>
 </div>
 
@@ -24,8 +24,10 @@
 
                 @if (@Model.GetDay(week, day) != null)
                 {
-                    <div class="border border-1 text-center m-2">
-                        <div class="m-3">
+
+
+                        <div class="border border-1 text-center m-2   ">
+                            <div class="m-3 @(Model.GetDay(week, day).IsToday ? "roster-overview-today" : "")">
                             <p>@Model.GetDay(week, day).Date.ToString("dd MMMM") </p>
 
                             <div class="roster-overview-iteminfo">

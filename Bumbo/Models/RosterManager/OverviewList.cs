@@ -17,6 +17,8 @@
 
             try
             {
+                OverviewItem day = Days[index];
+
                 return Days[index];
             }
             catch (Exception)
