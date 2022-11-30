@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bumbo.Models.BranchController;
+using Bumbo.Models.Converters;
 using Bumbo.Models.EmployeeManager.Employee;
 using Bumbo.Models.EmployeeManager.Index;
 using Bumbo.Models.EmployeeManager.Manager;
@@ -76,8 +77,7 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 
-            CreateMap<StandardViewModel, BumboData.Models.Standard>(); 
-            CreateMap<BumboData.Models.Standard, StandardViewModel>();
+            CreateMap<IEnumerable<BumboData.Models.Standard>, StandardViewModel>().ConvertUsing<StandardConverter>();
         }
     }
 }

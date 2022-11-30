@@ -1,0 +1,69 @@
+﻿@model Bumbo.Models.Standard.StandardViewModel
+
+@{
+    ViewData["Title"] = "Normeringen";
+}
+
+@if (TempData["saved"] != null)
+    {
+        <div class="alert alert-success text-center" role="alert">
+            <strong>De veranderingen zijn opgeslagen!</strong>
+        </div>
+    }
+
+<div class="container ">
+    <div>
+        <form asp-action="Save" id="SaveForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.BranchId" />
+            <div class="row">
+                <div class="col border border-3 border-dark employee-create-box">
+                    <div class="p-3">
+                        <table>
+                            <tr>
+                                <th width=350px>Activiteit</th>
+                                <th width=340px>Normering</th>
+                            </tr>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.CheckoutEmployees)</th>
+                                <th>@Html.EditorFor(model => model.CheckoutEmployees)</th>
+                                <span asp-validation-for="CheckoutEmployees" class="text-danger"></span>
+                            </tr>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.ColiTime)</th>
+                                <th>@Html.EditorFor(model => model.ColiTime)</th>
+                                <span asp-validation-for="ColiTime" class="text-danger"></span>
+                            </tr>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.FreshEmployees)</th>
+                                <th>@Html.EditorFor(model => model.FreshEmployees)</th>
+                                <span asp-validation-for="FreshEmployees" class="text-danger"></span>
+                            </tr>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.ShelfArrangement)</th>
+                                <th>@Html.EditorFor(model => model.ShelfArrangement)</th>
+                                <span asp-validation-for="ShelfArrangement" class="text-danger"></span>
+                            </tr>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.ShelfStockingTimes)</th>
+                                <th>@Html.EditorFor(model => model.ShelfStockingTimes)</th>
+                                <span asp-validation-for="ShelfStockingTimes" class="text-danger"></span>
+                            </tr>
+                        </table>
+                        <div class="form-group">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <input type="submit" value="Veranderingen Opslaan!" form="SaveForm" class="btn btn-success btn-lg" />
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
