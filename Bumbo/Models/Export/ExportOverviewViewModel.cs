@@ -8,6 +8,7 @@ public class ExportOverviewViewModel
     public DateTime SelectedMonth { get; set; }
 
     public List<DateTime> SelectableMonths { get; set; }
+    public List<int> SelectableYears { get; set; }
 
     public string SearchQuery { get; set; }
 

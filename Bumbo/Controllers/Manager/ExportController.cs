@@ -57,6 +57,7 @@ public class ExportController : Controller
             .Select(s => new DateTime(s.Year, s.Month, 1)).OrderBy(s => s.Date).Reverse().ToList();
 
         model.SelectableMonths = selectableMonths;
+        model.SelectableYears = selectableMonths.GroupBy(s => s.Year).Select(s=>s.Key).ToList();
         model.SelectedMonth = monthSelected;
         model.SortMode = SortMode;
         model.SearchQuery = SearchQuery;
