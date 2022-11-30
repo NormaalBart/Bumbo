@@ -66,10 +66,5 @@
             return total;
         }
 
-        public int GetTotalNumberOfDaysWithCAOViolations()
-        {
-            return Days.Where(d => d.IsViolatingCAO).Count();
-        }
-
     }
 }

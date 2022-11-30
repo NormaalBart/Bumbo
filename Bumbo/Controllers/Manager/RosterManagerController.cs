@@ -133,6 +133,7 @@ namespace Bumbo.Controllers.Manager
 
             OverviewList overviewList = new OverviewList();
             
+            // loops through month
             for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
             {
                 OverviewItem item = new OverviewItem();
@@ -156,13 +157,6 @@ namespace Bumbo.Controllers.Manager
                 {
                     item.IsToday = false;
                 }
-
-                // check for cAO violations
-                //var invalidshifts = InvalidPlannedShiftsFollowigCAO(item.Date, employee.ManagesBranchId ?? -1);
-                //if (invalidshifts.Count > 0)
-                //{
-                //    item.IsViolatingCAO = true;
-                //}
 
                 overviewList.Days.Add(item);
             }

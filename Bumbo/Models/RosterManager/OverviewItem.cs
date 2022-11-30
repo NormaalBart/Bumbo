@@ -12,7 +12,6 @@ namespace Bumbo.Models.RosterManager
         public double PrognosisHours { get; set; }
         public double RosteredHours { get; set; }
         public bool IsToday { get; set; }
-        public bool IsViolatingCAO { get; set; }
 
 
         public bool ItemIsToday(DateTime date)
