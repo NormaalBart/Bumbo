@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Bumbo.Models.ApproveWorkedHours;
 using Bumbo.Models.BranchController;
+using Bumbo.Models.Converters;
 using Bumbo.Models.EmployeeManager.Employee;
 using Bumbo.Models.EmployeeManager.Index;
 using Bumbo.Models.EmployeeManager.Manager;
 using Bumbo.Models.EmployeeRoster;
 using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
+using Bumbo.Models.Standard;
 using Bumbo.Models.UnavailableMoments;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -82,6 +84,7 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City))
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 
+            CreateMap<IEnumerable<BumboData.Models.Standard>, StandardViewModel>().ConvertUsing<StandardConverter>();
         }
     }
 }

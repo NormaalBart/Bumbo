@@ -1,6 +1,7 @@
 ﻿using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories.Repositories
 {
@@ -31,6 +32,11 @@ namespace BumboRepositories.Repositories
                 branch.Inactive = true;
                 Update(branch);
             }
+        }
+
+        public override Branch? Get(int id)
+        {
+            return DbSet.Include(branch => branch.Standards).FirstOrDefault(branch => branch.Id == id);
         }
     }
 }
