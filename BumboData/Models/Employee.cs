@@ -32,8 +32,7 @@ public class Employee: IdentityUser, IEntity<string>
     [Required] 
     public DateOnly EmployeeSince { get; set; }
 
-    [Required] 
-    public string Function { get; set; }
+    public string? Function { get; set; }
 
     [Required]
     public Branch DefaultBranch { get; set; }

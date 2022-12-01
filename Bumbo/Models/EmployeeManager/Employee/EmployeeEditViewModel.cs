@@ -10,7 +10,6 @@ namespace Bumbo.Models.EmployeeManager.Employee
     public class EmployeeEditViewModel : BaseCreateViewModel
     {
 
-        [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Functie")]
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
         public string Function { get; set; }
