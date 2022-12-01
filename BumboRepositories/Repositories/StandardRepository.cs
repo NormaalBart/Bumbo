@@ -20,5 +20,10 @@ namespace BumboRepositories.Repositories
         {
             return _context.Standards.Where(o => o.Branch == branch && o.Key == standardType).SingleOrDefault();
         }
+
+        public ICollection<Standard> Get(int branch)
+        {
+            return _context.Standards.Where(o => o.BranchId == branch).ToList();
+        }
     }
 }
