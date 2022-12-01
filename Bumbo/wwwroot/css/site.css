@@ -265,10 +265,9 @@ p {
 
 }
 
-    .roster-overview-box:hover {
-        filter: brightness(80%);
-
-    }
+.roster-item-container:hover {
+    filter: brightness(80%);
+}
 
 .roster-overview-date {
     width: 100%;
@@ -284,10 +283,6 @@ p {
 
 .roster-overview-cao {
     outline: 5px solid red;
-}
-
-.test {
-    background: rgba(144, 238, 144, 0.8);
 }
 
 /*.roster-overview-SufficientRostering {*/
@@ -321,16 +316,11 @@ p {
 }
 
 .grey {
-    background-color: #bbb;
-
-}
-
-.yellow {
-    background-color: yellow;
+    background-color: #e8e8e8;
 }
 
 .green {
-    background-color: green;
+    background: rgba(144, 238, 144, 0.9);
 }
 
 .red {
