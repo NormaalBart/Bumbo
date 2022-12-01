@@ -74,6 +74,9 @@ namespace BumboRepositories.Repositories
             }
             branch.OpeningHoursOverrides.Remove(model);
             Update(branch);
+        public override Branch? Get(int id)
+        {
+            return DbSet.Include(branch => branch.Standards).FirstOrDefault(branch => branch.Id == id);
         }
     }
 }
