@@ -62,6 +62,7 @@ namespace Bumbo.Models
 
             CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
             CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
+            CreateMap<UnavailableMomentCreateViewModel, UnavailableMoment>();
 
             CreateMap<Branch, BranchViewModel>();
             CreateMap<BranchViewModel, Branch>();

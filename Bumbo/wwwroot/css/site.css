@@ -282,14 +282,6 @@ p {
 }
 
 
-.moments-row {
-    background-color: #F5F5F5;
-}
-
-.border-collapse {
-    border-collapse: collapse;
-}
-
 
 /*Rooster overview */
 .roster-overview-iteminfo {
@@ -379,3 +371,14 @@ p {
 }
 
 
+/*Unavailable moments overview*/
+
+.moments-row {
+    background-color: #F5F5F5;
+}
+
+.moments-create-box {
+    background-color: #F5F5F5;
+    padding: 15px;
+
+}

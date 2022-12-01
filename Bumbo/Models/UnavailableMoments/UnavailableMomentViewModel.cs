@@ -21,5 +21,6 @@ namespace Bumbo.Models.UnavailableMoments
         [Required]
         [DisplayName("Reden")]
         public UnavailableMomentType Type { get; set; }
+
     }
 }
