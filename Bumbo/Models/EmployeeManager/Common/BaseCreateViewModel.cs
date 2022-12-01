@@ -52,7 +52,7 @@ namespace Bumbo.Models.EmployeeManager.Common
         public string HouseNumber { get; set; }
 
         [DisplayName("Straat")]
-        public string Street { get; set; }
+        public string? Street { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DataType(DataType.Date, ErrorMessage = "Veld is niet valide.")]
