@@ -30,8 +30,7 @@ namespace Bumbo.Controllers.Employees
             var Databaseresult = _unavailableMomentsRepository.GetAll(_userManager.GetUserId(User));
             var viewModel = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(Databaseresult).ToList();
             var sortedViewModel = viewModel.OrderBy(e => e.StartTime).Where(e => e.EndTime >= DateTime.Now).ToList();
-            UnavailableMomentsListViewModel unavailableMomentsListViewModel =
-                new UnavailableMomentsListViewModel(sortedViewModel);
+            UnavailableMomentsListViewModel unavailableMomentsListViewModel = new UnavailableMomentsListViewModel(sortedViewModel);
             return View(unavailableMomentsListViewModel);
         }
 

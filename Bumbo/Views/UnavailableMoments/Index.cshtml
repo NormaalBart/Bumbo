@@ -4,20 +4,24 @@
     ViewData["Title"] = "Afwezigheid";
 }
 
-<div class="row">
+<div>
     <h1 class="col-5">Afwezigheid</h1>
-    
-    <div class="col-3">
+
+    <div class="row">
+          <div class="col">
         <!-- Trigger/Open The Modal -->
-        <button id="openPrognoseModalbtn">Schoolrooster kopieren tussen dagen</button>
+        <button class="btn btn-primary" id="openModalBTN">Schoolrooster kopieren tussen dagen</button>
     </div>
-    <p class="col-3">
+    <p class="col">
         <a asp-action="Create" class="btn btn-success btn-lg">+ Nieuw moment</a>
     </p>
+    </div>
+  
 </div>
 
-@if (Model.UnavailableMoments.Count > 0){
-    <table class="table">
+@if (Model.UnavailableMoments.Count > 0)
+{
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>
@@ -33,32 +37,35 @@
                     @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
                 </th>
                 <th></th>
+
             </tr>
         </thead>
-    <tbody>
-    @foreach (var item in Model.UnavailableMoments)
-    {
-        <tr>
-            <td>
-                @item.StartTime.Day<br />
-                @item.StartTime.ToString("MMM")
-            </td>
-            <td>
-                @item.StartTime.ToString("HH:mm")
-            </td>
-            <td>
-                @item.EndTime.ToString("HH:mm")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Verwijder</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+        <tbody>
+            @foreach (var item in Model.UnavailableMoments)
+            {
+
+                <tr onclick="onRowClick('@item.StartTime.Date.ToString("yyyy-M-dd")', '@item.StartTime.AddDays(7).Date.ToString("yyyy-M-dd")')">
+                    <td>
+                        @item.StartTime.Day<br />
+                        @item.StartTime.ToString("MMM")
+                    </td>
+                    <td>
+                        @item.StartTime.ToString("HH:mm")
+                    </td>
+                    <td>
+                        @item.EndTime.ToString("HH:mm")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Verwijder</a>
+                    </td>
+                </tr>
+                
+            }
+        </tbody>
+    </table>
 }
 else
 {
@@ -66,18 +73,28 @@ else
 }
 
 
+<script>
+    function onRowClick(starttime, endtime) {
+        var modal = document.getElementById("modal");
+        modal.style.display = "block";
+        document.getElementById('modal-input-from').value = starttime;
+        document.getElementById('modal-input-to').value = endtime;
 
-<div id="prognoseModal" class="modal">
+    }
+</script>
+
+
+<div id="modal" class="modal-mobile">
     <!-- Modal content -->
-    <div class="modal-content">
+    <div class="modal-content-mobile">
         <span class="close position-absolute">&times;</span>
         <label> </label>
-        <div class="m-3 align-content-center">
+        <div class="m-3 align-content-center text-center m-3">
             <form asp-action="CopyFromDay">
                 <h2 class="text-center">Kopieer schoolrooster van dag</h2>
                 <div class="row">
                     <span class="col-4 text-end">Dag</span>
-                    <input asp-for="CopyFrom" class="col-5 asp-format="{0:yyyy-MM-dd}" />
+                    <input id="modal-input-from" asp-for="CopyFrom" class="col-5 asp-format="{0:yyyy-MM-dd}" />
                     <span asp-validation-for="CopyFrom" class="text-danger col-2"></span>
                 </div>
                 
@@ -89,10 +106,10 @@ else
 
                 <div class="row">
                     <span class="col-4 text-end">Dag</span>
-                    <input asp-for="CopyTo" class="col-5" asp-format="{0:yyyy-MM-dd}" />
+                    <input id="modal-input-to" asp-for="CopyTo" class="col-5" asp-format="{0:yyyy-MM-dd}" />
                     <span asp-validation-for="CopyTo" class="text-danger col-"4"></span>
                 </div>
-                <input type="submit" value="Kopiëren" class="btn btn-success btn-sm " />
+                <input type="submit" value="Kopiëren" class="btn btn-success btn-sm m-3" />
             </form>
         </div>
     </div>
