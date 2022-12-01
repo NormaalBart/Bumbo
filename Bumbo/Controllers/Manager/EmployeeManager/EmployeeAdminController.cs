@@ -52,6 +52,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             employee.NormalizedUserName = employee.UserName;
             await _userManager.CreateAsync(employee, viewModel.Password);
             await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.RoleId);
+            TempData["saved"] = true;
             return RedirectToAction(nameof(Index));
         }
 
@@ -75,6 +76,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             var employee = _employeesRepository.Get(viewModel.EmployeeKey);
             _mapper.Map<ManagerEditViewModel, Employee>(viewModel, employee);
             _employeesRepository.Update(employee);
+            TempData["saved"] = true;
             return RedirectToAction(nameof(Index));
         }
 

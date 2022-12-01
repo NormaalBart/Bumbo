@@ -70,6 +70,7 @@ namespace Bumbo.Controllers.Manager
             {
                 Employee employee = await _userManager.GetUserAsync(User);
                 _prognosisRepository.AddOrUpdateAll(employee.DefaultBranchId, result);
+                TempData["saved"] = true;
             }
             return View(list);
         }
@@ -95,7 +96,7 @@ namespace Bumbo.Controllers.Manager
                 newPrognosis.ColiCount = copyFromPrognoses[i].ColiCount;
                 updatedNewWeek.Add(newPrognosis);
             }
-
+            TempData["saved"] = true;
             _prognosisRepository.AddOrUpdateAll(employee.DefaultBranchId, updatedNewWeek);
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });

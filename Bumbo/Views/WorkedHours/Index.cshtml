@@ -3,6 +3,13 @@
 @using Bumbo.Utils;
 
 
+@if (TempData["saved"] != null)
+    {
+        <div class="alert alert-success text-center" role="alert" id="savedTag">
+            <strong>De veranderingen zijn opgeslagen!</strong>
+        </div>
+    }
+
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren accorderen</h1>
 
 

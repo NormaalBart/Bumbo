@@ -115,6 +115,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             var user = await _userManager.FindByIdAsync(viewModel.EmployeeKey);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, viewModel.Password);
+            TempData["saved"] = true;
             return RedirectToAction(nameof(Index));
         }
     }

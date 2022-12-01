@@ -105,6 +105,7 @@ namespace Bumbo.Controllers
                 temp.EndTime = item.EndTime;
                 _workedShiftRepository.Update(temp);
             }
+            TempData["saved"] = true;
             return Redirect("Index");
         }
 
