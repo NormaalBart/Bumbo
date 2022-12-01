@@ -19,16 +19,17 @@
                 <div class="col border border-3 border-dark moments-create-box">
                     <div class="col">
                         <div class="row p-1">
+                            
                             <div class="form-group text-center">
                                 <span>Van:</span>
-                                <input id="startdate" asp-for="StartDate" onchange="onDateChanged(true)" class="form-control" asp-format="{0:yyyy-MM-dd}" />
+                                <input id="startdate" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
                                 <input step="300" id="starttime" asp-for="StartHour" class="form-control" asp-format="{0:HH:mm}" />
                                 <span asp-validation-for="StartDate" class="text-danger"></span>
                                 <span asp-validation-for="StartHour" class="text-danger"></span>
                             </div>
                             <div class="form-group text-center">
                                 <span>Tot:</span>
-                                <input id="enddate" asp-for="EndDate" onchange="onDateChanged(false)" class="form-control" asp-format="{0:yyyy-MM-dd}" />
+                                <input id="enddate" asp-for="EndDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
                                 <input step="300" id="endtime" asp-for="EndHour" class="form-control" asp-format="{0:HH:mm}" />
                                 <span asp-validation-for="EndDate" class="text-danger"></span>
                                 <span asp-validation-for="EndHour" class="text-danger"></span>
@@ -50,42 +51,6 @@
         </form>
     </div>
 </div>
-
-<script>
-    function onDateChanged(isStart) {
-            var inputdata;
-            if(isStart){
-            inputdata = document.getElementById("startdate").value;
-            }else{
-            inputdata = document.getElementById("enddate").value;
-            }
-
-
-            $(function () {
-                $.ajax({
-                    type: "GET",
-                    url: '@Url.Action("GetOpenTime", "UnavailableMoments")',
-                    data: {
-                        dateInput: inputdata
-                       
-                    },
-                    success: function (data) {
-                        //handle the data
-                        if(isStart){
-                        document.getElementById("starttime").value = data;
-                        }else{
-                        document.getElementById("endtime").value = data;
-                        }
-
-                        
-                    }
-                });
-
-            
-        });
-    }
-
-</script>
 
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <input type="submit" value="Voeg toe!" form="CreateForm" class="btn btn-success btn-lg" />

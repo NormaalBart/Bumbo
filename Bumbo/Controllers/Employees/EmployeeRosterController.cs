@@ -17,11 +17,13 @@ namespace Bumbo.Controllers.Employees
         private readonly UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
         private readonly IPlannedShiftsRepository _shiftRepository;
-        public EmployeeRosterController(UserManager<Employee> userManager, IMapper mapper, IPlannedShiftsRepository shiftsRepository) 
+        private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
+        public EmployeeRosterController(UserManager<Employee> userManager, IMapper mapper, IPlannedShiftsRepository shiftsRepository, IUnavailableMomentsRepository unavailableMomentsRepository) 
         {
             _userManager = userManager;
             _mapper = mapper;
             _shiftRepository = shiftsRepository;
+            _unavailableMomentsRepository = unavailableMomentsRepository;
         }
 
 
@@ -40,7 +42,11 @@ namespace Bumbo.Controllers.Employees
             EmployeeShiftsListViewModel shiftsVM = new EmployeeShiftsListViewModel();
             shiftsVM.Date = date.ToDateOnly();
             var dbshifts = _shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, employee.Id);
+            var dbMoments = _unavailableMomentsRepository.GetWeekOfUnavailableMomentsAfterDateForEmployee(date, employee.Id);
+
             shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
+            shiftsVM.shifts.AddRange(_mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbMoments).ToList());
+            shiftsVM.shifts = shiftsVM.shifts.OrderBy(s => s.StartTime).ToList();
             return View(shiftsVM);
         }
     }

@@ -17,9 +17,6 @@ namespace Bumbo.Models.UnavailableMoments
         [DataType(DataType.Time)]
         public DateTime StartHour { get; set; }
 
-        [Required]
-        [DataType(DataType.Time)]
-        public DateTime StartMinute { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -28,10 +25,6 @@ namespace Bumbo.Models.UnavailableMoments
         [Required]
         [DataType(DataType.Time)]
         public DateTime EndHour { get; set; }
-
-        [Required]
-        [DataType(DataType.Time)]
-        public DateTime EndMinute { get; set; }
 
 
         [Required]
