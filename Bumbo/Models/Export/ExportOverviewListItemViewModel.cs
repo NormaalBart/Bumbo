@@ -10,6 +10,8 @@ public class ExportOverviewListItemViewModel
     public HourExportModel? CurrentMonth { get; set; }
     public HourExportModel? PrevMonth { get; set; }
 
+    public List<WorkedShift>? UnapprovedShifts { get; set; }
+
     public HourExportModel? GetDifference()
     {
         // Calculate difference between
