@@ -50,7 +50,6 @@ namespace Bumbo.Controllers
             }
 
             var employee = _employeeRepository.GetByEmail(loginModel.EmailAddress);
-
             if (employee != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(employee, loginModel.Password, false, false);
@@ -68,15 +67,16 @@ namespace Bumbo.Controllers
 
         private async Task<IActionResult> RedirectToPageAsync(Employee employee)
         {
-            var branch = employee.DefaultBranch == null ? _branchRepository.Get(employee.DefaultBranchId) : employee.DefaultBranch;
-            if(branch.Inactive)
+            Branch? branch = employee.DefaultBranch == null ? _branchRepository.Get(employee.DefaultBranchId ?? -1) : employee.DefaultBranch;
+
+            var roles = await _userManager.GetRolesAsync(employee);
+            if(!roles.Contains(RoleType.ADMINISTRATOR.Name) && (branch == null || branch.Inactive))
             {
                 await _signInManager.SignOutAsync();
                 TempData["InactiveBranch"] = "Deze branch is inactief";
                 return RedirectToAction(nameof(Login));
             }
             //User does not have roles yet assigned, so have to get from database.
-            var roles = await _userManager.GetRolesAsync(employee);
             if (roles.Contains(RoleType.ADMINISTRATOR.Name))
             {
                 return RedirectToAction("Index", "Branch");

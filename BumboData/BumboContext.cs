@@ -119,7 +119,6 @@ namespace BumboData
                 new Employee
                 {
                     Id = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
-                    DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Jan",

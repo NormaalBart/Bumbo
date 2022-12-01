@@ -104,9 +104,6 @@ namespace Bumbo.Models
             CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
             CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
 
-            CreateMap<Branch, BranchViewModel>();
-            CreateMap<BranchViewModel, Branch>();
-
             CreateMap<EmployeeWorkedHoursViewModel, Employee>();
             CreateMap<Employee, EmployeeWorkedHoursViewModel>();
             CreateMap<WorkedShift, WorkedShiftViewModel>();

@@ -42,7 +42,7 @@ public class ExportController : Controller
 
         var model = new ExportOverviewViewModel();
 
-        var branch = (await _userManager.GetUserAsync(User)).ManagesBranchId;
+        var branch = (await _userManager.GetUserAsync(User)).DefaultBranchId;
 
         if (branch == null)
         {
@@ -119,7 +119,7 @@ public class ExportController : Controller
             : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
 
         // Get branch id from logged in user
-        var branch = (await _userManager.GetUserAsync(User)).ManagesBranchId;
+        var branch = (await _userManager.GetUserAsync(User)).DefaultBranchId;
 
         if (branch == null)
         {
@@ -152,13 +152,13 @@ public class ExportController : Controller
 
         if (viewModel.ImportEmployees != null)
         {
-            _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.ManagesBranchId ?? -1);
+            _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.DefaultBranchId ?? -1);
         }
 
         if (viewModel.ImportClockEvents != null)
         {
             _importService.ImportClockEvents(viewModel.ImportClockEvents.OpenReadStream(),
-                manager.ManagesBranchId ?? -1);
+                manager.DefaultBranchId ?? -1);
         }
 
 

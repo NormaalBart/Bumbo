@@ -26,7 +26,10 @@ namespace BumboRepositories.Repositories
 
         public override Branch? Get(int id)
         {
-            var branch = DbSet.Include(branch => branch.StandardOpeningHours).Include(branch => branch.OpeningHoursOverrides).FirstOrDefault(branch => branch.Id == id);
+            var branch = DbSet.Include(branch => branch.StandardOpeningHours)
+                .Include(branch => branch.OpeningHoursOverrides)
+                .Include(branch => branch.Standards)
+                .FirstOrDefault(branch => branch.Id == id);
             if (branch == null)
             {
                 return null;
@@ -63,20 +66,17 @@ namespace BumboRepositories.Repositories
         public void RemoveSpecialOpeningHour(int id, DateOnly date)
         {
             var branch = Get(id);
-            if(branch == null)
+            if (branch == null)
             {
                 return;
             }
             var model = branch.OpeningHoursOverrides.Where(openingHour => openingHour.Date == date).FirstOrDefault();
-            if(model == null)
+            if (model == null)
             {
                 return;
             }
             branch.OpeningHoursOverrides.Remove(model);
             Update(branch);
-        public override Branch? Get(int id)
-        {
-            return DbSet.Include(branch => branch.Standards).FirstOrDefault(branch => branch.Id == id);
         }
     }
 }

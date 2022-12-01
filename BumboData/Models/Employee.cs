@@ -33,11 +33,9 @@ public class Employee: IdentityUser, IEntity<string>
     [Required] 
     public string Function { get; set; }
 
-    [Required]
-    public Branch DefaultBranch { get; set; }
+    public Branch? DefaultBranch { get; set; }
 
-    [Required]
-    public int DefaultBranchId { get; set; }
+    public int? DefaultBranchId { get; set; }
 
     public virtual ICollection<Department> AllowedDepartments { get; set; }
     
