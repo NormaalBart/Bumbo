@@ -36,7 +36,7 @@ public class ExportController : Controller
     
     public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery, int? Page = 1)
     {
-        var monthSelected = SelectedMonth == null
+        var monthSelected = SelectedMonth == null || SelectedMonth.Length != 7
             ? DateTime.Now
             : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
 
