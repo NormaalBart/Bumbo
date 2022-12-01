@@ -175,6 +175,7 @@ namespace Bumbo.Controllers.Manager
 
         public async Task<IActionResult> CopyFromWeekAsync(string date, DateTime copyFromWeek, DateTime copyToWeek)
         {
+            // the -1 is because a new datetime starts at year 1 not 0, same for the day
             var beginOfTheWeek = new DateTime().AddYears(copyFromWeek.Year - 1).AddDays(copyFromWeek.DayOfYear - 1);
             beginOfTheWeek = beginOfTheWeek.GetMondayOfTheWeek();
             var endOfTheWeek = beginOfTheWeek.AddDays(7);
@@ -188,11 +189,8 @@ namespace Bumbo.Controllers.Manager
                 var newShift = new PlannedShift();
                 newShift.StartTime = oldShift.StartTime + diff;
                 newShift.EndTime = oldShift.EndTime + diff;
-                newShift.Branch = oldShift.Branch;
                 newShift.BranchId = oldShift.BranchId;
-                newShift.Employee = oldShift.Employee;
                 newShift.EmployeeId = oldShift.EmployeeId;
-                newShift.Department = oldShift.Department;
                 newShift.DepartmentId = oldShift.DepartmentId;
                 if (!_shiftRepository.ShiftOverlapsWithOtherShifts(newShift))
                 {

@@ -117,6 +117,7 @@ namespace Bumbo.Controllers.Employees
             var oldMoments = _unavailableMomentsRepository.GetAll(_userManager.GetUserId(User))
                 .Where(e => e.StartTime.Date == unavailableMomentViewModel.CopyFrom.Date).ToList();
             var diff = unavailableMomentViewModel.CopyTo - unavailableMomentViewModel.CopyFrom;
+            var currentEmployee = await _userManager.GetUserAsync(User);
             foreach (var moment in oldMoments)
             {
                 var newMoment = new UnavailableMoment();
@@ -124,7 +125,7 @@ namespace Bumbo.Controllers.Employees
                 if (newStartTime != null) newMoment.StartTime = (DateTime)newStartTime;
                 DateTime? newEndTime = moment.EndTime + diff;
                 if (newEndTime != null) newMoment.EndTime = (DateTime)newEndTime;
-                newMoment.Employee = await _userManager.GetUserAsync(User);
+                newMoment.Employee = currentEmployee;
                 newMoment.Type = moment.Type;
                 newMoments.Add(newMoment);
             }
