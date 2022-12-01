@@ -19,6 +19,9 @@ public class ExportController : Controller
     private readonly UserManager<Employee> _userManager;
     private readonly IImportService _importService;
 
+    // Default page size for export page
+    private const int _pageSize = 20;
+
     public ExportController(
         IWorkedShiftRepository workedShiftRepository,
         IHourExportService hourExportService,
@@ -30,9 +33,8 @@ public class ExportController : Controller
         _userManager = userManager;
         _importService = importService;
     }
-
-    public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery,
-        ExportOverviewSortingOption? SortMode = ExportOverviewSortingOption.HoursAsc)
+    
+    public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery, int? Page = 1)
     {
         var monthSelected = SelectedMonth == null
             ? DateTime.Now
@@ -58,9 +60,8 @@ public class ExportController : Controller
 
         model.SelectableMonths = selectableMonths;
         model.SelectedMonth = monthSelected;
-        model.SortMode = SortMode;
         model.SearchQuery = SearchQuery;
-
+        
         if (SearchQuery != null && SearchQuery.Trim().Length != 0)
         {
             workedShiftsInMonth = workedShiftsInMonth.Where(s =>
@@ -69,29 +70,22 @@ public class ExportController : Controller
         }
 
         var prevMonth = new DateTime(monthSelected.Ticks).AddMonths(-1);
+        
+        // Apply pagination on the employees
+        var employees = workedShiftsInMonth.GroupBy(i => i.Employee);
+
+        // Pagination
+        model.MaxPage = (employees.Count() + _pageSize - 1) / _pageSize;
+        Page = Math.Max(1, Page ?? 1);
+        Page = Math.Min(Page ?? 1, model.MaxPage);
+        model.Page = Page ?? 1;
+        employees = employees.Skip(_pageSize * ((Page ?? 1) - 1)).Take(_pageSize).ToList();
 
         // Get all employees that have worked in this month, and get all worked shifts for each employee.
-        model.ExportOverviewListItemViewModels = workedShiftsInMonth.GroupBy(i => i.Employee)
+        model.ExportOverviewListItemViewModels = employees
             .Select(e => FromWorkedShifts(e.Key, e.ToList(),
                 _workedShiftRepository.GetWorkedShiftsInMonth(branch, e.Key.Id, prevMonth.Year, prevMonth.Month)))
             .ToList();
-
-        // Apply sorting
-        model.ExportOverviewListItemViewModels = SortMode switch
-        {
-            ExportOverviewSortingOption.HoursAsc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.CurrentMonth.HoursWorked).Reverse().ToList(),
-            ExportOverviewSortingOption.HoursDesc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.CurrentMonth.HoursWorked).ToList(),
-            ExportOverviewSortingOption.SickAsc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.CurrentMonth.Surcharges[SurchargeType.Sick]).Reverse().ToList(),
-            ExportOverviewSortingOption.SickDesc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.CurrentMonth.Surcharges[SurchargeType.Sick]).ToList(),
-            ExportOverviewSortingOption.DifferenceAsc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.GetDifference().HoursWorked).Reverse().ToList(),
-            ExportOverviewSortingOption.DifferenceDesc => model.ExportOverviewListItemViewModels
-                .OrderBy(m => m.GetDifference().HoursWorked).ToList()
-        };
 
         return View(model);
     }

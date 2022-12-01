@@ -49,7 +49,6 @@ namespace BumboRepositories.Repositories
                         {
                             return true;
                         }
-                        
                     }
                 }
             }
@@ -60,22 +59,32 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<PlannedShift> GetShiftsOnDayForEmployeeOnDate(DateTime date, string employeeId, int branchId)
         {
-            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date && p.BranchId == branchId).Include(p => p.Department).Include(p => p.Branch);
+            return DbSet.Where(p => p.Employee.Id == employeeId && p.StartTime.Date == date && p.BranchId == branchId)
+                .Include(p => p.Department).Include(p => p.Branch);
         }
 
 
         public PlannedShift GetPlannedShiftById(int shiftId)
         {
-            return DbSet.Where(p => p.Id == shiftId).Include(p => p.Department).Include(p => p.Branch).Include(p => p.Employee).FirstOrDefault();
+            return DbSet.Where(p => p.Id == shiftId).Include(p => p.Department).Include(p => p.Branch)
+                .Include(p => p.Employee).FirstOrDefault();
         }
+
         public List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week)
         {
-            var cal = new GregorianCalendar();
-            return DbSet.Include(s => s.Employee).ToList().Where(s => s.BranchId == branchId &&
-                                                                      s.StartTime.Year == year &&
-                                                                      cal.GetWeekOfYear(s.StartTime,
-                                                                          CalendarWeekRule.FirstFourDayWeek,
-                                                                          DayOfWeek.Monday) == week).ToList();
+            var startWeekDate = ISOWeek.ToDateTime(year, week, DayOfWeek.Monday);
+            // Create date at last minute of the week.
+            var endWeekDate = ISOWeek.ToDateTime(year, week, DayOfWeek.Sunday);
+            endWeekDate = endWeekDate.AddHours(23).AddMinutes(59).AddSeconds(59);
+
+            return DbSet.Where(s => s.BranchId == branchId && s.StartTime.Year == year &&
+                                    s.StartTime >= startWeekDate &&
+                                    s.StartTime <= endWeekDate).Include(s => s.Employee)
+                .ToList();
+        }
+        public IEnumerable<PlannedShift> GetOfEmployeeOnDay(DateTime date, string employeeId)
+        {
+            return DbSet.Where(p => p.EmployeeId == employeeId && p.StartTime.Date == date.Date).ToList();
         }
 
         public void Import(List<PlannedShift> list)
@@ -83,9 +92,10 @@ namespace BumboRepositories.Repositories
             DbSet.AddRange(list);
             Context.SaveChanges();
         }
-        
+
         // Returns all worked shifts found in between timestamps.
-        public List<PlannedShift> GetPlannedShiftsInBetween(int branchId, string employeeId, DateTime from, DateTime until)
+        public List<PlannedShift> GetPlannedShiftsInBetween(int branchId, string employeeId, DateTime from,
+            DateTime until)
         {
             return DbSet.Where(s => s.BranchId == branchId && s.EmployeeId == employeeId
                                                            && s.StartTime >= from && s.EndTime <= until).ToList();

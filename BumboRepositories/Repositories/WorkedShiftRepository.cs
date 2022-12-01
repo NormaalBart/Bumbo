@@ -25,8 +25,10 @@ namespace BumboRepositories.Repositories
 
         public List<WorkedShift> GetWorkedShiftsInMonth(int branchId, string employeeId, int year, int month)
         {
-            return DbSet.Include(i => i.Employee).Where(s =>
-                s.BranchId == branchId && employeeId == s.EmployeeId && s.StartTime.Year == year && s.StartTime.Month == month).ToList();
+            return DbSet.Where(s =>
+                s.BranchId == branchId && employeeId == s.EmployeeId &&
+                s.StartTime.Year == year && s.StartTime.Month == month)
+                .Include(s=>s.Employee).ToList();
         }
 
         public List<WorkedShift> GetWorkedShiftsInMonth(int branchId, int year, int month)
@@ -39,6 +41,11 @@ namespace BumboRepositories.Repositories
         {
             DbSet.AddRange(list);
             Context.SaveChanges();
+        }
+
+        public IEnumerable<WorkedShift> GetOfEmployeeOnDayThatIsComplete(DateTime date, string employeeId)
+        {
+            return DbSet.Where(w => w.EmployeeId == employeeId && w.StartTime.Date == date.Date && w.EndTime !=null).ToList();
         }
     }
 }

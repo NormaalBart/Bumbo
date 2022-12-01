@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using BumboData.Models;
+using BumboServices.CAO.Rules;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Bumbo.Models.RosterManager
@@ -36,6 +37,7 @@ namespace Bumbo.Models.RosterManager
 
         public string ErrorMessage { get; set; }
 
+        public Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidShifts { get; set; }
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 

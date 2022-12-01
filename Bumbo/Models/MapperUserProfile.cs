@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bumbo.Models.ApproveWorkedHours;
 using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager.Employee;
 using Bumbo.Models.EmployeeManager.Index;
@@ -100,6 +101,14 @@ namespace Bumbo.Models
 
             CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
             CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
+
+            CreateMap<Branch, BranchViewModel>();
+            CreateMap<BranchViewModel, Branch>();
+
+            CreateMap<EmployeeWorkedHoursViewModel, Employee>();
+            CreateMap<Employee, EmployeeWorkedHoursViewModel>();
+            CreateMap<WorkedShift, WorkedShiftViewModel>();
+            CreateMap<WorkedShiftViewModel, WorkedShift>();
 
             CreateMap<PlannedShift, EmployeeShiftViewModel>().ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber)).ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street)).ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City)).ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 

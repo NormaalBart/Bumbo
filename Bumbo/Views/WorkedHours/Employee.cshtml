@@ -1,0 +1,59 @@
+﻿@model Bumbo.Models.WorkedHours.EmployeeWorkedHoursListViewModel
+@using Bumbo.Utils;
+<h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren bekijken</h1>
+
+
+<div class="d-flex justify-content-between m-4 border rounded-2">
+    <button class="btn btn-outline-primary">
+        <a class="text-decoration-none" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(-7).Date"> Vorige week</a>
+    </button>
+
+    <p>Week @Model.Date.GetWeekNumber()</p>
+
+    <button class="btn btn-outline-primary">
+        <a class="text-decoration-none" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(7).Date"> Volgende week</a>
+    </button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Dag</th>
+            <th scope="col">Geplande uren</th>
+            <th scope="col">Werkelijke uren</th>
+            <th scope="col">Verschil</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.employeeWorkedHoursListItemViewModels)
+        {
+            <tr>
+                <td>
+                    @String.Format("{0:dddd, MMMM d, yyyy}", item.Date)
+                </td>
+                <td>@item.PlannedShiftsToString()</td>
+                <td>
+                    @item.WorkedShiftsToString()
+                </td>
+                <td>@item.CalculateDifference()</td>
+                <td>
+                    @if (item.PlannedShifts.Count > 0 || item.WorkedShifts.Count > 0)
+                    {
+                        @if (item.WorkedShifts.All(w => w.Approved == true))
+                        {
+                            @Html.Raw("Is goedgekeurd")
+                            ;
+                        }
+                        else
+                        {
+                            @Html.Raw("Is nog niet goedgekeurd")
+                            ;
+                        }
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
