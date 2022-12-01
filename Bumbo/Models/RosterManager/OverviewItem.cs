@@ -15,7 +15,7 @@ namespace Bumbo.Models.RosterManager
 
         public bool ItemIsToday()
         {
-            if (Date == DateTime.Now)
+            if (Date == DateTime.Now.Date)
             {
                 return true;
             }
