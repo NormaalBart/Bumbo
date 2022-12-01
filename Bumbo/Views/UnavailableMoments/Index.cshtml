@@ -5,15 +5,14 @@
 }
 
 <div>
-    <h1 class="col-5">Afwezigheid</h1>
 
     <div class="row">
           <div class="col">
         <!-- Trigger/Open The Modal -->
-        <button class="btn btn-primary" id="openModalBTN">Schoolrooster kopieren tussen dagen</button>
+        <button class="btn btn-primary h-100" id="openModalBTN">Schoolrooster kopieren tussen dagen</button>
     </div>
-    <p class="col">
-        <a asp-action="Create" class="btn btn-success btn-lg">+ Nieuw moment</a>
+    <p class="col ">
+        <a asp-action="Create" class="btn btn-success btn-lg h-100">Nieuw moment toevoegen</a>
     </p>
     </div>
   
@@ -25,15 +24,14 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
+                    Afwezigheden:
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.UnavailableMoments[0].EndTime)
+
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
                 </th>
-                <th></th>
 
             </tr>
         </thead>
@@ -45,32 +43,36 @@
                       
                     </td>
                 </tr>
-                // if the moment is on the same day, we don't show the date multiple times
-                @if (moment.StartTime.Date == moment.EndTime.Date)
-                {
-                    <tr class="moments-row">
+
+                <tr class="moments-row text-center" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-M-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-M-dd")')">
+                    @* if the moment is on the same day, we don't show the date multiple times*@
+                    @if (moment.StartTime.Date == moment.EndTime.Date)
+                    {
                         <td colspan="5">
-                            @moment.StartTime.ToString("ddd d-M-yyyy ")
+                            @moment.StartTime.ToString("dddd d-M-yyyy ")
                         </td>
-                    </tr>
-                }else{
-                    <tr class="moments-row">
+
+                    }else{
                         <td colspan="5">
-                            @moment.StartTime.ToString("ddd d-M-yyyy") tot  @moment.EndTime.ToString("ddd d-M-yyyy")
+                            @moment.StartTime.ToString("dddd d-M-yyyy") ->  @moment.EndTime.ToString("ddd d-M-yyyy")
                         </td>
-                    </tr>
-                }
+                    }
+                </tr>
+
                 <tr class="moments-row" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-M-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-M-dd")')">
-                    <td>        
-                        @moment.StartTime.ToString("HH:mm")
+                    <td>
+                        starttijd: <span class="fw-bold">@moment.StartTime.ToString("HH:mm") </span>
                     </td>
                     <td>
-                        @moment.EndTime.ToString("HH:mm")
+                        eindtijd: <span class="fw-bold"> @moment.EndTime.ToString("HH:mm") </span>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => moment.Type)
+                       @Html.DisplayFor(modelItem => moment.Type)
                     </td>
-                    <td>
+                  
+                </tr>
+                <tr class="moments-row">
+                    <td class="text-center" colspan="5">
                         <a asp-action="Delete" asp-route-id="@moment.Id" class="btn btn-sm btn-danger">Verwijder</a>
                     </td>
                 </tr>
