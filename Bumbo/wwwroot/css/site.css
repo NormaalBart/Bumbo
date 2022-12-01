@@ -281,3 +281,10 @@ p {
     background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
 }
 
+.moments-row {
+    background-color: #F5F5F5;
+}
+
+.border-collapse {
+    border-collapse: collapse;
+}

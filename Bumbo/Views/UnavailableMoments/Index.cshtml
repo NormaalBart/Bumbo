@@ -21,12 +21,9 @@
 
 @if (Model.UnavailableMoments.Count > 0)
 {
-    <table class="table table-hover">
+    <table class="table table-hover border-collapse">
         <thead>
             <tr>
-                <th>
-                    Dag
-                </th>
                 <th>
                     @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
                 </th>
@@ -41,25 +38,40 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.UnavailableMoments)
+            @foreach (var moment in Model.UnavailableMoments)
             {
-
-                <tr onclick="onRowClick('@item.StartTime.Date.ToString("yyyy-M-dd")', '@item.StartTime.AddDays(7).Date.ToString("yyyy-M-dd")')">
-                    <td>
-                        @item.StartTime.Day<br />
-                        @item.StartTime.ToString("MMM")
+                <tr class="">
+                    <td colspan="5">
+                      
+                    </td>
+                </tr>
+                // if the moment is on the same day, we don't show the date multiple times
+                @if (moment.StartTime.Date == moment.EndTime.Date)
+                {
+                    <tr class="moments-row">
+                        <td colspan="5">
+                            @moment.StartTime.ToString("ddd d-M-yyyy ")
+                        </td>
+                    </tr>
+                }else{
+                    <tr class="moments-row">
+                        <td colspan="5">
+                            @moment.StartTime.ToString("ddd d-M-yyyy") tot  @moment.EndTime.ToString("ddd d-M-yyyy")
+                        </td>
+                    </tr>
+                }
+                <tr class="moments-row" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-M-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-M-dd")')">
+                    <td>        
+                        @moment.StartTime.ToString("HH:mm")
                     </td>
                     <td>
-                        @item.StartTime.ToString("HH:mm")
+                        @moment.EndTime.ToString("HH:mm")
                     </td>
                     <td>
-                        @item.EndTime.ToString("HH:mm")
+                        @Html.DisplayFor(modelItem => moment.Type)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </td>
-                    <td>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Verwijder</a>
+                        <a asp-action="Delete" asp-route-id="@moment.Id" class="btn btn-sm btn-danger">Verwijder</a>
                     </td>
                 </tr>
                 
