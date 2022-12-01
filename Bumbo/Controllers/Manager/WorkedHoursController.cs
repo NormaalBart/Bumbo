@@ -14,7 +14,7 @@ using System.Data;
 namespace Bumbo.Controllers
 {
 
-
+    [Authorize(Roles = "Manager")]
     public class WorkedHoursController : Controller
     {
         readonly private UserManager<Employee> _userManager;
@@ -30,7 +30,7 @@ namespace Bumbo.Controllers
             _workedShiftRepository = workedShiftRepository;
             _plannedShiftRepository = plannedShiftsRepository;
         }
-        [Authorize(Roles = "Manager")]
+
         public async Task<IActionResult> IndexAsync(string? dateInput)
         {
             if (dateInput == null)
@@ -46,7 +46,7 @@ namespace Bumbo.Controllers
             viewModel.Employees = e.ToList();
             return View(viewModel);
         }
-        [Authorize(Roles = "Employee")]
+
         public async Task<IActionResult> EmployeeAsync(string? dateInput)
         {
             if (dateInput == null)
@@ -72,7 +72,6 @@ namespace Bumbo.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = "Manager")]
         public IActionResult Approve(List<int> ids)
         {
             foreach (var id in ids)
@@ -83,7 +82,7 @@ namespace Bumbo.Controllers
             }
             return Redirect("Index");
         }
-        [Authorize(Roles = "Manager")]
+
         public IActionResult Edit(List<int> workedShiftId, string employeeId)
         {
             var employeeWorkedHoursViewModel = _mapper.Map<EmployeeWorkedHoursViewModel>(_employeeRepository.Get(employeeId));
@@ -94,8 +93,9 @@ namespace Bumbo.Controllers
             }
             return View(employeeWorkedHoursViewModel);
         }
-        [Authorize(Roles = "Manager")]
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(EmployeeWorkedHoursViewModel employeeWorkedHoursViewModel)
         {
             foreach (var item in employeeWorkedHoursViewModel.WorkedShifts)
