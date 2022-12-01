@@ -4,7 +4,7 @@ using BumboData.Models;
 
 namespace Bumbo.Models.BranchController
 {
-    public class BranchViewModel
+    public class ListIndexBranchViewModel
     {
 
         public int Id { get; set; }
@@ -12,12 +12,12 @@ namespace Bumbo.Models.BranchController
         [DisplayName("Naam")]
         public string Name { get; set; }
 
-        [DisplayName("Mannager")]
-        public Employee? Manager { get; set; }
+        [DisplayName("Managers")]
+        public string? Managers { get; set; }
 
         [Required]
-        [DisplayName("Spiegelmeters")]
-        public int ShelvingDistance { get; set; }
+        [DisplayName("Aantal medewerkers")]
+        public int Employees { get; set; }
 
         [Required]
         [DisplayName("Stad")]
@@ -30,6 +30,9 @@ namespace Bumbo.Models.BranchController
         [Required]
         [DisplayName("Straat")]
         public String Street { get; set; }
+
+        public bool Inactive { get; set; }
+
 
         [DisplayName("Adres")]
         public string FormattedStreet

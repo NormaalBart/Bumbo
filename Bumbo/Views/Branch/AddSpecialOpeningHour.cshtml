@@ -1,0 +1,51 @@
+﻿@model Bumbo.Models.BranchController.OpeningHoursOverrideViewModel
+
+<h1 class="text-center">Voeg een uitwijkende openingstijd toe</h1>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+    </div>
+}
+
+<div class="container ">
+    <div>
+        <form asp-action="AddSpecialOpeningHour" id="AddSpecialOpeningHourForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(model => model.BranchId)
+            <div class="row">
+                <div class="col border border-3 border-dark employee-create-box">
+                    <div class="p-3">
+                        <div class="form-group">
+                            <label asp-for="Date" class="control-label"></label>
+                            @Html.EditorFor(model => model.Date)
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="OpenTime" class="control-label"></label>
+                            @Html.EditorFor(model => model.OpenTime)
+                            <span asp-validation-for="OpenTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CloseTime" class="control-label"></label>
+                            @Html.EditorFor(model => model.CloseTime)
+                            <span asp-validation-for="CloseTime" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <input type="submit" value="Voeg uitwijkende openingstijd toe!" form="AddSpecialOpeningHourForm" class="btn btn-success btn-lg" />
+</div>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    @Html.ActionLink("Ga terug", "Edit", "Branch", new { Id = Model.BranchId })
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

@@ -56,18 +56,18 @@ namespace Bumbo.Controllers.Manager
             };
             var manager = await _userManager.GetUserAsync(User);
 
-            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList(e=>e.DefaultBranchId == (manager.ManagesBranchId ?? -1)));
+            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList(e=>e.DefaultBranchId == (manager.DefaultBranchId ?? -1)));
             
             // Start CAO
             // Filter shifts to only display that of today
-            viewModel.InvalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.ManagesBranchId ?? -1);
+            viewModel.InvalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.DefaultBranchId ?? -1);
             // Setup invalid shifts
-            var invalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.ManagesBranchId ?? -1);
+            var invalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.DefaultBranchId ?? -1);
 
             foreach (var emp in employeeList)
             {
                 emp.PlannedShifts = _mapper
-                    .Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetShiftsOnDayForEmployeeOnDate(date, emp.Id, manager.DefaultBranchId))
+                    .Map<IEnumerable<ShiftViewModel>>(_shiftRepository.GetShiftsOnDayForEmployeeOnDate(date, emp.Id, manager.DefaultBranchId ?? -1))
                     .ToList();
                 if (emp.PlannedShifts.Count > 0)
                 {
@@ -91,9 +91,9 @@ namespace Bumbo.Controllers.Manager
 
             viewModel.InvalidShifts = invalidShifts;
 
-            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, manager.DefaultBranchId);
-            viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, manager.DefaultBranchId);
-            viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId);
+            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, manager.DefaultBranchId ?? -1 );
+            viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, manager.DefaultBranchId ?? -1);
+            viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1);
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
                 .ToList();
             viewModel.UpdatePrognosis(shiftsOnDay);
@@ -195,7 +195,7 @@ namespace Bumbo.Controllers.Manager
             plannedShift.Department = _departmentsRepository.Get(selectedDepartmentId);
             var manager = await _userManager.GetUserAsync(User);
 
-            plannedShift.Branch = _branchRepository.Get(manager.ManagesBranchId ?? -1);
+            plannedShift.Branch = _branchRepository.Get(manager.DefaultBranchId ?? -1);
 
             // time is valid
             if (plannedShift.StartTime > plannedShift.EndTime)
@@ -221,7 +221,7 @@ namespace Bumbo.Controllers.Manager
 
             var dateDt = DateTime.Parse(date);
             // First check if all shifts present follow the cao, prevent creating new shifts when cao is validated.
-            var invalid = InvalidPlannedShiftsFollowigCAO(dateDt, manager.ManagesBranchId ?? -1);
+            var invalid = InvalidPlannedShiftsFollowigCAO(dateDt, manager.DefaultBranchId ?? -1);
             if (invalid.Count > 0)
             {
                 return RedirectToAction("Index", "RosterManager",
