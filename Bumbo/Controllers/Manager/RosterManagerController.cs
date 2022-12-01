@@ -7,9 +7,6 @@ using BumboServices.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Numerics;
-using BumboData.Enums;
 using BumboServices.CAO.Rules;
 
 namespace Bumbo.Controllers.Manager
@@ -120,6 +117,56 @@ namespace Bumbo.Controllers.Manager
             return View(viewModel);
         }
 
+        public async Task<IActionResult> Overview(string? dateInput)
+        {
+            var employee = await _userManager.GetUserAsync(User);
+            DateTime date = DateTime.Now;
+            if (dateInput != null)
+            {
+                date = DateTime.Parse(dateInput).Date;
+            }
+
+            OverviewList overviewList = new OverviewList();
+            
+            // loops through month
+            for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+            {
+                OverviewItem item = new OverviewItem();
+                item.Date = new DateTime(date.Year, date.Month, i);
+                // gets the sum of the prognosis hours of departments
+                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(item.Date, employee.DefaultBranchId)
+                                        + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId)
+                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId);
+                item.PrognosisHours = Math.Round(item.PrognosisHours);
+                if (item.PrognosisHours < 0)
+                {
+                    item.PrognosisHours = 0;
+                }
+                // gets the sum of total planned hours on day
+                item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId, item.Date);
+
+                overviewList.Days.Add(item);
+            }
+            overviewList.Date = date;
+            
+
+
+            return View(overviewList);
+        }
+
+        public async Task<IActionResult>DayHasInvalidShifts(string date)
+        {
+            DateTime requestedDate = DateTime.Parse(date);
+            var employee = await _userManager.GetUserAsync(User);
+            
+            // check for cAO violations
+            var invalidshifts = InvalidPlannedShiftsFollowigCAO(requestedDate, employee.ManagesBranchId ?? -1);
+            // if there are invalid shifts, we return true otherwise false
+            return Json(invalidshifts.Count > 0);
+        }
+
+
+        
         private Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidPlannedShiftsFollowigCAO(DateTime day,
             int branchNr)
         {
