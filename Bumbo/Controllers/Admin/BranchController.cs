@@ -13,6 +13,7 @@ namespace Bumbo.Controllers.Admin
     {
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
+        private const int ItemsPerPage = 1;
 
         public BranchController(IMapper mapper, IBranchRepository branchRepository)
         {
@@ -21,11 +22,22 @@ namespace Bumbo.Controllers.Admin
         }
 
         // GET: BranchController
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
-            var branches = _branchRepository.GetAllActiveBranches();
-            List<BranchViewModel> result = _mapper.Map<List<BranchViewModel>>(branches);
-            return View(result);
+            if (page < 1) { page = 1; }
+            List<BranchViewModel> result = null;
+            while (result == null || result.Count == 0)
+            {
+                var branches = _branchRepository.GetAllActiveBranches((page - 1) * ItemsPerPage, ItemsPerPage);
+                result = _mapper.Map<List<BranchViewModel>>(branches);
+                if (result.Count == 0 && page > 1)
+                {
+                    page--;
+                    break;
+                }
+            }
+            BranchListViewModel viewModel = new BranchListViewModel(result, page);
+            return View(viewModel);
         }
 
         // GET: BranchController/Create
@@ -102,7 +114,7 @@ namespace Bumbo.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult SetInactive(int id, IFormCollection collection)
         {
-            _branchRepository.SetInactive(id); 
+            _branchRepository.SetInactive(id);
             return RedirectToAction(nameof(Index));
         }
     }

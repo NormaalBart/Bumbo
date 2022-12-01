@@ -1,11 +1,23 @@
-﻿@model IEnumerable<Bumbo.Models.BranchController.BranchViewModel>
+﻿@model Bumbo.Models.BranchController.BranchListViewModel
 
 @{
     ViewData["Title"] = "Filialen";
 }
 
 <h1>Filialen</h1>
-
+<div class="float-end">
+    <form asp-action="Index">
+        <input asp-for="Page" hidden value="@{Write( Model.Page + 1);}"/>
+        <input type="submit" value="Ga naar pagina @{Write( Model.Page + 1);}" class="btn btn-primary" />
+    </form>
+    @if (Model.Page >= 2)
+    {
+    <form asp-action="Index">
+        <input asp-for="Page"  hidden value="@{Write( Model.Page - 1);}" />
+        <input type="submit" value="Ga naar pagina @{Write( Model.Page - 1);}" class="btn btn-primary" />
+    </form>
+    }
+</div>
 <p>
     <a asp-action="Create">Maak nieuwe aan</a>
 </p>
@@ -13,19 +25,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Branches[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ShelvingDistance)
+                @Html.DisplayNameFor(model => model.Branches[0].ShelvingDistance)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FormattedStreet)
+                @Html.DisplayNameFor(model => model.Branches[0].FormattedStreet)
             </th>
             <th>Acties</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Branches) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
