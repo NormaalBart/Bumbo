@@ -122,7 +122,7 @@ namespace Bumbo.Controllers.Manager
             return View(viewModel);
         }
 
-        public async Task<IActionResult> OverView(string? dateInput)
+        public async Task<IActionResult> Overview(string? dateInput)
         {
             var employee = await _userManager.GetUserAsync(User);
             DateTime date = DateTime.Now;
@@ -175,14 +175,7 @@ namespace Bumbo.Controllers.Manager
             // check for cAO violations
             var invalidshifts = InvalidPlannedShiftsFollowigCAO(requestedDate, employee.ManagesBranchId ?? -1);
             // if there are invalid shifts, we return true otherwise false
-            if (invalidshifts.Count > 0)
-            {
-                return Json(true);
-            }
-            else
-            {
-                return Json(false);
-            }
+            return Json(invalidshifts.Count > 0);
         }
 
 

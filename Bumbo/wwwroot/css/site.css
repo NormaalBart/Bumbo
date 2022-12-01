@@ -271,12 +271,10 @@ p {
     }
 
 .roster-overview-date {
-    padding: 25px 25px;
     width: 100%;
     background: #1abc9c;
     text-align: center;
 }
-
 
 .roster-overview-today {
     border-bottom: 3px solid blue !important;
@@ -284,30 +282,31 @@ p {
     width: 100%;
 }
 
-
 .roster-overview-cao {
-    background-color: red;
-    border: 2px solid white;
+    outline: 5px solid red;
 }
 
-
-.roster-overview-SufficientRostering {
-    border: 5px solid;
-    background: linear-gradient(to bottom right, mediumspringgreen, springgreen) !important;
-    border-image: linear-gradient(45deg, #568203, #018749) 1 !important;
+.test {
+    background: rgba(144, 238, 144, 0.8);
 }
 
-.roster-overview-InsufficientRostering {
-    border: 5px solid;
-    background: linear-gradient(to bottom right, yellow, #FFD700) !important;
-    border-image: linear-gradient(45deg, #e6c300, #ccad00) 1 !important;
-}
+/*.roster-overview-SufficientRostering {*/
+/*    border: 5px solid;*/
+/*    background: linear-gradient(to bottom right, mediumspringgreen, springgreen) !important;*/
+/*    border-image: linear-gradient(45deg, #568203, #018749) 1 !important;*/
+/*}*/
 
-.roster-overview-box {
-    border: 5px solid;
-    border-image: linear-gradient(45deg, #888888, #909090) 1;
-    background: linear-gradient(to bottom right, #C0C0C0, #C8C8C8);
-}
+/*.roster-overview-InsufficientRostering {*/
+/*    border: 5px solid;*/
+/*    background: linear-gradient(to bottom right, yellow, #FFD700) !important;*/
+/*    border-image: linear-gradient(45deg, #e6c300, #ccad00) 1 !important;*/
+/*}*/
+
+/*.roster-overview-box {*/
+/*    border: 5px solid;*/
+/*    border-image: linear-gradient(45deg, #888888, #909090) 1;*/
+/*    background: linear-gradient(to bottom right, #C0C0C0, #C8C8C8);*/
+/*}*/
 
 
 .helpmenu{
@@ -345,5 +344,10 @@ p {
 .roster-overview-loading{
     width: 30px;
     height: 30px;
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
 }
 
