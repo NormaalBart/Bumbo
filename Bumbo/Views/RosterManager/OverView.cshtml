@@ -57,7 +57,7 @@
 
             @if (item != null)
             {
-                <div class="card roster-item-container @(item.IsToday ? "roster-overview-today" : "") @(item.IsSufficientlyRostered() ? "green" : "") @(item.IsInsufficientlyRostered() ? "bg-warning" : "")">
+                <div class="card roster-item-container @(item.ItemIsToday() ? "roster-overview-today" : "") @(item.IsSufficientlyRostered() ? "green" : "") @(item.IsInsufficientlyRostered() ? "bg-warning" : "")">
 
                     <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@item.Date.Date">
 
