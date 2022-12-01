@@ -52,7 +52,7 @@ namespace Bumbo.Controllers
                     return await RedirectToPageAsync(employee);
                 }
                 // Return invalid password
-                ModelState.AddModelError("Password", "Verkeerde email en wachtwoord combinatie, probeer opnieuw."); 
+                ModelState.AddModelError("Password", "Verkeerde email en wachtwoord combinatie, probeer opnieuw.");
                 return View(loginModel);
             }
 
@@ -70,13 +70,13 @@ namespace Bumbo.Controllers
             }
             else if (roles.Contains(RoleType.MANAGER.Name))
             {
-                return RedirectToAction("Index", "RosterManagerController");
+                return RedirectToAction("Index", "RosterManager", new { @dateInput = DateTime.Today.ToString(), @errormessage = string.Empty });
             }
             else if (roles.Contains(RoleType.EMPLOYEE.Name))
             {
                 return RedirectToAction("Index", "EmployeeRoster");
             }
-            return RedirectToAction("Login");
+            return BadRequest();
         }
 
         public async Task<IActionResult> Logout()

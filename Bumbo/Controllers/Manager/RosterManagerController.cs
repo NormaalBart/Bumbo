@@ -112,7 +112,7 @@ namespace Bumbo.Controllers.Manager
                     {Id = dep.Id, DepartmentName = dep.DepartmentName});
             }
 
-            if (errormessage != null)
+            if (!string.IsNullOrEmpty(errormessage))
             {
                 viewModel.ErrorMessage = errormessage;
             }
