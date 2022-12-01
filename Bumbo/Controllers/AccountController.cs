@@ -68,15 +68,15 @@ namespace Bumbo.Controllers
         private async Task<IActionResult> RedirectToPageAsync(Employee employee)
         {
             Branch? branch = employee.DefaultBranch == null ? _branchRepository.Get(employee.DefaultBranchId ?? -1) : employee.DefaultBranch;
-
+            //User does not have roles yet assigned, so have to get from database.
             var roles = await _userManager.GetRolesAsync(employee);
+
             if(!roles.Contains(RoleType.ADMINISTRATOR.Name) && (branch == null || branch.Inactive))
             {
                 await _signInManager.SignOutAsync();
                 TempData["InactiveBranch"] = "Deze branch is inactief";
                 return RedirectToAction(nameof(Login));
             }
-            //User does not have roles yet assigned, so have to get from database.
             if (roles.Contains(RoleType.ADMINISTRATOR.Name))
             {
                 return RedirectToAction("Index", "Branch");
