@@ -14,6 +14,6 @@ namespace Bumbo.Models.EmployeeRoster
         public string HouseNumber { get; set; }
 
 
-        public string? Type { get; set; }
+        public virtual UnavailableMomentType? Type { get; set; }
     }
 }
