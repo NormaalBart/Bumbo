@@ -41,7 +41,7 @@ namespace Bumbo.Controllers
             var viewModel = new IndexWorkedHoursViewModel();
             viewModel.Date = date;
             var employee = await _userManager.GetUserAsync(User);
-            var employeeList = _employeeRepository.GetAllThatWorkedOrWasPlannedOnDate(date, employee.DefaultBranchId);
+            var employeeList = _employeeRepository.GetAllThatWorkedOrWasPlannedOnDate(date, employee.DefaultBranchId ?? -1);
             var e = _mapper.Map<IEnumerable<EmployeeWorkedHoursViewModel>>(employeeList);
             viewModel.Employees = e.ToList();
             return View(viewModel);

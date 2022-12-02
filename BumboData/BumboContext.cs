@@ -38,10 +38,6 @@ namespace BumboData
                 .HasOne(i => i.DefaultBranch)
                 .WithMany(i => i.DefaultEmployees);
 
-            modelBuilder.Entity<Employee>()
-                .HasOne(i => i.ManagesBranch)
-                .WithMany(i => i.Managers);
-
             // Disable some cascade deletes, otherwise multiple cascade paths are created
 
             // By deleting a branch, do not also delete all employees
@@ -123,7 +119,6 @@ namespace BumboData
                 new Employee
                 {
                     Id = "0854e8fa-f2c9-4b71-b300-4a1728ea7ef2",
-                    DefaultBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Jan",
@@ -145,7 +140,6 @@ namespace BumboData
                 {
                     Id = "3a792773-527d-4bb7-8319-6db070350d38",
                     DefaultBranchId = 1,
-                    ManagesBranchId = 1,
                     Active = true,
                     Birthdate = new DateOnly(2003, 10, 2),
                     FirstName = "Manager",
@@ -280,7 +274,7 @@ namespace BumboData
 
             builder.Properties<TimeOnly>()
                 .HaveConversion<TimeOnlyConverter>()
-                .HaveColumnType("date");
+                .HaveColumnType("datetime");
         }
 
         /// <summary>

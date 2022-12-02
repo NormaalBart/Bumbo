@@ -24,7 +24,26 @@ namespace BumboRepositories.Repositories
             return DbSet.Where(branch => branch.Managers.Count == 0).ToList();
         }
 
-         public void SetInactive(int id)
+        public override Branch? Get(int id)
+        {
+            var branch = DbSet.Include(branch => branch.StandardOpeningHours)
+                .Include(branch => branch.OpeningHoursOverrides)
+                .Include(branch => branch.Standards)
+                .FirstOrDefault(branch => branch.Id == id);
+            if (branch == null)
+            {
+                return null;
+            }
+            branch.OpeningHoursOverrides = branch.OpeningHoursOverrides.Where(model => model.Date.CompareTo(new DateOnly()) >= 0).ToList();
+            return branch;
+        }
+
+        public override IEnumerable<Branch> GetList()
+        {
+            return DbSet.Include(branch => branch.Managers).Include(branch => branch.DefaultEmployees).ToList();
+        }
+
+        public void SetInactive(int id)
         {
             var branch = Get(id);
             if (branch != null)
@@ -34,9 +53,30 @@ namespace BumboRepositories.Repositories
             }
         }
 
-        public override Branch? Get(int id)
+        public void SetActive(int id)
         {
-            return DbSet.Include(branch => branch.Standards).FirstOrDefault(branch => branch.Id == id);
+            var branch = Get(id);
+            if (branch != null)
+            {
+                branch.Inactive = false;
+                Update(branch);
+            }
+        }
+
+        public void RemoveSpecialOpeningHour(int id, DateOnly date)
+        {
+            var branch = Get(id);
+            if (branch == null)
+            {
+                return;
+            }
+            var model = branch.OpeningHoursOverrides.Where(openingHour => openingHour.Date == date).FirstOrDefault();
+            if (model == null)
+            {
+                return;
+            }
+            branch.OpeningHoursOverrides.Remove(model);
+            Update(branch);
         }
     }
 }
