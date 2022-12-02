@@ -14,7 +14,5 @@ namespace BumboData.Interfaces.Repositories
         void AddOrUpdateAll(int branchId, List<Prognosis> list);
 
         IEnumerable<Prognosis> GetNextWeek(DateOnly firstDayOfWeek, int branchId);
-
-        IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis);
     }
 }
