@@ -78,6 +78,7 @@
             interval: 30,
             minTime: '10',
             maxTime: '6:00pm',
+            defaultTime: '11',
             startTime: '10:00',
             dynamic: true,
             dropdown: true,
@@ -89,6 +90,7 @@
             interval: 30,
             minTime: '10',
             maxTime: '6:00pm',
+            defaultTime: '11',
             startTime: '10:00',
             dynamic: true,
             dropdown: true,
@@ -102,19 +104,11 @@
 
             $('.timepicker-start').timepicker('option', 'minTime', "14:00");
             $('.timepicker-start').timepicker('option', 'maxTime', "19:00");
-     
-
-
-
         }
-
 
         function onEndDateChange() {
             console.log("change");
-
-       
             getTimes("15:00");
-
 
         }
 
@@ -128,11 +122,11 @@
                 success: function (data) {
                     //handle the data
                     console.log(data.open);
-                    let opentimestart = data.open;
-                  
-                    
-                    $('.timepicker-end').timepicker('option', 'minTime', '12:00');
-                    $('.timepicker-end').timepicker('option', 'maxTime', '23:00');
+                    let opentimestart = "13:00";
+                    let closetimestart = "19:00";
+                    $('.timepicker-end').timepicker('option', 'minTime', opentimestart);
+                    $('.timepicker-end').timepicker('option', 'maxTime', closetimestart);
+
 
                     }
                 });
@@ -151,10 +145,6 @@
                     //handle the data
                     console.log(data.open);
                     let opentimestart = data.open;
-               
-
-
-
                 }
             });
 
