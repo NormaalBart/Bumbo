@@ -173,6 +173,7 @@ public class RosterService : IRosterService
                     StartTime = startTime,
                     EndTime = endTime,
                     BranchId = branchId,
+                    // TODO: Use proper department.
                     DepartmentId = 1,
                 };
                 tempShifts.Add(pending);
