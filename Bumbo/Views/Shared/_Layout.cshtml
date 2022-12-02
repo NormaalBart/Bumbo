@@ -78,7 +78,7 @@
                                 <li class="nav-item" id="Roster">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeRoster" asp-action="Index">Rooster</a>
                                 </li>
-                                <li class="nav-item" id="Employee">
+                                <li class="nav-item" id="WorkedHours">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="WorkedHours" asp-action="Employee">Gewerkte uren</a>
                                 </li>
                                 <li class="nav-item" id="Availabilty">
@@ -115,7 +115,6 @@
     @await RenderSectionAsync("Scripts", required: false)
     <script>
         $(document).ready(function () {
-            console.log('@ViewBag.data');
             if ('@ViewBag.data' != null) {
                 $('#@ViewBag.data').addClass('active');
             }
