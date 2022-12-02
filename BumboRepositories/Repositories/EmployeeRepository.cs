@@ -35,7 +35,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
         {
-            return DbSet.Where(employee => employee.DefaultBranchId == branch);
+            return DbSet.Where(employee => employee.DefaultBranchId == branch).ToList();
         }
 
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
