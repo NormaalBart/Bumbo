@@ -134,16 +134,16 @@ namespace Bumbo.Controllers.Manager
                 OverviewItem item = new OverviewItem();
                 item.Date = new DateTime(date.Year, date.Month, i);
                 // gets the sum of the prognosis hours of departments
-                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(item.Date, employee.DefaultBranchId)
-                                        + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId)
-                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId);
+                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(item.Date, employee.DefaultBranchId ?? -1)
+                                        + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId ?? -1)
+                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1);
                 item.PrognosisHours = Math.Round(item.PrognosisHours);
                 if (item.PrognosisHours < 0)
                 {
                     item.PrognosisHours = 0;
                 }
                 // gets the sum of total planned hours on day
-                item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId, item.Date);
+                item.RosteredHours = _shiftRepository.GetTotalHoursPlannedOnDay(employee.DefaultBranchId ?? -1, item.Date);
 
                 overviewList.Days.Add(item);
             }
@@ -160,7 +160,7 @@ namespace Bumbo.Controllers.Manager
             var employee = await _userManager.GetUserAsync(User);
             
             // check for cAO violations
-            var invalidshifts = InvalidPlannedShiftsFollowigCAO(requestedDate, employee.ManagesBranchId ?? -1);
+            var invalidshifts = InvalidPlannedShiftsFollowigCAO(requestedDate, employee.DefaultBranchId ?? -1);
             // if there are invalid shifts, we return true otherwise false
             return Json(invalidshifts.Count > 0);
         }
