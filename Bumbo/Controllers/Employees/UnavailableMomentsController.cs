@@ -66,6 +66,23 @@ namespace Bumbo.Controllers.Employees
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetOpenTime(string dateInput)
+        {
+            DateTime date = DateTime.Parse(dateInput);
+            var employee = await _userManager.GetUserAsync(User);
+
+
+           // _branchRepository.GetOpeningTimes(employee.DefaultBranchId, date);
+            
+            string openTime = "06:00";
+            string closeTime = "20:00";
+            string resultingOpenTimes = openTime + " > " + closeTime;
+            var result = new { Open = openTime, Close = closeTime};
+            return Json(result);
+
+        }
+
         public IActionResult Delete(int id)
         {
             var unavailableMoment = _unavailableMomentsRepository.Get(id);

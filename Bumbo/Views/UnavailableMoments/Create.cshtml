@@ -37,7 +37,7 @@
                                 <span>Van:</span>
                                     <input id="startdate" onchange="onStartDateChange()" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
 
-                                    <input class="timepicker-start timepicker form-control" asp-for="StartHour" />
+                                    <input id="timepicker-end" class="timepicker-start timepicker form-control" asp-for="StartHour" />
 
                                 <span asp-validation-for="StartDate" class="text-danger"></span>
                                 <span asp-validation-for="StartHour" class="text-danger"></span>
@@ -73,38 +73,95 @@
 
 <script>
 
-        $('.timepicker').timepicker({
+        $('.timepicker-start').timepicker({
             timeFormat: 'HH:mm p',
             interval: 30,
             minTime: '10',
             maxTime: '6:00pm',
-            defaultTime: '11',
             startTime: '10:00',
-            dynamic: false,
+            dynamic: true,
             dropdown: true,
             scrollbar: true,
+        });
+
+        $('.timepicker-end').timepicker({
+            timeFormat: 'HH:mm p',
+            interval: 30,
+            minTime: '10',
+            maxTime: '6:00pm',
+            startTime: '10:00',
+            dynamic: true,
+            dropdown: true,
+            scrollbar: true,
+
         });
 
 
         function onStartDateChange() {
             console.log("change");
+
             $('.timepicker-start').timepicker('option', 'minTime', "14:00");
             $('.timepicker-start').timepicker('option', 'maxTime', "19:00");
-            $('.timepicker-start').timepicker({
-                minTime: "15:00"
-            });
+     
+
+
+
         }
 
 
         function onEndDateChange() {
             console.log("change");
-            $('.timepicker-end').timepicker('option', 'minTime', "14:00");
-            $('.timepicker-end').timepicker('option', 'maxTime', "19:00");
-            $('.timepicker-end').timepicker({
-                minTime: "15:00"
-            });
+
+       
+            getTimes("15:00");
+
+
         }
 
+        function getTimes(date) {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetOpenTime", "UnavailableMoments")',
+                data: {
+                    dateInput: date
+                },
+                success: function (data) {
+                    //handle the data
+                    console.log(data.open);
+                    let opentimestart = data.open;
+                  
+                    
+                    $('.timepicker-end').timepicker('option', 'minTime', '12:00');
+                    $('.timepicker-end').timepicker('option', 'maxTime', '23:00');
+
+                    }
+                });
+
+        }
+
+
+        function getTimesstart(date) {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetOpenTime", "UnavailableMoments")',
+                data: {
+                    dateInput: date
+                },
+                success: function (data) {
+                    //handle the data
+                    console.log(data.open);
+                    let opentimestart = data.open;
+               
+
+
+
+                }
+            });
+
+        }
+
+        $('.timepicker-end').timepicker('option', 'minTime', "14:00");
+        $('.timepicker-end').timepicker('option', 'maxTime', "19:00");
 
 
 
