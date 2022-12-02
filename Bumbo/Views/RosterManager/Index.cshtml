@@ -219,7 +219,7 @@
     <!-- Trigger/Open The Modal -->
     <button id="openModalBTN" class="btn btn-primary">Voeg dienst toe</button>
 
-    <button id="generate-roster" class="btn btn-primary">Rooster genereren</button>
+    <button id="generate-roster" class="btn btn-primary"><span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>Rooster genereren</button>
 </div>
 
 
@@ -459,9 +459,13 @@
             });
         });
         
-        $(document).ready(function(){             
+        $(document).ready(function(){          
+        $('#generate-roster-spinner').hide()
         // On click button, generate roster
         $("#generate-roster").click(function() {
+            // Show loading indicator
+             $('#generate-roster-spinner').show()
+             $('#generate-roster').prop('disabled', true);
               $.ajax({
                   type: "POST",
                   url: '@Url.Action("GenerateRoster", "RosterManager")',
@@ -472,6 +476,7 @@
                        // Refresh page
                        location.reload();    
                   }
+                  // TODO: Handle errors
               });
         });
         });
