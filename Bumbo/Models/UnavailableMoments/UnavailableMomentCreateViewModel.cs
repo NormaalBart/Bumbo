@@ -14,8 +14,7 @@ namespace Bumbo.Models.UnavailableMoments
         public DateTime StartDate { get; set; }
 
         [Required]
-        [DataType(DataType.Time)]
-        public DateTime StartHour { get; set; }
+        public string StartHour { get; set; }
 
 
         [Required]
@@ -23,8 +22,7 @@ namespace Bumbo.Models.UnavailableMoments
         public DateTime EndDate { get; set; }
 
         [Required]
-        [DataType(DataType.Time)]
-        public DateTime EndHour { get; set; }
+        public string EndHour { get; set; }
 
 
         [Required]
