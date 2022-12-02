@@ -1,4 +1,5 @@
 ﻿using BumboData.Models;
+using System.Text.Json.Nodes;
 
 namespace BumboData.Interfaces.Repositories
 {
@@ -9,5 +10,7 @@ namespace BumboData.Interfaces.Repositories
         void SetInactive(int id);
         void SetActive(int id);
         void RemoveSpecialOpeningHour(int id, DateOnly date);
+
+        JsonArray GetOpenAndCloseTimesOnDay(DateOnly date, int branchId);
     }
 }

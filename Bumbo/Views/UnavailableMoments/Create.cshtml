@@ -35,7 +35,7 @@
                             
                             <div class="form-group text-center">
                                 <span>Van:</span>
-                                    <input id="startdate" onchange="onStartDateChange()" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
+                                    <input id="startdate" onchange="onDateChange(true)" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
 
                                     <input id="timepicker-end" class="timepicker-start timepicker form-control" asp-for="StartHour" />
 
@@ -44,7 +44,7 @@
                             </div>
                             <div class="form-group text-center">
                                 <span>Tot:</span>
-                                    <input id="enddate" onchange="onEndDateChange()" asp-for="EndDate" class="form-control " />
+                                    <input id="enddate" onchange="onDateChange(false)" asp-for="EndDate" class="form-control " />
 
                                     <input asp-for="EndHour" class="form-control timepicker-end timepicker" />
 
@@ -73,14 +73,16 @@
 
 <script>
 
+    
+
         $('.timepicker-start').timepicker({
             timeFormat: 'HH:mm p',
             interval: 30,
-            minTime: '10',
-            maxTime: '6:00pm',
-            defaultTime: '11',
-            startTime: '10:00',
-            dynamic: true,
+            minTime: '1',
+            maxTime: '23',
+            defaultTime: '8',
+            startTime: '1',
+            dynamic: false,
             dropdown: true,
             scrollbar: true,
         });
@@ -88,31 +90,30 @@
         $('.timepicker-end').timepicker({
             timeFormat: 'HH:mm p',
             interval: 30,
-            minTime: '10',
-            maxTime: '6:00pm',
-            defaultTime: '11',
-            startTime: '10:00',
-            dynamic: true,
+            minTime: '1',
+            maxTime: '23',
+            defaultTime: '8',
+            startTime: '1',
+            dynamic: false,
             dropdown: true,
             scrollbar: true,
 
         });
 
 
-        function onStartDateChange() {
-            console.log("change");
+        
 
-            $('.timepicker-start').timepicker('option', 'minTime', "14:00");
-            $('.timepicker-start').timepicker('option', 'maxTime', "19:00");
+            function onDateChange(isFirst) {
+            if(isFirst){
+                var selectedDate = document.getElementById('startdate').value
+                getTimes(selectedDate, isFirst);
+            }else{
+                var selectedDate = document.getElementById('enddate').value
+                getTimes(selectedDate, isFirst);
+            }
         }
 
-        function onEndDateChange() {
-            console.log("change");
-            getTimes("15:00");
-
-        }
-
-        function getTimes(date) {
+        function getTimes(date, isFirst) {
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("GetOpenTime", "UnavailableMoments")',
@@ -120,39 +121,30 @@
                     dateInput: date
                 },
                 success: function (data) {
-                    //handle the data
-                    console.log(data.open);
-                    let opentimestart = "13:00";
-                    let closetimestart = "19:00";
-                    $('.timepicker-end').timepicker('option', 'minTime', opentimestart);
-                    $('.timepicker-end').timepicker('option', 'maxTime', closetimestart);
 
-
+                        if(isFirst){
+                            //handle the data
+                            let opentimestart = data.open;
+                            let closetimestart = data.close;
+                            $('.timepicker-start').timepicker('option', 'minTime', opentimestart);
+                            $('.timepicker-start').timepicker('option', 'maxTime', closetimestart);
+                        }else{
+                            //handle the data
+                            let opentimestart = data.open;
+                            let closetimestart = data.close;
+                            $('.timepicker-end').timepicker('option', 'minTime', opentimestart);
+                            $('.timepicker-end').timepicker('option', 'maxTime', closetimestart);
+                        }
+                       
                     }
                 });
 
         }
 
-
-        function getTimesstart(date) {
-            $.ajax({
-                type: "GET",
-                url: '@Url.Action("GetOpenTime", "UnavailableMoments")',
-                data: {
-                    dateInput: date
-                },
-                success: function (data) {
-                    //handle the data
-                    console.log(data.open);
-                    let opentimestart = data.open;
-                }
-            });
-
-        }
-
-        $('.timepicker-end').timepicker('option', 'minTime', "14:00");
-        $('.timepicker-end').timepicker('option', 'maxTime', "19:00");
-
+        window.onload = function () {
+            onDateChange(true);
+            onDateChange(false);
+        };
 
 
 </script>

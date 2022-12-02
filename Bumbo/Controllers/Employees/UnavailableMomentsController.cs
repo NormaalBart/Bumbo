@@ -3,6 +3,7 @@ using Bumbo.Models.UnavailableMoments;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -51,10 +52,13 @@ namespace Bumbo.Controllers.Employees
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UnavailableMomentCreateViewModel unavailableMomentViewModel)
         {
-            var newUnavailableMoment =
-                _mapper.Map<UnavailableMomentCreateViewModel, UnavailableMoment>(unavailableMomentViewModel);
+            UnavailableMoment newUnavailableMoment = new UnavailableMoment();
+            newUnavailableMoment.StartTime = unavailableMomentViewModel.StartDate.Add(TimeOnly.Parse(unavailableMomentViewModel.StartHour).ToTimeSpan());
+            newUnavailableMoment.EndTime = unavailableMomentViewModel.EndDate.Add(TimeOnly.Parse(unavailableMomentViewModel.EndHour).ToTimeSpan());
+           
             newUnavailableMoment.Type = unavailableMomentViewModel.Type;
             newUnavailableMoment.Employee = await _userManager.GetUserAsync(User);
+
             var errorMesssage = UnavailableMomentValid(newUnavailableMoment);
             if (errorMesssage != null)
             {
@@ -73,12 +77,9 @@ namespace Bumbo.Controllers.Employees
             var employee = await _userManager.GetUserAsync(User);
 
 
-           // _branchRepository.GetOpeningTimes(employee.DefaultBranchId, date);
-            
-            string openTime = "06:00";
-            string closeTime = "20:00";
-            string resultingOpenTimes = openTime + " > " + closeTime;
-            var result = new { Open = openTime, Close = closeTime};
+            // _branchRepository.GetOpeningTimes(employee.DefaultBranchId, date);
+            var times = _branchRepository.GetOpenAndCloseTimesOnDay(date.ToDateOnly(), (int)employee.DefaultBranchId);
+            var result = new { Open = times[0], Close = times[1] };
             return Json(result);
 
         }

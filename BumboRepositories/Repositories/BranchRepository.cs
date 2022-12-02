@@ -2,6 +2,7 @@
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Nodes;
 
 namespace BumboRepositories.Repositories
 {
@@ -77,6 +78,30 @@ namespace BumboRepositories.Repositories
             }
             branch.OpeningHoursOverrides.Remove(model);
             Update(branch);
+        }
+
+
+        // Gets the open and close time of a specific date, if it is not overriden it gets the default values.
+        public JsonArray GetOpenAndCloseTimesOnDay(DateOnly date, int branchId)
+        {
+            var branch = DbSet.Include(branch => branch.StandardOpeningHours)
+                .Include(branch => branch.OpeningHoursOverrides)
+                .FirstOrDefault(branch => branch.Id == branchId);
+            if (branch == null)
+            {
+                return null;
+            }
+            var openingHours = branch.OpeningHoursOverrides.Where(openingHour => openingHour.Date == date).FirstOrDefault();
+            if (openingHours == null)
+            {
+                var standard = branch.StandardOpeningHours.Where(s => s.DayOfWeek == date.DayOfWeek).FirstOrDefault();
+                // returns a json object with open and close times.
+                return new JsonArray { standard.OpenTime.ToString(), standard.CloseTime.ToString() };
+
+            }
+            var openTime = new TimeOnly(openingHours.OpenTime.Hour, openingHours.OpenTime.Minute, openingHours.OpenTime.Second);
+            var closeTime = new TimeOnly(openingHours.CloseTime.Hour, openingHours.CloseTime.Minute, openingHours.CloseTime.Second);
+            return new JsonArray { openTime.ToString(), closeTime.ToString() };
         }
     }
 }
