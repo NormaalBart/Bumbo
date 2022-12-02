@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Prognose";
+    ViewBag.data = "Prognosis";
 }
 
 <!-- if modelstate that returned is not valid, say that saving failed-->
@@ -125,7 +126,7 @@
 <div id="modal" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content text-center prognosis-textarea">
+    <div class="modal-content text-center">
         <span class="close position-absolute">&times;</span>
         <label> </label>
         <div class="m-3 text-center align-content-center">
@@ -137,10 +138,8 @@
 
                     <span class="col">In jaar</span>
                     <input asp-for="CopyFromYear" class="form-control col" value="@Model.PrognosisList.FirstOrDefault().Date.Year" />
-                </div>
-                <span>Kopieren naar</span>
+                    <span class="col">kopieer naar</span>
 
-                <div class="row">
                     <span class="col">Week</span>
                     <input asp-for="CopyToWeekNumber" class="form-control col" value="@Model.CopyToWeekNumber" />
 

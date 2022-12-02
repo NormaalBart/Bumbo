@@ -1,6 +1,8 @@
 ﻿@using Bumbo.Models.BranchController
 @model BranchCreateViewModel
-
+@{
+    ViewBag.data = "Branch";
+}
 
 <h1 class="text-center">Filiaal aanmaken</h1>
 @if (!ViewData.ModelState.IsValid)

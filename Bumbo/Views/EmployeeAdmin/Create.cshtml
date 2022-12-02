@@ -1,6 +1,8 @@
 ﻿@using Bumbo.Models.EmployeeManager.Manager
 @model ManagerCreateViewModel
-
+@{
+    ViewBag.data = "Employee";
+}
 
 <h1 class="text-center">Manager aanmaken</h1>
 @if (!ViewData.ModelState.IsValid)

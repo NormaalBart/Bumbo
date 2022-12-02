@@ -29,7 +29,6 @@ namespace Bumbo.Controllers.Admin
         // GET: BranchController
         public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort)
         {
-
             var resultingListViewModel = new BranchListIndexViewModel();
             var branches = _branchRepository.GetList();
 
