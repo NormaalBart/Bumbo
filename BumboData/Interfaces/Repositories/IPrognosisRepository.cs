@@ -4,7 +4,7 @@ namespace BumboData.Interfaces.Repositories
 {
     public interface IPrognosisRepository: IRepository<Prognosis>
     {
-        Prognosis GetByDate(DateOnly date,int branchId);
+        Prognosis GetByDate(DateOnly date, int branchId);
         IEnumerable<PlannedShift> GetShiftsOnDayByDate(DateTime date);
 
         int GetIdByDate(DateTime date);

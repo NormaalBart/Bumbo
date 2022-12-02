@@ -40,7 +40,7 @@ namespace BumboRepositories.Repositories
 
         public override IEnumerable<Branch> GetList()
         {
-            return DbSet.Include(branch => branch.Managers).Include(branch => branch.DefaultEmployees).ToList();
+            return DbSet.Include(branch => branch.DefaultEmployees).ToList();
         }
 
         public void SetInactive(int id)

@@ -36,7 +36,9 @@
                 <ul>
                     @foreach (var shift in modelInvalidShift.Value)
                     {
-                        <li><strong>@shift.Employee.FullName()</strong></li>
+                        <li>
+                            <strong>@shift.Employee.FullName()</strong>
+                        </li>
                     }
                 </ul>
             }
@@ -129,8 +131,6 @@
 
     // list of all shifts on screen.
     var listshifts = []; 
-    
-
 
     // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
     function getWidthOfbase(elem, hours, minutepercstart, minutepercend) {
@@ -141,7 +141,6 @@
         // We calculate the final width of the div
         // using the width of a normal cell, times the amount of hours.
         // We then calculate the offset of the div, using the time percentages.
-        
 
         let cell = document.querySelector('.roster-table-cell');
         let width = cell.offsetWidth;
@@ -219,6 +218,8 @@
 
     <!-- Trigger/Open The Modal -->
     <button id="openModalBTN" class="btn btn-primary">Voeg dienst toe</button>
+
+    <button id="generate-roster" class="btn btn-primary">Rooster genereren</button>
 </div>
 
 
@@ -258,8 +259,8 @@
                             var showError = invalidPairs.Any();
                             // Red background when shift is invalid.
                             var background = showError ? "background: red;" : "";
-                            var error = showError ? string.Join(" | ", invalidPairs.Select(s=>s.GetErrorMessage())) : "";
-                            
+                            var error = showError ? string.Join(" | ", invalidPairs.Select(s => s.GetErrorMessage())) : "";
+
                             <td id="roster-start" class="roster-table-cell" title="@error">
                                 <div id="roster-start-div " class="roster-shift text-center" style="height: 100%; @background" runat="server">
                                     @*If the shift is very short, we use a different string not make it ugly.*@
@@ -271,7 +272,7 @@
                                     {
                                         <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
                                     }
-                                    
+
                                     @if (showError)
                                     {
                                         <i class="bi-exclamation-triangle"></i>
@@ -355,23 +356,6 @@
     </div>
 }
 
-
-<script>
-    var rows = document.querySelectorAll('tr');
-    var lastrow = rows[rows.length - 1];
-    lastrow.addEventListener('click', () => {
-        onRowClick();
-    });
-
-        const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
-        
-        emptycells.forEach(cell => {
-            cell.addEventListener('click', function handleClick(event) {
-                onRowClick();
-            });
-        });
-</script>
-
 <div id="modal" class="modal">
 
     <!-- Modal content -->
@@ -454,11 +438,42 @@
                 <input type="submit" value="Opslaan" class="btn btn-success btn-sm "/>
             </form>
         </div>
-
-
     </div>
-
 </div>
-
-
 </body>
+
+@section Scripts
+{
+    <script>
+        let rows = document.querySelectorAll('tr');
+        let lastrow = rows[rows.length - 1];
+        lastrow.addEventListener('click', () => {
+            onRowClick();
+        });
+    
+        const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
+            
+        emptycells.forEach(cell => {
+            cell.addEventListener('click', function handleClick(event) {
+                onRowClick();
+            });
+        });
+        
+        $(document).ready(function(){             
+        // On click button, generate roster
+        $("#generate-roster").click(function() {
+              $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("GenerateRoster", "RosterManager")',
+                  data: {
+                      date: '@Model.Date'
+                  },
+                  success: function (data) {
+                       // Refresh page
+                       location.reload();    
+                  }
+              });
+        });
+        });
+    </script>
+}

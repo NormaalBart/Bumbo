@@ -7,6 +7,7 @@ using BumboServices.CAO;
 using BumboServices.Import;
 using BumboServices.Interface;
 using BumboServices.Prognoses;
+using BumboServices.Roster;
 using BumboServices.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,8 @@ namespace Bumbo
             builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
             builder.Services.AddScoped<IStandardRepository, StandardRepository>();
+
+            builder.Services.AddScoped<IRosterService, RosterService>();
             builder.Services.AddScoped<IPrognosesService, PrognosesService>();
             builder.Services.AddScoped<IHourExportService, HourExportService>();
             builder.Services.AddScoped<ICAOService, DutchCAOService>();

@@ -48,8 +48,7 @@ namespace Bumbo.Models.RosterManager
             AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
 
-
-
+        
         public int GetWeekNumber(DateTime date)
         {
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
