@@ -2,14 +2,16 @@
 
 namespace BumboData.Interfaces.Repositories
 {
-    public interface IEmployeeRepository: IRepository<Employee, string>
+    public interface IEmployeeRepository : IRepository<Employee, string>
     {
 
         IEnumerable<Department> GetDepartmentsOfEmployee(string id);
         Employee GetByEmail(string email);
         IEnumerable<Employee> GetAllManagers();
+        IEnumerable<Employee> GetAllManagers(int start, int amount);
         IEnumerable<Employee> GetAllThatWorkedOrWasPlannedOnDate(DateTime date, int branchId);
         IEnumerable<Employee> GetAllEmployeesOfBranch(int defaultBranchId);
+        IEnumerable<Employee> GetAllEmployeesOfBranch(int defaultBranchId, int start, int amount);
         bool EmployeeIsInDepartment(string employeeKey, int id);
         bool Exists(Employee newEmployee);
         public void Import(List<Employee> employees);

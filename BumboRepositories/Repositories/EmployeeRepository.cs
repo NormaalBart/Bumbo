@@ -2,7 +2,6 @@
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
-using BumboRepositories.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories.Repositories
@@ -33,9 +32,21 @@ namespace BumboRepositories.Repositories
             return DbSet.Where(employee => users.Contains(employee.Id));
         }
 
+        public IEnumerable<Employee> GetAllManagers(int start, int amount)
+        {
+            var users = Context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId)
+                .Select(role => role.UserId).Skip(start).Take(amount).ToList();
+            return DbSet.Where(employee => users.Contains(employee.Id));
+        }
+
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
         {
             return DbSet.Where(employee => employee.DefaultBranchId == branch);
+        }
+
+        public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch, int start, int amount)
+        {
+            return DbSet.Where(employee => employee.DefaultBranchId == branch).Skip(start).Take(amount);
         }
 
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)

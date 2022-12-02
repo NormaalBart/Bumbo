@@ -19,6 +19,8 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         protected readonly IMapper _mapper;
         protected readonly IBranchRepository _branchRepository;
         protected readonly IDepartmentsRepository _departmentsRepository;
+        private const int ItemsPerPage = 25;
+
 
         public EmployeeBaseController(UserManager<Employee> userManager, IEmployeeRepository employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
         {
@@ -30,13 +32,24 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
         }
 
-        public abstract IEnumerable<Employee> GetAllEmployeesAsync();
+        public abstract IEnumerable<Employee> GetAllEmployeesAsync(int start, int amount);
 
-        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort)
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort, int page = 1)
         {
+            if (page < 1) page = 1;
+            var employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage);
+            while (employees.Count() == 0 && page != 1)
+            {
+                page--;
+                employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage);
+            }
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
-            var employees = GetAllEmployeesAsync();
+            resultingListViewModel.Page = page;
+            resultingListViewModel.SearchString = searchString;
+            resultingListViewModel.CurrentSort = currentSort;
+            resultingListViewModel.IncludeInactive = includeInactive;
+            resultingListViewModel.IncludeActive = includeActive;
 
             if (!includeInactive && !includeActive)
             {

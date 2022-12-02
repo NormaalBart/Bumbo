@@ -43,7 +43,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
                 ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
                 return View(viewModel);
             }
-            if(_employeesRepository.GetByEmail(viewModel.Email) != null)
+            if (_employeesRepository.GetByEmail(viewModel.Email) != null)
             {
                 PopulateUnselectedDepartments(viewModel);
                 ModelState.AddModelError("Email", "Dit email is al in gebruik");
@@ -119,10 +119,10 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             }
         }
 
-        public override IEnumerable<Employee> GetAllEmployeesAsync()
+        public override IEnumerable<Employee> GetAllEmployeesAsync(int start, int amount)
         {
             var employee = _userManager.GetUserAsync(User).Result;
-            return _employeesRepository.GetAllEmployeesOfBranch(employee.DefaultBranchId);
+            return _employeesRepository.GetAllEmployeesOfBranch(employee.DefaultBranchId, start, amount);
         }
     }
 }

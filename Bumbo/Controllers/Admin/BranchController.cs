@@ -13,7 +13,7 @@ namespace Bumbo.Controllers.Admin
     {
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
-        private const int ItemsPerPage = 1;
+        private const int ItemsPerPage = 25;
 
         public BranchController(IMapper mapper, IBranchRepository branchRepository)
         {
@@ -25,14 +25,16 @@ namespace Bumbo.Controllers.Admin
         public ActionResult Index(int page = 1)
         {
             if (page < 1) { page = 1; }
-            List<BranchViewModel> result = null;
-            while (result == null || result.Count == 0)
+            List<BranchViewModel> result = new List<BranchViewModel>();
+            while (result.Count == 0)
             {
                 var branches = _branchRepository.GetAllActiveBranches((page - 1) * ItemsPerPage, ItemsPerPage);
                 result = _mapper.Map<List<BranchViewModel>>(branches);
                 if (result.Count == 0 && page > 1)
                 {
                     page--;
+                    branches = _branchRepository.GetAllActiveBranches((page - 1) * ItemsPerPage, ItemsPerPage);
+                    result = _mapper.Map<List<BranchViewModel>>(branches);
                     break;
                 }
             }

@@ -5,22 +5,22 @@
 }
 
 <h1>Filialen</h1>
-<div class="float-end">
+
+<div >
     <form asp-action="Index">
         <input asp-for="Page" hidden value="@{Write( Model.Page + 1);}"/>
-        <input type="submit" value="Ga naar pagina @{Write( Model.Page + 1);}" class="btn btn-primary" />
+        <input type="submit" value="Ga naar pagina @{Write( Model.Page + 1);}" class="btn btn-primary float-end" />
     </form>
+    <button asp-action="Create" class="btn btn-success float-start">Maak nieuwe aan</button>
     @if (Model.Page >= 2)
     {
     <form asp-action="Index">
         <input asp-for="Page"  hidden value="@{Write( Model.Page - 1);}" />
-        <input type="submit" value="Ga naar pagina @{Write( Model.Page - 1);}" class="btn btn-primary" />
+        <input type="submit" value="Ga naar pagina @{Write( Model.Page - 1);}" class="btn btn-primary float-start" />
     </form>
     }
 </div>
-<p>
-    <a asp-action="Create">Maak nieuwe aan</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>

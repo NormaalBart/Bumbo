@@ -78,9 +78,9 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             return RedirectToAction(nameof(Index));
         }
 
-        public override IEnumerable<Employee> GetAllEmployeesAsync()
+        public override IEnumerable<Employee> GetAllEmployeesAsync(int start, int amount)
         {
-            return _employeesRepository.GetAllManagers();
+            return _employeesRepository.GetAllManagers(start, amount);
         }
     }
 }
