@@ -30,12 +30,12 @@ public class RosterService : IRosterService
         _unavailableMomentsRepository = unavailableMomentsRepository;
     }
 
-    public async void GenerateRoster(int branchId, DateOnly day)
+    public async Task<string?> GenerateRoster(int branchId, DateOnly day)
     {
         var branch = _branchRepository.Get(branchId);
         if (branch == null)
         {
-            return;
+            return "Filiaal van medewerker is niet gevonden.";
         }
 
         // Get already planned shifts in target month for the branch
@@ -61,14 +61,14 @@ public class RosterService : IRosterService
 
         if (employees.Count == 0)
         {
-            return;
+            return "Geen medewerkers gevonden die beschikbaar zijn.";
         }
 
         employees.Reverse();
         // Map so that the employee is now the key instead of the employee id
         var employeesMapped = employees
             .Select(emp => (shifts.Where(s => s.EmployeeId == emp.Key)?.FirstOrDefault()?.Employee
-                                             ?? remainingEmployees.FirstOrDefault(e => e.Id == emp.Key), emp.TotalHours))
+                            ?? remainingEmployees.FirstOrDefault(e => e.Id == emp.Key), emp.TotalHours))
             .ToList();
 
         // Employee now has all the available employees in the branch sorted on how much hours they have worked.
@@ -77,9 +77,17 @@ public class RosterService : IRosterService
         // TODO: Get from prognosis
         var targetPlannedHours = 400;
 
-        // TODO: Use open and closing times
-        var openTime = day.ToDateTime(new TimeOnly(8, 00));
-        var closeTime = day.ToDateTime(new TimeOnly(22, 00));
+        var times = _branchRepository.GetOpenAndCloseTimes(branchId, day);
+
+        // Check if closed
+        if (times.Item1 == TimeOnly.MinValue || times.Item2 == TimeOnly.MinValue)
+        {
+            // Store is closed for the day
+            return "Winkel staat als gesloten geregistreerd op huidige dag.";
+        }
+
+        var openTime = day.ToDateTime(times.Item1);
+        var closeTime = day.ToDateTime(times.Item2);
 
         // Load rest of the week roster days
         var allWeekShifts = _plannedShiftsRepository.GetAllShiftsWeek(branchId, day);
@@ -87,13 +95,14 @@ public class RosterService : IRosterService
         // Cant generate if there are already shifts planned on this day for now
         if (allWeekShifts.Any(s => s.StartTime.Date == day.ToDateTime(new TimeOnly()).Date))
         {
-            return;
+            return "Er staan al diensten gepland op deze dag, verwijder deze eerst.";
         }
 
-        GenerateRoster(branchId, day, employeesMapped, allWeekShifts, closeTime, openTime, targetPlannedHours);
+        return GenerateRoster(branchId, day, employeesMapped, allWeekShifts, closeTime, openTime, targetPlannedHours);
     }
 
-    private void GenerateRoster(int branchId, DateOnly day, List<(Employee?, double TotalHours)> employeesMapped, List<PlannedShift> allWeekShifts, DateTime closeTime,
+    private string? GenerateRoster(int branchId, DateOnly day, List<(Employee?, double TotalHours)> employeesMapped,
+        List<PlannedShift> allWeekShifts, DateTime closeTime,
         DateTime openTime, int targetPlannedHours)
     {
         var currentShifts = new List<PlannedShift>();
@@ -133,14 +142,16 @@ public class RosterService : IRosterService
                 {
                     startTime = day.ToDateTime(new TimeOnly(
                         Math.Min(closeTime.Hour - 3,
-                            Math.Max(openTime.Hour, leastPopulatedStartTime.FirstOrDefault().Item1 - rnd.Next(6))), 00));
+                            Math.Max(openTime.Hour, leastPopulatedStartTime.FirstOrDefault().Item1 - rnd.Next(6))),
+                        00));
                 }
 
                 // Generate end time using a combination of randomness
                 var endTime =
                     day.ToDateTime(new TimeOnly(
                         Math.Min(closeTime.Hour, 3 + startTime.Hour +
-                                                 rnd.Next(Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
+                                                 rnd.Next(
+                                                     Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
                                                  rnd.Next(5)), 00));
 
                 // Only allow shifts of at least 3 hours
@@ -151,7 +162,8 @@ public class RosterService : IRosterService
 
                 // Prefer longer shifts
                 if (rnd.Next(Convert.ToInt32((closeTime - openTime).TotalHours) -
-                             Convert.ToInt32((endTime - startTime).TotalHours)) > ((closeTime - openTime).TotalHours / 2))
+                             Convert.ToInt32((endTime - startTime).TotalHours)) >
+                    ((closeTime - openTime).TotalHours / 2))
                 {
                     continue;
                 }
@@ -192,14 +204,11 @@ public class RosterService : IRosterService
             {
                 break;
             }
-            else
-            {
-                // TODO: Restart this loop once more.
-                
-            }
         }
-        // Commit shifts
-
+        // Save shifts
         _plannedShiftsRepository.Import(currentShifts);
+
+        // Display error if prognosis has not completely been reached.
+        return currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours < targetPlannedHours ? "Niet gelukt om volledig rooster te maken die prognose behaald, handmatige bewerking is nog nodig!" : null;
     }
 }

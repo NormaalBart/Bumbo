@@ -475,6 +475,13 @@
                   success: function (data) {
                        // Refresh page
                        location.reload();    
+                  },
+                  error: function (error) {
+                      // Hide loading
+                      $('#generate-roster-spinner').hide()
+                      $('#generate-roster').prop('disabled', false);
+                      // Show error
+                      alert(error.responseText)
                   }
                   // TODO: Handle errors
               });

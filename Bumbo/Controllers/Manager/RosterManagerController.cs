@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Bumbo.Models.RosterManager;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
@@ -168,7 +169,7 @@ namespace Bumbo.Controllers.Manager
         }
 
         // Will generate roster for given date
-        // [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> GenerateRoster(string date)
         {
             var forDate = DateTime.Parse(date);
@@ -179,9 +180,16 @@ namespace Bumbo.Controllers.Manager
             
             var manager = await _userManager.GetUserAsync(User);
 
-            _rosterService.GenerateRoster(manager.DefaultBranchId ?? -1, forDate.ToDateOnly());
-            
-            return Ok();
+            var error = await _rosterService.GenerateRoster(manager.DefaultBranchId ?? -1, forDate.ToDateOnly());
+
+            if (error == null)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(error);
+            }
         }
 
         private Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidPlannedShiftsFollowigCAO(DateTime day,

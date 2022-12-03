@@ -23,6 +23,29 @@ namespace BumboRepositories.Repositories
         {
             return DbSet.Where(branch => branch.Managers.Count == 0).ToList();
         }
+        
+        public (TimeOnly, TimeOnly) GetOpenAndCloseTimes(int branchId, DateOnly day)
+        {
+            // First check if any overrides are placed on given day
+            var over = Context.OpeningHoursOverride.FirstOrDefault(s => s.Date == day && s.BranchId == branchId);
+            if (over != null)
+            {
+                return (over.OpenTime, over.CloseTime);
+            }
+            
+            // Check regular opening times
+            var regular =
+                Context.StandardOpeningHours.FirstOrDefault(o =>
+                    o.DayOfWeek == day.DayOfWeek && o.BranchId == branchId);
+
+            if (regular is {IsClosed: false })
+            {
+                return (regular.OpenTime ?? TimeOnly.MinValue, regular.CloseTime ?? TimeOnly.MinValue);
+            }
+
+            // Closed
+            return (TimeOnly.MinValue, TimeOnly.MinValue);
+        }
 
         public override Branch? Get(int id)
         {
