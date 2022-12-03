@@ -26,6 +26,9 @@
 
 <div class="container">
     <div >
+        <div class="alert-info text-center small fst-italic rounded rounded-3 ">
+            <p>Tijden van selectie lijst zijn gebasseerd op opening en sluitingstijden van de geselecteerde dag.</p>
+        </div>
         <form asp-action="Create" id="CreateForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
@@ -47,8 +50,6 @@
                                     <input id="enddate" onchange="onDateChange(false)" asp-for="EndDate" class="form-control " />
 
                                     <input asp-for="EndHour" class="form-control timepicker-end timepicker" />
-
-
                                 <span asp-validation-for="EndDate" class="text-danger"></span>
                                 <span asp-validation-for="EndHour" class="text-danger"></span>
                             </div>
@@ -75,20 +76,9 @@
 
     
 
-        $('.timepicker-start').timepicker({
-            timeFormat: 'HH:mm p',
-            interval: 30,
-            minTime: '1',
-            maxTime: '23',
-            defaultTime: '8',
-            startTime: '1',
-            dynamic: false,
-            dropdown: true,
-            scrollbar: true,
-        });
 
-        $('.timepicker-end').timepicker({
-            timeFormat: 'HH:mm p',
+        $('.timepicker').timepicker({
+            timeFormat: 'HH:mm ',
             interval: 30,
             minTime: '1',
             maxTime: '23',
@@ -99,21 +89,18 @@
             scrollbar: true,
 
         });
-
-
-        
 
             function onDateChange(isFirst) {
             if(isFirst){
-                var selectedDate = document.getElementById('startdate').value
-                getTimes(selectedDate, isFirst);
+                var selectedDate = document.getElementById('startdate').value;
+                setTimes(selectedDate, isFirst);
             }else{
-                var selectedDate = document.getElementById('enddate').value
-                getTimes(selectedDate, isFirst);
+                var selectedDate = document.getElementById('enddate').value;
+                setTimes(selectedDate, isFirst);
             }
         }
 
-        function getTimes(date, isFirst) {
+        function setTimes(date, isFirst) {
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("GetOpenTime", "UnavailableMoments")',
@@ -121,19 +108,21 @@
                     dateInput: date
                 },
                 success: function (data) {
-
+                    // isFirst refers to if it is the first [start] timepicker or the second [end]. 
                         if(isFirst){
                             //handle the data
                             let opentimestart = data.open;
                             let closetimestart = data.close;
                             $('.timepicker-start').timepicker('option', 'minTime', opentimestart);
                             $('.timepicker-start').timepicker('option', 'maxTime', closetimestart);
+                            $('.timepicker-start').timepicker('option', 'defaultTime', opentimestart);
                         }else{
                             //handle the data
                             let opentimestart = data.open;
                             let closetimestart = data.close;
                             $('.timepicker-end').timepicker('option', 'minTime', opentimestart);
                             $('.timepicker-end').timepicker('option', 'maxTime', closetimestart);
+                            $('.timepicker-end').timepicker('option', 'defaultTIme', opentimestart);
                         }
                        
                     }
