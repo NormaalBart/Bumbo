@@ -134,6 +134,7 @@ public class RosterService : IRosterService
             return "CAO overtredingen gevonden, verhelp deze eerst voor het rooster aangevuld kan worden.";
         }
 
+        // Loop through all employees that are available, starting with the ones that have worked the least hours this month.
         while (employeesMapped.Count > 1)
         {
             var emp = employeesMapped.First().Item1;
@@ -179,16 +180,18 @@ public class RosterService : IRosterService
         // Order so we can take the top values
         leastPopulatedStartTime = leastPopulatedStartTime.OrderBy(s => s.Item2).ToList();
 
-        // For loops shifts start and end times arround
+        // For loops shifts start and end times around
         // Little bit of a bruteforce approach, but randomly try 10 times with random start and end times.
         // Initially start + end time is the same as store open and closing time.
+        // Prefers longer shifts, and tries to occupy timeslots where the least people are present.
         for (int i = 0; i < 10; i++)
         {
+            // Random generated start time
             var startTime = day.ToDateTime(new TimeOnly(
                 openTime.Hour + _random.Next(Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))), 00));
 
             // After at least 10 shifts have been made already, try and occupy the least populated times.
-            // With a random chance
+            // With a random chance, will overrwrite previous set start time above.
             if (leastPopulatedStartTime.Sum(s => s.Item2) > 10 && _random.Next(2) == 0)
             {
                 startTime = day.ToDateTime(new TimeOnly(
@@ -197,12 +200,11 @@ public class RosterService : IRosterService
                     00));
             }
 
-            // Generate end time using a combination of randomness
+            // Generate end time using a combination of randomness, also preventing end time being after closing time.
             var endTime =
                 day.ToDateTime(new TimeOnly(
                     Math.Min(closeTime.Hour, MinShiftDurationHours + startTime.Hour +
-                                             _random.Next(
-                                                 Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
+                                             _random.Next(Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
                                              _random.Next(5)), 00));
 
             // Only allow shifts of at least minShiftDurationHours hours
