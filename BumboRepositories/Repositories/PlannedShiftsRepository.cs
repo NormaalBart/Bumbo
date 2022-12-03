@@ -83,6 +83,14 @@ namespace BumboRepositories.Repositories
                 .Include(s => s.Employee)
                 .ToList();
         }
+
+        public List<PlannedShift> GetAllShiftsDay(int branchId, DateOnly day)
+        {
+            return DbSet.Where(s => s.BranchId == branchId && 
+                                    s.StartTime.Day == day.Day && s.StartTime.Month == day.Month && s.StartTime.Year == day.Year)
+                .Include(s => s.Employee)
+                .ToList();
+        }
         
         public List<PlannedShift> GetShiftsByMonth(int branchId, int year, int month)
         {

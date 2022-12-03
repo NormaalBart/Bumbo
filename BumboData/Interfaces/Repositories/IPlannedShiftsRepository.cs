@@ -12,7 +12,9 @@ namespace BumboData.Interfaces.Repositories
 
         PlannedShift GetPlannedShiftById(int shiftId);
 
-        List<PlannedShift> GetAllShiftsWeek(int branchId, DateOnly day); 
+        List<PlannedShift> GetAllShiftsWeek(int branchId, DateOnly day);
+
+        List<PlannedShift> GetAllShiftsDay(int branchId, DateOnly day);
         
         /*
          * Month needs to be supplied from 1 to 12;

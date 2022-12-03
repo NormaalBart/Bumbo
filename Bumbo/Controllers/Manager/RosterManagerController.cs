@@ -179,8 +179,11 @@ namespace Bumbo.Controllers.Manager
             }
             
             var manager = await _userManager.GetUserAsync(User);
+            
+            // Get already planned shifts
+            var plannedShifts = _shiftRepository.GetAllShiftsDay(manager.DefaultBranchId ?? -1, forDate.ToDateOnly());
 
-            var error = await _rosterService.GenerateRoster(manager.DefaultBranchId ?? -1, forDate.ToDateOnly());
+            var error = await _rosterService.GenerateRoster(manager.DefaultBranchId ?? -1, forDate.ToDateOnly(), plannedShifts);
 
             if (error == null)
             {
@@ -192,16 +195,11 @@ namespace Bumbo.Controllers.Manager
             }
         }
 
-        private Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidPlannedShiftsFollowigCAO(DateTime day,
+        private Dictionary<ICAORule, List<PlannedShift>> InvalidPlannedShiftsFollowigCAO(DateTime day,
             int branchNr)
         {
             var allShiftsWeek = _shiftRepository.GetAllShiftsWeek(branchNr, day.ToDateOnly());
-            return _caoService.VerifyPlannedShiftsWeek(allShiftsWeek)
-                // convert to return day only
-                .Select(s => (s.Key, s.Value.Where(s => s.StartTime.Date == day.Date)))
-                .Where(s=>s.Item2.Any())
-                .ToDictionary(d => d.Key, d => d.Item2);
-            ;
+            return _caoService.VerifyPlannedShifts(allShiftsWeek, day.ToDateOnly());
         }
 
         [HttpPost]

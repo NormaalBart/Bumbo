@@ -37,7 +37,7 @@ namespace Bumbo.Models.RosterManager
 
         public string ErrorMessage { get; set; }
 
-        public Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidShifts { get; set; }
+        public Dictionary<ICAORule, List<PlannedShift>> InvalidShifts { get; set; }
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 

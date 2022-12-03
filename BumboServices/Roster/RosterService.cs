@@ -1,6 +1,7 @@
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using BumboServices.Interface;
 using BumboServices.Utils;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,9 @@ public class RosterService : IRosterService
     private readonly IPrognosisRepository _prognosisRepository;
     private readonly ICAOService _caoService;
     private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
+    private readonly Random _random;
+
+    private const int MinShiftDurationHours = 3;
 
     public RosterService(IPlannedShiftsRepository plannedShiftsRepository, IEmployeeRepository employeeRepository,
         IBranchRepository branchRepository, UserManager<Employee> userManager, IPrognosisRepository prognosisRepository,
@@ -28,9 +32,16 @@ public class RosterService : IRosterService
         _prognosisRepository = prognosisRepository;
         _caoService = caoService;
         _unavailableMomentsRepository = unavailableMomentsRepository;
+
+        _random = new Random();
     }
 
     public async Task<string?> GenerateRoster(int branchId, DateOnly day)
+    {
+        return await GenerateRoster(branchId, day, new List<PlannedShift>());
+    }
+
+    public async Task<string?> GenerateRoster(int branchId, DateOnly day, List<PlannedShift> alreadyPlannedShifts)
     {
         var branch = _branchRepository.Get(branchId);
         if (branch == null)
@@ -89,126 +100,155 @@ public class RosterService : IRosterService
         var openTime = day.ToDateTime(times.Item1);
         var closeTime = day.ToDateTime(times.Item2);
 
-        // Load rest of the week roster days
+        // Load rest of the week roster days, required when checking for the CAO.
         var allWeekShifts = _plannedShiftsRepository.GetAllShiftsWeek(branchId, day);
 
-        // Cant generate if there are already shifts planned on this day for now
-        if (allWeekShifts.Any(s => s.StartTime.Date == day.ToDateTime(new TimeOnly()).Date))
-        {
-            return "Er staan al diensten gepland op deze dag, verwijder deze eerst.";
-        }
-
-        return GenerateRoster(branchId, day, employeesMapped, allWeekShifts, closeTime, openTime, targetPlannedHours);
+        return GenerateRoster(branchId, day, employeesMapped, allWeekShifts, closeTime, openTime, targetPlannedHours,
+            alreadyPlannedShifts);
     }
 
     private string? GenerateRoster(int branchId, DateOnly day, List<(Employee?, double TotalHours)> employeesMapped,
         List<PlannedShift> allWeekShifts, DateTime closeTime,
-        DateTime openTime, int targetPlannedHours)
+        DateTime openTime, int targetPlannedHours, List<PlannedShift> alreadyPlannedShifts)
     {
+        // Remove today from allweeksshifts
+        allWeekShifts = allWeekShifts.Where(s => s.StartTime.Date.ToDateOnly() != day).ToList();
+
+        // Holds all the shifts on target day.
         var currentShifts = new List<PlannedShift>();
-        var rnd = new Random();
+        currentShifts.AddRange(alreadyPlannedShifts);
+
+        // Check if prognosis has already been reached
+        // TODO: Change when prognisis is properly implemented.
+        if (currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours >= targetPlannedHours)
+        {
+            return "Prognose is al behaald!";
+        }
+
+        // Check if already planned shifts have CAO violations
+        var checkCAOBefore = new List<PlannedShift>();
+        checkCAOBefore.AddRange(allWeekShifts);
+        checkCAOBefore.AddRange(currentShifts);
+        if (_caoService.VerifyPlannedShifts(checkCAOBefore, day).Any())
+        {
+            return "CAO overtredingen gevonden, verhelp deze eerst voor het rooster aangevuld kan worden.";
+        }
 
         while (employeesMapped.Count > 1)
         {
             var emp = employeesMapped.First().Item1;
             employeesMapped.RemoveAt(0);
 
-            var tempShiftsOrigin = new List<PlannedShift>();
-            tempShiftsOrigin.AddRange(allWeekShifts);
-            tempShiftsOrigin.AddRange(currentShifts);
-
-            // Calculate preferred start time, where currently the least hours are made.
-            var leastPopulatedStartTime = Enumerable.Range(0, (closeTime - openTime).Hours).Select(h =>
+            var suggested = TryGenerateShift(branchId, emp, openTime, closeTime, allWeekShifts, currentShifts, day);
+            if (suggested != null)
             {
-                return (h + openTime.Hour,
-                    currentShifts.Count(s =>
-                        s.StartTime.Hour <= h + openTime.Hour && s.EndTime.Hour >= h + openTime.Hour));
-            }).ToList();
-
-            // Order so we can take the top values
-            leastPopulatedStartTime = leastPopulatedStartTime.OrderBy(s => s.Item2).ToList();
-
-            // For loops shifts start and end times arround
-            // Little bit of a bruteforce approach, but randomly try 10 times with random start and end times.
-            // Initially start + end time is the same as store open and closing time.
-            for (int i = 0; i < 10; i++)
-            {
-                var startTime = day.ToDateTime(new TimeOnly(
-                    openTime.Hour + rnd.Next(Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))), 00));
-
-                // After at least 10 shifts have been made already, try and occupy the least populated times.
-                // With a random chance
-                if (leastPopulatedStartTime.Sum(s => s.Item2) > 10 && rnd.Next(2) == 0)
-                {
-                    startTime = day.ToDateTime(new TimeOnly(
-                        Math.Min(closeTime.Hour - 3,
-                            Math.Max(openTime.Hour, leastPopulatedStartTime.FirstOrDefault().Item1 - rnd.Next(6))),
-                        00));
-                }
-
-                // Generate end time using a combination of randomness
-                var endTime =
-                    day.ToDateTime(new TimeOnly(
-                        Math.Min(closeTime.Hour, 3 + startTime.Hour +
-                                                 rnd.Next(
-                                                     Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
-                                                 rnd.Next(5)), 00));
-
-                // Only allow shifts of at least 3 hours
-                if ((endTime - startTime).TotalHours < 3)
-                {
-                    continue;
-                }
-
-                // Prefer longer shifts
-                if (rnd.Next(Convert.ToInt32((closeTime - openTime).TotalHours) -
-                             Convert.ToInt32((endTime - startTime).TotalHours)) >
-                    ((closeTime - openTime).TotalHours / 2))
-                {
-                    continue;
-                }
-
-                // Check for employee availability.
-                if (!_unavailableMomentsRepository.IsEmployeeAvailable(emp.Id, startTime, endTime))
-                {
-                    continue;
-                }
-
-                // Create list to send to the CAO service
-                var tempShifts = new List<PlannedShift>();
-                tempShifts.AddRange(tempShiftsOrigin);
-
-                var pending = new PlannedShift()
-                {
-                    Employee = emp,
-                    EmployeeId = emp.Id,
-                    StartTime = startTime,
-                    EndTime = endTime,
-                    BranchId = branchId,
-                    // TODO: Use proper department.
-                    DepartmentId = 1,
-                };
-                tempShifts.Add(pending);
-
-                // Verify if CAO is valid.
-                if (_caoService.VerifyPlannedShiftsWeek(tempShifts).Count == 0)
-                {
-                    // Valid by following CAO
-                    currentShifts.Add(pending);
-                    break;
-                }
+                currentShifts.Add(suggested);
             }
 
-            // TODO: Check if prognosis already hit
+            // TODO: Check if prognosis already hit with proper prognosis instead of hardcoded values.
             if (currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours >= targetPlannedHours)
             {
                 break;
             }
         }
-        // Save shifts
-        _plannedShiftsRepository.Import(currentShifts);
+
+        // Save shifts, only newly generated ones.
+        _plannedShiftsRepository.Import(currentShifts.Where(s => !alreadyPlannedShifts.Contains(s)).ToList());
 
         // Display error if prognosis has not completely been reached.
-        return currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours < targetPlannedHours ? "Niet gelukt om volledig rooster te maken die prognose behaald, handmatige bewerking is nog nodig!" : null;
+        return currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours < targetPlannedHours
+            ? "Niet gelukt om volledig rooster te maken die prognose behaald, handmatige bewerking is nog nodig!"
+            : null;
+    }
+
+    private PlannedShift? TryGenerateShift(int branch, Employee emp, DateTime openTime, DateTime closeTime,
+        List<PlannedShift> allWeekShifts, List<PlannedShift> currentShifts, DateOnly day)
+    {
+        var tempShiftsOrigin = new List<PlannedShift>();
+        tempShiftsOrigin.AddRange(allWeekShifts);
+        tempShiftsOrigin.AddRange(currentShifts);
+
+        // Calculate preferred start time, where currently the least hours are made.
+        var leastPopulatedStartTime = Enumerable.Range(0, (closeTime - openTime).Hours).Select(h =>
+        {
+            return (h + openTime.Hour,
+                currentShifts.Count(s =>
+                    s.StartTime.Hour <= h + openTime.Hour && s.EndTime.Hour >= h + openTime.Hour));
+        }).ToList();
+
+        // Order so we can take the top values
+        leastPopulatedStartTime = leastPopulatedStartTime.OrderBy(s => s.Item2).ToList();
+
+        // For loops shifts start and end times arround
+        // Little bit of a bruteforce approach, but randomly try 10 times with random start and end times.
+        // Initially start + end time is the same as store open and closing time.
+        for (int i = 0; i < 10; i++)
+        {
+            var startTime = day.ToDateTime(new TimeOnly(
+                openTime.Hour + _random.Next(Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))), 00));
+
+            // After at least 10 shifts have been made already, try and occupy the least populated times.
+            // With a random chance
+            if (leastPopulatedStartTime.Sum(s => s.Item2) > 10 && _random.Next(2) == 0)
+            {
+                startTime = day.ToDateTime(new TimeOnly(
+                    Math.Min(closeTime.Hour - MinShiftDurationHours,
+                        Math.Max(openTime.Hour, leastPopulatedStartTime.FirstOrDefault().Item1 - _random.Next(6))),
+                    00));
+            }
+
+            // Generate end time using a combination of randomness
+            var endTime =
+                day.ToDateTime(new TimeOnly(
+                    Math.Min(closeTime.Hour, MinShiftDurationHours + startTime.Hour +
+                                             _random.Next(
+                                                 Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
+                                             _random.Next(5)), 00));
+
+            // Only allow shifts of at least minShiftDurationHours hours
+            if ((endTime - startTime).TotalHours < MinShiftDurationHours)
+            {
+                continue;
+            }
+
+            // Prefer longer shifts
+            if (_random.Next(Convert.ToInt32((closeTime - openTime).TotalHours) -
+                             Convert.ToInt32((endTime - startTime).TotalHours)) >
+                ((closeTime - openTime).TotalHours / 2))
+            {
+                continue;
+            }
+
+            // Check for employee availability.
+            if (!_unavailableMomentsRepository.IsEmployeeAvailable(emp.Id, startTime, endTime))
+            {
+                continue;
+            }
+
+            // Create list to send to the CAO service
+            var tempShifts = new List<PlannedShift>();
+            tempShifts.AddRange(tempShiftsOrigin);
+
+            var pending = new PlannedShift()
+            {
+                Employee = emp,
+                EmployeeId = emp.Id,
+                StartTime = startTime,
+                EndTime = endTime,
+                BranchId = branch,
+                // TODO: Use proper department.
+                DepartmentId = 1,
+            };
+            tempShifts.Add(pending);
+
+            // Verify if CAO is valid.
+            if (_caoService.VerifyPlannedShifts(tempShifts, day).Count == 0)
+            {
+                // Valid by following CAO
+                return pending;
+            }
+        }
+
+        return null;
     }
 }
