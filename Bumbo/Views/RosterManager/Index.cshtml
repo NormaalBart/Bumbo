@@ -473,15 +473,33 @@
                       date: '@Model.Date'
                   },
                   success: function (data) {
-                       // Refresh page
-                       location.reload();    
+                       // Refresh page toast
+                       const Toast = Swal.mixin({
+                         toast: true,
+                         position: 'top-end',
+                         showConfirmButton: true,
+                         timer: 3000,
+                         timerProgressBar: true,
+                         confirmButtonText: 'Refresh'
+                       })
+                       Toast.fire({
+                         icon: 'success',
+                         title: 'Rooster succesvol gegenereerd.'
+                       }).then(function() {
+                          location.reload();    
+                       });
                   },
                   error: function (error) {
                       // Hide loading
                       $('#generate-roster-spinner').hide()
                       $('#generate-roster').prop('disabled', false);
-                      // Show error
-                      alert(error.responseText)
+                      // Show error                      
+                      Swal.fire({
+                        title: 'Oeps!',
+                        text: error.responseText,
+                        icon: 'error',
+                        confirmButtonText: 'Oke'
+                      })
                   }
                   // TODO: Handle errors
               });
