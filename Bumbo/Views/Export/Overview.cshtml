@@ -115,7 +115,7 @@
                                             @foreach (var unapprovedShift in viewModel.UnapprovedShifts)
                                             {
                                                 <li>
-                                                    <a asp-controller="WorkedHours" asp-action="Index" asp-route-dateInput="@unapprovedShift.StartTime">@unapprovedShift.StartTime.Date.ToString("dd-MM-yyyy")</a>: @unapprovedShift.StartTime.TimeOfDay.ToString("hh\\:mm") - @unapprovedShift.EndTime?.TimeOfDay.ToString("hh\\:mm")
+                                                    <a asp-controller="WorkedHours" asp-action="Index" asp-route-dateInput="@unapprovedShift.StartTime">@unapprovedShift.StartTime.Date.ToString("dd-MM-yyyy")</a>: @unapprovedShift.StartTime.TimeOfDay.ToString("HH\\:mm") - @unapprovedShift.EndTime?.TimeOfDay.ToString("HH\\:mm")
                                                 </li>
                                             }
                                         </ul>

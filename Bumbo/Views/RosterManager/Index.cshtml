@@ -37,7 +37,7 @@
                     @foreach (var shift in modelInvalidShift.Value)
                     {
                         <li>
-                            <strong>@shift.Employee.FullName()</strong>
+                            <strong>@shift.Employee.FullName():</strong> @shift.StartTime.ToString("HH\\:mm") - @shift.EndTime.ToString("HH\\:mm")
                         </li>
                     }
                 </ul>
