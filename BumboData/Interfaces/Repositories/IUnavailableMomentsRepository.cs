@@ -1,4 +1,5 @@
-﻿using BumboData.Models;
+﻿using BumboData.Enums;
+using BumboData.Models;
 
 namespace BumboData.Interfaces.Repositories
 {
@@ -12,5 +13,7 @@ namespace BumboData.Interfaces.Repositories
         List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day);
 
         List<UnavailableMoment> GetWeekOfUnavailableMomentsAfterDateForEmployee(DateTime date, string employeeId);
+
+        IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId, ReviewStatus status);
     }
 }

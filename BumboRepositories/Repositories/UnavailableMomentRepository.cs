@@ -72,5 +72,10 @@ namespace BumboRepositories.Repositories
             return DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date >= date && u.StartTime <= date.AddDays(7)).ToList();
 
         }
+
+        public IEnumerable<UnavailableMoment> GetAllUnapprovedUnavailabilityMoments(int branchId,ReviewStatus status)
+        {
+            return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus.Equals(status) == false).ToList();
+        }
     }
 }

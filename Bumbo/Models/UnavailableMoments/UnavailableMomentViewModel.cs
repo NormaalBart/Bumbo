@@ -22,5 +22,9 @@ namespace Bumbo.Models.UnavailableMoments
         [DisplayName("Reden")]
         public UnavailableMomentType Type { get; set; }
 
+        [DisplayName("Acceptatie status")]
+        public ReviewStatus ReviewStatus { get; set; }
+        
+
     }
 }

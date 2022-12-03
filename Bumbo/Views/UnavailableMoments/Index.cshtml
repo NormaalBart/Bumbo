@@ -44,7 +44,7 @@
                     </td>
                 </tr>
 
-                <tr class="moments-row text-center" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-M-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-M-dd")')">
+                <tr class="moments-row text-center" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-MM-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-MM-dd")')">
                     @* if the moment is on the same day, we don't show the date multiple times*@
                     @if (moment.StartTime.Date == moment.EndTime.Date)
                     {
@@ -59,7 +59,7 @@
                     }
                 </tr>
 
-                <tr class="moments-row" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-M-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-M-dd")')">
+                <tr class="moments-row" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-MM-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-MM-dd")')">
                     <td>
                         starttijd: <span class="fw-bold">@moment.StartTime.ToString("HH:mm") </span>
                     </td>
@@ -90,6 +90,7 @@ else
 
 <script>
     function onRowClick(starttime, endtime) {
+        // if user clicks on a row, we open the copy to and from modal adding a week.
         var modal = document.getElementById("modal");
         modal.style.display = "block";
         document.getElementById('modal-input-from').value = starttime;
