@@ -162,6 +162,9 @@ public class RosterService : IRosterService
             : null;
     }
 
+    /*
+     * Tries to generate a shift with given parameters.
+     */
     private PlannedShift? TryGenerateShift(int branch, Employee emp, DateTime openTime, DateTime closeTime,
         List<PlannedShift> allWeekShifts, List<PlannedShift> currentShifts, DateOnly day)
     {
