@@ -66,6 +66,12 @@
                         <th>
                             @Html.DisplayNameFor(model => model.UnavailableMoments[0].ReviewStatus)
                         </th>
+                        <th>
+                            Acties
+                        </th>
+                        <th>
+                           
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,6 +92,18 @@
                                 </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReviewStatus)
+                            </td>
+                            <td>
+                                <!--Approve button-->
+                                <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" method="post">
+                                    <input type="submit" value="Goedkeuren" class="btn btn-success" />
+                                </form>
+                            </td>
+                            <td>
+                                <!--reject button-->
+                                <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" method="post">
+                                    <input type="submit" value="Afkeuren" class="btn btn-danger" />
+                                </form>
                             </td>
                             </tr>
                         }

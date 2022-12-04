@@ -11,11 +11,13 @@ namespace BumboData.Enums
 
     public enum ReviewStatus
     {
-        [Display(Name = "Goedgekeurd")]
-        Approved = 1,
         [Display(Name = "In afwachting")]
-        Pending = 2,
+        Pending,
+        [Display(Name = "Goedgekeurd")]
+        Approved,
         [Display(Name = "Afgekeurd")]
-        Rejected = 3
+        Rejected
+
+
     }
 }

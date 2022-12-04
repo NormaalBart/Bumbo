@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Bumbo.Models.UnavailableMoments;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
@@ -66,6 +67,7 @@ namespace Bumbo.Controllers.Employees
                 return View(unavailableMomentViewModel);
             }
 
+            newUnavailableMoment.ReviewStatus = ReviewStatus.Pending;
             _unavailableMomentsRepository.Create(newUnavailableMoment);
             return RedirectToAction("Index");
         }
@@ -147,6 +149,7 @@ namespace Bumbo.Controllers.Employees
                 if (newEndTime != null) newMoment.EndTime = (DateTime) newEndTime;
                 newMoment.Employee = await _userManager.GetUserAsync(User);
                 newMoment.Type = moment.Type;
+                newMoment.ReviewStatus = ReviewStatus.Pending;
                 newMoments.Add(newMoment);
             }
 

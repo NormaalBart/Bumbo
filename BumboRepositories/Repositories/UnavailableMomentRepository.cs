@@ -73,7 +73,7 @@ namespace BumboRepositories.Repositories
 
         }
 
-        public IEnumerable<UnavailableMoment> GetAllUnapprovedUnavailabilityMoments(int branchId,ReviewStatus status)
+        public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId,ReviewStatus status)
         {
             return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus.Equals(status) == false).ToList();
         }
