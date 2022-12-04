@@ -4,16 +4,44 @@
     ViewData["Title"] = "Index";
 }
 
-<h1 class="text-center">Afwezigheid beheer</h1>
+<body>
 
-<div class="text-center">
-    <a class="text-center text-decoration-none text-black btn btn-lg btn-primary justify-content-center" asp-action="MonthlyOverview">Ga naar overzicht van alle afwezigheden</a>
+
+
+<h1 class="text-center">Afwezigheid overzicht</h1>
+
+<div class="roster-overview-date">
+    <div class=" d-flex justify-content-between m-2 align-items-center">
+        <div>
+            <!--Arrow to left, using an online arrow png-->
+            <a class="text-decoration-none text-black" asp-action="MonthlyOverview" asp-route-dateInput="@Model.Date.AddMonths(-1).Date" asp-route-searchString="@Model.SearchString">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z" />
+                </svg>
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            @Model.Date.ToString("MMMM")<br><span style="font-size:18px"> @Model.Date.ToString("yyyy") </span>
+        </div>
+        <div>
+            <!--Arrow to right, using an online arrow png on the right side of the bar.-->
+            <a class="text-decoration-none text-black" asp-action="MonthlyOverview" asp-route-dateInput="@Model.Date.AddMonths(1).Date" asp-route-searchString="@Model.SearchString">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
 </div>
+
 
 <div class="top-header">
     <div class="top-header-content">
-        <form asp-action="Index" method="get" class="container align-content-center">
+        <form asp-action="MonthlyOverview" method="get" class="container align-content-center">
             <div class="form-actions no-color row   d-flex justify-content-center m-2 align-items-center">
+                <input hidden name="dateInput" asp-for="Date" />
                 <div class="d-flex justify-content-center text-center my-auto flex-row">
                     <div class="form-group top-header-content form-check flex-column">
                         <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
@@ -26,14 +54,8 @@
                         </div>
                     </div>
 
-                    <div class=" text-center my-auto flex-column m-3">
-                        <div class="justify-content-center text-center my-auto ">
-                            <div class=" text-center">
-                                <a class="btn btn-success" id="openModalBTN"> Alles accepteren </a>
-                            </div>
-                        </div>
                     </div>
-                </div>
+              </div>
         </form>
     </div>
 </div>
@@ -56,19 +78,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.UnavailableMoments[0].ReviewStatus)
             </th>
-            <th>
-                Acties
-            </th>
-            <th>
-            </th>
         </tr>
     </thead>
     <tbody>
         @if (Model.UnavailableMoments.Count == 0)
         {
             <tr class="alert-info text-center">
-                <td colspan="7">
-                    <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
+                <td colspan="5">
+                    <p>Er zijn geen medewerkers die afwezig zijn deze maand.</p>
                 </td>
 
             </tr>
@@ -92,47 +109,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ReviewStatus)
                 </td>
-                <td class="text-center">
-                    <!--Approve button-->
-                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" method="post">
-                        <input type="submit" value="Goedkeuren" class="btn btn-success" />
-                    </form>
-                </td>
-                <td class="text-center">
-                    <!--reject button-->
-                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" method="post">
-                        <input type="submit" value="Afkeuren" class="btn btn-danger" />
-                    </form>
-                </td>
             </tr>
         }
     </tbody>
-
 </table>
 
-
-
-<!-- The Modal -->
-<div id="modal" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content text-center prognosis-textarea">
-        <span class="close position-absolute">&times;</span>
-        <label> </label>
-        <div class="m-3 text-center align-content-center">
-            <form asp-action="ReviewAll">
-                <div class="m-3">
-                    <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
-                </div>
-               
-                
-                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-search="@Model.SearchString" asp-route-isApproved="true" class="btn btn-success btn-sm " />
-            </form>
-        </div>
-
-
-    </div>
-
-</div>
-
-
+</body>

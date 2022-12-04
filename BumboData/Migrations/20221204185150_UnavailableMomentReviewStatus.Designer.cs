@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    [Migration("20221203233956_UnavailableMomentStatusAdd")]
-    partial class UnavailableMomentStatusAdd
+    [Migration("20221204185150_UnavailableMomentReviewStatus")]
+    partial class UnavailableMomentReviewStatus
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

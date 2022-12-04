@@ -15,5 +15,7 @@ namespace Bumbo.Models.EmployeeRoster
 
 
         public virtual UnavailableMomentType? Type { get; set; }
+
+        public virtual ReviewStatus? ReviewStatus { get; set; }
     }
 }

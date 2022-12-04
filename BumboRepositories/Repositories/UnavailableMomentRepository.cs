@@ -3,6 +3,7 @@ using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace BumboRepositories.Repositories
 {
@@ -73,9 +74,34 @@ namespace BumboRepositories.Repositories
 
         }
 
-        public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId,ReviewStatus status)
+        public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId,ReviewStatus status, string search)
         {
-            return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus.Equals(status) == false).ToList();
+            if (search == null)
+            {
+                return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status).Include(u => u.Employee);
+            }
+            return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status && (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim())).Include(u => u.Employee);
+        }
+
+        public IEnumerable<UnavailableMoment> GetAllMomentsFromMonth(int branchId, DateTime date, string search)
+        {
+            if (search == null  )
+            {
+                return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId).Include(u => u.Employee);
+            }
+            return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId && (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim())).Include(u => u.Employee);
+        }
+
+        public void UpdateAllMomentsBySearch(int branchId, ReviewStatus newStatus, string search)
+        {
+            // updates a list of unavailable moments to a new status.
+            var moments = GetAllUnavailabilityMomentsByReviewStatus(branchId, ReviewStatus.Pending, search);
+            foreach (var moment in moments)
+            {
+                moment.ReviewStatus = newStatus;
+            }
+            DbSet.UpdateRange(moments);
+            Context.SaveChanges();
         }
     }
 }

@@ -110,13 +110,34 @@
                             </div>
                         </div>
                        
+                        <div class="container">
+                            <div class="row">
+                                <div class="col m-2">
+                                    @Html.DisplayFor(modelItem => shift.Type)
+                                </div>
+                                <div class="col">
+                                    @if (shift.ReviewStatus == null)
+                                    {
+                                        <p>Status: <span class="bi bi-exclamation-circle text-danger text-large"></span></p>
+                                    }
+                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
+                                    {
+                                        <p>Status: <span class="bi bi-check text-success text-large"></span></p>
+                                    }
+                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
+                                    {
+                                        <p>Status: <span class="bi bi-patch-question-fill text-primary text-large"></span></p>
+                                    }
+                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
+                                    {
+                                        <p>Status: <span class="bi bi-x text-danger text-large"></span></p>
+                                    }
 
-                  
-                        <div >
-                            @Html.DisplayFor(modelItem => shift.Type)
-                        
+                                </div>
+                            </div>
                         </div>
 
+ 
                     
                     </div>
 

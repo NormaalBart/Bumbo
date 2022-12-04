@@ -14,6 +14,10 @@ namespace BumboData.Interfaces.Repositories
 
         List<UnavailableMoment> GetWeekOfUnavailableMomentsAfterDateForEmployee(DateTime date, string employeeId);
 
-        IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId, ReviewStatus status);
+        IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId, ReviewStatus status, string search);
+        IEnumerable<UnavailableMoment> GetAllMomentsFromMonth(int branchId, DateTime date, string search);
+
+        void UpdateAllMomentsBySearch(int branchId, ReviewStatus newStatus, string search);
+
     }
 }

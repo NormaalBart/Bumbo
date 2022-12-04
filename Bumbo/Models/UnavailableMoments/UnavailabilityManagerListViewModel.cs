@@ -4,9 +4,9 @@
     {
         public List<UnavailableMomentsViewModel> UnavailableMoments { get; set; }
 
-        public bool IncludeApproved { get; set; }
-        public bool IncludePending { get; set; }
-        public bool IncludeRejected { get; set; }
+        public DateTime Date { get; set; }
+        
+        public string SearchString { get; set; }
 
         public UnavailabilityManagerListViewModel()
         {

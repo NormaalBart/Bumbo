@@ -102,7 +102,7 @@ namespace Bumbo.Models
                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeSpan(src.OpenTime.Ticks)))
                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeSpan(src.CloseTime.Ticks)));
 
-            CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
+            CreateMap<UnavailableMoment, UnavailableMomentsViewModel>().ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.FullName()));
             CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
             CreateMap<UnavailableMomentCreateViewModel, UnavailableMoment>();
             CreateMap<UnavailableMoment, EmployeeShiftViewModel>();
