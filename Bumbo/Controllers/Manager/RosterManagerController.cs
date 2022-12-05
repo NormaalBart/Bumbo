@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.Json.Nodes;
 using AutoMapper;
 using Bumbo.Models.RosterManager;
 using BumboData.Enums;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BumboServices.CAO.Rules;
+using BumboServices.Roster;
 
 namespace Bumbo.Controllers.Manager
 {
@@ -173,11 +175,7 @@ namespace Bumbo.Controllers.Manager
         public async Task<IActionResult> GenerateRoster(string date)
         {
             var forDate = DateTime.Parse(date);
-            if (!User.IsInRole(RoleType.MANAGER.Name))
-            {
-                return BadRequest();
-            }
-            
+
             var manager = await _userManager.GetUserAsync(User);
             
             // Get already planned shifts
@@ -185,13 +183,23 @@ namespace Bumbo.Controllers.Manager
 
             var error = await _rosterService.GenerateRoster(manager.DefaultBranchId ?? -1, forDate.ToDateOnly(), plannedShifts);
 
-            if (error == null)
+            if (error == RosterCreationResponse.Succes || error == RosterCreationResponse.Incomplete)
             {
-                return Ok();
+                var jsonObj = new JsonObject();
+                jsonObj["incomplete"] = error == RosterCreationResponse.Incomplete;
+                return Ok(Json(jsonObj));
             }
             else
             {
-                return BadRequest(error);
+                var err = error switch
+                {
+                    RosterCreationResponse.NoBranch => "Filiaal van medewerker is niet gevonden.",
+                    RosterCreationResponse.NoEmployees => "Geen medewerkers gevonden die beschikbaar zijn.",
+                    RosterCreationResponse.ClosedOnDay => "Winkel staat als gesloten geregistreerd op huidige dag.",
+                    RosterCreationResponse.AlreadyReachedPrognosis => "Prognose is al behaald!",
+                    RosterCreationResponse.CaoViolationsFound => "CAO overtredingen gevonden, verhelp deze eerst voor het rooster aangevuld kan worden.",
+                };
+                return BadRequest(err);
             }
         }
 

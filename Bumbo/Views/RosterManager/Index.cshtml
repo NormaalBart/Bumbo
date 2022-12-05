@@ -476,6 +476,16 @@
                       date: '@Model.Date'
                   },
                   success: function (data) {
+                      if (data.value.incomplete) {
+                          Swal.fire({
+                               title: 'Oeps!',
+                               text: "Rooster is aangemaakt, maar de prognose kon niet behaald worden. Handmatige bewerking is nog nodig!",
+                               icon: 'warning',
+                               confirmButtonText: 'Verversen'
+                          }).then(function() {
+                             location.reload();    
+                          });
+                      } else {
                        // Refresh page toast
                        const Toast = Swal.mixin({
                          toast: true,
@@ -483,7 +493,7 @@
                          showConfirmButton: true,
                          timer: 3000,
                          timerProgressBar: true,
-                         confirmButtonText: 'Refresh'
+                         confirmButtonText: 'Verversen'
                        })
                        Toast.fire({
                          icon: 'success',
@@ -491,6 +501,7 @@
                        }).then(function() {
                           location.reload();    
                        });
+                      }
                   },
                   error: function (error) {
                       // Hide loading

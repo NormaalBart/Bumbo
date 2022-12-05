@@ -36,17 +36,17 @@ public class RosterService : IRosterService
         _random = new Random();
     }
 
-    public async Task<string?> GenerateRoster(int branchId, DateOnly day)
+    public async Task<RosterCreationResponse> GenerateRoster(int branchId, DateOnly day)
     {
         return await GenerateRoster(branchId, day, new List<PlannedShift>());
     }
 
-    public async Task<string?> GenerateRoster(int branchId, DateOnly day, List<PlannedShift> alreadyPlannedShifts)
+    public async Task<RosterCreationResponse> GenerateRoster(int branchId, DateOnly day, List<PlannedShift> alreadyPlannedShifts)
     {
         var branch = _branchRepository.Get(branchId);
         if (branch == null)
         {
-            return "Filiaal van medewerker is niet gevonden.";
+            return RosterCreationResponse.NoBranch;
         }
 
         // Get already planned shifts in target month for the branch
@@ -72,7 +72,7 @@ public class RosterService : IRosterService
 
         if (employees.Count == 0)
         {
-            return "Geen medewerkers gevonden die beschikbaar zijn.";
+            return RosterCreationResponse.NoEmployees;
         }
 
         employees.Reverse();
@@ -94,7 +94,7 @@ public class RosterService : IRosterService
         if (times.Item1 == TimeOnly.MinValue || times.Item2 == TimeOnly.MinValue)
         {
             // Store is closed for the day
-            return "Winkel staat als gesloten geregistreerd op huidige dag.";
+            return RosterCreationResponse.ClosedOnDay;
         }
 
         var openTime = day.ToDateTime(times.Item1);
@@ -107,7 +107,7 @@ public class RosterService : IRosterService
             alreadyPlannedShifts);
     }
 
-    private string? GenerateRoster(int branchId, DateOnly day, List<(Employee?, double TotalHours)> employeesMapped,
+    private RosterCreationResponse GenerateRoster(int branchId, DateOnly day, List<(Employee?, double TotalHours)> employeesMapped,
         List<PlannedShift> allWeekShifts, DateTime closeTime,
         DateTime openTime, int targetPlannedHours, List<PlannedShift> alreadyPlannedShifts)
     {
@@ -122,7 +122,7 @@ public class RosterService : IRosterService
         // TODO: Change when prognisis is properly implemented.
         if (currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours >= targetPlannedHours)
         {
-            return "Prognose is al behaald!";
+            return RosterCreationResponse.AlreadyReachedPrognosis;
         }
 
         // Check if already planned shifts have CAO violations
@@ -131,7 +131,7 @@ public class RosterService : IRosterService
         checkCAOBefore.AddRange(currentShifts);
         if (_caoService.VerifyPlannedShifts(checkCAOBefore, day).Any())
         {
-            return "CAO overtredingen gevonden, verhelp deze eerst voor het rooster aangevuld kan worden.";
+            return RosterCreationResponse.CaoViolationsFound;
         }
 
         // Loop through all employees that are available, starting with the ones that have worked the least hours this month.
@@ -158,8 +158,8 @@ public class RosterService : IRosterService
 
         // Display error if prognosis has not completely been reached.
         return currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours < targetPlannedHours
-            ? "Niet gelukt om volledig rooster te maken die prognose behaald, handmatige bewerking is nog nodig!"
-            : null;
+            ? RosterCreationResponse.Incomplete
+            : RosterCreationResponse.Succes;
     }
 
     /*
