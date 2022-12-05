@@ -80,6 +80,11 @@
                                         <label asp-for="Password" class="control-label"></label>
                                         <input asp-for="Password" class="form-control" />
                                         <span asp-validation-for="Password" class="text-danger"></span>
+                                        <div id="password-message">
+                                            <p id="password-capital" class="password-invalid"><b>1 Hoofdletter</b></p>
+                                            <p id="password-number" class="password-invalid"><b>1 Nummer</b></p>
+                                            <p id="password-length" class="password-invalid"><b>6 tekens</b></p>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label asp-for="ConfirmPassword" class="control-label"></label>
