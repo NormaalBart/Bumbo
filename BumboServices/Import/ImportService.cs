@@ -42,7 +42,7 @@ public class ImportService : IImportService
         _employeeRepository.Import(mappedEmployees);
     }
 
-    public void ImportClockEvents(Stream file, int branchId)
+    public void ImportClockEvents(Stream file, int branchId, ImportClockEventsType type)
     {
         var csv = CsvFromStream(file);
 
@@ -54,21 +54,23 @@ public class ImportService : IImportService
             m.Approved = true;
             m.BranchId = branchId;
         });
-        
-        // Uncomment to import as planned shifts, instead of workedshifts.
-        // TODO: Create UI for switching between
-        /*var plannedShifts = mappedModels.Select(s => new PlannedShift()
+
+        if (type == ImportClockEventsType.Planned)
         {
-            StartTime = s.StartTime,
-            EndTime = (DateTime) s.EndTime,
-            DepartmentId = 1,
-            EmployeeId = s.EmployeeId,
-            BranchId = s.BranchId
-        }).ToList();
+            var plannedShifts = mappedModels.Select(s => new PlannedShift()
+            {
+                StartTime = s.StartTime,
+                EndTime = (DateTime) s.EndTime,
+                DepartmentId = 1,
+                EmployeeId = s.EmployeeId,
+                BranchId = s.BranchId
+            }).ToList();
 
-        _plannedShiftsRepository.Import(plannedShifts);*/
-
-        _workedShiftRepository.Import(mappedModels);
+            _plannedShiftsRepository.Import(plannedShifts);
+        } else if (type == ImportClockEventsType.Worked)
+        {
+            _workedShiftRepository.Import(mappedModels);
+        }
     }
 
     private CsvReader CsvFromStream(Stream s)
