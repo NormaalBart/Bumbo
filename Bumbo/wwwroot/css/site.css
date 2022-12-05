@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
 }
 
@@ -257,3 +257,40 @@ p {
     background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
 }
 
+
+/* Wachtwoord validatie*/
+/* The message box is shown when the user clicks on the password field */
+#password-message {
+    display: block;
+    color: #000;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+    #password-message p {
+        padding: 10px 35px;
+        font-size: 18px;
+    }
+
+/* Add a green text color and a checkmark when the requirements are right */
+.password-valid {
+    color: green;
+}
+
+.valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔";
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.password-invalid {
+    color: red;
+}
+
+    .password-invalid:before {
+        position: relative;
+        left: -35px;
+        content: "✖";
+    }
