@@ -7,7 +7,7 @@
 <h1 class="text-center">Afwezigheid beheer</h1>
 
 <div class="text-center">
-    <a class="text-center text-decoration-none text-black btn btn-lg btn-primary justify-content-center" asp-action="MonthlyOverview">Ga naar overzicht van alle afwezigheden</a>
+    <a class="text-center text-decoration-none text-black btn btn-primary justify-content-center" asp-action="MonthlyOverview">Ga naar overzicht van alle afwezigheden</a>
 </div>
 
 <div class="top-header">
@@ -113,20 +113,27 @@
 
 
 <!-- The Modal -->
-<div id="modal" class="modal">
+<div id="modal" class="modal ">
 
     <!-- Modal content -->
     <div class="modal-content text-center prognosis-textarea">
         <span class="close position-absolute">&times;</span>
         <label> </label>
         <div class="m-3 text-center align-content-center">
-            <form asp-action="ReviewAll">
+            <form method="post" asp-action="ReviewAll">
+                
+                <!--We pass all ids of items on screen.-->
+                @foreach (var item in Model.Ids)
+                {
+                    <input hidden asp-for="Ids" value="@item" name="ids" />
+                 }
+                 
                 <div class="m-3">
                     <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
                 </div>
                
                 
-                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-search="@Model.SearchString" asp-route-isApproved="true" class="btn btn-success btn-sm " />
+                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
             </form>
         </div>
 

@@ -6,6 +6,7 @@ using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 using System.Data;
 
 namespace Bumbo.Controllers.Manager
@@ -27,6 +28,7 @@ namespace Bumbo.Controllers.Manager
 
         public async Task<IActionResult> Index(string? searchString)
         {
+  
             var manager = await _userManager.GetUserAsync(User);
             // Returns all unavailability moments that haven't been approved yet.
 
@@ -35,6 +37,9 @@ namespace Bumbo.Controllers.Manager
             UnavailabilityManagerListViewModel viewModel = new UnavailabilityManagerListViewModel();
             viewModel.UnavailableMoments = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(unavailabilityMoments).ToList();
             viewModel.SearchString = searchString;
+
+            var selectedids = viewModel.UnavailableMoments.Select(u => u.Id).ToList();
+            viewModel.Ids = selectedids;
             return View(viewModel);
         }
 
@@ -89,7 +94,7 @@ namespace Bumbo.Controllers.Manager
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> ReviewAll(string? search, bool isApproved)
+        public async Task<IActionResult> ReviewAll(bool isApproved, List<int> ids)
         {
             // This method recieves a 'isApproved' bool to indicate if it is approved or reject.
             // Currently there's only a button to approve all, as I am not sure if a reject all is neccesesary.
@@ -104,7 +109,10 @@ namespace Bumbo.Controllers.Manager
             {
                 newStatus = ReviewStatus.Rejected;
             }
-            _unavailableMomentsRepository.UpdateAllMomentsBySearch(manager.DefaultBranchId ?? -1, newStatus, search);
+
+            
+            _unavailableMomentsRepository.UpdateRange(newStatus, ids);
+
             return RedirectToAction("Index");
         }
 

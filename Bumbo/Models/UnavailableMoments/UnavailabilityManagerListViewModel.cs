@@ -8,6 +8,8 @@
         
         public string SearchString { get; set; }
 
+        public List<int> Ids { get; set; }
+
         public UnavailabilityManagerListViewModel()
         {
             UnavailableMoments = new List<UnavailableMomentsViewModel>();

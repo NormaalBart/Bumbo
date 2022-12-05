@@ -90,6 +90,7 @@ input[type="search"] {
     text-decoration: none;
 }
 
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
@@ -104,6 +105,9 @@ input[type="search"] {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+
+
+
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
@@ -111,6 +115,12 @@ input[type="search"] {
     padding: 20px;
     border: 1px solid #888;
     width: 45%; /* Could be more or less, depending on screen size */
+}
+
+@media only screen and (max-width: 600px) {
+    .modal-content {
+        width: 100%;
+    }
 }
 
 /* The Close Button */
@@ -141,6 +151,8 @@ input[type="search"] {
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+
+
 
 /* Modal Content/Box */
 .modal-content-mobile {
@@ -377,6 +389,10 @@ p {
     background-color: #F5F5F5;
 }
 
+.moments-collumn{
+    width: 30%;
+}
+
 .moments-create-box {
     background-color: #F5F5F5;
     padding: 15px;
@@ -384,9 +400,16 @@ p {
     justify-content: center;
     align-items: center;
     height: 300px;
+    width: 500px;
 }
 
 .text-large {
     font-size: 19px;
+}
+
+@media only screen and (min-width: 800px) {
+    .employee-roster-box {
+        width: 800px;
+    }
 }
 

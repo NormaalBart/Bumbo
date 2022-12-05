@@ -80,8 +80,8 @@ namespace Bumbo.Controllers.Employees
 
 
             // _branchRepository.GetOpeningTimes(employee.DefaultBranchId, date);
-            var times = _branchRepository.GetOpenAndCloseTimesOnDay(date.ToDateOnly(), (int)employee.DefaultBranchId);
-            var result = new { Open = times[0], Close = times[1] };
+            var times = _branchRepository.GetOpenAndCloseTimes((int)employee.DefaultBranchId, date.ToDateOnly());
+            var result = new { Open = times.Item1.ToString(), Close = times.Item2.ToString() };
             return Json(result);
 
         }

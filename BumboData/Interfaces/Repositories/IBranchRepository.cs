@@ -11,6 +11,6 @@ namespace BumboData.Interfaces.Repositories
         void SetActive(int id);
         void RemoveSpecialOpeningHour(int id, DateOnly date);
 
-        JsonArray GetOpenAndCloseTimesOnDay(DateOnly date, int branchId);
+        (TimeOnly, TimeOnly) GetOpenAndCloseTimes(int branchId, DateOnly day);
     }
 }

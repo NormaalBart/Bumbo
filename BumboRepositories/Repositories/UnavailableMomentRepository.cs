@@ -78,29 +78,39 @@ namespace BumboRepositories.Repositories
         {
             if (search == null)
             {
-                return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status).Include(u => u.Employee);
+                return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status).Include(u => u.Employee).ToList();
             }
-            return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status && (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim())).Include(u => u.Employee);
+            return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status && (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim())).Include(u => u.Employee).ToList();
         }
 
         public IEnumerable<UnavailableMoment> GetAllMomentsFromMonth(int branchId, DateTime date, string search)
         {
             if (search == null  )
             {
-                return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId).Include(u => u.Employee);
+                return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId).Include(u => u.Employee).ToList();
             }
-            return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId && (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim())).Include(u => u.Employee);
+            return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId && (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim())).Include(u => u.Employee).ToList();
         }
 
-        public void UpdateAllMomentsBySearch(int branchId, ReviewStatus newStatus, string search)
+        public void UpdateRange(ReviewStatus newStatus, List<int> momentIds)
         {
             // updates a list of unavailable moments to a new status.
-            var moments = GetAllUnavailabilityMomentsByReviewStatus(branchId, ReviewStatus.Pending, search);
-            foreach (var moment in moments)
+            List<UnavailableMoment> trackedMoments = new List<UnavailableMoment>();
+            foreach (var id in momentIds)
             {
-                moment.ReviewStatus = newStatus;
+                var moment = Get(id);
+                // potentially throw exception here if it is null? Or continue with rest of list? Even if this situation is incredibly rare.
+                if (moment != null)
+                {
+                    
+                    if (moment.ReviewStatus == ReviewStatus.Pending)
+                    {
+                        moment.ReviewStatus = newStatus;
+                        trackedMoments.Add(moment);
+                    }
+                }
             }
-            DbSet.UpdateRange(moments);
+            DbSet.UpdateRange(trackedMoments);
             Context.SaveChanges();
         }
     }

@@ -81,27 +81,27 @@ namespace BumboRepositories.Repositories
         }
 
 
-        // Gets the open and close time of a specific date, if it is not overriden it gets the default values.
-        public JsonArray GetOpenAndCloseTimesOnDay(DateOnly date, int branchId)
+        public (TimeOnly, TimeOnly) GetOpenAndCloseTimes(int branchId, DateOnly day)
         {
-            var branch = DbSet.Include(branch => branch.StandardOpeningHours)
-                .Include(branch => branch.OpeningHoursOverrides)
-                .FirstOrDefault(branch => branch.Id == branchId);
-            if (branch == null)
+            // First check if any overrides are placed on given day
+            var over = Context.OpeningHoursOverride.FirstOrDefault(s => s.Date == day && s.BranchId == branchId);
+            if (over != null)
             {
-                return null;
+                return (over.OpenTime, over.CloseTime);
             }
-            var openingHours = branch.OpeningHoursOverrides.Where(openingHour => openingHour.Date == date).FirstOrDefault();
-            if (openingHours == null)
-            {
-                var standard = branch.StandardOpeningHours.Where(s => s.DayOfWeek == date.DayOfWeek).FirstOrDefault();
-                // returns a json object with open and close times.
-                return new JsonArray { standard.OpenTime.ToString(), standard.CloseTime.ToString() };
 
+            // Check regular opening times
+            var regular =
+                Context.StandardOpeningHours.FirstOrDefault(o =>
+                    o.DayOfWeek == day.DayOfWeek && o.BranchId == branchId);
+
+            if (regular is { IsClosed: false })
+            {
+                return (regular.OpenTime ?? TimeOnly.MinValue, regular.CloseTime ?? TimeOnly.MinValue);
             }
-            var openTime = new TimeOnly(openingHours.OpenTime.Hour, openingHours.OpenTime.Minute, openingHours.OpenTime.Second);
-            var closeTime = new TimeOnly(openingHours.CloseTime.Hour, openingHours.CloseTime.Minute, openingHours.CloseTime.Second);
-            return new JsonArray { openTime.ToString(), closeTime.ToString() };
+
+            // Closed
+            return (TimeOnly.MinValue, TimeOnly.MinValue);
         }
     }
 }

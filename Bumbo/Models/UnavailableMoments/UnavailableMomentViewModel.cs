@@ -8,6 +8,7 @@ namespace Bumbo.Models.UnavailableMoments
     {
         public int Id { get; set; }
 
+        [DisplayName("Medewerker naam")]
         public string EmployeeName { get; set; }
 
         [Required]
