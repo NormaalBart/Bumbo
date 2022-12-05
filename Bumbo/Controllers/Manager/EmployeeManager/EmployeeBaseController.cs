@@ -118,5 +118,34 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             TempData["saved"] = true;
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> ToggleActive(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var viewModel = new ChangeWorkStatusViewModel
+            {
+                Id = id,
+                Name = user.FullName(),
+                IsActive = user.Active
+            };
+            return View("Views/EmployeeBase/ToggleActive.cshtml", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleActive(ChangeWorkStatusViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Views/EmployeeBase/ToggleActive.cshtml", viewModel);
+            }
+
+            TempData["saved"] = true;
+            var user = await _userManager.FindByIdAsync(viewModel.Id);
+            user.Active = !user.Active;
+            _employeesRepository.Update(user);
+            return RedirectToAction(nameof(Index));
+        }
     }
+
 }

@@ -1,0 +1,41 @@
+﻿@using Bumbo.Models.EmployeeManager.Common
+@model ChangeWorkStatusViewModel
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+    </div>
+}
+
+<div class="container ">
+    <div>
+        <form asp-action="ToggleActive" id="ToggleActiveForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Id" />
+            <div class="row">
+                <div class="col border border-3 border-dark employee-create-box">
+                    @if (Model.IsActive)
+                    {
+                        <h1 class="text-center">Wilt u @Model.Name op <b>inactief</b> zetten?</h1>
+                    }
+                    else
+                    {
+                        <h1 class="text-center">Wilt u @Model.Name op <b>actief</b> zetten?</h1>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <input type="submit" value="Opslaan!" form="ToggleActiveForm" class="btn btn-success btn-lg" />
+</div>
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+    <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
