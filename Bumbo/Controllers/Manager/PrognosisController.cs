@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bumbo.Controllers.Manager
 {
     [Authorize(Roles = "Manager")]
-    public class PrognosisController : Controller
+    public class PrognosisController : NotificationController
     {
         private readonly UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
@@ -70,7 +70,7 @@ namespace Bumbo.Controllers.Manager
             {
                 Employee employee = await _userManager.GetUserAsync(User);
                 _prognosisRepository.AddOrUpdateAll(employee.DefaultBranchId, result);
-                TempData["saved"] = true;
+                ShowMessage(MessageType.Success, "De data is opgeslagen");
             }
             return View(list);
         }
@@ -86,6 +86,12 @@ namespace Bumbo.Controllers.Manager
 
             Employee employee = await _userManager.GetUserAsync(User);
             var copyFromPrognoses = _prognosisRepository.GetNextWeek(copyFromDate.ToDateOnly(), employee.DefaultBranchId).ToList();
+
+            if(copyFromPrognoses.All(prognose => prognose.CustomerCount == 0 && prognose.ColiCount == 0))
+            {
+                ShowMessage(MessageType.Error, "Deze week heeft geen prognose. Niks is veranderd");
+                return RedirectToAction(nameof(Index));
+            }
             List<Prognosis> updatedNewWeek = new List<Prognosis>();
             for (int i = 0; i < copyFromPrognoses.Count(); i++)
             {
@@ -96,7 +102,7 @@ namespace Bumbo.Controllers.Manager
                 newPrognosis.ColiCount = copyFromPrognoses[i].ColiCount;
                 updatedNewWeek.Add(newPrognosis);
             }
-            TempData["saved"] = true;
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
             _prognosisRepository.AddOrUpdateAll(employee.DefaultBranchId, updatedNewWeek);
 
             return RedirectToAction("Index", "Prognosis", new { dateInput = copyToDate.AddDays(-7).ToString(), next = true });

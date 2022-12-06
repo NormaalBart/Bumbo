@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using BumboData.Enums;
 using BumboServices.CAO.Rules;
+using Bumbo.Models.Validations;
 
 namespace Bumbo.Controllers.Manager
 {

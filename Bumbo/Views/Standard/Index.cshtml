@@ -4,13 +4,6 @@
     ViewData["Title"] = "Normeringen";
 }
 
-@if (TempData["saved"] != null)
-    {
-        <div class="alert alert-success text-center" role="alert">
-            <strong>De veranderingen zijn opgeslagen!</strong>
-        </div>
-    }
-
 <div class="container ">
     <div>
         <form asp-action="Save" id="SaveForm">

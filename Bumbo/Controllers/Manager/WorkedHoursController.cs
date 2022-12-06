@@ -15,7 +15,7 @@ namespace Bumbo.Controllers
 {
 
     [Authorize(Roles = "Manager")]
-    public class WorkedHoursController : Controller
+    public class WorkedHoursController : NotificationController
     {
         readonly private UserManager<Employee> _userManager;
         readonly private IMapper _mapper;
@@ -105,8 +105,8 @@ namespace Bumbo.Controllers
                 temp.EndTime = item.EndTime;
                 _workedShiftRepository.Update(temp);
             }
-            TempData["saved"] = true;
-            return Redirect("Index");
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
+            return Redirect(nameof(Index));
         }
 
     }
