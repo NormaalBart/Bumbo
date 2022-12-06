@@ -22,7 +22,10 @@
 
 @if (Model.UnavailableMoments.Count > 0)
 {
-    <table class="table table-hover " data-toggle="tooltip" data-placement="top" title="Hint: klik op een huidig moment om het snel te kopieren" data-animation="true">
+    <div class="alert-info small text-center m-2 border border-2">
+        <p>Hint: Klik op een specifiek moment om die snel te kunnen kopieren!</p>
+    </div>
+    <table class="table table-hover ">
         <thead>
             <tr>
                 <th>
@@ -187,18 +190,6 @@ else
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
     
-            //Show table tooltip on page load
-            $('table').tooltip('show');
-
-            //Hide tooltip after three seconds (hide first so there's a fade out transition) and then after 5 seconds we delete it.
-            setTimeout(function () {
-                $('table').tooltip('hide');
-            }, 3000)
-            setTimeout(function () {
-                $('table').tooltip('dispose');
-            }, 5000)
-           
-        })
     </script>
 
 

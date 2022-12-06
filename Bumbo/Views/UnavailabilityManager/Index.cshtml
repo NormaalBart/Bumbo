@@ -143,11 +143,14 @@
     <script>
     $('#openModalBTN').click(function() {
         // Show no new items to accept
-        Swal.fire({
+        if(@Model.UnavailableMoments.Count() == 0){
+             Swal.fire({
             title: 'Oeps!',
             text: "Er zijn op dit moment geen nieuwe onbeschikbaarheids aanvragingen die je kunt accepteren.",
             icon: 'warning'
         })
+        }
+       
     })
     </script>
 }
