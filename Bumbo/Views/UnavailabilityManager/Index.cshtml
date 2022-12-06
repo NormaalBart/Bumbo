@@ -112,10 +112,10 @@
 </table>
 
 
-
-<!-- The Modal -->
+@if (Model.UnavailableMoments.Count() != 0)
+{
+    <!-- The Modal -->
 <div id="modal" class="modal ">
-
     <!-- Modal content -->
     <div class="modal-content modal-dialog text-center prognosis-textarea">
         <span class="close position-absolute">&times;</span>
@@ -127,29 +127,28 @@
                 @foreach (var item in Model.Ids)
                 {
                     <input hidden asp-for="Ids" value="@item" name="ids" />
-                 }
-
-                @if (Model.UnavailableMoments.Count() == 0)
-                {
-                    <div class="m-3">
-                        <span> Er zijn op dit moment geen nieuwe onbeschikbaarheidsaanvragingen die je kunt accepteren. </span>
-                    </div>
-                }else{
-                    <div class="m-3">
-                        <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
-                    </div>
-                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
                 }
-      
-               
-                
-               
+                <div class="m-3">
+                    <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
+                </div>
+                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
             </form>
         </div>
-
-
     </div>
-
 </div>
+}
 
+@section Scripts
+{ 
+    <script>
+    $('#openModalBTN').click(function() {
+        // Show no new items to accept
+        Swal.fire({
+            title: 'Oeps!',
+            text: "Er zijn op dit moment geen nieuwe onbeschikbaarheids aanvragingen die je kunt accepteren.",
+            icon: 'warning'
+        })
+    })
+    </script>
+}
 
