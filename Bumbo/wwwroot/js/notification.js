@@ -2,20 +2,17 @@
     show(message, state) {
         clearTimeout(this.hideTimeout);
 
-        this.el = document.getElementById("notification-centre");
-        this.el.className = "notification";
-        console.log(this.el.className);
-
+        this.el = document.createElement("div");
         this.el.textContent = message;
         this.el.className = "notification notification--visible";
-        console.log(this.el.className);
+        document.body.appendChild(this.el);
 
         if (state) {
             this.el.classList.add(`notification--${state}`);
         }
 
         this.hideTimeout = setTimeout(() => {
-            this.el.classList.remove("notification--visible");
+            this.el.remove();
         }, 5000);
     }
 };
