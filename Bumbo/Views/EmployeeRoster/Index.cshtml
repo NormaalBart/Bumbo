@@ -79,7 +79,7 @@
 <div >
     @if (Model.shifts.Count() == 0)
     {
-        <p class="text-center">Geen ingeplande diensten in de komende week.</p>
+        <p class="text-center mt-2">Geen ingeplande diensten op geselecteerde dag.</p>
     }
     @foreach (var shift in Model.shifts)
     {
@@ -87,7 +87,7 @@
         @if (shift.Type != null)
         {
             <div class="p-3 mx-auto employee-roster-box">
-                <div class="card d-flex row justify-content-around border-bottom border-dark p-3 employee-roster-box flex-column">
+                <div class="card d-flex row justify-content-around border-bottom employee-roster-box flex-column">
                     <div class="card-header text-center">
                        <span class="fw-bold">Onbeschikbaar</span>
                         @if (shift.StartTime.Date == shift.EndTime.Date)
