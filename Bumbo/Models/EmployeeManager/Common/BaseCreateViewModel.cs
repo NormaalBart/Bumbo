@@ -35,11 +35,10 @@ namespace Bumbo.Models.EmployeeManager.Common
         [DisplayName("E-mail")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Het telefoonnummer is verplicht")]
         [DisplayName("Telefoon")]
         [Phone(ErrorMessage = "Veld moet een valide telefoon nummer zijn.")]
         [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Postcode")]
