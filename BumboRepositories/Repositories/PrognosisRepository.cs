@@ -52,11 +52,9 @@ namespace BumboRepositories.Repositories
                 // other wise we add it.
                 if (DbSet.Where(p => p.Date == item.Date && p.BranchId == branchId).FirstOrDefault() != null)
                 {
-                    var prognosisDay = DbSet.Where(p => p.Date == item.Date && p.BranchId == branchId).Include(p => p.DepartmentPrognosis).FirstOrDefault();
+                    var prognosisDay = DbSet.Where(p => p.Date == item.Date && p.BranchId == branchId).FirstOrDefault();
                     prognosisDay.ColiCount = item.ColiCount;
                     prognosisDay.CustomerCount = item.CustomerCount;
-                    item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
-                    prognosisDay.DepartmentPrognosis = item.DepartmentPrognosis;
 
                     DbSet.Update(prognosisDay);
 
@@ -65,7 +63,6 @@ namespace BumboRepositories.Repositories
                 {
                     // get the branch of the item
                     item.BranchId = branchId;
-                    item.DepartmentPrognosis = this.CalculateDepartmentPrognoses(item).ToList();
                     DbSet.Add(item);
 
                 }
@@ -132,38 +129,6 @@ namespace BumboRepositories.Repositories
                 }
             }
             return resultList;
-        }
-
-        public IEnumerable<DepartmentPrognosis> CalculateDepartmentPrognoses(Prognosis prognosis)
-        {
-            // This method calculates the amount of employees and hours needed for each department.
-            // This is done using the standard from the database.
-            List<DepartmentPrognosis> result = new List<DepartmentPrognosis>();
-
-            // create 3 new department prognoses for each department.
-            // with default values
-
-            var standards = Context.Standards.Where(p => p.Branch.Id == prognosis.Branch.Id);
-
-
-            foreach (var department in Context.Departments)
-            {
-                DepartmentPrognosis departmentPrognosis = new DepartmentPrognosis();
-                departmentPrognosis.Prognosis = prognosis;
-                departmentPrognosis.Department = department;
-
-                // calculate using the standard.
-
-
-                // TODO calculate using the standard.
-                departmentPrognosis.RequiredEmployees = 2;
-                departmentPrognosis.RequiredHours = 2;
-
-
-                result.Add(departmentPrognosis);
-
-            }
-            return result;
         }
 
     }

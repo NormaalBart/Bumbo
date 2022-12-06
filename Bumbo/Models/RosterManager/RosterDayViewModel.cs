@@ -37,7 +37,7 @@ namespace Bumbo.Models.RosterManager
 
         public string ErrorMessage { get; set; }
 
-        public Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidShifts { get; set; }
+        public Dictionary<ICAORule, List<PlannedShift>> InvalidShifts { get; set; }
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 
@@ -48,8 +48,7 @@ namespace Bumbo.Models.RosterManager
             AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
 
-
-
+        
         public int GetWeekNumber(DateTime date)
         {
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);

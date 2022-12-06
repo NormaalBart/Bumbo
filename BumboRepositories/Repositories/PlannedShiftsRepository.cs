@@ -70,18 +70,34 @@ namespace BumboRepositories.Repositories
                 .Include(p => p.Employee).FirstOrDefault();
         }
 
-        public List<PlannedShift> GetShiftsByWeek(int branchId, int year, int week)
+        public List<PlannedShift> GetAllShiftsWeek(int branchId, DateOnly day)
         {
-            var startWeekDate = ISOWeek.ToDateTime(year, week, DayOfWeek.Monday);
+            var startWeekDate = day.ToDateTime(TimeOnly.MinValue).StartOfWeek(DayOfWeek.Monday);
             // Create date at last minute of the week.
-            var endWeekDate = ISOWeek.ToDateTime(year, week, DayOfWeek.Sunday);
+            var endWeekDate = day.ToDateTime(TimeOnly.MinValue).LastDayOfWeek();
             endWeekDate = endWeekDate.AddHours(23).AddMinutes(59).AddSeconds(59);
 
-            return DbSet.Where(s => s.BranchId == branchId && s.StartTime.Year == year &&
+            return DbSet.Where(s => s.BranchId == branchId && s.StartTime.Year == day.Year &&
                                     s.StartTime >= startWeekDate &&
-                                    s.StartTime <= endWeekDate).Include(s => s.Employee)
+                                    s.StartTime <= endWeekDate)
+                .Include(s => s.Employee)
                 .ToList();
         }
+
+        public List<PlannedShift> GetAllShiftsDay(int branchId, DateOnly day)
+        {
+            return DbSet.Where(s => s.BranchId == branchId && 
+                                    s.StartTime.Day == day.Day && s.StartTime.Month == day.Month && s.StartTime.Year == day.Year)
+                .Include(s => s.Employee)
+                .ToList();
+        }
+        
+        public List<PlannedShift> GetShiftsByMonth(int branchId, int year, int month)
+        {
+            return DbSet.Where(s => s.BranchId == branchId && s.StartTime.Year == year &&
+                                    s.StartTime.Month == month).ToList();
+        }
+
         public IEnumerable<PlannedShift> GetOfEmployeeOnDay(DateTime date, string employeeId)
         {
             return DbSet.Where(p => p.EmployeeId == employeeId && p.StartTime.Date == date.Date).ToList();

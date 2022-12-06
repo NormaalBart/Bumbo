@@ -20,6 +20,5 @@ public class Prognosis: IEntity
     [Required]
     public int CustomerCount { get; set; }
 
-    public virtual ICollection<DepartmentPrognosis> DepartmentPrognosis { get; set; }
     public int BranchId { get; set; }
 }

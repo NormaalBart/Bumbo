@@ -19,6 +19,12 @@ public static class DateTime_Extensions
         int diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
         return dt.AddDays(-1 * diff).Date;
     }
+    
+    public static DateTime LastDayOfWeek(this DateTime date)
+    {
+        DateTime ldowDate = StartOfWeek(date, DayOfWeek.Monday).AddDays(6);
+        return ldowDate;
+    }
 
     public static DateTime GetMondayOfTheWeek(this DateTime currentDate)
     {
