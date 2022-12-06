@@ -80,7 +80,7 @@
 
                                         $(function () {
                                             $.ajax({
-                                                type: "GET",
+                                                type: "POST",
                                                 url: '@Url.Action("DayHasInvalidShifts", "RosterManager")',
                                                 data: {
                                                     date: '@item.Date.ToString()'

@@ -37,7 +37,9 @@
                 <ul>
                     @foreach (var shift in modelInvalidShift.Value)
                     {
-                        <li><strong>@shift.Employee.FullName()</strong></li>
+                        <li>
+                            <strong>@shift.Employee.FullName():</strong> @shift.StartTime.ToString("HH\\:mm") - @shift.EndTime.ToString("HH\\:mm")
+                        </li>
                     }
                 </ul>
             }
@@ -130,8 +132,6 @@
 
     // list of all shifts on screen.
     var listshifts = []; 
-    
-
 
     // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
     function getWidthOfbase(elem, hours, minutepercstart, minutepercend) {
@@ -142,7 +142,6 @@
         // We calculate the final width of the div
         // using the width of a normal cell, times the amount of hours.
         // We then calculate the offset of the div, using the time percentages.
-        
 
         let cell = document.querySelector('.roster-table-cell');
         let width = cell.offsetWidth;
@@ -219,7 +218,9 @@
 <div class="text-center m-3">
 
     <!-- Trigger/Open The Modal -->
-    <button id="openModalBTN" class="btn btn-primary">Voeg dienst toe</button>
+    <button id="openModalBTN" class="btn btn-primary">Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span></button>
+
+    <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")"><span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span></button>
 </div>
 
 
@@ -259,8 +260,8 @@
                             var showError = invalidPairs.Any();
                             // Red background when shift is invalid.
                             var background = showError ? "background: red;" : "";
-                            var error = showError ? string.Join(" | ", invalidPairs.Select(s=>s.GetErrorMessage())) : "";
-                            
+                            var error = showError ? string.Join(" | ", invalidPairs.Select(s => s.GetErrorMessage())) : "";
+
                             <td id="roster-start" class="roster-table-cell" title="@error">
                                 <div id="roster-start-div " class="roster-shift text-center" style="height: 100%; @background" runat="server">
                                     @*If the shift is very short, we use a different string not make it ugly.*@
@@ -272,7 +273,7 @@
                                     {
                                         <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
                                     }
-                                    
+
                                     @if (showError)
                                     {
                                         <i class="bi-exclamation-triangle"></i>
@@ -356,23 +357,6 @@
     </div>
 }
 
-
-<script>
-    var rows = document.querySelectorAll('tr');
-    var lastrow = rows[rows.length - 1];
-    lastrow.addEventListener('click', () => {
-        onRowClick();
-    });
-
-        const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
-        
-        emptycells.forEach(cell => {
-            cell.addEventListener('click', function handleClick(event) {
-                onRowClick();
-            });
-        });
-</script>
-
 <div id="modal" class="modal">
 
     <!-- Modal content -->
@@ -455,11 +439,86 @@
                 <input type="submit" value="Opslaan" class="btn btn-success btn-sm "/>
             </form>
         </div>
-
-
     </div>
-
 </div>
-
-
 </body>
+
+@section Scripts
+{
+    <script>
+        let rows = document.querySelectorAll('tr');
+        let lastrow = rows[rows.length - 1];
+        lastrow.addEventListener('click', () => {
+            onRowClick();
+        });
+    
+        const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
+            
+        emptycells.forEach(cell => {
+            cell.addEventListener('click', function handleClick(event) {
+                onRowClick();
+            });
+        });
+        
+        $(document).ready(function(){          
+        $('#generate-roster-spinner').hide()
+        // On click button, generate roster
+        let genBtn = $('#generate-roster')
+        genBtn.click(function() {
+            // Show loading indicator
+             $('#generate-roster-spinner').show()
+             genBtn.prop('disabled', true);
+             // Hide tooltip
+             genBtn.tooltip('hide')
+              $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("GenerateRoster", "RosterManager")',
+                  data: {
+                      date: '@Model.Date'
+                  },
+                  success: function (data) {
+                      if (data.value.incomplete) {
+                          Swal.fire({
+                               title: 'Oeps!',
+                               text: "Rooster is aangemaakt, maar de prognose kon niet behaald worden. Handmatige bewerking is nog nodig!",
+                               icon: 'warning',
+                               confirmButtonText: 'Verversen'
+                          }).then(function() {
+                             location.reload();    
+                          });
+                      } else {
+                       // Refresh page toast
+                       const Toast = Swal.mixin({
+                         toast: true,
+                         position: 'top-end',
+                         showConfirmButton: true,
+                         timer: 3000,
+                         timerProgressBar: true,
+                         confirmButtonText: 'Verversen'
+                       })
+                       Toast.fire({
+                         icon: 'success',
+                         title: 'Rooster succesvol gegenereerd.'
+                       }).then(function() {
+                          location.reload();    
+                       });
+                      }
+                  },
+                  error: function (error) {
+                      // Hide loading
+                      $('#generate-roster-spinner').hide()
+                      $('#generate-roster').prop('disabled', false);
+                      // Show error                      
+                      Swal.fire({
+                        title: 'Oeps!',
+                        text: error.responseText,
+                        icon: 'error',
+                        confirmButtonText: 'Oke'
+                      })
+                  }
+                  // TODO: Handle errors
+              });
+        });
+        });
+    </script>
+}

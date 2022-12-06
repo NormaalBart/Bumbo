@@ -416,3 +416,8 @@ p {
     border-color: #d56000;
     color: #ffffff;
 }
+body.swal2-shown > [aria-hidden="true"] {
+    transition: 0.1s filter;
+    filter: blur(10px);
+}
+

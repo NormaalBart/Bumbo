@@ -1,5 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using System.Text.Json.Nodes;
+using AutoMapper;
 using Bumbo.Models.RosterManager;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -9,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BumboServices.CAO.Rules;
 using Bumbo.Models.Validations;
+using BumboServices.Roster;
 
 namespace Bumbo.Controllers.Manager
 {
@@ -25,11 +29,12 @@ namespace Bumbo.Controllers.Manager
         private readonly IDepartmentsRepository _departmentsRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly ICAOService _caoService;
+        private readonly IRosterService _rosterService;
 
         public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee,
             IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts,
             IUnavailableMomentsRepository unavailableMoments, IPrognosesService prognosesService,
-            IDepartmentsRepository departments, IBranchRepository branches, ICAOService caoService)
+            IDepartmentsRepository departments, IBranchRepository branches, ICAOService caoService, IRosterService rosterService)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -41,6 +46,7 @@ namespace Bumbo.Controllers.Manager
             _departmentsRepository = departments;
             _branchRepository = branches;
             _caoService = caoService;
+            _rosterService = rosterService;
         }
 
         public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
@@ -61,9 +67,9 @@ namespace Bumbo.Controllers.Manager
             
             // Start CAO
             // Filter shifts to only display that of today
-            viewModel.InvalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.DefaultBranchId ?? -1);
             // Setup invalid shifts
             var invalidShifts = InvalidPlannedShiftsFollowigCAO(date, manager.DefaultBranchId ?? -1);
+            viewModel.InvalidShifts = invalidShifts;
 
             foreach (var emp in employeeList)
             {
@@ -92,7 +98,7 @@ namespace Bumbo.Controllers.Manager
 
             viewModel.InvalidShifts = invalidShifts;
 
-            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, manager.DefaultBranchId ?? -1 );
+            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1 );
             viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, manager.DefaultBranchId ?? -1);
             viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1);
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
@@ -135,7 +141,7 @@ namespace Bumbo.Controllers.Manager
                 OverviewItem item = new OverviewItem();
                 item.Date = new DateTime(date.Year, date.Month, i);
                 // gets the sum of the prognosis hours of departments
-                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(item.Date, employee.DefaultBranchId ?? -1)
+                item.PrognosisHours = _prognosesServices.GetCassierePrognose(item.Date, employee.DefaultBranchId ?? -1)
                                         + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId ?? -1)
                                         + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1);
                 item.PrognosisHours = Math.Round(item.PrognosisHours);
@@ -149,15 +155,14 @@ namespace Bumbo.Controllers.Manager
                 overviewList.Days.Add(item);
             }
             overviewList.Date = date;
-            
-
 
             return View(overviewList);
         }
 
-        public async Task<IActionResult>DayHasInvalidShifts(string date)
+        [HttpPost]
+        public async Task<IActionResult> DayHasInvalidShifts(string date)
         {
-            DateTime requestedDate = DateTime.Parse(date);
+            var requestedDate = DateTime.Parse(date);
             var employee = await _userManager.GetUserAsync(User);
             
             // check for cAO violations
@@ -166,17 +171,44 @@ namespace Bumbo.Controllers.Manager
             return Json(invalidshifts.Count > 0);
         }
 
+        // Will generate roster for given date
+        [HttpPost]
+        public async Task<IActionResult> GenerateRoster(string date)
+        {
+            var forDate = DateTime.Parse(date);
 
-        
-        private Dictionary<ICAORule, IEnumerable<PlannedShift>> InvalidPlannedShiftsFollowigCAO(DateTime day,
+            var manager = await _userManager.GetUserAsync(User);
+            
+            // Get already planned shifts
+            var plannedShifts = _shiftRepository.GetAllShiftsDay(manager.DefaultBranchId ?? -1, forDate.ToDateOnly());
+
+            var error = await _rosterService.GenerateRoster(manager.DefaultBranchId ?? -1, forDate.ToDateOnly(), plannedShifts);
+
+            if (error == RosterCreationResponse.Succes || error == RosterCreationResponse.Incomplete)
+            {
+                var jsonObj = new JsonObject();
+                jsonObj["incomplete"] = error == RosterCreationResponse.Incomplete;
+                return Ok(Json(jsonObj));
+            }
+            else
+            {
+                var err = error switch
+                {
+                    RosterCreationResponse.NoBranch => "Filiaal van medewerker is niet gevonden.",
+                    RosterCreationResponse.NoEmployees => "Geen medewerkers gevonden die beschikbaar zijn.",
+                    RosterCreationResponse.ClosedOnDay => "Winkel staat als gesloten geregistreerd op huidige dag.",
+                    RosterCreationResponse.AlreadyReachedPrognosis => "Prognose is al behaald!",
+                    RosterCreationResponse.CaoViolationsFound => "CAO overtredingen gevonden, verhelp deze eerst voor het rooster aangevuld kan worden.",
+                };
+                return BadRequest(err);
+            }
+        }
+
+        private Dictionary<ICAORule, List<PlannedShift>> InvalidPlannedShiftsFollowigCAO(DateTime day,
             int branchNr)
         {
-            var allShiftsWeek = _shiftRepository.GetShiftsByWeek(branchNr, day.Year, day.GetWeekNumber());
-            return _caoService.VerifyPlannedShiftsWeek(allShiftsWeek)
-                // convert to return day only
-                .Select(s => (s.Key, s.Value.Where(s => s.StartTime.Date == day.Date)))
-                .ToDictionary(d => d.Key, d => d.Item2);
-            ;
+            var allShiftsWeek = _shiftRepository.GetAllShiftsWeek(branchNr, day.ToDateOnly());
+            return _caoService.VerifyPlannedShifts(allShiftsWeek, day.ToDateOnly());
         }
 
         [HttpPost]

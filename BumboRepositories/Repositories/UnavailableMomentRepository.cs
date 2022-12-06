@@ -28,18 +28,8 @@ namespace BumboRepositories.Repositories
             // check if employee is unavailable in unavailable moments 
             var unavailableMoments = DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date == startTime.Date)
                 .ToList();
-            if (unavailableMoments.Count > 0)
-            {
-                foreach (var moment in unavailableMoments)
-                {
-                    if (startTime < moment.EndTime && endTime > moment.StartTime)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return !unavailableMoments.Any(moment => startTime < moment.EndTime && 
+                                                    moment.StartTime < endTime);
         }
 
         /*
@@ -55,6 +45,7 @@ namespace BumboRepositories.Repositories
 
         public List<UnavailableMoment> GetSchoolUnavailableMomentsByWeek(string employee, int year, int week)
         {
+            // Tolist is required, weeknumber function can't be converted to SQL.
             return DbSet.ToList().Where(s =>
                 s.EmployeeId == employee && s.StartTime.Year == year && s.StartTime.GetWeekNumber() == week &&
                 s.Type == UnavailableMomentType.School).ToList();
