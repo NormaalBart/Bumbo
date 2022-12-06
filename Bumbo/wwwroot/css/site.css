@@ -388,6 +388,18 @@ p {
     font-size: 19px;
 }
 
+.review-status-box {
+    width: 40%;
+}
+
+/*For mobile we make the tooltip for the review status easier to click. */
+@media only screen and (max-width: 780px) {
+    .review-status-box {
+        width: 100%;
+    }
+}
+
+
 @media only screen and (min-width: 800px) {
     .employee-roster-box {
         width: 800px;
