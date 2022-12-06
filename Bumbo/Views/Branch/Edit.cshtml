@@ -1,6 +1,8 @@
 ﻿@using Bumbo.Models.BranchController
 @model BranchEditViewModel
-
+@{
+    ViewBag.data = "Branch";
+}
 
 <h1 class="text-center">Filiaalinformatie veranderen</h1>
 @if (!ViewData.ModelState.IsValid)

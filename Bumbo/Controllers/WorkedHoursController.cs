@@ -75,13 +75,14 @@ namespace Bumbo.Controllers
         [Authorize(Roles = "Manager")]
         public IActionResult Approve(List<int> ids)
         {
+            WorkedShift tempWorkedShift = null;
             foreach (var id in ids)
             {
-                var tempWorkedShift = _workedShiftRepository.Get(id);
+                tempWorkedShift = _workedShiftRepository.Get(id);
                 tempWorkedShift.Approved = true;
                 _workedShiftRepository.Update(tempWorkedShift);
             }
-            return Redirect("Index");
+            return RedirectToAction("Index", new { dateInput = tempWorkedShift.StartTime.ToString() });
         }
         [Authorize(Roles = "Manager")]
         public IActionResult Edit(List<int> workedShiftId, string employeeId)
@@ -105,7 +106,7 @@ namespace Bumbo.Controllers
                 temp.EndTime = item.EndTime;
                 _workedShiftRepository.Update(temp);
             }
-            return Redirect("Index");
+            return RedirectToAction("Index",new { dateInput = employeeWorkedHoursViewModel.WorkedShifts.FirstOrDefault().StartTime.ToString() });
         }
 
     }

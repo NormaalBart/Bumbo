@@ -1,6 +1,8 @@
 ﻿@using Bumbo.Models.EmployeeManager.Manager
 @model ManagerEditViewModel
-
+@{
+    ViewBag.data = "Employee";
+}
 
 <h1 class="text-center">Manager wijzigen</h1>
 @if (!ViewData.ModelState.IsValid)
