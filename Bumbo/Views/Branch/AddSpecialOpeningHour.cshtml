@@ -1,5 +1,7 @@
 ﻿@model Bumbo.Models.BranchController.OpeningHoursOverrideViewModel
-
+@{
+    ViewBag.data = "Branch";
+}
 <h1 class="text-center">Voeg een uitwijkende openingstijd toe</h1>
 @if (!ViewData.ModelState.IsValid)
 {

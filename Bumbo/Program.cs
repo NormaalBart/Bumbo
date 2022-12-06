@@ -35,12 +35,11 @@ namespace Bumbo
             builder.Services.AddScoped<IWorkedShiftRepository, WorkedShiftRepository>();
             builder.Services.AddScoped<IBranchRepository, BranchRepository>();
             builder.Services.AddScoped<IStandardRepository, StandardRepository>();
-
-            builder.Services.AddScoped<IRosterService, RosterService>();
-            builder.Services.AddScoped<IPrognosesService, PrognosesService>();
+            builder.Services.AddScoped<IPrognosesService, PrognosisService>();
             builder.Services.AddScoped<IHourExportService, HourExportService>();
             builder.Services.AddScoped<ICAOService, DutchCAOService>();
             builder.Services.AddScoped<IImportService, ImportService>();
+            builder.Services.AddScoped<IRosterService, RosterService>();
 
             builder.Services.AddDbContext<BumboContext>(options =>
             {

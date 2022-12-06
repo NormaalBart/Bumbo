@@ -15,7 +15,6 @@ namespace BumboData
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<DepartmentPrognosis> DepartmentPrognosis { get; set; }
         public DbSet<OpeningHoursOverride> OpeningHoursOverride { get; set; }
         public DbSet<PlannedShift> PlannedShifts { get; set; }
         public DbSet<Prognosis> Prognoses { get; set; }

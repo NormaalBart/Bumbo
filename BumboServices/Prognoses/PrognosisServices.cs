@@ -12,19 +12,19 @@ using System.Threading.Tasks;
 
 namespace BumboServices.Prognoses
 {
-    public class PrognosesService : IPrognosesService
+    public class PrognosisService : IPrognosesService
     {
         private readonly int secondsInMin = 60;
         private readonly int MinutesInHour = 60;
         private readonly IPrognosisRepository _prognosisRepository;
         private readonly IStandardRepository _standardRepository;
-        public PrognosesService(IPrognosisRepository prognosisRepository, IStandardRepository standardRepository)
+        public PrognosisService(IPrognosisRepository prognosisRepository, IStandardRepository standardRepository)
         {
             _prognosisRepository = prognosisRepository;
             _standardRepository = standardRepository;
         }
 
-        public double GetCassierePrognoseAsync(DateTime date, int branchId)
+        public double GetCassierePrognose(DateTime date, int branchId)
         {
             var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(), branchId);
             if (prognosis != null)

@@ -97,7 +97,7 @@ namespace Bumbo.Controllers.Manager
 
             viewModel.InvalidShifts = invalidShifts;
 
-            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognoseAsync(date, manager.DefaultBranchId ?? -1 );
+            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1 );
             viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, manager.DefaultBranchId ?? -1);
             viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1);
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
@@ -140,7 +140,7 @@ namespace Bumbo.Controllers.Manager
                 OverviewItem item = new OverviewItem();
                 item.Date = new DateTime(date.Year, date.Month, i);
                 // gets the sum of the prognosis hours of departments
-                item.PrognosisHours = _prognosesServices.GetCassierePrognoseAsync(item.Date, employee.DefaultBranchId ?? -1)
+                item.PrognosisHours = _prognosesServices.GetCassierePrognose(item.Date, employee.DefaultBranchId ?? -1)
                                         + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId ?? -1)
                                         + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1);
                 item.PrognosisHours = Math.Round(item.PrognosisHours);
