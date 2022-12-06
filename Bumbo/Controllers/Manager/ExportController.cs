@@ -3,6 +3,7 @@ using Bumbo.Models.ExportManager;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboServices.Import;
 using BumboServices.Interface;
 using BumboServices.Surcharges.SurchargeRules;
 using Microsoft.AspNetCore.Authorization;
@@ -129,22 +130,18 @@ public class ExportController : Controller
         return File(_hourExportService.CsvExportForMonth(branch ?? -1, monthSelected), "text/csv",
             "export-" + SelectedMonth + ".csv");
     }
-
+    
     public async Task<IActionResult> Import(ImportViewModel? viewModel)
     {
-        if (viewModel == null ||
-            (viewModel.ImportEmployees == null &&
-             viewModel.ImportClockEvents == null))
+        if (viewModel.ImportEmployees == null &&
+            viewModel.ImportClockEvents == null)
         {
-            return View(new ImportViewModel());
+            return View();
         }
-        // Import data
-
-        // Only allow manger to import
-        if (!User.IsInRole(RoleType.MANAGER.Name))
+        
+        if (!ModelState.IsValid)
         {
-            // TODO: Change error page
-            return BadRequest();
+            return View();
         }
 
         // get manager branch id
@@ -158,9 +155,8 @@ public class ExportController : Controller
         if (viewModel.ImportClockEvents != null)
         {
             _importService.ImportClockEvents(viewModel.ImportClockEvents.OpenReadStream(),
-                manager.DefaultBranchId ?? -1);
+                manager.DefaultBranchId ?? -1, viewModel.ImportAsPlanned ? ImportClockEventsType.Planned : ImportClockEventsType.Worked);
         }
-
 
         return Redirect("Import");
     }
