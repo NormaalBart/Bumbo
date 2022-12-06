@@ -90,6 +90,7 @@ input[type="search"] {
         text-decoration: none;
     }
 
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
@@ -104,14 +105,17 @@ input[type="search"] {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+
+
+
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    
 }
+
 
 /* The Close Button */
 .close {
@@ -126,7 +130,8 @@ input[type="search"] {
         color: black;
         text-decoration: none;
         cursor: pointer;
-    }
+    } 
+
 
 .date-display {
     width: 20%;
@@ -369,6 +374,49 @@ p {
 /* Add a red text color and an "x" icon when the requirements are wrong */
 .password-invalid {
     color: red;
+}
+
+
+/*Unavailable moments overview*/
+
+.moments-row {
+    background-color: #F5F5F5;
+}
+
+.moments-collumn{
+    width: 30%;
+}
+
+.moments-create-box {
+    background-color: #F5F5F5;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 500px;
+}
+
+.text-large {
+    font-size: 19px;
+}
+
+.review-status-box {
+    width: 40%;
+}
+
+/*For mobile we make the tooltip for the review status easier to click. */
+@media only screen and (max-width: 780px) {
+    .review-status-box {
+        width: 100%;
+    }
+}
+
+
+@media only screen and (min-width: 800px) {
+    .employee-roster-box {
+        width: 800px;
+    }
 }
 
 body.swal2-shown > [aria-hidden="true"] {

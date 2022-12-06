@@ -72,6 +72,9 @@
                                 <li class="nav-item" id="Export">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Overview">Exporteer uren</a>
                                 </li>
+                                <li class="nav-item" id="Unavailability">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="UnavailabilityManager" asp-action="Index">Beschikbaarheid</a>
+                                </li>
                                 <li class="nav-item" id="Import">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Import">Importeren</a>
                                 </li>
@@ -88,6 +91,7 @@
                                 <li class="nav-item" id="Availabilty">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="UnavailableMoments" asp-action="Index">Beschikbaarheid</a>
                                 </li>
+                                
                             }
                             <li class="nav-item">
                                 <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" )">
@@ -114,6 +118,8 @@
             @RenderBody()
         </main>
     </div>
+    
+
 
     <footer class="border-top footer text-muted">
         <div class="container">

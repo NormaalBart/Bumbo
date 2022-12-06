@@ -10,6 +10,7 @@ using Bumbo.Models.PrognosisManager;
 using Bumbo.Models.RosterManager;
 using Bumbo.Models.Standard;
 using Bumbo.Models.UnavailableMoments;
+using BumboData.Enums;
 using BumboData.Models;
 using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Identity;
@@ -101,8 +102,10 @@ namespace Bumbo.Models
                .ForMember(dest => dest.OpenTime, opt => opt.MapFrom(src => new TimeSpan(src.OpenTime.Ticks)))
                .ForMember(dest => dest.CloseTime, opt => opt.MapFrom(src => new TimeSpan(src.CloseTime.Ticks)));
 
-            CreateMap<UnavailableMoment, UnavailableMomentsViewModel>();
+            CreateMap<UnavailableMoment, UnavailableMomentsViewModel>().ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.FullName()));
             CreateMap<UnavailableMomentsViewModel, UnavailableMoment>();
+            CreateMap<UnavailableMomentCreateViewModel, UnavailableMoment>();
+            CreateMap<UnavailableMoment, EmployeeShiftViewModel>();
 
             CreateMap<EmployeeWorkedHoursViewModel, Employee>();
             CreateMap<Employee, EmployeeWorkedHoursViewModel>();

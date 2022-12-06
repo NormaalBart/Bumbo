@@ -1,4 +1,7 @@
-﻿namespace Bumbo.Models.EmployeeRoster
+﻿using BumboData.Enums;
+using System.ComponentModel;
+
+namespace Bumbo.Models.EmployeeRoster
 {
     public class EmployeeShiftViewModel
     {
@@ -10,5 +13,9 @@
         public string Street { get; set; }
         public string HouseNumber { get; set; }
 
+
+        public virtual UnavailableMomentType? Type { get; set; }
+
+        public virtual ReviewStatus? ReviewStatus { get; set; }
     }
 }
