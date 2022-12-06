@@ -370,7 +370,7 @@
                 <h2>Voeg een dienst toe</h2>
                 <div class="row">
                     <span class="col">Medewerker:</span>
-                    <select asp-for="SelectedEmployeeId" class="form-control col">
+                    <select id="selectemployee" asp-for="SelectedEmployeeId" class="form-control col">
 
                         @foreach (var employee in Model.AvailableEmployees)
                         {
@@ -520,5 +520,45 @@
               });
         });
         });
+
+
+        setEmployeeSelectList(1);
+
+        function setEmployeeSelectList(depId) {
+
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetEmployeeList", "RosterManager")',
+                data: {
+                    departmentId: depId
+                },
+                success: function (data) {
+                    //handle the data
+                    console.log(data.length);
+                    let selectEmployeeList = document.getElementById("selectemployee");
+                        while (selectEmployeeList.options.length > 0) {
+                            selectEmployeeList.remove(selectEmployeeList.options.length - 1);
+                        }
+
+                        for (i = 0; i < data.length; i++)
+                        {
+                            var opt = document.createElement('option');
+
+                              opt.text = data[[Object.Keys(data)]i].fullname;
+                              opt.value = data[[Object.Keys(data)][i].id;
+
+                            selectEmployeeList.add(opt, null);
+                        }
+                    console.log(data);
+
+                }
+
+            });
+
+        }
+       
+
+
     </script>
 }

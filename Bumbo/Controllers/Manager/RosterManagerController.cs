@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BumboServices.CAO.Rules;
 using BumboServices.Roster;
+using NuGet.Protocol;
 
 namespace Bumbo.Controllers.Manager
 {
@@ -122,6 +123,16 @@ namespace Bumbo.Controllers.Manager
 
             return View(viewModel);
         }
+
+
+        public async Task<IActionResult> GetEmployeeList(int departmentId)
+        {
+            var manager = await _userManager.GetUserAsync(User);
+
+            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList(e => e.DefaultBranchId == (manager.DefaultBranchId ?? -1)));
+            return Json(employeeList);
+        }
+
 
         public async Task<IActionResult> Overview(string? dateInput)
         {
