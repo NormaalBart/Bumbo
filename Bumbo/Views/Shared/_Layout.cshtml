@@ -73,8 +73,12 @@
                                 <li class="nav-item" id="Export">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Overview">Exporteer uren</a>
                                 </li>
+
                                 <li class="nav-item" id="Unavailability">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="UnavailabilityManager" asp-action="Index">Beschikbaarheid</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Import">Importeren</a>
                                 </li>
                             }
                             else if (User.IsInRole(RoleType.EMPLOYEE.Name))
