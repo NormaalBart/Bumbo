@@ -8,16 +8,16 @@ namespace Bumbo.Models.EmployeeManager.Common
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Voornaam")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string FirstName { get; set; }
 
         [DisplayName("Tussenvoegsel")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string? Preposition { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Achternaam")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
@@ -31,13 +31,11 @@ namespace Bumbo.Models.EmployeeManager.Common
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [EmailAddress(ErrorMessage = "Veld moet een valide email address zijn.")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
         [DisplayName("E-mail")]
         public string Email { get; set; }
 
         [DisplayName("Telefoon")]
-        [Phone(ErrorMessage = "Veld moet een valide telefoon nummer zijn.")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
@@ -47,7 +45,7 @@ namespace Bumbo.Models.EmployeeManager.Common
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Huisnummer")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string HouseNumber { get; set; }
 
         [DisplayName("Straat")]

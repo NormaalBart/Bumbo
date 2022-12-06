@@ -11,8 +11,7 @@ namespace Bumbo.Models.EmployeeManager.Employee
     {
 
         [DisplayName("Functie")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        public string Function { get; set; }
+        public string? Function { get; set; }
 
         public virtual ICollection<Department> AllowedDepartments { get; set; }
 
