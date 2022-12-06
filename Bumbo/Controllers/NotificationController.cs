@@ -7,18 +7,12 @@ namespace Bumbo.Controllers
 
         public void ShowMessage(MessageType messageType, string message)
         {
-            switch (messageType)
+            TempData["ValidationType"] = messageType switch
             {
-                case MessageType.Error:
-                    TempData["ValidationType"] = "error";
-                    break;
-                case MessageType.Warning:
-                    TempData["ValidationType"] = "warning";
-                    break;
-                case MessageType.Success:
-                    TempData["ValidationType"] = "success";
-                    break;
-            }
+                MessageType.Error => "error",
+                MessageType.Warning => "warning",
+                MessageType.Success => "success"
+            };
             TempData["ValidationMessage"] = message;
         }
 
