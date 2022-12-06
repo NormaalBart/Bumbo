@@ -23,4 +23,7 @@ public class UnavailableMoment : IEntity
 
     [Required]
     public UnavailableMomentType Type { get; set; }
+
+    [Required]
+    public ReviewStatus ReviewStatus { get; set; }
 }

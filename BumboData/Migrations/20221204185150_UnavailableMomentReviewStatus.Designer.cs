@@ -4,6 +4,7 @@ using BumboData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    partial class BumboContextModelSnapshot : ModelSnapshot
+    [Migration("20221204185150_UnavailableMomentReviewStatus")]
+    partial class UnavailableMomentReviewStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,6 +103,35 @@ namespace BumboData.Migrations
                             Id = 3,
                             DepartmentName = "Vullers"
                         });
+                });
+
+            modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrognosisId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequiredEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequiredHours")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("PrognosisId");
+
+                    b.ToTable("DepartmentPrognosis");
                 });
 
             modelBuilder.Entity("BumboData.Models.Employee", b =>
@@ -2006,6 +2037,25 @@ namespace BumboData.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
+                {
+                    b.HasOne("BumboData.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BumboData.Models.Prognosis", "Prognosis")
+                        .WithMany("DepartmentPrognosis")
+                        .HasForeignKey("PrognosisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Prognosis");
+                });
+
             modelBuilder.Entity("BumboData.Models.Employee", b =>
                 {
                     b.HasOne("BumboData.Models.Branch", null)
@@ -2209,6 +2259,11 @@ namespace BumboData.Migrations
                     b.Navigation("UnavailableMoments");
 
                     b.Navigation("WorkedShifts");
+                });
+
+            modelBuilder.Entity("BumboData.Models.Prognosis", b =>
+                {
+                    b.Navigation("DepartmentPrognosis");
                 });
 #pragma warning restore 612, 618
         }
