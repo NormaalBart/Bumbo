@@ -40,18 +40,18 @@ namespace BumboUnitTests
 
             var standardType = StandardType.CHECKOUT_EMPLOYEES;
             var value = 30;
-            
+
             var standardDto = new Standard
             {
                 Branch = branch,
                 Key = standardType,
                 Value = value
             };
-            _standardRepositoryMock.Setup(x => x.Get(standardType,branch)).Returns(standardDto);
+            _standardRepositoryMock.Setup(x => x.Get(standardType, branch)).Returns(standardDto);
             //Act
             var result = _prognosisService.GetCassierePrognose(date, branchId);
             //Assert
-            Assert.AreEqual(customerCount/value, result);
+            Assert.AreEqual(customerCount / value, result);
         }
         [Test]
         public void GetCassierePrognoseTest_NoPrognoses()
@@ -73,7 +73,7 @@ namespace BumboUnitTests
             //Act
             var result = _prognosisService.GetCassierePrognose(date, branchId);
             //Assert
-            Assert.AreEqual(-1,result);
+            Assert.AreEqual(-1, result);
         }
         [Test]
         public void GetCassierePrognoseTest_NoStandard()
@@ -98,7 +98,7 @@ namespace BumboUnitTests
             //Act
             var result = _prognosisService.GetCassierePrognose(date, branchId);
             //Assert
-            Assert.AreEqual(-1 , result);
+            Assert.AreEqual(-1, result);
         }
         [Test]
         public void GetFreshPrognose_CorrectInput()
@@ -182,7 +182,7 @@ namespace BumboUnitTests
 
             var value = 100;
 
-            
+
             _standardRepositoryMock.Setup(x => x.Get(It.IsAny<StandardType>(), It.IsAny<Branch>())).Returns(() => null);
             //Act
             var result = _prognosisService.GetFreshPrognose(date, branchId);
@@ -200,7 +200,7 @@ namespace BumboUnitTests
             var customerCount = 300;
             var branch = new Branch()
             {
-                Id= 1,
+                Id = 1,
                 ShelvingDistance = 100
             };
             var prognosisDto = new Prognosis
@@ -268,7 +268,7 @@ namespace BumboUnitTests
                 Id = 1,
                 ShelvingDistance = 100
             };
-            
+
             _prognosisRepositoryMock.Setup(x => x.GetByDate(It.IsAny<DateOnly>(), It.IsAny<int>())).Returns(() => null);
 
 
@@ -306,7 +306,7 @@ namespace BumboUnitTests
             //Act
             var result = _prognosisService.GetStockersPrognose(date, branchId);
             //Assert
-            
+
             Assert.AreEqual(-1, result);
         }
 
@@ -343,12 +343,12 @@ namespace BumboUnitTests
             var valueShelfArrangement = 30;
 
 
-            
+
             _standardRepositoryMock.Setup(x => x.Get(It.IsAny<StandardType>(), It.IsAny<Branch>())).Returns(() => null);
             //Act
             var result = _prognosisService.GetStockersPrognose(date, branchId);
             //Assert
-           
+
             Assert.AreEqual(-1, result);
         }
     }
