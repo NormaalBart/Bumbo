@@ -1,0 +1,154 @@
+﻿@model Bumbo.Models.RosterManager.OverviewList
+
+@{
+    ViewData["Title"] = "Roosterbeheer";
+    ViewBag.data = "RosterOverview";
+}
+<body class="roster-overview">
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+
+<div class="roster-overview-date">
+    <div class=" d-flex justify-content-between m-2 align-items-center">
+        <div>
+            <!--Arrow to left, using an online arrow png-->
+            <a class="text-decoration-none text-black" asp-action="Overview" asp-route-dateInput="@Model.Date.AddMonths(-1).Date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
+                </svg>
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            @Model.Date.ToString("MMMM")<br><span style="font-size:18px"> @Model.Date.ToString("yyyy") </span>
+        </div>
+        <div>
+            <!--Arrow to right, using an online arrow png on the right side of the bar.-->
+            <a class="text-decoration-none text-black" asp-action="Overview" asp-route-dateInput="@Model.Date.AddMonths(1).Date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="text-center justify-content-center gap-1">
+    <span>Er zijn </span> <span class="text-warning fw-bolder">@Model.GetTotalNumberOfItemsNotSufficientlyRostered() </span> <span> dagen met een rooster dat </span> <span class="fw-bold"> niet </span> <span> de prognose haalt.</span>
+</div>
+
+<div class="text-center justify-content-center gap-1">
+    <span>Er zijn </span> <span class="text-secondary fw-bolder">@Model.GetTotalNumberOfItemsWithoutRoster() </span> <span> dagen </span> <span class="fw-bold"> zonder </span> <span> rooster.</span>
+</div>
+<div class="text-center  justify-content-center gap-1">
+    <span>Er zijn </span> <span class="text-success fw-bolder">@Model.GetTotalNumberOfItemsSufficientlyRostered()</span> <span> dagen met een </span> <span class="fw-bold"> voldoende </span> <span> rooster.</span>
+</div>
+<div class="text-center  justify-content-center gap-1">
+    <span>En er zijn </span> <span class="text-danger fw-bolder roster-overiew-value"> 0 </span> <span> dagen met een rooster met een</span> <span class="fw-bold"> CAO overtreding. </span>
+</div>
+
+<div class="row container pt-4">
+    @for (int day = 0; day <= DateTime.DaysInMonth(Model.Date.Year, Model.Date.Month); day++)
+    {
+        var item = Model.GetDayByIndex(day);
+        <div class="col-md-3 col-sm-6 col-6 col-lg-3 col-xl-2 pb-4">
+
+            @if (item != null)
+            {
+                <div class="card roster-item-container @(item.ItemIsToday() ? "roster-overview-today" : "") @(item.IsSufficientlyRostered() ? "green" : "") @(item.IsInsufficientlyRostered() ? "bg-warning" : "")">
+
+                    <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@item.Date.Date">
+
+                        <div class="text-center roster-overview-box  ">
+                            <div class="card-header">
+                                <p>@item.GetDayName()</p>
+                                <p>
+                                    @item.Date.ToString("dd MMMM")<i class="ms-1 bi-exclamation-triangle roster-overview-warning"></i>
+                                </p>
+                            </div>
+
+                            <div class="card-body roster-overview-iteminfo">
+                                <div class="roster-overview-loading spinner-border"></div>
+                                <p>Prognose: @item.PrognosisHours</p>
+                                <p>Ingeplande uren: @item.RosteredHours</p>
+                            </div>
+
+                            <script>
+
+                                        $(function () {
+                                            $.ajax({
+                                                type: "GET",
+                                                url: '@Url.Action("DayHasInvalidShifts", "RosterManager")',
+                                                data: {
+                                                    date: '@item.Date.ToString()'
+                                                },
+                                                success: function (data) {
+                                                    //handle the data
+                                                     var index = @day;
+                                                    if(data){
+                                                       
+                                                        // add the red bar.
+                                                        var itemContainer = $('.roster-item-container').eq(index);
+                                                        itemContainer[0].classList.add("roster-overview-cao");
+
+                                                        // set the title, which shows when hovering
+                                                        var itemBox = $('.roster-overview-box').eq(index);
+                                                         itemBox[0].title = "Deze dag heeft een CAO overtreding";
+
+                                                        // Show the tirangle
+                                                        var itemTriangle = $('.roster-overview-warning').eq(index);
+                                                        itemTriangle[0].style.display = "inline";
+
+
+                                                        // Update the total value
+                                                        var value = $('.roster-overiew-value').eq(0);
+                                                        var newVal = parseInt($(".score").text()) + 1;
+
+                                                        value[0].textContent = Number(value[0].textContent) + 1;
+                                                    }
+                                                    var loading = $('.roster-overview-loading').eq(index);
+                                                    loading[0].style.display = "none";
+                                                
+                                                }
+                                                    
+                                            });
+                                        });
+                                    </script>
+                        </div>
+                    </a>
+                </div>
+            }
+
+        </div>
+    }
+    
+    <div class="container row">
+        <div class="col-3">
+            <span class="dot grey me-2"></span> <span>Wit / grijze blokken: Dagen zonder rooster.</span>
+        </div>
+        <div class="col-3">
+            <span class="dot bg-warning me-2"></span> <span>Gele blokken: Dagen met rooster die prognose niet haalt.</span>
+        </div>
+        <div class="col-3">
+            <span class="dot green me-2"></span> <span>Groene blokken: Dagen met rooster die prognose wel behaalt.</span>
+        </div>
+        <div class="col-3">
+            <span class="dot red me-2"></span> <span>Rode omlijning: Dag heeft CAO overtredingen.</span>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+}

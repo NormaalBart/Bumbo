@@ -1,5 +1,7 @@
 ﻿@model Bumbo.Models.ApproveWorkedHours.EmployeeWorkedHoursViewModel
-
+@{
+    ViewBag.data = "WorkedHours";
+}
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap"><b>Naam: </b>  @Model.FullName</h1>
 
 @if (!ViewData.ModelState.IsValid)

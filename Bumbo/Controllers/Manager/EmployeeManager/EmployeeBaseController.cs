@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager.Common;
 using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
@@ -40,16 +41,16 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
             if (!includeInactive && !includeActive)
             {
-                employees = employees.Where(e => e.Active);
+                employees = employees.Where(e => e.Active).ToList();
                 resultingListViewModel.IncludeActive = true;
             }
             else if (!includeInactive && includeActive)
             {
-                employees = employees.Where(e => e.Active);
+                employees = employees.Where(e => e.Active).ToList();
             }
             else if (includeInactive && !includeActive)
             {
-                employees = employees.Where(e => e.Active == false);
+                employees = employees.Where(e => !e.Active).ToList();
             }
 
             if (!string.IsNullOrEmpty(searchString))

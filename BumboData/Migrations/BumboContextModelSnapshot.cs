@@ -103,35 +103,6 @@ namespace BumboData.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PrognosisId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequiredEmployees")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequiredHours")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("PrognosisId");
-
-                    b.ToTable("DepartmentPrognosis");
-                });
-
             modelBuilder.Entity("BumboData.Models.Employee", b =>
                 {
                     b.Property<string>("Id")
@@ -146,11 +117,14 @@ namespace BumboData.Migrations
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("date");
 
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DefaultBranchId")
+                    b.Property<int?>("DefaultBranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -183,9 +157,6 @@ namespace BumboData.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int?>("ManagesBranchId")
-                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -226,9 +197,9 @@ namespace BumboData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DefaultBranchId");
+                    b.HasIndex("BranchId");
 
-                    b.HasIndex("ManagesBranchId");
+                    b.HasIndex("DefaultBranchId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -248,7 +219,6 @@ namespace BumboData.Migrations
                             Active = true,
                             Birthdate = new DateTime(2003, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ConcurrencyStamp = "d2acbf3f-d036-419a-a9a2-3b600593717a",
-                            DefaultBranchId = 1,
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             EmployeeSince = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -282,7 +252,6 @@ namespace BumboData.Migrations
                             Housenumber = "10",
                             LastName = "Piet",
                             LockoutEnabled = false,
-                            ManagesBranchId = 1,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
                             NormalizedUserName = "3a792773-527d-4bb7-8319-6db070350d38",
                             PasswordHash = "AQAAAAEAACcQAAAAEDLx0FkXHJEHBgP85LHKwOyjbYgWvQjyIyiPAUXO8A/+3URtMmx9kYa8oVic+XHg5Q==",
@@ -353,10 +322,10 @@ namespace BumboData.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CloseTime")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("OpenTime")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime");
 
                     b.HasKey("Date");
 
@@ -485,11 +454,14 @@ namespace BumboData.Migrations
                     b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CloseTime")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("CloseTime")
+                        .HasColumnType("datetime");
 
-                    b.Property<DateTime>("OpenTime")
-                        .HasColumnType("date");
+                    b.Property<bool>("IsClosed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("OpenTime")
+                        .HasColumnType("datetime");
 
                     b.HasKey("BranchId", "DayOfWeek");
 
@@ -500,50 +472,57 @@ namespace BumboData.Migrations
                         {
                             BranchId = 1,
                             DayOfWeek = 0,
-                            CloseTime = new DateTime(2022, 12, 1, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 12, 1, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 12, 2, 20, 0, 0, 0, DateTimeKind.Local),
+                            IsClosed = false,
+                            OpenTime = new DateTime(2022, 12, 2, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 1,
-                            CloseTime = new DateTime(2022, 12, 1, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 12, 1, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 12, 2, 20, 0, 0, 0, DateTimeKind.Local),
+                            IsClosed = false,
+                            OpenTime = new DateTime(2022, 12, 2, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 2,
-                            CloseTime = new DateTime(2022, 12, 1, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 12, 1, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 12, 2, 20, 0, 0, 0, DateTimeKind.Local),
+                            IsClosed = false,
+                            OpenTime = new DateTime(2022, 12, 2, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 3,
-                            CloseTime = new DateTime(2022, 12, 1, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 12, 1, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 12, 2, 20, 0, 0, 0, DateTimeKind.Local),
+                            IsClosed = false,
+                            OpenTime = new DateTime(2022, 12, 2, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 4,
-                            CloseTime = new DateTime(2022, 12, 1, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 12, 1, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 12, 2, 20, 0, 0, 0, DateTimeKind.Local),
+                            IsClosed = false,
+                            OpenTime = new DateTime(2022, 12, 2, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 5,
-                            CloseTime = new DateTime(2022, 12, 1, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 12, 1, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 12, 2, 20, 0, 0, 0, DateTimeKind.Local),
+                            IsClosed = false,
+                            OpenTime = new DateTime(2022, 12, 2, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 6,
-                            CloseTime = new DateTime(2022, 12, 1, 20, 0, 0, 0, DateTimeKind.Local),
-                            OpenTime = new DateTime(2022, 12, 1, 8, 0, 0, 0, DateTimeKind.Local)
+                            CloseTime = new DateTime(2022, 12, 2, 20, 0, 0, 0, DateTimeKind.Local),
+                            IsClosed = false,
+                            OpenTime = new DateTime(2022, 12, 2, 8, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -2026,40 +2005,18 @@ namespace BumboData.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BumboData.Models.DepartmentPrognosis", b =>
-                {
-                    b.HasOne("BumboData.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BumboData.Models.Prognosis", "Prognosis")
-                        .WithMany("DepartmentPrognosis")
-                        .HasForeignKey("PrognosisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Prognosis");
-                });
-
             modelBuilder.Entity("BumboData.Models.Employee", b =>
                 {
+                    b.HasOne("BumboData.Models.Branch", null)
+                        .WithMany("Managers")
+                        .HasForeignKey("BranchId");
+
                     b.HasOne("BumboData.Models.Branch", "DefaultBranch")
                         .WithMany("DefaultEmployees")
                         .HasForeignKey("DefaultBranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BumboData.Models.Branch", "ManagesBranch")
-                        .WithMany("Managers")
-                        .HasForeignKey("ManagesBranchId");
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("DefaultBranch");
-
-                    b.Navigation("ManagesBranch");
                 });
 
             modelBuilder.Entity("BumboData.Models.OpeningHoursOverride", b =>
@@ -2251,11 +2208,6 @@ namespace BumboData.Migrations
                     b.Navigation("UnavailableMoments");
 
                     b.Navigation("WorkedShifts");
-                });
-
-            modelBuilder.Entity("BumboData.Models.Prognosis", b =>
-                {
-                    b.Navigation("DepartmentPrognosis");
                 });
 #pragma warning restore 612, 618
         }

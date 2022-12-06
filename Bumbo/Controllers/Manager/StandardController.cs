@@ -28,7 +28,7 @@ namespace Bumbo.Controllers.Manager
         public async Task<IActionResult> Index()
         {
             Employee employee = await _userManager.GetUserAsync(User);
-            var standards = _standardRepository.Get(employee.DefaultBranchId);
+            var standards = _standardRepository.Get(employee.DefaultBranchId ?? -1);
             var viewModel = _mapper.Map<StandardViewModel>(standards);
             return View(viewModel);
         }
@@ -44,7 +44,7 @@ namespace Bumbo.Controllers.Manager
 
             var standards = StandardViewModelConverter.Convert(viewModel).ToList();
             Employee employee = await _userManager.GetUserAsync(User);
-            Branch branch = _branchRepository.Get(employee.DefaultBranchId);
+            Branch branch = _branchRepository.Get(employee.DefaultBranchId ?? -1);
             
             if(branch == null)
             {

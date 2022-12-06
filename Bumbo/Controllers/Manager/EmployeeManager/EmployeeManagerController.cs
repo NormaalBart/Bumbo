@@ -124,7 +124,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         public override IEnumerable<Employee> GetAllEmployeesAsync()
         {
             var employee = _userManager.GetUserAsync(User).Result;
-            return _employeesRepository.GetAllEmployeesOfBranch(employee.DefaultBranchId);
+            return _employeesRepository.GetAllEmployeesOfBranch(employee.DefaultBranchId ?? -1);
         }
     }
 }

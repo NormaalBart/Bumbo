@@ -10,9 +10,9 @@ public class StandardOpeningHours
 
     public DayOfWeek DayOfWeek { get; set; }
 
-    [Required]
-    public TimeOnly OpenTime { get; set; }
+    public TimeOnly? OpenTime { get; set; }
 
-    [Required]
-    public TimeOnly CloseTime { get; set; }
+    public TimeOnly? CloseTime { get; set; }
+
+    public bool IsClosed { get; set; }
 }
