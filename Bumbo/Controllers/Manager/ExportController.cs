@@ -159,6 +159,12 @@ public class ExportController : NotificationController
                 manager.DefaultBranchId ?? -1, viewModel.ImportAsPlanned ? ImportClockEventsType.Planned : ImportClockEventsType.Worked);
             ShowMessage(MessageType.Success, "Laden van " + (viewModel.ImportAsPlanned ? "geplande" : "gewerkte") + " diensten is voltooid");
         }
+        
+        // If both show different message
+        if (viewModel.ImportClockEvents != null && viewModel.ImportEmployees != null)
+        {
+            ShowMessage(MessageType.Success, "Personeel en diensten zijn ingeladen");
+        }
 
         return Redirect(nameof(Import));
     }
