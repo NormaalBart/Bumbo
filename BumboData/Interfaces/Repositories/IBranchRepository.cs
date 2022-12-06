@@ -8,6 +8,8 @@ namespace BumboData.Interfaces.Repositories
         List<Branch> GetUnmanagedBranches();
         void SetInactive(int id);
         void SetActive(int id);
-        void RemoveSpecialOpeningHour(int id, DateOnly date);
+        void RemoveSpecialOpeningHour(int id, DateOnly date); 
+        // Returns the opening times for given day, will return TimeSpan.MinValue if closed
+        (TimeOnly, TimeOnly) GetOpenAndCloseTimes(int branchId, DateOnly day);
     }
 }

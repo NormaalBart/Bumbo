@@ -7,6 +7,7 @@ using BumboServices.CAO;
 using BumboServices.Import;
 using BumboServices.Interface;
 using BumboServices.Prognoses;
+using BumboServices.Roster;
 using BumboServices.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace Bumbo
             builder.Services.AddScoped<IHourExportService, HourExportService>();
             builder.Services.AddScoped<ICAOService, DutchCAOService>();
             builder.Services.AddScoped<IImportService, ImportService>();
+            builder.Services.AddScoped<IRosterService, RosterService>();
 
             builder.Services.AddDbContext<BumboContext>(options =>
             {
