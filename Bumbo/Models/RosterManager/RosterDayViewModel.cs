@@ -41,6 +41,10 @@ namespace Bumbo.Models.RosterManager
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 
+        public TimeOnly OpenTime { get; set; }
+        public TimeOnly CloseTime { get; set; }
+        
+
 
         public RosterDayViewModel()
         {

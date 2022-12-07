@@ -232,7 +232,7 @@
         <tr class="">
             <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Naam</th>
             @*Important note: The text in the header blocks must be equal characters long.*@
-            @for (var i = 0; i < 24; i++)
+            @for (var i = Model.OpenTime.Hour; i < Model.CloseTime.Hour; i++)
             {
                 <th class="small border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
             }
@@ -251,7 +251,7 @@
                         @employee.FullName
                     </td>
 
-                    @for (var i = 0; i < 24; i++)
+                            @for (var i = Model.OpenTime.Hour; i < Model.CloseTime.Hour; i++)
                     {
                         var shift = Model.GetShiftOnHourOfEmployee(employee, i);
                         @if (shift != null)
@@ -360,7 +360,7 @@
 <div id="modal" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content text-center prognosis-textarea">
+    <div class="modal-dialog modal-content text-center prognosis-textarea">
         <span class="close position-absolute">&times;</span>
         <label> </label>
         <!-- The Modal for creating a new shift -->
@@ -520,44 +520,6 @@
               });
         });
         });
-
-
-        setEmployeeSelectList(1);
-
-        function setEmployeeSelectList(depId) {
-
-
-            $.ajax({
-                type: "GET",
-                url: '@Url.Action("GetEmployeeList", "RosterManager")',
-                data: {
-                    departmentId: depId
-                },
-                success: function (data) {
-                    //handle the data
-                    console.log(data.length);
-                    let selectEmployeeList = document.getElementById("selectemployee");
-                        while (selectEmployeeList.options.length > 0) {
-                            selectEmployeeList.remove(selectEmployeeList.options.length - 1);
-                        }
-
-                        for (i = 0; i < data.length; i++)
-                        {
-                            var opt = document.createElement('option');
-
-                              opt.text = data[[Object.Keys(data)]i].fullname;
-                              opt.value = data[[Object.Keys(data)][i].id;
-
-                            selectEmployeeList.add(opt, null);
-                        }
-                    console.log(data);
-
-                }
-
-            });
-
-        }
-       
 
 
     </script>

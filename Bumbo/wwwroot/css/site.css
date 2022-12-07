@@ -234,7 +234,7 @@ p {
     height: 45px;
     border: 1px solid darkgrey;
     background-color: lightgray;
-    width: 50px !important;
+    min-width: 50px !important;
     padding: 0px !important;
 }
 
