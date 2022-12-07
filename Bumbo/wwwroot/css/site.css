@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
 }
 
@@ -200,13 +200,7 @@ p {
         height: 100%;
     }
 }
-
-}
-
-
 /*Rooster manager*/
-
-
 
 .roster-table-employee-cell {
     background-color: grey !important;
@@ -307,6 +301,20 @@ p {
     outline: 5px solid red;
 }
 
+.roster-overview-warning {
+    display: none;
+}
+
+.roster-overview-loading {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
+}
+
 /*.roster-overview-SufficientRostering {*/
 /*    border: 5px solid;*/
 /*    background: linear-gradient(to bottom right, mediumspringgreen, springgreen) !important;*/
@@ -324,7 +332,6 @@ p {
 /*    border-image: linear-gradient(45deg, #888888, #909090) 1;*/
 /*    background: linear-gradient(to bottom right, #C0C0C0, #C8C8C8);*/
 /*}*/
-
 
 .helpmenu {
     display: none;
@@ -349,18 +356,24 @@ p {
     background-color: red;
 }
 
-.roster-overview-warning {
-    display: none;
+/* Wachtwoord validatie*/
+/* The message box is shown when the user clicks on the password field */
+#password-message {
+    display: block;
+    color: #000;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
 }
 
-.roster-overview-loading {
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -15px;
-    margin-left: -15px;
+/* Add a green text color and a checkmark when the requirements are right */
+.password-valid {
+    color: green;
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.password-invalid {
+    color: red;
 }
 
 

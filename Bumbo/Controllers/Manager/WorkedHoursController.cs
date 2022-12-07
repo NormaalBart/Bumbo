@@ -14,8 +14,8 @@ using System.Data;
 namespace Bumbo.Controllers
 {
 
-
-    public class WorkedHoursController : Controller
+    [Authorize(Roles = "Manager")]
+    public class WorkedHoursController : NotificationController
     {
         readonly private UserManager<Employee> _userManager;
         readonly private IMapper _mapper;
@@ -30,7 +30,7 @@ namespace Bumbo.Controllers
             _workedShiftRepository = workedShiftRepository;
             _plannedShiftRepository = plannedShiftsRepository;
         }
-        [Authorize(Roles = "Manager")]
+
         public async Task<IActionResult> IndexAsync(string? dateInput)
         {
             if (dateInput == null)
@@ -46,7 +46,7 @@ namespace Bumbo.Controllers
             viewModel.Employees = e.ToList();
             return View(viewModel);
         }
-        [Authorize(Roles = "Employee")]
+
         public async Task<IActionResult> EmployeeAsync(string? dateInput)
         {
             if (dateInput == null)
@@ -72,7 +72,6 @@ namespace Bumbo.Controllers
             return View(viewModel);
         }
 
-        [Authorize(Roles = "Manager")]
         public IActionResult Approve(List<int> ids)
         {
             WorkedShift tempWorkedShift = null;
@@ -84,7 +83,7 @@ namespace Bumbo.Controllers
             }
             return RedirectToAction("Index", new { dateInput = tempWorkedShift.StartTime.ToString() });
         }
-        [Authorize(Roles = "Manager")]
+
         public IActionResult Edit(List<int> workedShiftId, string employeeId)
         {
             var employeeWorkedHoursViewModel = _mapper.Map<EmployeeWorkedHoursViewModel>(_employeeRepository.Get(employeeId));
@@ -95,8 +94,9 @@ namespace Bumbo.Controllers
             }
             return View(employeeWorkedHoursViewModel);
         }
-        [Authorize(Roles = "Manager")]
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(EmployeeWorkedHoursViewModel employeeWorkedHoursViewModel)
         {
             foreach (var item in employeeWorkedHoursViewModel.WorkedShifts)
@@ -106,6 +106,7 @@ namespace Bumbo.Controllers
                 temp.EndTime = item.EndTime;
                 _workedShiftRepository.Update(temp);
             }
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
             return RedirectToAction("Index",new { dateInput = employeeWorkedHoursViewModel.WorkedShifts.FirstOrDefault().StartTime.ToString() });
         }
 

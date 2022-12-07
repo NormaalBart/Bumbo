@@ -11,7 +11,7 @@ namespace Bumbo.Controllers.Manager
 {
 
     [Authorize(Roles = "Manager")]
-    public class StandardController : Controller
+    public class StandardController : NotificationController
     {
         private readonly UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
@@ -58,7 +58,7 @@ namespace Bumbo.Controllers.Manager
 
             branch.Standards = standards;
             _branchRepository.Update(branch);
-            TempData["saved"] = true;
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
             return RedirectToAction(nameof(Index));
         }
     }

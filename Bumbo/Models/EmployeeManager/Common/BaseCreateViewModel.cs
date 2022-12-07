@@ -8,16 +8,16 @@ namespace Bumbo.Models.EmployeeManager.Common
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Voornaam")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string FirstName { get; set; }
 
         [DisplayName("Tussenvoegsel")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string? Preposition { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Achternaam")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
@@ -31,28 +31,25 @@ namespace Bumbo.Models.EmployeeManager.Common
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [EmailAddress(ErrorMessage = "Veld moet een valide email address zijn.")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
         [DisplayName("E-mail")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Het telefoonnummer is verplicht")]
         [DisplayName("Telefoon")]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
-         ErrorMessage = "Veld moet een valide telefoon nummer zijn.")]
-        [Phone(ErrorMessage = "Veld moet een valide telefoon nummer zijn.")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
-        public string PhoneNumber { get; set; }
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
+        public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Postcode")]
-        [DataType(DataType.PostalCode, ErrorMessage = "Veld moet een valide postcode zijn.")]
         [StringLength(50)]
         public string PostalCode { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DisplayName("Huisnummer")]
-        [StringLength(50, ErrorMessage = "Veld heeft te veel characters.")]
+        [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
         public string HouseNumber { get; set; }
+
+        [DisplayName("Straat")]
+        public string? Street { get; set; }
 
         [Required(ErrorMessage = "Dit veld is verplicht")]
         [DataType(DataType.Date, ErrorMessage = "Veld is niet valide.")]

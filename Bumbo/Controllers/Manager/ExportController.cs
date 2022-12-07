@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bumbo.Controllers.Manager;
 
 [Authorize(Roles = "Manager")]
-public class ExportController : Controller
+public class ExportController : NotificationController
 {
     private readonly IWorkedShiftRepository _workedShiftRepository;
     private readonly IHourExportService _hourExportService;
@@ -150,14 +150,22 @@ public class ExportController : Controller
         if (viewModel.ImportEmployees != null)
         {
             _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.DefaultBranchId ?? -1);
+            ShowMessage(MessageType.Success, "Laden van personeel is voltooid");
         }
 
         if (viewModel.ImportClockEvents != null)
         {
             _importService.ImportClockEvents(viewModel.ImportClockEvents.OpenReadStream(),
                 manager.DefaultBranchId ?? -1, viewModel.ImportAsPlanned ? ImportClockEventsType.Planned : ImportClockEventsType.Worked);
+            ShowMessage(MessageType.Success, "Laden van " + (viewModel.ImportAsPlanned ? "geplande" : "gewerkte") + " diensten is voltooid");
+        }
+        
+        // If both show different message
+        if (viewModel.ImportClockEvents != null && viewModel.ImportEmployees != null)
+        {
+            ShowMessage(MessageType.Success, "Personeel en diensten zijn ingeladen");
         }
 
-        return Redirect("Import");
+        return Redirect(nameof(Import));
     }
 }

@@ -62,6 +62,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             employee.NormalizedUserName = employee.UserName;
             await _userManager.CreateAsync(employee, viewModel.Password);
             await _userManager.AddToRoleAsync(employee, RoleType.EMPLOYEE.RoleId);
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
             return RedirectToAction(nameof(Index));
         }
 
@@ -98,6 +99,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
                 employee.AllowedDepartments.Add(department);
             }
             _employeesRepository.Update(employee);
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
             return RedirectToAction(nameof(Index));
         }
 
