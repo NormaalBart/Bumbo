@@ -21,7 +21,7 @@ namespace Bumbo.Models.Validations
 
             else if (!password.Any(ch => char.IsDigit(ch)))
             {
-                return new ValidationResult("Wachtwoord moet minimaal 1 letter hebben");
+                return new ValidationResult("Wachtwoord moet minimaal 1 nummer hebben");
             }
             return ValidationResult.Success;
         }

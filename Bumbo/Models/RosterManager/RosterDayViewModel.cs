@@ -1,7 +1,9 @@
 ﻿using BumboData.Models;
+using BumboServices.CAO.Rules;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+
 
 namespace Bumbo.Models.RosterManager
 {
@@ -35,6 +37,7 @@ namespace Bumbo.Models.RosterManager
 
         public string ErrorMessage { get; set; }
 
+        public Dictionary<ICAORule, List<PlannedShift>> InvalidShifts { get; set; }
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 
@@ -49,7 +52,6 @@ namespace Bumbo.Models.RosterManager
             RosteredEmployees = new List<EmployeeRosterViewModel>();
             AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
-
 
 
         public int GetWeekNumber(DateTime date)

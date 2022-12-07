@@ -1,4 +1,5 @@
 ﻿using BumboData.Models;
+using BumboServices.CAO.Rules;
 
 namespace Bumbo.Models.RosterManager
 {
@@ -10,7 +11,13 @@ namespace Bumbo.Models.RosterManager
 
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        
-        
+
+        public List<ICAORule> ValidatesRules { get; set; }
+
+        public ShiftViewModel()
+        {
+            ValidatesRules = new List<ICAORule>();
+        }
+
     }
 }

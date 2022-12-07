@@ -1,0 +1,32 @@
+﻿@model Bumbo.Models.ApproveWorkedHours.EmployeeWorkedHoursViewModel
+@{
+    ViewBag.data = "WorkedHours";
+}
+<h1 class=" col-sm d-flex justify-content-center flex-nowrap"><b>Naam: </b>  @Model.FullName</h1>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+    </div>
+}
+<div class="container ">
+    @using (Html.BeginForm("Edit", "WorkedHours", FormMethod.Post))
+    {
+        for (var i = 0; i < Model.WorkedShifts.Count(); i++)
+        {
+            <div class="row">
+                @Html.HiddenFor(m => m.WorkedShifts[i].Id)
+                <div class="col">
+                    @Html.Raw("Start tijd: ") @Html.EditorFor(workedShift => workedShift.WorkedShifts[i].StartTime)
+                </div>
+                <div class="col">
+                    @Html.Raw("Eind tijd: ") @Html.EditorFor(workedShift => workedShift.WorkedShifts[i].EndTime)
+                </div>
+            </div>
+        }
+        <div class="row">
+            <input type="submit" value="Opslaan" />
+        </div>
+    }
+</div>

@@ -1,0 +1,61 @@
+﻿@model Bumbo.Models.ApproveWorkedHours.IndexWorkedHoursViewModel
+@using Bumbo.Utils;
+@{
+    ViewBag.data = "WorkedHours";
+}
+
+
+<h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren accorderen</h1>
+
+<div class="d-flex justify-content-between m-4 border rounded-2">
+    <button class="btn btn-outline-primary">
+        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date"> Vorige dag </a>
+    </button>
+
+    <p>Week @Model.Date.GetWeekNumber() | @Model.Date.ToShortDateString() </p>
+
+    <button class="btn btn-outline-primary">
+        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date"> Volgende dag </a>
+    </button>
+
+
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Naam</th>
+            <th scope="col">Geplande uren</th>
+            <th scope="col">Werkelijke uren</th>
+            <th scope="col">Verschil</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.Employees)
+        {
+            <tr>
+                <td>@employee.FullName</td>
+                <td>@employee.PlannedShiftsToString()</td>
+                <td>@employee.WorkedShiftsToString()
+                    @if (!employee.WorkedShifts.All(w => w.Approved == true))
+                    {
+                        @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new { workedShiftId = employee.WorkedShifts.Select(w => w.Id),employeeId = employee.Id})
+                    }
+                </td>
+                <td>@employee.CalculateDifference()</td>
+                <td>
+                    @if (employee.WorkedShifts.All(w => w.Approved == true))
+                    {
+                        @Html.Raw("Is al goedgekeurd");
+                    } else
+                    {
+                        
+                        @Html.ActionLink("Goedkeuren", "Approve", "WorkedHours", new { ids = employee.WorkedShifts.Select(w => w.Id)})
+                    }
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>

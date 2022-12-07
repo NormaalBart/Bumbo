@@ -27,21 +27,16 @@ public class Employee: IdentityUser, IEntity<string>
     [Required] 
     public string Housenumber { get; set; }
 
+    public string? Street { get; set; }
+
     [Required] 
     public DateOnly EmployeeSince { get; set; }
 
-    [Required] 
-    public string Function { get; set; }
+    public string? Function { get; set; }
 
-    [Required]
-    public Branch DefaultBranch { get; set; }
+    public Branch? DefaultBranch { get; set; }
 
-    [Required]
-    public int DefaultBranchId { get; set; }
-
-    public Branch? ManagesBranch { get; set; }
-    
-    public int? ManagesBranchId { get; set; }
+    public int? DefaultBranchId { get; set; }
 
     public virtual ICollection<Department> AllowedDepartments { get; set; }
     

@@ -1,31 +1,42 @@
-﻿@model Bumbo.Models.BranchController.BranchViewModel
+﻿@using Bumbo.Models.BranchController
+@model BranchCreateViewModel
 
 @{
-    ViewData["Title"] = "Zet inactief";
+    ViewData["Title"] = "Inactief stellen van filiaal";
+    ViewBag.data = "Branch";
 }
 
-<h3>Weet je zeker dat je deze branch inactief wilt zetten?</h3>
-<div>
-    <h4>@Model.Name</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShelvingDistance)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShelvingDistance)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormattedStreet)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormattedStreet)
-        </dd>
-    </dl>
-    
-    <form asp-action="SetInactive">
-        <input type="submit" value="Zet inactief" class="btn btn-danger" /> |
-        <a asp-action="Index">Terug naar lijst</a>
-    </form>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+    </div>
+}
+
+<div class="container ">
+    <div>
+        <form asp-action="SetInactive" id="DeleteForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(model => model.Id)
+            <div class="row">
+                <div class="col border border-3 border-dark employee-create-box">
+                    <div class="p-3">
+                        <h1 class="text-center">Weet u zeker dat u @Model.Name inactief wilt stellen?</h1>
+                        <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+                            <input type="submit" value="Zet filiaal op inactief" form="DeleteForm" class="btn btn-danger btn-lg" />
+                        </div>
+                        <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+                            <a class="btn btn-success btn-lg" asp-action="Index">Ga terug naar lijst zonder inactief te stellen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

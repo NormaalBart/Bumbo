@@ -1,9 +1,13 @@
 ﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
 
 @{
-    if (Model.ErrorMessage != null){
+    ViewBag.data = "Rooster";
+    if (Model.ErrorMessage != null)
+    {
         ViewData["Title"] = "Rooster (1)";
-    }else{
+    }
+    else
+    {
         ViewData["Title"] = "Rooster";
     }
 
@@ -27,12 +31,34 @@
     </div>
 }
 
+@* Display CAO errors *@
+@if (Model.InvalidShifts.Count > 0)
+{
+    <div class="alert alert-danger text-left" role="alert">
+        <i class="bi-exclamation-triangle-fill"></i><strong> Oeps!</strong> Er zijn CAO overtredingen, deze zullen verholpen moeten worden voordat een nieuwe dienst aangemaakt kan worden.
+        <ul>
+            @foreach (var modelInvalidShift in Model.InvalidShifts)
+            {
+                <li>@modelInvalidShift.Key.GetErrorMessage()</li>
+                <ul>
+                    @foreach (var shift in modelInvalidShift.Value)
+                    {
+                        <li>
+                            <strong>@shift.Employee.FullName():</strong> @shift.StartTime.ToString("HH\\:mm") - @shift.EndTime.ToString("HH\\:mm")
+                        </li>
+                    }
+                </ul>
+            }
+        </ul>
+    </div>
+}
+
 <div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
     <div>
         <!--Arrow to left, using an online arrow png-->
         <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z" />
+                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
             </svg>
         </a>
     </div>
@@ -44,12 +70,12 @@
         <!--Arrow to right, using an online arrow png on the right side of the bar.-->
         <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z" />
+                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
             </svg>
         </a>
     </div>
 </div>
-  
+
 <div>
 
     <div class="row border ">
@@ -69,12 +95,12 @@
                 }
             </div>
         </div>
-        
+
         <div class="border col-sm d-flex justify-content-center flex-nowrap">
-                <div>
+            <div>
                 @Html.DisplayNameFor(model => model.FreshPrognose) :
             </div>
-                <div>
+            <div>
                 @if (Model.FreshPrognose == -1)
                 {
                     <span>Geen Info</span>
@@ -90,7 +116,7 @@
             <div>
                 @Html.DisplayNameFor(model => model.StockersPrognose) :
             </div>
-                <div>
+            <div>
                 @if (Model.StockersPrognose == -1)
                 {
                     <span>Geen informatie</span>
@@ -103,7 +129,6 @@
         </div>
 
 
-
     </div>
 </div>
 
@@ -112,9 +137,7 @@
     'use strict';
 
     // list of all shifts on screen.
-    var listshifts = new Array; 
-    
-
+    var listshifts = []; 
 
     // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
     function getWidthOfbase(elem, hours, minutepercstart, minutepercend) {
@@ -125,7 +148,6 @@
         // We calculate the final width of the div
         // using the width of a normal cell, times the amount of hours.
         // We then calculate the offset of the div, using the time percentages.
-        
 
         let cell = document.querySelector('.roster-table-cell');
         let width = cell.offsetWidth;
@@ -152,12 +174,9 @@
         
     }
 
-
     function resize(shift){
         getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
     }
-
-
 
     // Everytime the screen is resized, we resize every shift that's in the list along with it.
     window.addEventListener("resize", function () {
@@ -181,13 +200,12 @@
         editmodal.style.display = "block";
         
         document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
-            document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
+        document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
             
-            document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
+        document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
            
-            document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
-            document.getElementById("employeeIdInput").value = shiftinfo.shiftEmployeeId;
-        
+        document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
+        document.getElementById("employeeIdInput").value = shiftinfo.shiftEmployeeId;
     }
 
     function onRowClick() {
@@ -206,11 +224,15 @@
 
 <div class="text-center m-3">
 
-    <!-- Trigger/Open The Modal -->
-    <button id="openModalBTN">Voeg dienst toe</button>
+   
 
     <!-- Trigger/Open The Second Modal, to copy between weeks -->
     <button id="copyWeekModalBtn">Rooster kopieren tussen weken</button>
+
+     <!-- Trigger/Open The Modal -->
+    <button id="openModalBTN" class="btn btn-primary">Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span></button>
+
+    <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")"><span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span></button>
 </div>
 
 
@@ -218,56 +240,60 @@
 
 <div class="table-responsive-sm">
 
-        <!--table, 24 long horizontal -->
-        <table class="table roster-table table-hover" style="background-color: white;">
-            <thead>
-                <tr class="">
-                <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Naam</th>
-                    @*Important note: The text in the header blocks must be equal characters long.*@
-                    @for (int i = 0; i < 24; i++)
+    <!--table, 24 long horizontal -->
+    <table class="table roster-table table-hover" style="background-color: white;">
+        <thead>
+        <tr class="">
+            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Naam</th>
+            @*Important note: The text in the header blocks must be equal characters long.*@
+            @for (var i = 0; i < 24; i++)
+            {
+                <th class="small border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+            }
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <!--For each available employee, create a row-->
+        @if (Model.RosteredEmployees != null)
+        {
+            foreach (var employee in Model.RosteredEmployees)
+            {
+                <tr class="roster-shift-containter">
+                    <td class="small roster-table-employee-cell">
+                        @employee.FullName
+                    </td>
+
+                    @for (var i = 0; i < 24; i++)
                     {
-     
-                        <th class="small border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
-                   
-                    }
-                </tr>
-            </thead>
+                        var shift = Model.GetShiftOnHourOfEmployee(employee, i);
+                        @if (shift != null)
+                        {
+                            var invalidPairs = shift.ValidatesRules;
+                            var showError = invalidPairs.Any();
+                            // Red background when shift is invalid.
+                            var background = showError ? "background: red;" : "";
+                            var error = showError ? string.Join(" | ", invalidPairs.Select(s => s.GetErrorMessage())) : "";
 
+                            <td id="roster-start" class="roster-table-cell" title="@error">
+                                <div id="roster-start-div " class="roster-shift text-center" style="height: 100%; @background" runat="server">
+                                    @*If the shift is very short, we use a different string not make it ugly.*@
+                                    @if (Model.GetShiftHourLength(employee, i) < 2)
+                                    {
+                                        <p class="align-self-center"> @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName </p>
+                                    }
+                                    else
+                                    {
+                                        <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
+                                    }
 
+                                    @if (showError)
+                                    {
+                                        <i class="bi-exclamation-triangle"></i>
+                                    }
 
-            <tbody>
-
-                <!--For each available employee, create a row-->
-                @if (Model.RosteredEmployees != null)
-                {
- 
-                    foreach (var employee in Model.RosteredEmployees)
-                    {
-                        <tr class="roster-shift-containter" >
-                            <td class="small roster-table-employee-cell">
-                                 @employee.FullName
-                            </td>
-
-                            @for (int i = 0; i < 24; i++)
-                            {
-
-                            
-                                @if (Model.GetShiftOnHourOfEmployee(employee, i) != null)
-                                {
-
-                                <td id="roster-start" class="roster-table-cell ">
-
-                                        <div id="roster-start-div " class="roster-shift text-center" style="height: 100%;" runat="server">
-                                        @*If the shift is very short, we use a different string not make it ugly.*@
-                                        @if (Model.GetShiftHourLength(employee, i) < 2)
-                                        {
-                                            <p class="align-self-center">  @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName </p>
-                                        }else{
-                                            <p class="align-self-center"> * @Model.GetShiftOnHourOfEmployee(employee, i).Department.DepartmentName *</p>
-                                        }
-                                        
-                                       
-                                        <script>
+                                    <script>
                                             // gets the div above, and passes it to a function which then sets the div length based on the shift length.
                                             var divs = document.querySelectorAll('div');
                                             var above_div = divs[divs.length - 1];
@@ -283,12 +309,13 @@
                                             // shiftid, employeename, employeeid, departmentname, departmentid, starttime, endtime 
                                             // pass these values along with the function to auto fill the modal.
 
-
-
-
-                                                var shiftinfo = { shiftid: shift.shiftid, shiftStartHour: shift.shiftStartTime, shiftEndTimeHour: shift.shiftEndTime, shiftDepartmentId: '@Model.GetShiftOnHourOfEmployee(employee, i).Department.Id', shiftEmployeeId: '@employee.Id' };
-                                           
-
+                                            var shiftinfo = { 
+                                                shiftid: shift.shiftid, 
+                                                shiftStartHour: shift.shiftStartTime, 
+                                                shiftEndTimeHour: shift.shiftEndTime, 
+                                                shiftDepartmentId: '@Model.GetShiftOnHourOfEmployee(employee, i).Department.Id', 
+                                                shiftEmployeeId: '@employee.Id',
+                                            };
 
                                             above_div.addEventListener("click", onShiftClick.bind(this, shiftinfo), false);
                                                 above_div.addEventListener('click', () => {
@@ -296,79 +323,53 @@
                                                     
                                                 });
                                             </script>
-                                    </div>
+                                </div>
 
-                                </td>
-
-                            }else{
-                                if (Model.IsPlanned(employee, i))
-                                    {
-                                        <td class="roster-table-cell">
-                                        </td>
-                                    }else{
-                                        <td class="roster-table-cell roster-table-cell-empty">
-                                        </td>
-                                    }
-                              
-                                }
-
-
-
-                            }
-                         
-                        </tr>
-                    }
-                    
-                    <!--Add new shift row.-->
-                    
-                    <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" >
-                            <td colspan="25" class="roster-table-employee-cell text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                            </svg>
-                            Dienst toevoegen
                             </td>
+                        }
+                        else
+                        {
+                            if (Model.IsPlanned(employee, i))
+                            {
+                                <td class="roster-table-cell">
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="roster-table-cell roster-table-cell-empty">
+                                </td>
+                            }
+                        }
+                    }
 
-                    </tr>
-        
-                }
+                </tr>
+            }
 
-            </tbody>
-        </table>
+            <!--Add new shift row.-->
 
-    </div>
+            <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow">
+                <td colspan="25" class="roster-table-employee-cell text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                    </svg>
+                    Dienst toevoegen
+                </td>
+
+            </tr>
+        }
+
+        </tbody>
+    </table>
+
+</div>
 
 @if (Model.RosteredEmployees.Count == 0)
 {
     <div class="justify-content-center mx-auto d-flex justify-content-center">
 
-    <span class="alert alert-primary text-center "> Er zijn op dit moment nog geen medewerkers ingepland, voeg een nieuwe medewerker toe aan het rooster met de knop hierboven.</span>
+        <span class="alert alert-primary text-center "> Er zijn op dit moment nog geen medewerkers ingepland, voeg een nieuwe medewerker toe aan het rooster met de knop hierboven.</span>
     </div>
 }
-
-
-<script>
- 
-    
-    var rows = document.querySelectorAll('tr');
-    var lastrow = rows[rows.length - 1];
-    lastrow.addEventListener('click', () => {
-        onRowClick();
-    });
-
-
-
-
-        const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
-        
-        emptycells.forEach(cell => {
-            cell.addEventListener('click', function handleClick(event) {
-                onRowClick();
-            });
-        });
-
-
-</script>
 
 <div id="modal" class="modal">
 
@@ -379,24 +380,23 @@
         <!-- The Modal for creating a new shift -->
         <div id="createshiftmodal" class="m-3 text-center align-content-center">
             <form asp-action="CreateShift">
-                <input type="hidden" asp-for="Date" />
+                <input type="hidden" asp-for="Date"/>
                 <h2>Voeg een dienst toe</h2>
                 <div class="row">
                     <span class="col">Medewerker:</span>
                     <select asp-for="SelectedEmployeeId" class="form-control col">
-                        
+
                         @foreach (var employee in Model.AvailableEmployees)
                         {
                             <option value="@employee.Id">@employee.FullName</option>
                         }
                     </select>
 
-
                     @*TODO make it so you can only select department for employee who have them.*@
                     <span class="col">In afdeling:</span>
-                   
-                     <select asp-for="SelectedDepartmentId" class="form-control col">
-                        
+
+                    <select asp-for="SelectedDepartmentId" class="form-control col">
+
                         @foreach (var dep in Model.Departments)
                         {
                             <option value="@dep.Id">@dep.DepartmentName</option>
@@ -405,32 +405,32 @@
                 </div>
                 <div class="row">
                     <span class="col">Startijd:</span>
-                    <input asp-for="SelectedStartTime" class="form-control col" />
+                    <input asp-for="SelectedStartTime" class="form-control col"/>
 
                     <span class="col">Eindtijd:</span>
-                    <input asp-for="SelectedEndTime" class="form-control col" />
+                    <input asp-for="SelectedEndTime" class="form-control col"/>
                 </div>
                 <label> </label>
-                <input type="submit" value="Opslaan" class="btn btn-success btn-sm " />
+                <input type="submit" value="Opslaan" class="btn btn-success btn-sm "/>
             </form>
         </div>
 
         <!--This is the modal for editing a shift.-->
         <div id="editshiftmodal" class="m-3 text-center align-content-center">
-            <form  asp-action="EditShift">
-                <input type="hidden" asp-for="Date" />
-                <input id="shiftIdInput" type="hidden" asp-for="SelectedShiftId" />
+            <form asp-action="EditShift">
+                <input type="hidden" asp-for="Date"/>
+                <input id="shiftIdInput" type="hidden" asp-for="SelectedShiftId"/>
                 <h2>Wijzig een dienst</h2>
                 <div class="row">
                     <span class="col">Medewerker:</span>
-                       
-                        <select id="employeeIdInput" asp-for="SelectedEmployeeId" class="form-control col">
 
-                            @foreach (var employee in Model.AvailableEmployees)
-                            {
-                                <option value="@employee.Id">@employee.FullName</option>
-                            }
-                        </select>
+                    <select id="employeeIdInput" asp-for="SelectedEmployeeId" class="form-control col">
+
+                        @foreach (var employee in Model.AvailableEmployees)
+                        {
+                            <option value="@employee.Id">@employee.FullName</option>
+                        }
+                    </select>
                     @*TODO make it so you can only select department for employee who have them.*@
                     <span class="col">In afdeling:</span>
 
@@ -444,20 +444,18 @@
                 </div>
                 <div class="row">
                     <span class="col">Startijd:</span>
-                    <input id="starttimeinput" asp-for="SelectedStartTime" class="form-control col" />
+                    <input id="starttimeinput" asp-for="SelectedStartTime" class="form-control col"/>
 
                     <span class="col">Eindtijd:</span>
-                    <input id="endtimeinput" asp-for="SelectedEndTime" class="form-control col" />
+                    <input id="endtimeinput" asp-for="SelectedEndTime" class="form-control col"/>
                 </div>
                 <label> </label>
-                <input type="submit" value="Opslaan" class="btn btn-success btn-sm " />
+                <input type="submit" value="Opslaan" class="btn btn-success btn-sm "/>
             </form>
         </div>
-
-
     </div>
-
 </div>
+</body>
 
 <div id="copyWeekModal" class="modal">
     <!-- Modal content -->
@@ -494,5 +492,85 @@
     </div>
 </div>
 
+
+@section Scripts
+{
+    <script>
+        let rows = document.querySelectorAll('tr');
+        let lastrow = rows[rows.length - 1];
+        lastrow.addEventListener('click', () => {
+            onRowClick();
+        });
+    
+        const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
+            
+        emptycells.forEach(cell => {
+            cell.addEventListener('click', function handleClick(event) {
+                onRowClick();
+            });
+        });
+        
+        $(document).ready(function(){          
+        $('#generate-roster-spinner').hide()
+        // On click button, generate roster
+        let genBtn = $('#generate-roster')
+        genBtn.click(function() {
+            // Show loading indicator
+             $('#generate-roster-spinner').show()
+             genBtn.prop('disabled', true);
+             // Hide tooltip
+             genBtn.tooltip('hide')
+              $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("GenerateRoster", "RosterManager")',
+                  data: {
+                      date: '@Model.Date'
+                  },
+                  success: function (data) {
+                      if (data.value.incomplete) {
+                          Swal.fire({
+                               title: 'Oeps!',
+                               text: "Rooster is aangemaakt, maar de prognose kon niet behaald worden. Handmatige bewerking is nog nodig!",
+                               icon: 'warning',
+                               confirmButtonText: 'Verversen'
+                          }).then(function() {
+                             location.reload();    
+                          });
+                      } else {
+                       // Refresh page toast
+                       const Toast = Swal.mixin({
+                         toast: true,
+                         position: 'top-end',
+                         showConfirmButton: true,
+                         timer: 3000,
+                         timerProgressBar: true,
+                         confirmButtonText: 'Verversen'
+                       })
+                       Toast.fire({
+                         icon: 'success',
+                         title: 'Rooster succesvol gegenereerd.'
+                       }).then(function() {
+                          location.reload();    
+                       });
+                      }
+                  },
+                  error: function (error) {
+                      // Hide loading
+                      $('#generate-roster-spinner').hide()
+                      $('#generate-roster').prop('disabled', false);
+                      // Show error                      
+                      Swal.fire({
+                        title: 'Oeps!',
+                        text: error.responseText,
+                        icon: 'error',
+                        confirmButtonText: 'Oke'
+                      })
+                  }
+                  // TODO: Handle errors
+              });
+        });
+        });
+    </script>
+}
 
 </body>

@@ -6,23 +6,31 @@
 
 @{
     ViewData["Title"] = "Exporteer uren";
+    ViewBag.data = "Export";
 }
 
 <h1 class="text-center">Uren overzicht</h1>
 
 <div class="container">
     <div class="row">
-        <div class="col-md-2 col-sm-12" style="height: 100%;">
+        <div class="col-md-2 col-sm-12">
+            <label class="fw-bold">Selecteer jaar:</label>
+            @Html.DropDownListFor(s => s.SelectedMonth.Year, new SelectList(Model.SelectableYears), new
+            {
+                @class = "form-select mb-3",
+                id = "select-year"
+            })
+
             @foreach (var modelSelectableMonth in Model.SelectableMonths)
             {
                 if (modelSelectableMonth.Month == Model.SelectedMonth.Month
                     && modelSelectableMonth.Year == Model.SelectedMonth.Year)
                 {
-                    <a class="btn my-1 w-100 btn-primary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
+                    <a class="@modelSelectableMonth.Year selectable-month btn my-1 w-100 btn-primary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
                 }
                 else
                 {
-                    <a asp-action="Overview" asp-route-SelectedMonth="@modelSelectableMonth.ToString("yyyy-MM")" class="btn my-1 w-100 py-1 btn-secondary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
+                    <a asp-action="Overview" asp-route-SelectedMonth="@modelSelectableMonth.ToString("yyyy-MM")" class="@modelSelectableMonth.Year selectable-month btn my-1 w-100 btn-secondary">@modelSelectableMonth.ToString("MMMM - yyyy")</a>
                 }
             }
         </div>
@@ -36,9 +44,20 @@
                 {
                     @foreach (var viewModel in Model.ExportOverviewListItemViewModels)
                     {
-                        <tr class="my-1 card">
+                        var hasUnapprovedShifts = viewModel.UnapprovedShifts?.Any() ?? false;
+                        <tr class="my-1 card @(hasUnapprovedShifts ? "bg-warning" : "")">
                             <td class="card-header">
-                                <p class="fw-bold text-center">@viewModel.Employee.FullName()</p>
+                                <p class="fw-bold text-center">
+                                    @viewModel.Employee.FullName()
+                                    @if (hasUnapprovedShifts)
+                                    {
+                                        <i class="ms-1 bi-exclamation-triangle" title="Er zijn nog uren die niet goedgekeurd zijn." data-toggle="tooltip" data-placement="top"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="ms-1 bi-check-circle" style="color: green" title="Alle uren voor geselecteerde maand zijn goedgekeurd." data-toggle="tooltip" data-placement="top"></i>
+                                    }
+                                </p>
                             </td>
                             <td class="card-body row">
                                 @for (var i = 0; i < 3; i++)
@@ -87,11 +106,35 @@
                                         </div>
                                     </div>
                                 }
+
+                                @if (hasUnapprovedShifts)
+                                {
+                                    <div class="alert-warning rounded mt-2">
+                                        <p class="fw-bold mt-2">Diens(ten) gevonden die nog niet zijn goedgekeurd.</p>
+                                        <p class="mb-2">Deze worden pas opgenomen in de export, zodra ze zijn goedgekeurd.</p>
+                                        <ul>
+                                            @foreach (var unapprovedShift in viewModel.UnapprovedShifts)
+                                            {
+                                                <li>
+                                                    <a asp-controller="WorkedHours" asp-action="Index" asp-route-dateInput="@unapprovedShift.StartTime">@unapprovedShift.StartTime.Date.ToString("dd-MM-yyyy")</a>: @unapprovedShift.StartTime.TimeOfDay.ToString("HH\\:mm") - @unapprovedShift.EndTime?.TimeOfDay.ToString("HH\\:mm")
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }
                 }
             </table>
+            @if (Model.ExportOverviewListItemViewModels.Count > 0)
+            {
+                <div class="py-3 d-flex justify-content-between">
+                    <a class="btn btn-primary @(Model.Page <= 1 ? "hidden" : "")" asp-action="Overview" asp-route-Page="@(Model.Page - 1)" asp-route-SearchQuery="@Model.SearchQuery" asp-route-SelectedMonth="@Model.SelectedMonthUrlFormatted()">Vorige</a>
+                    <p>Pagina @Model.Page/@Model.MaxPage</p>
+                    <a class="btn btn-primary @(Model.Page == Model.MaxPage ? "hidden" : "")" asp-action="Overview" asp-route-Page="@(Model.Page + 1)" asp-route-SearchQuery="@Model.SearchQuery" asp-route-SelectedMonth="@Model.SelectedMonthUrlFormatted()">Volgende</a>
+                </div>
+            }
         </div>
         <div class="col-md-2 d-flex justify-content-center order-sm-0 order-0">
             <div>
@@ -99,8 +142,8 @@
                 <form asp-action="Overview" method="get">
                     <div class="form-group w-100">
                         <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
-                        <h5><label asp-for="SortMode" class="control-label"></label></h5>
-                        <select asp-for="SortMode" class="form-control" value="@Model.SortMode" asp-items="@Html.GetEnumSelectList<ExportOverviewSortingOption>()"></select>
+                        @Html.HiddenFor(m => m.SelectedMonth)
+                        @Html.HiddenFor(m => m.SelectedMonth)
                         <input class="btn btn-primary my-2" type="submit" value="Zoeken"><br/>
                         <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
                     </div>
@@ -109,3 +152,31 @@
         </div>
     </div>
 </div>
+
+@* Show / hide months according to selected year *@
+
+@section Scripts {
+    <script> 
+    let select = $('#select-year')
+    select.on('change', function() {
+        setYearActive(this.value)
+    });
+    
+    function setYearActive(year) {
+        // Set all to invisible first, except if is in selected year.
+        for (let item of document.getElementsByClassName("selectable-month")) {
+            if (!item.classList.contains(year)) {
+                item.style.display = "none";
+            }
+        }
+        
+        // Set current years to visible
+        for (let cur of document.getElementsByClassName(year)) {
+           cur.style.display = "block";
+        }
+    }
+    
+    setYearActive(@Model.SelectedMonth.Year)
+        
+    </script>
+}

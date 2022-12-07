@@ -1,4 +1,5 @@
-﻿@using BumboData.Models
+﻿@using Bumbo.Models.Validations
+@using BumboData.Models
 @using Microsoft.AspNetCore.Identity
 @using BumboData.Enums
 @inject SignInManager<Employee> SignInManager
@@ -13,7 +14,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Bumbo.styles.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/notification.js"></script>
     @await RenderSectionAsync("Head", required: false)
 </head>
 
@@ -27,43 +30,68 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">Bumbo</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
+                        <img src="~/images/bumbo.png" class="logo-nav" alt="Bumbo logo" />
+                    </a>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
                             {
-                                <li class="nav-item">
+                                <li class="nav-item" id="Branch">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Branch" asp-action="Index">Filiaalbeheer</a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeAdmin" asp-action="Index">Personeel</a>
+                                <li class="nav-item" id="Employee">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeAdmin" asp-action="Index">Personeelsbeheer</a>
                                 </li>
                             }
                             else if (User.IsInRole(RoleType.MANAGER.Name))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Personeel</a>
+                                <li class="nav-item" id="Employee">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Personeelsbeheer</a>
+
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="Branch">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Branch" asp-action="EditManager">Filiaalinformatie</a>
+                                </li>
+                                <li class="nav-item" id="Prognosis">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Prognosis" asp-action="Index">Prognose</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="Roster">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Rooster</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="RosterOverview">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Overview">Rooster overzicht</a>
+                                </li>
+                                <li class="nav-item" id="Standard">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Standard" asp-action="Index">Normeringen</a>
+                                </li>
+                                <li class="nav-item" id="WorkedHours">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="WorkedHours" asp-action="Index">Gewerkte uren accorderen</a>
+                                </li>
+                                <li class="nav-item" id="Export">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Overview">Exporteer uren</a>
+                                </li>
+                                <li class="nav-item" id="Unavailability">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="UnavailabilityManager" asp-action="Index">Beschikbaarheid</a>
+                                </li>
+                                <li class="nav-item" id="Import">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Export" asp-action="Import">Importeren</a>
                                 </li>
                             }
                             else if (User.IsInRole(RoleType.EMPLOYEE.Name))
                             {
 
-                                <li class="nav-item">
+                                <li class="nav-item" id="Roster">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeRoster" asp-action="Index">Rooster</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="WorkedHours">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="WorkedHours" asp-action="Employee">Gewerkte uren</a>
+                                </li>
+                                <li class="nav-item" id="Availabilty">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="UnavailableMoments" asp-action="Index">Beschikbaarheid</a>
                                 </li>
+                                
                             }
                             <li class="nav-item">
                                 <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" )">
@@ -79,18 +107,37 @@
 
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["ValidationType"] != null)
+            {
+                <script>
+                    var type = '@TempData["ValidationType"]';
+                    var message = '@TempData["ValidationMessage"]';
+                    Notification.show(type, message);
+                </script>
+            }
             @RenderBody()
         </main>
     </div>
+    
+
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - Bumbo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - Bumbo
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/passwordvalidation.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            if ('@ViewBag.data' != null) {
+                $('#@ViewBag.data').addClass('active');
+            }
+        });
+    </script>
 </body>
 </html>

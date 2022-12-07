@@ -7,6 +7,8 @@ public class OpeningHoursOverride
     [Key]
     public Branch Branch { get; set; }
 
+    public int BranchId { get; set; }
+
     [Key]
     public DateOnly Date { get; set; }
 

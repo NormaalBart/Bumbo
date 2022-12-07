@@ -8,6 +8,7 @@ namespace BumboData.Interfaces.Repositories
         IEnumerable<WorkedShift> GetAllApproved(int branchId);
         List<WorkedShift> GetWorkedShiftsInMonth(int branchId, string employee, int year, int month);
         List<WorkedShift> GetWorkedShiftsInMonth(int branchId, int year, int month);
+        IEnumerable<WorkedShift> GetOfEmployeeOnDayThatIsComplete(DateTime date, string employeeId);
         void Import(List<WorkedShift> list);
     }
 }

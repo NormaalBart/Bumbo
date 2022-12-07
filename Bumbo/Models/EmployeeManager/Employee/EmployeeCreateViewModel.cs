@@ -6,7 +6,7 @@ namespace Bumbo.Models.EmployeeManager.Employee
     public class EmployeeCreateViewModel : EmployeeEditViewModel
     {
 
-        [Required]
+        [Required(ErrorMessage = "Dit veld is verplicht")]
         [DataType(DataType.Password)]
         [CustomPasswordValidation]
         [Display(Name = "Wachtwoord")]
