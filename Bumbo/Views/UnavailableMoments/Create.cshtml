@@ -1,8 +1,22 @@
-﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsViewModel
+﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentCreateViewModel
 @using BumboData.Enums
 @{
+    ViewBag.data = "Availabilty";
     ViewData["Title"] = "Afwezigheid toevoegen";
 }
+<head>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
+
+
+
+</head>
+
+<body>
+   
+
+
+
 <h1 class="text-center">Afwezigheid toevoegen</h1>
 
 
@@ -11,21 +25,34 @@
 
 
 
-<div class="container ">
+<div class="container">
     <div >
+        <div class="alert-info text-center small fst-italic rounded rounded-3 ">
+            <p>Tijden van selectie lijst zijn gebasseerd op opening en sluitingstijden van de geselecteerde dag.</p>
+        </div>
         <form asp-action="Create" id="CreateForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
-                <div class="col border border-3 border-dark employee-create-box">
+                <div class="col border border-3 border-dark moments-create-box">
                     <div class="col">
-                        <div class="row border border-3 border-dark p-1">
-                            <div class="form-group col-6">
-                                <input asp-for="StartTime" class="form-control" asp-format="{0:yyyy-MM-dd HH:mm}" />
-                                <span asp-validation-for="StartTime" class="text-danger"></span>
+                        <div class="row p-1">
+                            
+                            <div class="form-group text-center">
+                                <span>Van:</span>
+                                    <input id="startdate" onchange="setTimes(true)" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
+
+                                    <input id="timepicker-end" class="timepicker-start timepicker form-control" asp-for="StartHour" />
+
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                                <span asp-validation-for="StartHour" class="text-danger"></span>
                             </div>
-                            <div class="form-group col-6">
-                                <input asp-for="EndTime" class="form-control" asp-format="{0:yyyy-MM-dd HH:mm}" />
-                                <span asp-validation-for="EndTime" class="text-danger"></span>
+                            <div class="form-group text-center">
+                                <span>Tot:</span>
+                                    <input id="enddate" onchange="setTimes(false)" asp-for="EndDate" class="form-control " />
+
+                                    <input asp-for="EndHour" class="form-control timepicker-end timepicker" />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                                <span asp-validation-for="EndHour" class="text-danger"></span>
                             </div>
 
                             <div class="form-group text-center">
@@ -44,6 +71,10 @@
         </form>
     </div>
 </div>
+
+
+
+
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <input type="submit" value="Voeg toe!" form="CreateForm" class="btn btn-success btn-lg" />
 </div>
@@ -53,5 +84,72 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+    <script>
+
+        $('.timepicker').timepicker({
+            timeFormat: 'HH:mm ',
+            interval: 30,
+            minTime: '1',
+            maxTime: '23',
+            defaultTime: '8',
+            startTime: '1',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true,
+
+        });
+
+        // if user changes Start date of unavailable moment, this method is called with 'isFirst' being true. 
+        // if user changes second box, the 'isFirst' is false. 
+        // This is also used to determine which date form we get the selected date from. 
+        function setTimes(isFirst) {
+            let date;
+                if (isFirst) {
+                    date = document.getElementById('startdate').value;
+                } else {
+                    date = document.getElementById('enddate').value;
+                }
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetOpenTime", "UnavailableMoments")',
+                data: {
+                    dateInput: date
+                },
+                success: function (data) {
+                    // isFirst refers to if it is the first [start] timepicker or the second [end].
+                    if (isFirst) {
+                        //handle the data
+                        let opentimestart = data.open;
+                        let closetimestart = data.close;
+                        $('.timepicker-start').timepicker('option', 'minTime', opentimestart);
+                        $('.timepicker-start').timepicker('option', 'maxTime', closetimestart);
+                        $('.timepicker-start').timepicker('option', 'defaultTime', opentimestart);
+                    } else {
+                        //handle the data
+                        let opentimestart = data.open;
+                        let closetimestart = data.close;
+                        $('.timepicker-end').timepicker('option', 'minTime', opentimestart);
+                        $('.timepicker-end').timepicker('option', 'maxTime', closetimestart);
+                        $('.timepicker-end').timepicker('option', 'defaultTIme', opentimestart);
+                    }
+
+                }
+            });
+
+        }
+
+        window.onload = function () {
+            // when finished loading we set the min and max values for both input boxes. 
+            setTimes(true);
+            setTimes(false);
+        };
+
+
+    </script>
+
+
+    }
+
+    </body>

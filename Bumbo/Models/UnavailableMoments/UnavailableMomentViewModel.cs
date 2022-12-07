@@ -8,6 +8,9 @@ namespace Bumbo.Models.UnavailableMoments
     {
         public int Id { get; set; }
 
+        [DisplayName("Medewerker naam")]
+        public string EmployeeName { get; set; }
+
         [Required]
         [DisplayName("Van")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
@@ -21,5 +24,10 @@ namespace Bumbo.Models.UnavailableMoments
         [Required]
         [DisplayName("Reden")]
         public UnavailableMomentType Type { get; set; }
+
+        [DisplayName("Acceptatie status")]
+        public ReviewStatus ReviewStatus { get; set; }
+        
+
     }
 }

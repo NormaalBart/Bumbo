@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager.Common;
 using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
@@ -12,7 +13,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 {
 
     [Authorize(Roles = "Administrator,Manager")]
-    public abstract class EmployeeBaseController : Controller
+    public abstract class EmployeeBaseController : NotificationController
     {
         protected readonly UserManager<Employee> _userManager;
         protected readonly IEmployeeRepository _employeesRepository;
@@ -53,16 +54,16 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
             if (!includeInactive && !includeActive)
             {
-                employees = employees.Where(e => e.Active);
+                employees = employees.Where(e => e.Active).ToList();
                 resultingListViewModel.IncludeActive = true;
             }
             else if (!includeInactive && includeActive)
             {
-                employees = employees.Where(e => e.Active);
+                employees = employees.Where(e => e.Active).ToList();
             }
             else if (includeInactive && !includeActive)
             {
-                employees = employees.Where(e => e.Active == false);
+                employees = employees.Where(e => !e.Active).ToList();
             }
 
             if (!string.IsNullOrEmpty(searchString))
@@ -128,7 +129,37 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             var user = await _userManager.FindByIdAsync(viewModel.EmployeeKey);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, viewModel.Password);
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> ToggleActive(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var viewModel = new ChangeWorkStatusViewModel
+            {
+                Id = id,
+                Name = user.FullName(),
+                IsActive = user.Active
+            };
+            return View("Views/EmployeeBase/ToggleActive.cshtml", viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleActive(ChangeWorkStatusViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Views/EmployeeBase/ToggleActive.cshtml", viewModel);
+            }
+
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
+            var user = await _userManager.FindByIdAsync(viewModel.Id);
+            user.Active = !user.Active;
+            _employeesRepository.Update(user);
             return RedirectToAction(nameof(Index));
         }
     }
+
 }

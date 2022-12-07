@@ -1,0 +1,157 @@
+﻿@model Bumbo.Models.UnavailableMoments.UnavailabilityManagerListViewModel
+
+@{
+    ViewBag.data = "Unavailability";
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center">Afwezigheid beheer</h1>
+
+<div class="text-center">
+    <a class="text-center text-decoration-none text-black btn btn-primary justify-content-center" asp-action="MonthlyOverview">Ga naar overzicht van alle afwezigheden</a>
+</div>
+
+<div class="top-header">
+    <div class="top-header-content">
+        <form asp-action="Index" method="get" class="container align-content-center">
+            <div class="form-actions no-color row   d-flex justify-content-center m-2 align-items-center">
+                <div class="d-flex justify-content-center text-center my-auto flex-row">
+                    <div class="form-group top-header-content form-check flex-column">
+                        <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
+                    </div>
+                    <div class=" text-center my-auto flex-column">
+                        <div class="justify-content-center text-center my-auto ">
+                            <div class="btn btn-warning text-center">
+                                <input type="submit" value="Zoeken" class="btn btn-default search-bar" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" text-center my-auto flex-column m-3">
+                        <div class="justify-content-center text-center my-auto ">
+                            <div class=" text-center">
+                                <a class="btn btn-success" id="openModalBTN"> Alles accepteren </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-striped table-hover table-bordered">
+    <thead class="table table-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].EmployeeName)
+            </th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
+            </th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].ReviewStatus)
+            </th>
+            <th>
+                Acties
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.UnavailableMoments.Count == 0)
+        {
+            <tr class="alert-info text-center">
+                <td colspan="7">
+                    <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
+                </td>
+
+            </tr>
+
+        }
+        @foreach (var item in Model.UnavailableMoments)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewStatus)
+                </td>
+                <td class="text-center">
+                    <!--Approve button-->
+                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" method="post">
+                        <input type="submit" value="Goedkeuren" class="btn btn-success" />
+                    </form>
+                </td>
+                <td class="text-center">
+                    <!--reject button-->
+                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" method="post">
+                        <input type="submit" value="Afkeuren" class="btn btn-danger" />
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+@if (Model.UnavailableMoments.Count() != 0)
+{
+    <!-- The Modal -->
+<div id="modal" class="modal ">
+    <!-- Modal content -->
+    <div class="modal-content modal-dialog text-center prognosis-textarea">
+        <span class="close position-absolute">&times;</span>
+        <label> </label>
+        <div class="m-3 text-center align-content-center">
+            <form method="post" asp-action="ReviewAll">
+                
+                <!--We pass all ids of items on screen.-->
+                @foreach (var item in Model.Ids)
+                {
+                    <input hidden asp-for="Ids" value="@item" name="ids" />
+                }
+                <div class="m-3">
+                    <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
+                </div>
+                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
+            </form>
+        </div>
+    </div>
+</div>
+}
+
+@section Scripts
+{ 
+    <script>
+    $('#openModalBTN').click(function() {
+        // Show no new items to accept
+        if(@Model.UnavailableMoments.Count() == 0){
+             Swal.fire({
+            title: 'Oeps!',
+            text: "Er zijn op dit moment geen nieuwe onbeschikbaarheids aanvragingen die je kunt accepteren.",
+            icon: 'warning'
+        })
+        }
+       
+    })
+    </script>
+}
+

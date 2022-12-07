@@ -7,10 +7,12 @@
 @inject UserManager<Employee> UserManager
 
 @{
-    ViewData["Title"] = "Medewerkersoverzicht";
+    ViewData["Title"] = "Personeelsbeheer";
+    ViewBag.data = "Employee";
 }
 
-<h1 class="text-center">Medewerker beheer</h1>
+<h1 class="text-center">Personeelsbeheer</h1>
+
 
 <table class="table">
     <thead>
@@ -114,10 +116,7 @@
                             @Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Employees[0].Active)
-                        </th>
-                        <th>
-                            acties
+                            Acties
                         </th>
                     </tr>
                 </thead>
@@ -137,21 +136,21 @@
                             <td class="text-center">
                                 @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
                             </td>
-                            <td class="text-center">
-                                @if (item.Active)
-                                {
-                                    <div class="alert-success"> @Html.DisplayFor(modelItem => item.Active) </div>
-                                }
-                                else
-                                {
-                                    <div class="alert-danger"> @Html.DisplayFor(modelItem => item.Active) </div>
-                                }
-
-                            </td>
-
                             <td>
                                 @Html.ActionLink("Verander", "Edit", new { item.Id }) |
                                 @Html.ActionLink("Reset wachtwoord", "ChangePassword", new { item.Id })
+                                @if (item.Active)
+                                {
+                                    <div class="alert-danger">
+                                        @Html.ActionLink("Zet inactief", "ToggleActive", new { item.Id })
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert-success">
+                                        @Html.ActionLink("Zet actief", "ToggleActive", new { item.Id })
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }

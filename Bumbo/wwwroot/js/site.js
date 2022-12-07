@@ -4,7 +4,9 @@
 // Write your JavaScript code.
 
 
-
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
 
 // Get the modal
 var modal = document.getElementById("modal");
@@ -15,22 +17,28 @@ var btn = document.getElementById("openModalBTN");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on the button, open the modal
-btn.onclick = function () {
-    // This code is partially for the roster, as it checks for create and edit sections
-    // It then disables the edit section and enables the create.
-    modal.style.display = "block";
-    var createmodal = document.getElementById("createshiftmodal");
-    createmodal.style.display = "block";
-    var editmodal = document.getElementById("editshiftmodal");
-    editmodal.style.display = "none";
+if (btn != null) {
+    // When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        // This code is partially for the roster, as it checks for create and edit sections
+        // It then disables the edit section and enables the create.
+        modal.style.display = "block";
+        var createmodal = document.getElementById("createshiftmodal");
+        createmodal.style.display = "block";
+        var editmodal = document.getElementById("editshiftmodal");
+        editmodal.style.display = "none";
+    }
+
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+
+    }
+
 }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-    modal.style.display = "none";
 
-}
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
@@ -38,6 +46,3 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 } 
-
-
-

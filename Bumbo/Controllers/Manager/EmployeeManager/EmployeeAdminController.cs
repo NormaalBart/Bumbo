@@ -45,13 +45,13 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             var employee = _mapper.Map<Employee>(viewModel);
             employee.AllowedDepartments = _departmentsRepository.GetList().ToList();
             employee.DefaultBranchId = viewModel.SelectedBranch;
-            employee.ManagesBranchId = viewModel.SelectedBranch;
             employee.Id = Guid.NewGuid().ToString();
             employee.UserName = employee.Id;
             employee.Function = RoleType.MANAGER.Name;
             employee.NormalizedUserName = employee.UserName;
             await _userManager.CreateAsync(employee, viewModel.Password);
             await _userManager.AddToRoleAsync(employee, RoleType.MANAGER.RoleId);
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
             return RedirectToAction(nameof(Index));
         }
 
@@ -75,6 +75,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             var employee = _employeesRepository.Get(viewModel.EmployeeKey);
             _mapper.Map<ManagerEditViewModel, Employee>(viewModel, employee);
             _employeesRepository.Update(employee);
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
             return RedirectToAction(nameof(Index));
         }
 

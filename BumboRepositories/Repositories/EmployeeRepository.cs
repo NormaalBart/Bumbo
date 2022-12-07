@@ -41,7 +41,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
         {
-            return DbSet.Where(employee => employee.DefaultBranchId == branch);
+            return DbSet.Where(employee => employee.DefaultBranchId == branch).ToList();
         }
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch, int start, int amount)
@@ -74,7 +74,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<Employee> GetAllThatWorkedOrWasPlannedOnDate(DateTime date, int branchId)
         {
-            return DbSet.Include(e => e.PlannedShifts.Where(p => p.StartTime.Date == date.Date && p.BranchId == branchId)).Include(e => e.WorkedShifts.Where(w => w.StartTime.Date == date.Date && w.EndTime != null && w.BranchId == branchId)).Where(e => e.PlannedShifts.Any() || e.WorkedShifts.Any()).ToList();
+            return DbSet.Include(e => e.PlannedShifts.Where(p => p.StartTime.Date == date.Date && p.BranchId == branchId)).Include(e => e.WorkedShifts.Where(w => w.StartTime.Date == date.Date && w.EndTime != null && w.BranchId == branchId)).ToList().Where(e => e.PlannedShifts.Any() || e.WorkedShifts.Any());
         }
     }
 }
