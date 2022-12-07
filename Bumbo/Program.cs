@@ -1,3 +1,4 @@
+using System.Globalization;
 using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
@@ -76,6 +77,11 @@ namespace Bumbo
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
+            
+            // Set all displayed dates to the Dutch locale
+            var cultureInfo = new CultureInfo("nl-NL");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             app.MapControllerRoute(
                 name: "default",
