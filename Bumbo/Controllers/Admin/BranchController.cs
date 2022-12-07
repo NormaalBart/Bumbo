@@ -16,7 +16,7 @@ namespace Bumbo.Controllers.Admin
         private readonly UserManager<Employee> _userManager;
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
-        private const int ItemsPerPage = 25;
+        private const int ItemsPerPage = 2;
 
         public BranchController(UserManager<Employee> userManager, IMapper mapper, IBranchRepository branchRepository)
         {
@@ -27,32 +27,10 @@ namespace Bumbo.Controllers.Admin
 
         [Authorize(Roles = "Administrator")]
         // GET: BranchController
-        /*
-                public ActionResult Index(int page = 1)
-                {
-                    if (page < 1) { page = 1; }
-                    List<BranchViewModel> result = new List<BranchViewModel>();
-                    while (result.Count == 0)
-                    {
-                        var branches = _branchRepository.GetAllActiveBranches((page - 1) * ItemsPerPage, ItemsPerPage);
-                        result = _mapper.Map<List<BranchViewModel>>(branches);
-                        if (result.Count == 0 && page > 1)
-                        {
-                            page--;
-                            branches = _branchRepository.GetAllActiveBranches((page - 1) * ItemsPerPage, ItemsPerPage);
-                            result = _mapper.Map<List<BranchViewModel>>(branches);
-                            break;
-                        }
-                    }
-                    BranchListViewModel viewModel = new BranchListViewModel(result, page);
-                    return View(viewModel);
-        */
         public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort, int page = 1)
         {
 
             if (page < 1) { page = 1; }
-
-
             var resultingListViewModel = new BranchListIndexViewModel();
 
             var branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
@@ -62,7 +40,11 @@ namespace Bumbo.Controllers.Admin
                 page--;
                 branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
             }
-
+            resultingListViewModel.Page = page;
+            resultingListViewModel.CurrentSort = currentSort;
+            resultingListViewModel.IncludeInactive = includeInactive;
+            resultingListViewModel.IncludeActive = includeActive;
+            resultingListViewModel.SearchString = searchString;
 
             if (!includeInactive && !includeActive)
             {
