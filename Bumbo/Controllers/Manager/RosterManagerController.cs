@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BumboServices.CAO.Rules;
+using Bumbo.Models.Validations;
 using BumboServices.Roster;
 using NuGet.Protocol;
 
@@ -116,7 +117,7 @@ namespace Bumbo.Controllers.Manager
                     {Id = dep.Id, DepartmentName = dep.DepartmentName});
             }
 
-            if (errormessage != null)
+            if (!string.IsNullOrEmpty(errormessage))
             {
                 viewModel.ErrorMessage = errormessage;
             }

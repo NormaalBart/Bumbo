@@ -10,7 +10,7 @@ namespace Bumbo.Models.EmployeeManager.Common
 
         public string? FullName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Dit veld is verplicht")]
         [DataType(DataType.Password)]
         [CustomPasswordValidation]
         [Display(Name = "Wachtwoord")]
@@ -18,6 +18,7 @@ namespace Bumbo.Models.EmployeeManager.Common
 
         [DataType(DataType.Password)]
         [Display(Name = "Bevestig wachtwoord")]
+        [Required(ErrorMessage = "Dit veld is verplicht")]
         [CustomPasswordValidation]
         [Compare("Password", ErrorMessage = "De wachtwoorden zijn niet gelijk.")]
         public string ConfirmPassword { get; set; }
