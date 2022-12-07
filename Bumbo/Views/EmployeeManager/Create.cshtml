@@ -68,13 +68,25 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="form-group col">
+                                <label asp-for="Street" class="control-label"></label>
+                                <input asp-for="Street" class="form-control" placeholder="Straat" />
+                                <span asp-validation-for="Street" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col border border-3 border-dark employee-create-box">
                                 <div class="p-3">
-                                    <h5>Persoonlijke informatie</h5>
+                                    <h5>Wachtwoord</h5>
                                     <div class="form-group">
                                         <label asp-for="Password" class="control-label"></label>
                                         <input asp-for="Password" class="form-control" />
                                         <span asp-validation-for="Password" class="text-danger"></span>
+                                        <div id="password-message">
+                                            <p id="password-capital" class="password-invalid"><b>1 Hoofdletter</b></p>
+                                            <p id="password-number" class="password-invalid"><b>1 Nummer</b></p>
+                                            <p id="password-length" class="password-invalid"><b>6 tekens</b></p>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label asp-for="ConfirmPassword" class="control-label"></label>
@@ -137,7 +149,7 @@
     </div>
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <input type="submit" value="Veranderingen Opslaan!" form="CreateForm" class="btn btn-success btn-lg" />
+    <input type="submit" value="Medewerker Opslaan!" form="CreateForm" class="btn btn-success btn-lg" />
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>

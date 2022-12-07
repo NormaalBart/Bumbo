@@ -2,6 +2,7 @@
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Nodes;
 
 namespace BumboRepositories.Repositories
 {
@@ -101,5 +102,6 @@ namespace BumboRepositories.Repositories
             branch.OpeningHoursOverrides.Remove(model);
             Update(branch);
         }
+
     }
 }

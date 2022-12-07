@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Bumbo.Models.UnavailableMoments;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +17,15 @@ namespace Bumbo.Controllers.Employees
         private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
         private IMapper _mapper;
         private UserManager<Employee> _userManager;
+        private readonly IBranchRepository _branchRepository;
 
         public UnavailableMomentsController(UserManager<Employee> userManager,
-            IUnavailableMomentsRepository unavailableMomentListRepository, IMapper mapper)
+            IUnavailableMomentsRepository unavailableMomentListRepository, IMapper mapper, IBranchRepository branchRepository)
         {
             _userManager = userManager;
             _unavailableMomentsRepository = unavailableMomentListRepository;
             _mapper = mapper;
+            _branchRepository = branchRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -30,28 +34,32 @@ namespace Bumbo.Controllers.Employees
             var Databaseresult = _unavailableMomentsRepository.GetAll(_userManager.GetUserId(User));
             var viewModel = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(Databaseresult).ToList();
             var sortedViewModel = viewModel.OrderBy(e => e.StartTime).Where(e => e.EndTime >= DateTime.Now).ToList();
-            UnavailableMomentsListViewModel unavailableMomentsListViewModel =
-                new UnavailableMomentsListViewModel(sortedViewModel);
+            UnavailableMomentsListViewModel unavailableMomentsListViewModel = new UnavailableMomentsListViewModel(sortedViewModel);
             return View(unavailableMomentsListViewModel);
         }
 
         public IActionResult Create()
         {
-            UnavailableMomentsViewModel unAvailableMoments = new UnavailableMomentsViewModel();
-            unAvailableMoments.StartTime = DateTime.Now;
-            unAvailableMoments.EndTime = DateTime.Now.AddHours(5);
+            UnavailableMomentCreateViewModel unAvailableMoments = new UnavailableMomentCreateViewModel();
+            unAvailableMoments.StartDate = DateTime.Now.AddDays(1);
+            unAvailableMoments.EndDate = DateTime.Now.AddDays(1);
+            unAvailableMoments.StartHour = "08:00";
+            unAvailableMoments.EndHour = "16:00";
             unAvailableMoments.Type = UnavailableMomentType.Other;
             return View(unAvailableMoments);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UnavailableMomentsViewModel unavailableMomentViewModel)
+        public async Task<IActionResult> Create(UnavailableMomentCreateViewModel unavailableMomentViewModel)
         {
-            var newUnavailableMoment =
-                _mapper.Map<UnavailableMomentsViewModel, UnavailableMoment>(unavailableMomentViewModel);
+            UnavailableMoment newUnavailableMoment = new UnavailableMoment();
+            newUnavailableMoment.StartTime = unavailableMomentViewModel.StartDate.Add(TimeOnly.Parse(unavailableMomentViewModel.StartHour).ToTimeSpan());
+            newUnavailableMoment.EndTime = unavailableMomentViewModel.EndDate.Add(TimeOnly.Parse(unavailableMomentViewModel.EndHour).ToTimeSpan());
+           
             newUnavailableMoment.Type = unavailableMomentViewModel.Type;
             newUnavailableMoment.Employee = await _userManager.GetUserAsync(User);
+
             var errorMesssage = UnavailableMomentValid(newUnavailableMoment);
             if (errorMesssage != null)
             {
@@ -59,8 +67,23 @@ namespace Bumbo.Controllers.Employees
                 return View(unavailableMomentViewModel);
             }
 
+            newUnavailableMoment.ReviewStatus = ReviewStatus.Pending;
             _unavailableMomentsRepository.Create(newUnavailableMoment);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOpenTime(string dateInput)
+        {
+            DateTime date = DateTime.Parse(dateInput);
+            var employee = await _userManager.GetUserAsync(User);
+
+
+            // _branchRepository.GetOpeningTimes(employee.DefaultBranchId, date);
+            var times = _branchRepository.GetOpenAndCloseTimes((int)employee.DefaultBranchId, date.ToDateOnly());
+            var result = new { Open = times.Item1.ToString(), Close = times.Item2.ToString() };
+            return Json(result);
+
         }
 
         public IActionResult Delete(int id)
@@ -126,6 +149,7 @@ namespace Bumbo.Controllers.Employees
                 if (newEndTime != null) newMoment.EndTime = (DateTime) newEndTime;
                 newMoment.Employee = await _userManager.GetUserAsync(User);
                 newMoment.Type = moment.Type;
+                newMoment.ReviewStatus = ReviewStatus.Pending;
                 newMoments.Add(newMoment);
             }
 

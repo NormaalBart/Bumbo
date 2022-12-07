@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
 }
 
@@ -90,6 +90,7 @@ input[type="search"] {
         text-decoration: none;
     }
 
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
@@ -104,14 +105,17 @@ input[type="search"] {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+
+
+
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    
 }
+
 
 /* The Close Button */
 .close {
@@ -126,7 +130,8 @@ input[type="search"] {
         color: black;
         text-decoration: none;
         cursor: pointer;
-    }
+    } 
+
 
 .date-display {
     width: 20%;
@@ -195,13 +200,7 @@ p {
         height: 100%;
     }
 }
-
-}
-
-
 /*Rooster manager*/
-
-
 
 .roster-table-employee-cell {
     background-color: grey !important;
@@ -271,6 +270,7 @@ p {
 }
 
 
+
 /*Rooster overview */
 .roster-overview-iteminfo {
     font-size: 11px;
@@ -301,6 +301,20 @@ p {
     outline: 5px solid red;
 }
 
+.roster-overview-warning {
+    display: none;
+}
+
+.roster-overview-loading {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
+}
+
 /*.roster-overview-SufficientRostering {*/
 /*    border: 5px solid;*/
 /*    background: linear-gradient(to bottom right, mediumspringgreen, springgreen) !important;*/
@@ -318,7 +332,6 @@ p {
 /*    border-image: linear-gradient(45deg, #888888, #909090) 1;*/
 /*    background: linear-gradient(to bottom right, #C0C0C0, #C8C8C8);*/
 /*}*/
-
 
 .helpmenu {
     display: none;
@@ -343,18 +356,67 @@ p {
     background-color: red;
 }
 
-.roster-overview-warning {
-    display: none;
+/* Wachtwoord validatie*/
+/* The message box is shown when the user clicks on the password field */
+#password-message {
+    display: block;
+    color: #000;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
 }
 
-.roster-overview-loading {
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -15px;
-    margin-left: -15px;
+/* Add a green text color and a checkmark when the requirements are right */
+.password-valid {
+    color: green;
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.password-invalid {
+    color: red;
+}
+
+
+/*Unavailable moments overview*/
+
+.moments-row {
+    background-color: #F5F5F5;
+}
+
+.moments-collumn{
+    width: 30%;
+}
+
+.moments-create-box {
+    background-color: #F5F5F5;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 500px;
+}
+
+.text-large {
+    font-size: 19px;
+}
+
+.review-status-box {
+    width: 40%;
+}
+
+/*For mobile we make the tooltip for the review status easier to click. */
+@media only screen and (max-width: 780px) {
+    .review-status-box {
+        width: 100%;
+    }
+}
+
+
+@media only screen and (min-width: 800px) {
+    .employee-roster-box {
+        width: 800px;
+    }
 }
 
 body.swal2-shown > [aria-hidden="true"] {

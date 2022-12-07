@@ -27,11 +27,12 @@ public class Employee: IdentityUser, IEntity<string>
     [Required] 
     public string Housenumber { get; set; }
 
+    public string? Street { get; set; }
+
     [Required] 
     public DateOnly EmployeeSince { get; set; }
 
-    [Required] 
-    public string Function { get; set; }
+    public string? Function { get; set; }
 
     public Branch? DefaultBranch { get; set; }
 

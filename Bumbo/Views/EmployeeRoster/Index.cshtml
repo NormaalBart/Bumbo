@@ -1,9 +1,14 @@
 ﻿@model Bumbo.Models.EmployeeRoster.EmployeeShiftsListViewModel
-
+@using BumboData.Enums
 @{
     ViewData["Title"] = "Rooster";
     ViewBag.data = "Roster";
 }
+
+<h1>
+    Rooster
+</h1>
+
 
 <div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark p-2 mx-auto">
 
@@ -74,11 +79,90 @@
 <div >
     @if (Model.shifts.Count() == 0)
     {
-        <p class="text-center">Geen ingeplande diensten in de komende week.</p>
+        <p class="text-center mt-2">Geen ingeplande diensten op geselecteerde dag.</p>
     }
     @foreach (var shift in Model.shifts)
     {
-        <div class="d-flex flex-row justify-content-around mx-auto align-items-center ">
+        // if there's no tyoe we have an unavailable moment
+        @if (shift.Type != null)
+        {
+            <div class="p-3 mx-auto employee-roster-box">
+                <div class="card d-flex row justify-content-around border-bottom employee-roster-box flex-column">
+                    <div class="card-header text-center">
+                       <span class="fw-bold">Onbeschikbaar</span>
+                        @if (shift.StartTime.Date == shift.EndTime.Date)
+                        {
+                            <div colspan="5">
+                                @shift.StartTime.ToString("dddd d-M-yyyy ")
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div colspan="5">
+                                @shift.StartTime.ToString("dddd d-M-yyyy") ->  @shift.EndTime.ToString("ddd d-M-yyyy")
+                            </div>
+                        }
+           
+
+                     </div>
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col">
+                                start tijd: <span class="fw-bold">@shift.StartTime.ToString("HH:mm") </span>
+                            </div>
+                            <div class="col">
+                                eind tijd: <span class="fw-bold"> @shift.EndTime.ToString("HH:mm") </span>
+                            </div>
+                        </div>
+                       
+                        <div class="container">
+                            <div class="row">
+                                <div class="col m-2">
+                                    Type: @Html.DisplayFor(modelItem => shift.Type)
+                                </div>
+                                <div class="col">
+                                    @if (shift.ReviewStatus == null)
+                                    {
+
+                                        <p>Status: <span class="bi bi-exclamation-circle text-danger text-large"></span></p>
+                                    }
+                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
+                                    {
+                                        <div data-toggle="tooltip" data-placement="top" title="Dit moment is goedgekeurd door de manager">
+                                            <p>Status: <span class="bi bi-check text-success text-large"></span></p>
+                                        </div>
+
+                                       
+                                    }
+                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
+                                    {
+                                        <div data-toggle="tooltip" data-placement="top" title="Dit moment is nog niet gekeurd door de manager">
+                                            <p>Status: <span class="bi bi-patch-question-fill text-primary text-large"></span></p>
+                                        </div>
+                                        
+                                    }
+                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
+                                    {
+                                        <div data-toggle="tooltip" data-placement="top" title="Dit moment is niet goedgekeurd door de manager. ">
+                                            <p>Status: <span class="bi bi-x text-danger text-large"></span></p>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+
+ 
+                    
+                    </div>
+
+                 </div>
+             </div>
+
+
+        }else{
+                    <div class="d-flex flex-row justify-content-around mx-auto align-items-center employee-roster-box">
             <div class="d-flex flex-column row date-display">
                 <h3>@shift.StartTime.Day</h3>
                 <p>@shift.StartTime.ToString("MMM")</p>
@@ -100,5 +184,20 @@
                 </div>
             </div>
         </div>
+        }
+
+
     }
 </div>
+
+@section Scripts {
+
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+
+
+}
+
