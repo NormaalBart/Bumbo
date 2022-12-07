@@ -36,6 +36,7 @@ namespace BumboRepositories.Repositories
 
         public bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift)
         {
+            if (plannedShift == null || plannedShift.Employee == null) return false;
             var overlappingShifts = DbSet.Where(p =>
                 p.Employee.Id == plannedShift.Employee.Id && p.StartTime.Date == plannedShift.StartTime.Date).ToList();
             if (overlappingShifts.Count > 0)

@@ -9,6 +9,7 @@ using BumboServices.Roster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Text.Json.Nodes;
 
 namespace Bumbo.Controllers.Manager
@@ -318,11 +319,11 @@ namespace Bumbo.Controllers.Manager
         public async Task<IActionResult> CopyFromWeekAsync(string date, int copyFromWeek, int copyToWeek)
         {
             // the -1 is because a new datetime starts at year 1 not 0, same for the day
-            var beginOfTheWeek = new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(copyFromWeek * 7 - 1).GetMondayOfTheWeek();
+            var beginOfTheWeek = FirstDayOfWeek(2022, copyFromWeek);
             var endOfTheWeek = beginOfTheWeek.AddDays(7);
             var employee = await _userManager.GetUserAsync(User);
             var shifts = _shiftRepository.GetPlannedShiftsInBetween((int)employee.DefaultBranchId, beginOfTheWeek, endOfTheWeek);
-            var diff = new DateTime().AddDays(copyToWeek - 1 * 7) - beginOfTheWeek;
+            var diff = FirstDayOfWeek(2022, copyToWeek) - beginOfTheWeek;
             int numberOfCopiedShifts = 0;
             foreach (var shift in shifts)
             {
@@ -340,6 +341,33 @@ namespace Bumbo.Controllers.Manager
                 }
             }
             return RedirectToAction("Index", "RosterManager", new { dateInput = date, copiedShifts = numberOfCopiedShifts });
+        }
+
+        public static DateTime FirstDayOfWeek(int year, int weekOfYear)
+        {
+            DateTime jan1 = new DateTime(year, 1, 1);
+            int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+
+            // Use first Thursday in January to get first week of the year as
+            // it will never be in Week 52/53
+            DateTime firstThursday = jan1.AddDays(daysOffset);
+            var cal = CultureInfo.CurrentCulture.Calendar;
+            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+            var weekNum = weekOfYear;
+            // As we're adding days to a date in Week 1,
+            // we need to subtract 1 in order to get the right date for week #1
+            if (firstWeek == 1)
+            {
+                weekNum -= 1;
+            }
+
+            // Using the first Thursday as starting week ensures that we are starting in the right year
+            // then we add number of weeks multiplied with days
+            var result = firstThursday.AddDays(weekNum * 7);
+
+            // Subtract 3 days from Thursday to get Monday, which is the first weekday in ISO8601
+            return result.AddDays(-3);
         }
     }
 }
