@@ -3,13 +3,13 @@
     public class BranchListViewModel
     {
         public int Page { get; set; }
-        public List<BranchViewModel> Branches { get; set; }
+        public List<ListIndexBranchViewModel> Branches { get; set; }
 
         public BranchListViewModel()
         {
-            Branches = new List<BranchViewModel>();
+            Branches = new List<ListIndexBranchViewModel>();
         }
-        public BranchListViewModel(List<BranchViewModel> branches, int page)
+        public BranchListViewModel(List<ListIndexBranchViewModel> branches, int page)
         {
             Branches = branches;
             Page = page;

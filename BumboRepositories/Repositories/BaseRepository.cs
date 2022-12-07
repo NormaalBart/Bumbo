@@ -1,8 +1,8 @@
-using System.Linq.Expressions;
 using BumboData;
 using BumboData.Interfaces;
 using BumboData.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BumboRepositories.Repositories;
 
@@ -44,6 +44,7 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         .AsQueryable()
         .ToList();
 
+
     public virtual IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate) =>
         DbSet
             .AsQueryable()
@@ -79,5 +80,12 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
     {
         Context.Remove(entity);
         Context.SaveChanges();
+    }
+
+    public IEnumerable<TEntity> GetList(int start, int amount)
+    {
+        return DbSet
+        .AsQueryable().Skip(start).Take(amount)
+        .ToList();
     }
 }

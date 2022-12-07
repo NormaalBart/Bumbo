@@ -47,10 +47,22 @@ namespace Bumbo.Controllers.Admin
                     BranchListViewModel viewModel = new BranchListViewModel(result, page);
                     return View(viewModel);
         */
-        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort)
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort, int page = 1)
         {
+
+            if (page < 1) { page = 1; }
+
+
             var resultingListViewModel = new BranchListIndexViewModel();
-            var branches = _branchRepository.GetList();
+
+            var branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
+
+            while (branches.Count() == 0 && page > 1)
+            {
+                page--;
+                branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
+            }
+
 
             if (!includeInactive && !includeActive)
             {

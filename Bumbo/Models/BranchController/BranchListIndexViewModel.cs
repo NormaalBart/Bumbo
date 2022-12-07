@@ -1,7 +1,6 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Bumbo.Models.EmployeeManager.Index;
-using BumboData.Enums;
 
 namespace Bumbo.Models.BranchController
 {
@@ -19,7 +18,7 @@ namespace Bumbo.Models.BranchController
 
         public List<BranchSortingOption> AvailableSortOptions { get; set; }
 
-
+        public int Page { get; set; }
 
         public BranchListIndexViewModel()
         {
