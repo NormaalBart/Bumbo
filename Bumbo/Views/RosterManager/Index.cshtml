@@ -203,14 +203,17 @@
 </script>
 
 
+
 <div class="text-center m-3">
 
     <!-- Trigger/Open The Modal -->
     <button id="openModalBTN">Voeg dienst toe</button>
 
     <!-- Trigger/Open The Second Modal, to copy between weeks -->
-    <button id="openModal2BTN">Rooster kopieren tussen weken</button>
+    <button id="copyWeekModalBtn">Rooster kopieren tussen weken</button>
 </div>
+
+
 
 
 <div class="table-responsive-sm">
@@ -456,17 +459,18 @@
 
 </div>
 
-<div id="modal2" class="modal">
+<div id="copyWeekModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
-        <span class="close closeSecondModal position-absolute">&times;</span>
+        <span class="close closeCopyWeekModal  position-absolute">&times;</span>
         <label> </label>
         <div class="m-3 align-content-center">
             <form asp-action="CopyFromWeek">
                 <h2 class="text-center">Kopieer rooster van week naar week</h2>
                 <div class="row">
-                    <span class="col-6">Willekeurige dag in de week</span>
-                    <input asp-for="CopyFromWeek" class="col-auto" asp-format="{0:yyyy-MM-dd}" />
+                    <span class="col-6">Weeknummer: </span>
+                    @Html.EditorFor(model => model.CopyFromWeek, new { htmlAttributes = new { @class = "col-auto",@max = "52",@min="1" } })
+                    
                 </div>
                 <div class="row">
                     <span asp-validation-for="CopyFromWeek" class="text-danger col"></span>
@@ -478,8 +482,8 @@
 
 
                 <div class="row">
-                    <span class="col-6">Willekeurige dag in de andere week</span>
-                    <input asp-for="CopyToWeek" class="col-auto" asp-format="{0:yyyy-MM-dd}" />
+                    <span class="col-6">Weeknummer: </span>
+                    @Html.EditorFor(model => model.CopyToWeek, new { htmlAttributes = new { @class = "col-auto",@max = "52",@min="1" } })
                 </div>
                 <div class="row">
                     <span asp-validation-for="CopyToWeek" class="text-danger col"></span>
@@ -489,7 +493,6 @@
         </div>
     </div>
 </div>
-
 
 
 </body>

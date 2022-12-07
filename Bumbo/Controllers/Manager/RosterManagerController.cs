@@ -46,8 +46,8 @@ namespace Bumbo.Controllers.Manager
             DateTime date = DateTime.Parse(dateInput).Date;
             RosterDayViewModel viewModel = new RosterDayViewModel();
             viewModel.Date = date;
-            viewModel.CopyFromWeek = date;
-            viewModel.CopyToWeek = date.AddDays(7);
+            viewModel.CopyFromWeek = date.GetWeekNumber();
+            viewModel.CopyToWeek = date.AddDays(7).GetWeekNumber();
             viewModel.CopiedShifts = copiedShifts;
             var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList());
 
@@ -173,15 +173,14 @@ namespace Bumbo.Controllers.Manager
             return RedirectToAction("Index", "RosterManager", new { dateInput = date });
         }
 
-        public async Task<IActionResult> CopyFromWeekAsync(string date, DateTime copyFromWeek, DateTime copyToWeek)
+        public async Task<IActionResult> CopyFromWeekAsync(string date, int copyFromWeek, int copyToWeek)
         {
             // the -1 is because a new datetime starts at year 1 not 0, same for the day
-            var beginOfTheWeek = new DateTime().AddYears(copyFromWeek.Year - 1).AddDays(copyFromWeek.DayOfYear - 1);
-            beginOfTheWeek = beginOfTheWeek.GetMondayOfTheWeek();
+            var beginOfTheWeek = new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(copyFromWeek * 7 - 1).GetMondayOfTheWeek();
             var endOfTheWeek = beginOfTheWeek.AddDays(7);
             var employee = await _userManager.GetUserAsync(User);
             var shifts = _shiftRepository.GetPlannedShiftsInBetween(employee.DefaultBranchId, beginOfTheWeek, endOfTheWeek);
-            var diff = copyToWeek - copyFromWeek;
+            var diff = new DateTime().AddDays(copyToWeek - 1 * 7) - beginOfTheWeek;
             int numberOfCopiedShifts = 0;
             foreach (var shift in shifts)
             {

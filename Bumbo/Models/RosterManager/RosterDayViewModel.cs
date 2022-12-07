@@ -38,13 +38,10 @@ namespace Bumbo.Models.RosterManager
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        [DataType(DataType.Date)]
-        public DateTime CopyFromWeek { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        [DataType(DataType.Date)]
-        public DateTime CopyToWeek { get; set; }
+        [Range(1, 52, ErrorMessage = "Weeknummer moet tussen de 1 en de 52 liggen!")]
+        public int CopyFromWeek { get; set; }
+        [Range(1, 52, ErrorMessage = "Weeknummer moet tussen de 1 en de 52 liggen!")]
+        public int CopyToWeek { get; set; }
         public int CopiedShifts { get; set; }
 
         public RosterDayViewModel()
