@@ -37,7 +37,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         public IActionResult Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort, int page = 1)
         {
             if (page < 1) page = 1;
-            var employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage);
+            var employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage, searchString, includeActive, includeInactive);
             if (employees.Count() == 0 && page != 1)
             {
                 page--;
