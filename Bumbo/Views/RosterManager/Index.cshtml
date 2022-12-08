@@ -502,17 +502,13 @@
                     <div class="row justify-content-center">
                         <span class="col-auto text-end">Dag: </span>
                         @Html.EditorFor(model => model.CopyFrom, new { htmlAttributes = new { @class = "col-auto" } })
-
                     </div>
                     <div class="row">
                         <span asp-validation-for="CopyFrom" class="text-danger col-4"></span>
                     </div>
-
                     <div class="row justify-content-center">
                         <span class="col-6 fw-light">Kopieren naar</span>
                     </div>
-
-
                     <div class="row justify-content-center">
                         <span class="col-auto">Dag: </span>
                         @Html.EditorFor(model => model.CopyTo, new { htmlAttributes = new { @class = "col-auto" } })
