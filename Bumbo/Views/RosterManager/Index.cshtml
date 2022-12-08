@@ -145,24 +145,19 @@
         // We then calculate the offset of the div, using the time percentages.
 
         let cell = document.querySelector('.roster-table-cell');
-        let width = cell.offsetWidth;
+
+        // gets width of cell, including the decimal numbers (incase a cell is half a pixel bigger than normal)!
+        let width = cell.getBoundingClientRect().width;
 
         let finalwidth = (width * hours);
 
         // this is the offset of the div caused by any minutes in the shift.
         let startoffset = (width * (minutepercstart * 0.01));
         let endoffset = (width * (minutepercend * 0.01));
-        
-
-            // The longer a shift is, there's a small offset where it sticks out.
-            // TODO actually solve this issue.
-            let weirdOffset = (hours * 0.25);
-        
+            
         // We set the width of the div using the calculated values.
-            elem.style.width = finalwidth - startoffset + endoffset - weirdOffset + 'px';
+        elem.style.width = finalwidth - startoffset + endoffset + 'px';
         
-    
-
         // We move the div right using the minute percentages.
         elem.style.marginLeft = startoffset + 'px';
 
