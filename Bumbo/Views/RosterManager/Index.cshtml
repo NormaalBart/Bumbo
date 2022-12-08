@@ -19,7 +19,7 @@
 
 @if (Model.CopiedShifts != 0)
 {
-    <p class="alert-success text-center">@Model.CopiedShifts diensten succesvol gekopiëerd naar een andere week.</p>
+    <p class="alert-success text-center">@Model.CopiedShifts diensten succesvol gekopiëerd naar een andere dag.</p>
 }
 
 
@@ -227,8 +227,9 @@
    
 
     <!-- Trigger/Open The Second Modal, to copy between weeks -->
-    <button id="copyWeekModalBtn" class="btn btn-primary">Rooster kopieren tussen weken</button>
-
+    <button type="button" data-bs-toggle="modal" data-bs-target="#copyRosterModal" class="btn btn-primary">
+        Prognose kopieren tussen weken
+    </button>
      <!-- Trigger/Open The Modal -->
     <button id="openModalBTN" class="btn btn-primary">Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span></button>
 
@@ -456,7 +457,6 @@
     </div>
 </div>
 
-
 <div id="copyWeekModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
@@ -468,7 +468,6 @@
                 <div class="row">
                     <span class="col-6">Dag: </span>
                     @Html.EditorFor(model => model.CopyFrom, new { htmlAttributes = new { @class = "col-auto" } })
-                    
                 </div>
                 <div class="row">
                     <span asp-validation-for="CopyFrom" class="text-danger col"></span>
@@ -477,8 +476,6 @@
                 <div class="row">
                     <span class="col fw-light">Kopieren naar</span>
                 </div>
-
-
                 <div class="row">
                     <span class="col-6">Dag: </span>
                     @Html.EditorFor(model => model.CopyTo, new { htmlAttributes = new { @class = "col-auto" } })
@@ -491,6 +488,48 @@
         </div>
     </div>
 </div>
+
+<!-- The Modal -->
+<div id="copyRosterModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <label> </label>
+            <div class="m-3 align-content-center">
+                <form asp-action="CopyFromWeek">
+                    <h2 class="text-center">Kopieer rooster van dag naar dag</h2>
+                    <div class="row justify-content-center">
+                        <span class="col-auto text-end">Dag: </span>
+                        @Html.EditorFor(model => model.CopyFrom, new { htmlAttributes = new { @class = "col-auto" } })
+
+                    </div>
+                    <div class="row">
+                        <span asp-validation-for="CopyFrom" class="text-danger col-4"></span>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <span class="col-6 fw-light">Kopieren naar</span>
+                    </div>
+
+
+                    <div class="row justify-content-center">
+                        <span class="col-auto">Dag: </span>
+                        @Html.EditorFor(model => model.CopyTo, new { htmlAttributes = new { @class = "col-auto" } })
+                    </div>
+                    <div class="row">
+                        <span asp-validation-for="CopyTo" class="text-danger col"></span>
+                    </div>
+                    <input type="submit" value="Kopiëren" class="btn btn-success btn-sm " />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 </body>
 @section Scripts
 {
