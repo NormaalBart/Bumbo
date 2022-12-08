@@ -58,7 +58,7 @@
     </div>
     <div>
         <!--Week  number, date information which is in the center.-->
-        <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToShortDateString() </p>
+            <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToString("dddd") @Model.Date.ToShortDateString() </p>
     </div>
     <div>
         <!--Arrow to right, using an online arrow png on the right side of the bar.-->

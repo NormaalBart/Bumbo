@@ -21,41 +21,54 @@
 
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Naam</th>
-            <th scope="col">Geplande uren</th>
-            <th scope="col">Werkelijke uren</th>
-            <th scope="col">Verschil</th>
-            <th scope="col">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var employee in Model.Employees)
-        {
+
+@if (Model.Employees.Count < 1)
+{
+    <div class="alert alert-secondary" role="alert">
+        Geen medewerkers die op deze datum gewerkt/ingeplaned zijn.
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>@employee.FullName</td>
-                <td>@employee.PlannedShiftsToString()</td>
-                <td>@employee.WorkedShiftsToString()
-                    @if (!employee.WorkedShifts.All(w => w.Approved == true))
-                    {
-                        @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new { workedShiftId = employee.WorkedShifts.Select(w => w.Id),employeeId = employee.Id})
-                    }
-                </td>
-                <td>@employee.CalculateDifference()</td>
-                <td>
-                    @if (employee.WorkedShifts.All(w => w.Approved == true))
-                    {
-                        @Html.Raw("Is al goedgekeurd");
-                    } else
-                    {
-                        
-                        @Html.ActionLink("Goedkeuren", "Approve", "WorkedHours", new { ids = employee.WorkedShifts.Select(w => w.Id)})
-                    }
-                </td>
-                
+                <th scope="col">Naam</th>
+                <th scope="col">Geplande uren</th>
+                <th scope="col">Werkelijke uren</th>
+                <th scope="col">Verschil</th>
+                <th scope="col">Status</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td>@employee.FullName</td>
+                    <td>@employee.PlannedShiftsToString()</td>
+                    <td>
+                        @employee.WorkedShiftsToString()
+                        @if (!employee.WorkedShifts.All(w => w.Approved == true))
+                        {
+                            @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new { workedShiftId = employee.WorkedShifts.Select(w => w.Id),employeeId = employee.Id})
+                        }
+                    </td>
+                    <td>@employee.CalculateDifference()</td>
+                    <td>
+                        @if (employee.WorkedShifts.All(w => w.Approved == true))
+                        {
+                            @Html.Raw("Is al goedgekeurd")
+                            ;
+                        }
+                        else
+                        {
+
+                            @Html.ActionLink("Goedkeuren", "Approve", "WorkedHours", new { ids = employee.WorkedShifts.Select(w => w.Id)})
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
