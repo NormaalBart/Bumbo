@@ -98,9 +98,11 @@ namespace Bumbo.Controllers.Manager
 
             viewModel.InvalidShifts = invalidShifts;
 
-            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1 );
-            viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, manager.DefaultBranchId ?? -1);
-            viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1);
+            viewModel.CassierePrognoseHours = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Hours;
+            viewModel.CassierePrognoseWorkers = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Workers;
+            viewModel.StockersPrognoseHours = _prognosesServices.GetStockersPrognoseHours(date, manager.DefaultBranchId ?? -1);
+            viewModel.FreshPrognoseHours = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Hours;
+            viewModel.FreshPrognoseWorkers = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Workers;
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
                 .ToList();
             viewModel.UpdatePrognosis(shiftsOnDay);
@@ -141,9 +143,9 @@ namespace Bumbo.Controllers.Manager
                 OverviewItem item = new OverviewItem();
                 item.Date = new DateTime(date.Year, date.Month, i);
                 // gets the sum of the prognosis hours of departments
-                item.PrognosisHours = _prognosesServices.GetCassierePrognose(item.Date, employee.DefaultBranchId ?? -1)
-                                        + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId ?? -1)
-                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1);
+                item.PrognosisHours = _prognosesServices.GetCassierePrognose(item.Date, employee.DefaultBranchId ?? -1).Hours
+                                        + _prognosesServices.GetStockersPrognoseHours(item.Date, employee.DefaultBranchId ?? -1)
+                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1).Hours;
                 item.PrognosisHours = Math.Round(item.PrognosisHours);
                 if (item.PrognosisHours < 0)
                 {

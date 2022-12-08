@@ -14,7 +14,7 @@ namespace BumboUnitTests
         [SetUp]
         public void Setup()
         {
-            _prognosisService = new PrognosisService(_prognosisRepositoryMock.Object, _standardRepositoryMock.Object);
+            //_prognosisService = new PrognosisService(_prognosisRepositoryMock.Object, _standardRepositoryMock.Object);
         }
 
         [Test]
@@ -247,7 +247,7 @@ namespace BumboUnitTests
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfStocking, branch)).Returns(standardShelfStockingDto);
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfArrangement, branch)).Returns(standardShelfArrangement);
             //Act
-            var result = _prognosisService.GetStockersPrognose(date, branchId);
+            var result = _prognosisService.GetStockersPrognoseHours(date, branchId);
             //Assert
             var timeSpentOnColiInMin = (valueColi + valueShelfStocking) * coliCount;
             var timeSpentOnShelfsInMin = (valueShelfArrangement * branch.ShelvingDistance) / 60;
@@ -304,7 +304,7 @@ namespace BumboUnitTests
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfStocking, branch)).Returns(standardShelfStockingDto);
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfArrangement, branch)).Returns(standardShelfArrangement);
             //Act
-            var result = _prognosisService.GetStockersPrognose(date, branchId);
+            var result = _prognosisService.GetStockersPrognoseHours(date, branchId);
             //Assert
 
             Assert.AreEqual(-1, result);
@@ -346,7 +346,7 @@ namespace BumboUnitTests
 
             _standardRepositoryMock.Setup(x => x.Get(It.IsAny<StandardType>(), It.IsAny<Branch>())).Returns(() => null);
             //Act
-            var result = _prognosisService.GetStockersPrognose(date, branchId);
+            var result = _prognosisService.GetStockersPrognoseHours(date, branchId);
             //Assert
 
             Assert.AreEqual(-1, result);
