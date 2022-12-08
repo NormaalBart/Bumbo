@@ -16,7 +16,7 @@ namespace Bumbo.Controllers.Admin
         private readonly UserManager<Employee> _userManager;
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
-        private const int ItemsPerPage = 2;
+        private const int ItemsPerPage = 25;
 
         public BranchController(UserManager<Employee> userManager, IMapper mapper, IBranchRepository branchRepository)
         {
@@ -35,7 +35,7 @@ namespace Bumbo.Controllers.Admin
 
             var branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
 
-            while (branches.Count() == 0 && page > 1)
+            if (branches.Count() == 0 && page > 1)
             {
                 page--;
                 branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);

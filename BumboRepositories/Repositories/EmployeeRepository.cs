@@ -35,8 +35,8 @@ namespace BumboRepositories.Repositories
         public IEnumerable<Employee> GetAllManagers(int start, int amount)
         {
             var users = Context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId)
-                .Select(role => role.UserId).Skip(start).Take(amount).ToList();
-            return DbSet.Where(employee => users.Contains(employee.Id));
+                .Select(role => role.UserId).Skip(start).Take(amount);
+            return DbSet.Where(employee => users.Contains(employee.Id)).ToList();
         }
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
@@ -46,7 +46,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch, int start, int amount)
         {
-            return DbSet.Where(employee => employee.DefaultBranchId == branch).Skip(start).Take(amount);
+            return DbSet.Where(employee => employee.DefaultBranchId == branch).Skip(start).Take(amount).ToList();
         }
 
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)

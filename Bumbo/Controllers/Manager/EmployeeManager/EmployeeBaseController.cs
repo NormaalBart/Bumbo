@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager.Common;
 using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
@@ -39,7 +38,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         {
             if (page < 1) page = 1;
             var employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage);
-            while (employees.Count() == 0 && page != 1)
+            if (employees.Count() == 0 && page != 1)
             {
                 page--;
                 employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage);
