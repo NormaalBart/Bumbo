@@ -103,6 +103,11 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             return RedirectToAction(nameof(Index));
         }
 
+        public override IEnumerable<Employee> GetAllEmployeesAsync(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
+        {
+            return _employeesRepository.GetAllManagers(start, amount, searchString, includeActive, includeInactive, sortingOption);
+        }
+
         private void PopulateDepartments(EmployeeEditViewModel viewModel)
         {
             viewModel.EmployeeSelectedDepartments = _mapper.Map<List<EmployeeDepartmentViewModel>>(_employeesRepository.GetDepartmentsOfEmployee(viewModel.EmployeeKey));
@@ -121,10 +126,5 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             }
         }
 
-        public override IEnumerable<Employee> GetAllEmployeesAsync(int start, int amount)
-        {
-            var employee = _userManager.GetUserAsync(User).Result;
-            return _employeesRepository.GetAllEmployeesOfBranch(employee.DefaultBranchId ?? -1, start, amount);
-        }
     }
 }
