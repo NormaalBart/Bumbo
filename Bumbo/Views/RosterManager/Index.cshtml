@@ -1,7 +1,7 @@
 ﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
 
 @{
-    ViewBag.data = "Rooster";
+    ViewBag.data = "Roster";
     if (Model.ErrorMessage != null)
     {
         ViewData["Title"] = "Rooster (1)";
@@ -12,6 +12,7 @@
     }
 
 }
+
 
 <body class="roster-body">
 
@@ -230,11 +231,11 @@
     <table class="table roster-table table-hover" style="background-color: white;">
         <thead>
         <tr class="">
-            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Naam</th>
+            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
             @*Important note: The text in the header blocks must be equal characters long.*@
-            @for (var i = Model.OpenTime.Hour; i < Model.CloseTime.Hour; i++)
+            @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
             {
-                <th class="small border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                 <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
             }
         </tr>
         </thead>
@@ -251,7 +252,7 @@
                         @employee.FullName
                     </td>
 
-                            @for (var i = Model.OpenTime.Hour; i < Model.CloseTime.Hour; i++)
+                            @for (var i = Model.TableMinHour ; i < Model.TableMaxHour ; i++)
                     {
                         var shift = Model.GetShiftOnHourOfEmployee(employee, i);
                         @if (shift != null)
@@ -262,7 +263,7 @@
                             var background = showError ? "background: red;" : "";
                             var error = showError ? string.Join(" | ", invalidPairs.Select(s => s.GetErrorMessage())) : "";
 
-                            <td id="roster-start" class="roster-table-cell" title="@error">
+                                    <td id="roster-start" class="roster-table-cell @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")" title="@error">
                                 <div id="roster-start-div " class="roster-shift text-center" style="height: 100%; @background" runat="server">
                                     @*If the shift is very short, we use a different string not make it ugly.*@
                                     @if (Model.GetShiftHourLength(employee, i) < 2)
@@ -317,12 +318,13 @@
                         {
                             if (Model.IsPlanned(employee, i))
                             {
-                                <td class="roster-table-cell">
+                                        <td class="roster-table-cell @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")" >
                                 </td>
                             }
                             else
                             {
-                                <td class="roster-table-cell roster-table-cell-empty">
+                                        <td class="roster-table-cell roster-table-cell-empty @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")" title="@(Model.IsOutSideOfOpeningTimes(i) ? "Winkel is gesloten" : "")">
+
                                 </td>
                             }
                         }
@@ -365,40 +367,47 @@
         <label> </label>
         <!-- The Modal for creating a new shift -->
         <div id="createshiftmodal" class="m-3 text-center align-content-center">
-            <form asp-action="CreateShift">
-                <input type="hidden" asp-for="Date"/>
-                <h2>Voeg een dienst toe</h2>
-                <div class="row">
-                    <span class="col">Medewerker:</span>
-                    <select id="selectemployee" asp-for="SelectedEmployeeId" class="form-control col">
-
-                        @foreach (var employee in Model.AvailableEmployees)
-                        {
-                            <option value="@employee.Id">@employee.FullName</option>
-                        }
-                    </select>
-
-                    @*TODO make it so you can only select department for employee who have them.*@
-                    <span class="col">In afdeling:</span>
-
-                    <select asp-for="SelectedDepartmentId" class="form-control col">
-
-                        @foreach (var dep in Model.Departments)
-                        {
-                            <option value="@dep.Id">@dep.DepartmentName</option>
-                        }
-                    </select>
+           
+                <div class="modal-title">
+                    Nieuwe dienst toevoegen
                 </div>
-                <div class="row">
-                    <span class="col">Startijd:</span>
-                    <input asp-for="SelectedStartTime" class="form-control col"/>
+                <div class="modal-body">
+                    <form asp-action="CreateShift">
+                    <input type="hidden" asp-for="Date"/>
+                        <div class="row">
+                            <span class="col">Medewerker:</span>
+                            <select id="selectemployee" asp-for="SelectedEmployeeId" class="form-control col">
 
-                    <span class="col">Eindtijd:</span>
-                    <input asp-for="SelectedEndTime" class="form-control col"/>
+                                @foreach (var employee in Model.AvailableEmployees)
+                                {
+                                    <option value="@employee.Id">@employee.FullName</option>
+                                }
+                            </select>
+
+                            @*TODO make it so you can only select department for employee who have them.*@
+                            <span class="col">In afdeling:</span>
+
+                            <select asp-for="SelectedDepartmentId" class="form-control col">
+
+                                @foreach (var dep in Model.Departments)
+                                {
+                                    <option value="@dep.Id">@dep.DepartmentName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="row">
+                            <span class="col">Startijd:</span>
+                            <input asp-for="SelectedStartTime" class="form-control col" />
+
+                            <span class="col">Eindtijd:</span>
+                            <input asp-for="SelectedEndTime" class="form-control col" />
+                        </div>
+                        <label> </label>
+                        <input type="submit" value="Opslaan" class="btn btn-success btn-sm " />
+                </form>
                 </div>
-                <label> </label>
-                <input type="submit" value="Opslaan" class="btn btn-success btn-sm "/>
-            </form>
+                
+
         </div>
 
         <!--This is the modal for editing a shift.-->
@@ -410,11 +419,11 @@
                 <div class="row">
                     <span class="col">Medewerker:</span>
 
-                    <select id="employeeIdInput" asp-for="SelectedEmployeeId" class="form-control col">
+                    <select id="employeeIdInput" asp-for="SelectedEmployeeId" class="form-control col ">
 
                         @foreach (var employee in Model.AvailableEmployees)
                         {
-                            <option value="@employee.Id">@employee.FullName</option>
+                                <option value="@employee.Id">@employee.FullName</option>
                         }
                     </select>
                     @*TODO make it so you can only select department for employee who have them.*@
@@ -446,6 +455,14 @@
 @section Scripts
 {
     <script>
+        $(document).ready(function () {
+            //change selectboxes to selectize mode to be searchable
+            $("#selectemployee").select2({
+                dropdownParent: $('#modal')
+            });
+        });
+
+
         let rows = document.querySelectorAll('tr');
         let lastrow = rows[rows.length - 1];
         lastrow.addEventListener('click', () => {
