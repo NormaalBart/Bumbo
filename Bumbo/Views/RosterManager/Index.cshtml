@@ -464,14 +464,14 @@
         <label> </label>
         <div class="m-3 align-content-center">
             <form asp-action="CopyFromWeek">
-                <h2 class="text-center">Kopieer rooster van week naar week</h2>
+                <h2 class="text-center">Kopieer rooster van dag naar dag</h2>
                 <div class="row">
-                    <span class="col-6">Weeknummer: </span>
-                    @Html.EditorFor(model => model.CopyFromWeek, new { htmlAttributes = new { @class = "col-auto",@max = "52",@min="1" } })
+                    <span class="col-6">Dag: </span>
+                    @Html.EditorFor(model => model.CopyFrom, new { htmlAttributes = new { @class = "col-auto" } })
                     
                 </div>
                 <div class="row">
-                    <span asp-validation-for="CopyFromWeek" class="text-danger col"></span>
+                    <span asp-validation-for="CopyFrom" class="text-danger col"></span>
                 </div>
 
                 <div class="row">
@@ -480,11 +480,11 @@
 
 
                 <div class="row">
-                    <span class="col-6">Weeknummer: </span>
-                    @Html.EditorFor(model => model.CopyToWeek, new { htmlAttributes = new { @class = "col-auto",@max = "52",@min="1" } })
+                    <span class="col-6">Dag: </span>
+                    @Html.EditorFor(model => model.CopyTo, new { htmlAttributes = new { @class = "col-auto" } })
                 </div>
                 <div class="row">
-                    <span asp-validation-for="CopyToWeek" class="text-danger col"></span>
+                    <span asp-validation-for="CopyTo" class="text-danger col"></span>
                 </div>
                 <input type="submit" value="Kopiëren" class="btn btn-success btn-sm " />
             </form>
@@ -569,5 +569,6 @@
               });
         });
         });
+
     </script>
 }

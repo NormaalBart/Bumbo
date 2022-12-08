@@ -38,34 +38,11 @@ if (btn != null) {
 
 }
 
-// Get the second modal
-var copyWeekModal = document.getElementById("copyWeekModal");
-
-// Get the button that opens the second modal
-var copyWeekModalBtn = document.getElementById("copyWeekModalBtn");
-
-// Get the <span> element that closes the modal
-var copyWeekModalSpan = document.getElementsByClassName("closeCopyWeekModal")[0];
-
-// When the user clicks on the second button, open the second modal
-copyWeekModalBtn.onclick = function () {
-    copyWeekModal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-copyWeekModalSpan.onclick = function () {
-    copyWeekModal.style.display = "none";
-}
-
-
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
-    }
-    if (event.target == copyWeekModal) {
-        copyWeekModal.style.display = "none";
     }
 } 
 
