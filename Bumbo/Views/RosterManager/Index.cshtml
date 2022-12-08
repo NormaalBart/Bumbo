@@ -225,14 +225,6 @@
             <span>De winkel is vandaag gesloten.</span>
         </div>
     }
-    @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" && Model.RosteredEmployees.Count == 0)
-    {
-        <div class="alert-warning text-center text-large">
-            <span></span>
-        </div>
-    }
-
-    
 <div class="table-responsive-sm">
 
     <!--table, 24 long horizontal -->
@@ -373,7 +365,7 @@
 </div>
 
 
-@if (Model.RosteredEmployees.Count == 0)
+    @if (Model.RosteredEmployees.Count == 0 && !(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00"))
 {
     <div class="justify-content-center mx-auto d-flex justify-content-center">
 
@@ -510,10 +502,6 @@
     <script>
         $(document).ready(function () {
             //change selectboxes to selectize mode to be searchable
-
-
-            
-
             $("#selectemployee").select2({
                 dropdownParent: $('#createNewShiftModal'),
                 width: 'resolve',

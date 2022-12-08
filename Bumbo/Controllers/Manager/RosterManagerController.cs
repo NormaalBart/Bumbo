@@ -1,8 +1,6 @@
-﻿using System.Net;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using AutoMapper;
 using Bumbo.Models.RosterManager;
-using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -11,9 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BumboServices.CAO.Rules;
-using Bumbo.Models.Validations;
 using BumboServices.Roster;
-using NuGet.Protocol;
 
 namespace Bumbo.Controllers.Manager
 {
