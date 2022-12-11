@@ -216,8 +216,8 @@
 
 @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
     {
-        <div class="alert-warning text-center text-large">
-            <span>De winkel is vandaag gesloten.</span>
+        <div class="alert alert-warning text-center text-large">
+            <span>De winkel is op deze datum gesloten.</span>
         </div>
     }
 <div class="table-responsive-sm">
@@ -335,7 +335,7 @@
                         <tr class="roster-shift-containter roster-table-cell-closed border border-3 ">
                             <td colspan="25" class="roster-table-employee-cell text-center">
 
-                                <a class="text-large text-decoration-none" asp-controller="Branch" asp-action="EditManager">Klik hier om openingstijden aan te passen.</a>
+                                <a class="btn btn-primary text-large text-decoration-none" asp-controller="Branch" asp-action="EditManager">Openingstijden aanpassen</a>
                             </td>
 
                         </tr>
