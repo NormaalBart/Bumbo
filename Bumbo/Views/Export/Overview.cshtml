@@ -116,7 +116,7 @@
                                             @foreach (var unapprovedShift in viewModel.UnapprovedShifts)
                                             {
                                                 <li>
-                                                    <a asp-controller="WorkedHours" asp-action="Index" asp-route-dateInput="@unapprovedShift.StartTime">@unapprovedShift.StartTime.Date.ToString("dd-MM-yyyy")</a>: @unapprovedShift.StartTime.TimeOfDay.ToString("HH\\:mm") - @unapprovedShift.EndTime?.TimeOfDay.ToString("HH\\:mm")
+                                                    <a asp-controller="WorkedHours" asp-action="Index" asp-route-dateInput="@unapprovedShift.StartTime">@unapprovedShift.StartTime.ToString("dd-MM-yyyy")</a>: @unapprovedShift.StartTime.ToString("HH\\:mm") - @unapprovedShift.EndTime?.ToString("HH\\:mm")
                                                 </li>
                                             }
                                         </ul>
@@ -141,11 +141,11 @@
                 <h4>Filters</h4>
                 <form asp-action="Overview" method="get">
                     <div class="form-group w-100">
-                        <input type="search" name="SearchQuery" class="export-screen-input-field" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
+                        <input type="search" name="SearchQuery" class="export-screen-input-field w-100" value="@Model.SearchQuery" placeholder="Medewerker naam"/>
                         @Html.HiddenFor(m => m.SelectedMonth)
                         @Html.HiddenFor(m => m.SelectedMonth)
-                        <input class="btn btn-primary my-2" type="submit" value="Zoeken"><br/>
-                        <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth.ToString("yyyy-MM")" target="_blank" class="btn btn-warning my-2" type="submit">Exporteren</a>
+                        <input class="btn btn-primary my-2 w-100" type="submit" value="Zoeken"><br/>
+                        <a asp-action="GenerateExport" asp-route-SelectedMonth="@Model.SelectedMonth.ToString("yyyy-MM")" target="_blank" class="btn btn-warning w-100" type="submit">Exporteren</a>
                     </div>
                 </form>
             </div>

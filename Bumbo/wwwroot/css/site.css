@@ -203,8 +203,7 @@ p {
 /*Rooster manager*/
 
 .roster-table-employee-cell {
-    background-color: grey !important;
-    width: 30px;
+    width: 50px;
     height: 45px;
 }
 
@@ -213,7 +212,7 @@ p {
 .roster-table-header-cell {
     background-color: grey !important;
     white-space: nowrap;
-    font-size: 9px;
+    font-size: 14px;
 }
 
 .roster-body {
@@ -227,9 +226,9 @@ p {
 .roster-table-cell {
     height: 45px;
     border: 1px solid darkgrey;
-    background-color: lightgray;
-    width: 50px !important;
+    min-width: 50px !important;
     padding: 0px !important;
+   
 }
 
 .roster-table {
@@ -239,12 +238,14 @@ p {
     margin-right: auto;
 }
 
+/* Cells that are within closing time */
 .roster-table-cell-closed {
-    width: 45px;
-    height: 45px;
-    padding: 10px;
-    border: 1px solid lightslategrey;
-    background-color: lightslategrey !important;
+    margin: 10px !important;
+    outline: solid;
+    outline-color: darkgrey;
+    outline-width: 1px;
+    background-color: #D3D3D3 !important;
+
 }
 
 /* Div which is the planned shift in the roster*/
