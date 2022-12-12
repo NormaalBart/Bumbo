@@ -11,6 +11,7 @@ using BumboServices.Roster;
 using BumboServices.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Bumbo
 {
@@ -61,6 +62,11 @@ namespace Bumbo
                 }
             ).AddEntityFrameworkStores<BumboContext>()
             .AddDefaultTokenProviders();
+
+            // Set all displayed dates to the Dutch locale
+            var cultureInfo = new CultureInfo("nl-NL");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
 
 
