@@ -8,7 +8,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - Bumbo2022
 
 
 env:
-  AZURE_WEBAPP_NAME: Bumbo2022    # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: Bumbo2122    # set this to the name of your Azure Web App
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '6.0.x'  
 
@@ -64,7 +64,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'Bumbo2022'
+          app-name: 'Bumbo2122'
           slot-name: 'production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
