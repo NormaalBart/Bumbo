@@ -87,6 +87,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if (Model.Branches.Count == 0)
+                    {
+                        <tr class="alert-info text-center">
+                            <td colspan="5">
+                                <p>Er zijn geen filialen gevonden.</p>
+                            </td>
+                        </tr>
+                    }
                     @foreach (var item in Model.Branches)
                     {
                         <tr>

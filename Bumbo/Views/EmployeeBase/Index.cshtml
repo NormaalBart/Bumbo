@@ -101,38 +101,49 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Employees)
+                    @if (Model.Employees.Count == 0)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FullName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Function)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.Birthdate)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
-                            </td>
-                            <td>
-                                @Html.ActionLink("Verander", "Edit", new { item.Id }) |
-                                @Html.ActionLink("Reset wachtwoord", "ChangePassword", new { item.Id })
-                                @if (item.Active)
-                                {
-                                    <div class="alert-danger">
-                                        @Html.ActionLink("Zet inactief", "ToggleActive", new { item.Id })
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="alert-success">
-                                        @Html.ActionLink("Zet actief", "ToggleActive", new { item.Id })
-                                    </div>
-                                }
+                        <tr class="alert-info text-center">
+                            <td colspan="5">
+                                <p>Er zijn geen medewekers gevonden.</p>
                             </td>
                         </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.Employees)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Function)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.Birthdate)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Verander", "Edit", new { item.Id }) |
+                                    @Html.ActionLink("Reset wachtwoord", "ChangePassword", new { item.Id })
+                                    @if (item.Active)
+                                    {
+                                        <div class="alert-danger">
+                                            @Html.ActionLink("Zet inactief", "ToggleActive", new { item.Id })
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert-success">
+                                            @Html.ActionLink("Zet actief", "ToggleActive", new { item.Id })
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
