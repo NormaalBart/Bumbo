@@ -37,9 +37,7 @@ public class ExportController : NotificationController
     
     public async Task<IActionResult> Overview(string? SelectedMonth, string? SearchQuery, int? Page = 1)
     {
-        var monthSelected = SelectedMonth == null || SelectedMonth.Length != 7
-            ? DateTime.Now
-            : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
+        
 
         var model = new ExportOverviewViewModel();
 
@@ -50,15 +48,19 @@ public class ExportController : NotificationController
             return BadRequest();
         }
 
-        var workedShiftsInMonth =
-            _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, monthSelected.Year, monthSelected.Month);
-
         // Get all months available, where at least 1 shift has taken place in.
         var selectableMonths = _workedShiftRepository.GetList(s => s.BranchId == branch)
             .GroupBy(s=>(s.StartTime.Year, s.StartTime.Date.Month))
             .Select(s => new DateTime(s.Key.Year, s.Key.Month, 1))
             .OrderBy(s => s.Date).Reverse().ToList();
-
+        
+        var monthSelected = SelectedMonth == null || SelectedMonth.Length != 7
+            ? selectableMonths.First()
+            : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
+        
+        var workedShiftsInMonth =
+            _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, monthSelected.Year, monthSelected.Month);
+        
         model.SelectableMonths = selectableMonths;
         model.SelectableYears = selectableMonths.GroupBy(s => s.Year).Select(s => s.Key).ToList();
         model.SelectedMonth = monthSelected;
