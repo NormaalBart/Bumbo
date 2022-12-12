@@ -90,6 +90,14 @@ input[type="search"] {
         text-decoration: none;
     }
 
+.center-table{
+  margin-right: auto;
+  margin-left: auto;
+}
+
+    .center-table td{ 
+        padding: 5px;
+    }
 
 /* The Modal (background) */
 .modal {
@@ -425,3 +433,12 @@ body.swal2-shown > [aria-hidden="true"] {
     filter: blur(10px);
 }
 
+.input-max-width-40 {
+    display: inline;
+    width: 40px;
+    max-width: 40px;
+}
+
+.border-standard {
+    max-width: 70%;
+}
