@@ -1,0 +1,29 @@
+﻿<div class="modal fade" id="setBranchInactive" tabindex="-1" aria-labelledby="filiaalinactief" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Filiaal inactief zetten</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="SetInactive" id="InactiveForm">
+                    <h2 id="modalText">Wilt u inactief zetten?</h2>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ga terug zonder opslaan</button>
+                <input type="submit" value="Opslaan" form="InactiveForm" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setInactiveClick(id, name) {
+        $('#setBranchInactive').modal('show');
+        var paragraph = document.getElementById("modalText");
+        paragraph.textContent = "Wilt u " + name + " op inactief zetten?";
+        var form = document.getElementById("InactiveForm");
+        form.action += "/" + id;
+    }
+</script>

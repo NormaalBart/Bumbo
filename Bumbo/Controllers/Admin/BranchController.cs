@@ -164,36 +164,12 @@ namespace Bumbo.Controllers.Admin
         }
 
         [Authorize(Roles = "Administrator")]
-        public ActionResult SetInactive(int id)
-        {
-            var branch = _branchRepository.Get(id);
-            if (branch == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            var branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
-            return View(branchViewModel);
-        }
-
-        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SetInactive(int id, IFormCollection collection)
         {
             _branchRepository.SetInactive(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        [Authorize(Roles = "Administrator")]
-        public ActionResult SetActive(int id)
-        {
-            var branch = _branchRepository.Get(id);
-            if (branch == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            var branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
-            return View(branchViewModel);
         }
 
         [Authorize(Roles = "Administrator")]
