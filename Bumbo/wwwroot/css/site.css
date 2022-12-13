@@ -425,3 +425,13 @@ body.swal2-shown > [aria-hidden="true"] {
     filter: blur(10px);
 }
 
+.white-fade-bottom {
+    background-image: linear-gradient(white, white, white, transparent);
+}
+
+@media (min-width: 1200px) {
+    .seven-cols .col-xl-1 {
+        width: 14.285714285714285714285714285714%;
+        *width: 14.285714285714285714285714285714%;
+    }
+}
