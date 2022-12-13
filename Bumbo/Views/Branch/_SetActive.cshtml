@@ -11,8 +11,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ga terug zonder opslaan</button>
-                <input type="submit" value="Opslaan" form="ActiveForm" class="btn btn-success" />
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ga terug zonder te veranderen</button>
+                <input type="submit" value="Zet branch actief" form="ActiveForm" class="btn btn-danger" />
             </div>
         </div>
     </div>
@@ -25,6 +25,6 @@
         paragraph.textContent = "Wilt u " + name + " op actief zetten?";
         console.log(paragraph.textContent)
         var form = document.getElementById("ActiveForm");
-        form.action += "/" + id;
+        form.attributes['action'].value = "/Branch/SetActive/" + id;
     }
 </script>
