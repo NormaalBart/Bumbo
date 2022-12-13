@@ -1,4 +1,6 @@
-﻿@model Bumbo.Models.RosterManager.OverviewList
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Bumbo.Models.RosterManager.OverviewList
 
 @{
     ViewData["Title"] = "Roosterbeheer";
@@ -43,41 +45,57 @@
                 <span class="dot red me-2"></span> <span>Rode omlijning: Dag heeft CAO overtredingen.</span>
             </div>
         </div>
-    </div>
+                </div>
 
-    <div class="row pt-4 seven-cols">
+    
+    <div class="row py-1 seven-cols">
+        @{
+            var daysInWeek = Enum.GetValues(typeof(DayOfWeek));
+            // Shift days in week by 2 forward to start with monday.
+            var daysInWeekShifted = daysInWeek.Cast<DayOfWeek>().Skip(1).Concat(daysInWeek.Cast<DayOfWeek>().Take(1));
+        }
+        @foreach (DayOfWeek day in daysInWeekShifted)
+        {
+            <div class="col-xl-2 d-xl-inline d-none fw-bold text-center">@CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(day)</div>
+        }
+    </div>
+    <hr/>
+        
+
+
+        <div class="row pt-4 seven-cols m-0">
         @* Add placeholder items so the week is properly aligned. Start with monday *@
         @{ var offset = (int) new DateTime(Model.Date.Year, Model.Date.Month, 1).DayOfWeek;}
         @for (int i = 0; i < offset - 1; i++)
         {
-            <div class="col-xl-1 d-xl-inline d-none"></div>
+            <div class="col-xl-2 d-xl-inline d-none"></div>
         }
         @for (int day = 0; day <= DateTime.DaysInMonth(Model.Date.Year, Model.Date.Month); day++)
         {
             var item = Model.GetDayByIndex(day);
-            
-            <div class="col-md-3 col-sm-6 col-6 col-lg-3 col-xl-1 pb-4">
-                            @if (item != null)
-                            {
-                                <div class="card roster-item-container @(item.ItemIsToday() ? "roster-overview-today" : "") @(item.IsSufficientlyRostered() ? "green" : "") @(item.IsInsufficientlyRostered() ? "bg-warning" : "")">
-                                    <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@item.Date.Date">
-                                        <div class="text-center roster-overview-box  ">
-                                            <div class="card-header">
-                                                <p>
-                                                    <strong>@item.GetDayName()</strong>
-                                                </p>
-                                                <p>
-                                                    @item.Date.ToString("dd MMMM")
-                                                </p>
-                                            </div>
 
-                                            <div class="card-body roster-overview-iteminfo">
-                                                <div class="roster-overview-loading spinner-border"></div>
-                                                <p>Prognose: <strong>@item.PrognosisHours</strong></p>
-                                                <p>Ingeplande uren: <strong>@item.RosteredHours</strong></p>
-                                            </div>
+            <div class="col-md-3 col-sm-6 col-6 col-lg-3 col-xl-2 pb-4">
+                @if (item != null)
+                {
+                    <div class="card roster-item-container @(item.ItemIsToday() ? "roster-overview-today" : "") @(item.IsSufficientlyRostered() ? "green" : "") @(item.IsInsufficientlyRostered() ? "bg-warning" : "")">
+                        <a class="text-decoration-none text-black" asp-action="index" asp-route-dateInput="@item.Date.Date">
+                            <div class="text-center roster-overview-box  ">
+                                <div class="card-header">
+                                    <p>
+                                        <strong>@item.GetDayName()</strong>
+                                    </p>
+                                    <p>
+                                        @item.Date.ToString("dd MMMM")
+                                    </p>
+                                </div>
 
-                                            <script>
+                                <div class="card-body roster-overview-iteminfo">
+                                    <div class="roster-overview-loading spinner-border"></div>
+                                    <p>Prognose: <strong>@item.PrognosisHours</strong></p>
+                                    <p>Ingeplande uren: <strong>@item.RosteredHours</strong></p>
+                                </div>
+
+                                <script>
 
                                         $(function () {
                                             $.ajax({
@@ -105,13 +123,12 @@
                                             });
                                         });
                                     </script>
-                                        </div>
-                                    </a>
-                                </div>
-                            }
+                            </div>
+                        </a>
+                    </div>
+                }
 
-                        </div>
-                        <div class='w-100 d-md-none'></div>
-                        }
+            </div>
+        }
     </div>
 </div>

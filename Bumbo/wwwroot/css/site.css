@@ -429,9 +429,8 @@ body.swal2-shown > [aria-hidden="true"] {
     background-image: linear-gradient(white, white, white, transparent);
 }
 
-@media (min-width: 1200px) {
-    .seven-cols .col-xl-1 {
+@media (min-width: 1400px) {
+    .seven-cols .col-xl-2 {
         width: 14.285714285714285714285714285714%;
-        *width: 14.285714285714285714285714285714%;
     }
 }
