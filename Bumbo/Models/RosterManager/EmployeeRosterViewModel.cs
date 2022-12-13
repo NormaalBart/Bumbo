@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using BumboData.Models;
 
 namespace Bumbo.Models.RosterManager
 {
@@ -14,10 +15,11 @@ namespace Bumbo.Models.RosterManager
         public string LastName { get; set; }
         [DisplayName("Naam")]
         public string FullName => $"{FirstName} {MiddleName} {LastName}";
-
-
+        
         public List<ShiftViewModel> PlannedShifts { get; set; }
         public List<UnavailableMomentsRosterViewModel> UnavailableMoments { get; set; }
+        
+        public List<Department> AllowedDepartments { get; set; }
 
         public EmployeeRosterViewModel()
         {

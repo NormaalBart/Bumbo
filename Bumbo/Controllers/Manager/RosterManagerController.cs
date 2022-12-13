@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Globalization;
+using System.Text.Json.Nodes;
 using AutoMapper;
 using Bumbo.Models.RosterManager;
 using BumboData.Interfaces.Repositories;
@@ -48,10 +49,7 @@ namespace Bumbo.Controllers.Manager
 
         public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
         {
-            if (dateInput == null)
-            {
-                dateInput = DateTime.Today.ToString();
-            }
+            dateInput ??= DateTime.Today.ToString(CultureInfo.CurrentCulture);
 
             var date = DateTime.Parse(dateInput).Date;
             var viewModel = new RosterDayViewModel
@@ -68,9 +66,8 @@ namespace Bumbo.Controllers.Manager
             viewModel.CloseTime = openAndCloseTimes.Item2;
             viewModel.TableMinHour = viewModel.OpenTime.Hour - 1;
             viewModel.TableMaxHour = viewModel.CloseTime.Hour + 1;
-
-
-            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList(e=>e.DefaultBranchId == (manager.DefaultBranchId ?? -1)));
+            
+            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId ?? -1));
             
             // Start CAO
             // Filter shifts to only display that of today
@@ -88,7 +85,7 @@ namespace Bumbo.Controllers.Manager
                     emp.PlannedShifts.ForEach(shift =>
                     {
                         // Add invalid shift validated rules to the viewmodel.
-                        shift.ValidatesRules.AddRange(invalidShifts.Where(s =>
+                        shift.ViolatedRules.AddRange(invalidShifts.Where(s =>
                                 s.Value.Any(s => s.Id == shift.Id))
                             .Select(s => s.Key));
 
@@ -112,7 +109,7 @@ namespace Bumbo.Controllers.Manager
 
             // Sort by the amount of rules violated.
             viewModel.RosteredEmployees = viewModel.RosteredEmployees
-                .OrderByDescending(e => e.PlannedShifts.Sum(s => s.ValidatesRules.Count)).ToList();
+                .OrderByDescending(e => e.PlannedShifts.Sum(s => s.ViolatedRules.Count)).ToList();
 
             viewModel.InvalidShifts = invalidShifts;
 
@@ -139,20 +136,18 @@ namespace Bumbo.Controllers.Manager
                 viewModel.ErrorMessage = errormessage;
             }
 
-            if (viewModel.TableMinHour < 0 || viewModel.TableMinHour > 24)
+            if (viewModel.TableMinHour is < 0 or > 24)
             {
                 viewModel.TableMinHour = 0;
             }
-            if (viewModel.TableMaxHour < 0 || viewModel.TableMaxHour > 24)
+            if (viewModel.TableMaxHour is < 0 or > 24)
             {
                 viewModel.TableMinHour = 24;
             }
 
             return View(viewModel);
         }
-
-
-
+        
         public async Task<IActionResult> Overview(string? dateInput)
         {
             var employee = await _userManager.GetUserAsync(User);
