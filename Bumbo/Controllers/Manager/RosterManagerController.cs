@@ -1,8 +1,6 @@
-﻿using System.Net;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using AutoMapper;
 using Bumbo.Models.RosterManager;
-using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -11,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BumboServices.CAO.Rules;
-using Bumbo.Models.Validations;
 using BumboServices.Roster;
 
 namespace Bumbo.Controllers.Manager
@@ -61,7 +58,17 @@ namespace Bumbo.Controllers.Manager
             {
                 Date = date
             };
+
             var manager = await _userManager.GetUserAsync(User);
+
+
+            var openAndCloseTimes = _branchRepository.GetOpenAndCloseTimes(manager.DefaultBranchId ?? -1, date.ToDateOnly());
+            // TableMinHour and TableMaxHour are for the width of the table. 
+            viewModel.OpenTime = openAndCloseTimes.Item1;
+            viewModel.CloseTime = openAndCloseTimes.Item2;
+            viewModel.TableMinHour = viewModel.OpenTime.Hour - 1;
+            viewModel.TableMaxHour = viewModel.CloseTime.Hour + 1;
+
 
             var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList(e=>e.DefaultBranchId == (manager.DefaultBranchId ?? -1)));
             
@@ -84,6 +91,17 @@ namespace Bumbo.Controllers.Manager
                         shift.ValidatesRules.AddRange(invalidShifts.Where(s =>
                                 s.Value.Any(s => s.Id == shift.Id))
                             .Select(s => s.Key));
+
+                        // If the shift is outside of the opening and closing times we use the max so they don't go offscreen.
+                        // Min and max get a 1 offset to make it look a little better. 
+                        if (shift.EndTime.Hour > viewModel.TableMaxHour)
+                        {
+                            viewModel.TableMaxHour = shift.EndTime.Hour + 1;
+                        }
+                        if (shift.StartTime.Hour < viewModel.TableMinHour)
+                        {
+                            viewModel.TableMinHour = shift.StartTime.Hour -1;
+                        }
                     });
 
                     viewModel.RosteredEmployees.Add(emp);
@@ -123,8 +141,19 @@ namespace Bumbo.Controllers.Manager
                 viewModel.ErrorMessage = errormessage;
             }
 
+            if (viewModel.TableMinHour < 0 || viewModel.TableMinHour > 24)
+            {
+                viewModel.TableMinHour = 0;
+            }
+            if (viewModel.TableMaxHour < 0 || viewModel.TableMaxHour > 24)
+            {
+                viewModel.TableMinHour = 24;
+            }
+
             return View(viewModel);
         }
+
+
 
         public async Task<IActionResult> Overview(string? dateInput)
         {
