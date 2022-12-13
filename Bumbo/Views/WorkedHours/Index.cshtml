@@ -57,8 +57,7 @@ else
                     <td>
                         @if (employee.WorkedShifts.All(w => w.Approved == true))
                         {
-                            @Html.Raw("Is al goedgekeurd")
-                            ;
+                            <i class="ms-1 bi-check-circle" style="color: green" title="Uren zijn al goedgekeurd." data-toggle="tooltip" data-placement="top"></i>
                         }
                         else
                         {
