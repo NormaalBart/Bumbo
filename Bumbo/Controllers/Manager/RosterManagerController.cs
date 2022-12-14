@@ -315,7 +315,7 @@ namespace Bumbo.Controllers.Manager
             return RedirectToAction("Index", "RosterManager", new { dateInput = date });
         }
 
-        public async Task<IActionResult> CopyFromWeekAsync(string date, DateTime copyFrom, DateTime copyTo)
+        public async Task<IActionResult> CopyRoster(string date, DateTime copyFrom, DateTime copyTo)
         {
             var employee = await _userManager.GetUserAsync(User);
             var shifts = _shiftRepository.GetPlannedShiftsInBetween((int)employee.DefaultBranchId, copyFrom, copyFrom.AddDays(1));
@@ -336,7 +336,7 @@ namespace Bumbo.Controllers.Manager
                     numberOfCopiedShifts++;
                 }
             }
-            return RedirectToAction("Index", "RosterManager", new { dateInput = date, copiedShifts = numberOfCopiedShifts });
+            return RedirectToAction("Index", "RosterManager", new { dateInput = copyTo.ToString(), copiedShifts = numberOfCopiedShifts });
         }
     }
 }
