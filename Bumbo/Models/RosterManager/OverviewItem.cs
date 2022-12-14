@@ -45,7 +45,7 @@ namespace Bumbo.Models.RosterManager
         public string GetDayName()
         {
             // Get dutch culture
-            return CultureInfo.GetCultureInfo("nl-NL").DateTimeFormat.GetDayName(Date.DayOfWeek);
+            return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(Date.DayOfWeek);
         }
 
     }

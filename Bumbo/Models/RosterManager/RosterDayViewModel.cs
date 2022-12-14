@@ -41,11 +41,20 @@ namespace Bumbo.Models.RosterManager
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
 
+
         [DataType(DataType.Date)]
         public DateTime CopyFrom { get; set; }
         [DataType(DataType.Date)]
         public DateTime CopyTo { get; set; }
         public int CopiedShifts { get; set; }
+
+        public TimeOnly OpenTime { get; set; }
+        public TimeOnly CloseTime { get; set; }
+
+        public int TableMinHour { get; set; }
+        public int TableMaxHour { get; set; }
+
+
 
         public RosterDayViewModel()
         {
@@ -212,6 +221,19 @@ namespace Bumbo.Models.RosterManager
         {
             TimeOnly timeOnly = new TimeOnly(time, 0);
             return timeOnly.ToString();
+        }
+
+        public bool IsOutSideOfOpeningTimes(int hour)
+        {
+
+            if (hour < OpenTime.Hour || hour >= CloseTime.Hour)
+            {
+                return true;
+            }
+            return false;
+
+
+
         }
 
     }
