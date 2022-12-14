@@ -28,12 +28,15 @@ body {
 }
 
 
-.employee-create-box {
-    background-color: grey;
+.edit-box {
+    background-color: lightgray;
+    border: 2px solid;
+    border-color: darkgray;
+    border-radius: 25px;
     padding: 20px;
 }
 
-    .employee-create-box input {
+    .edit-box input {
         padding: 10px;
     }
 

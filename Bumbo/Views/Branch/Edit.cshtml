@@ -4,7 +4,6 @@
     ViewBag.data = "Branch";
 }
 
-<h1 class="text-center">Filiaalinformatie veranderen</h1>
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger text-center" role="alert">
@@ -16,13 +15,13 @@
     <div>
         <form asp-action="Edit" id="EditForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="col border border-3 border-dark employee-create-box">
+            <div class="row edit-box">
+                <div class="col edit-box">
                     <!--Branch informatie column-->
                     @Html.HiddenFor(model => model.Id)
                     <div class="col">
                         <h3 class="text-center">Bedrijfsinformatie</h3>
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row edit-box">
                             <div class="form-group col-4">
                                 <label asp-for="Name" class="control-label"></label>
                                 <input asp-for="Name" class="form-control" placeholder="Naam" />
@@ -37,7 +36,7 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row edit-box">
                             <h5 class="text-center">Plaats</h5>
                             <div class="form-group col-4">
                                 <label asp-for="City" class="control-label"></label>
@@ -57,52 +56,50 @@
                         </div>
                     </div>
                 </div>
-                <div class="col border border-3 border-dark employee-create-box">
-                    <div class="p-3">
-                        <h3 class="text-center">Openingstijden</h3>
-                        <div class="row border border-3 border-dark p-1">
+                <div class="col edit-box">
+                    <h5 class="text-center">Openingstijden</h5>
+                    <div class="row edit-box">
+                        <table>
+                            <tr>
+                                <th width=200px>Dag</th>
+                                <th>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
+                                <th>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
+                                <th>@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
+                            </tr>
+                        </table>
+                        @for (int i = 0; i < Model.OpeningHours.Count; i++)
+                        {
+                            @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
                             <table>
                                 <tr>
-                                    <th width=200px>Dag</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
+                                    <th width=200px>
+                                        @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
+                                    </th>
+                                    <th>
+                                        @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
+                                    </th>
+                                    <th>
+                                        @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
+                                    </th>
+                                    <th>
+                                        @Html.EditorFor(model => model.OpeningHours[i].IsClosed)
+                                    </th>
                                 </tr>
                             </table>
-                            @for (int i = 0; i < Model.OpeningHours.Count; i++)
-                            {
-                                @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
-                                <table>
-                                    <tr>
-                                        <th width=200px>
-                                            @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
-                                        </th>
-                                        <th>
-                                            @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
-                                        </th>
-                                        <th>
-                                            @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
-                                        </th>
-                                        <th>
-                                            @Html.EditorFor(model => model.OpeningHours[i].IsClosed)
-                                        </th>
-                                    </tr>
-                                </table>
-                                <div class="text-center">
-                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
-                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
-                                </div>
-                            }
-                        </div>
+                            <div class="text-center">
+                                @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
+                                @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
+                            </div>
+                        }
                     </div>
-                    <div class="p-3">
-                        <h3 class="text-center">Speciale openingstijden</h3>
+                    <div class="row edit-box">
+                        <h5 class="text-center">Speciale openingstijden</h5>
                         <div class="btn-warning text-center">
                             @Html.ActionLink("Voeg toe", "AddSpecialOpeningHour", "Branch", new { id = Model.Id })
                         </div>
                         @if (Model.SpecialOpeningHours.Count != 0)
                         {
-                            <div class="row border border-3 border-dark p-1">
+                            <div class="row edit-box">
                                 <table>
                                     <tr>
                                         <th width=200px>Dag</th>
@@ -134,15 +131,20 @@
                         }
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <div class="m-2">
+                            <a class="btn btn-danger h-100" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
+                        </div>
+                        <div class="m-2">
+                            <input class="btn btn-success h-100" btn-lgtype="submit" value="Veranderingen Opslaan!" form="EditForm" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
-</div>
-<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <input type="submit" value="Veranderingen Opslaan!" form="EditForm" class="btn btn-success btn-lg" />
-</div>
-<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
 </div>
 
 @section Scripts
