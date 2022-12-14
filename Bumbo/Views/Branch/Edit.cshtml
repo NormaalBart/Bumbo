@@ -15,13 +15,12 @@
     <div>
         <form asp-action="Edit" id="EditForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row edit-box">
-                <div class="col edit-box">
-                    <!--Branch informatie column-->
+            <div class="col edit-box">
+                <div class="row edit-box">
+                    <h3 class="text-center">Bedrijfsinformatie</h3>
                     @Html.HiddenFor(model => model.Id)
                     <div class="col">
-                        <h3 class="text-center">Bedrijfsinformatie</h3>
-                        <div class="row edit-box">
+                        <div class="row">
                             <div class="form-group col-4">
                                 <label asp-for="Name" class="control-label"></label>
                                 <input asp-for="Name" class="form-control" placeholder="Naam" />
@@ -29,15 +28,13 @@
                             </div>
                             <div class="form-group col-4">
                                 <label asp-for="ShelvingDistance" class="control-label"></label>
-
                                 <input asp-for="ShelvingDistance" class="form-control" placeholder="Spiegelmeters" />
                                 <span asp-validation-for="ShelvingDistance" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col">
-                        <div class="row edit-box">
-                            <h5 class="text-center">Plaats</h5>
+                        <div class="row">
                             <div class="form-group col-4">
                                 <label asp-for="City" class="control-label"></label>
                                 <input asp-for="City" class="form-control" placeholder="Stad" />
@@ -56,15 +53,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col edit-box">
-                    <h5 class="text-center">Openingstijden</h5>
-                    <div class="row edit-box">
+                <div class="row edit-box">
+                    <div class="col edit-box">
+                        <div class="m-2">
+                            <h5 class="text-center">Reguliere openingstijden</h5>
+                        </div>
                         <table>
                             <tr>
-                                <th width=200px>Dag</th>
-                                <th>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
-                                <th>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
-                                <th>@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
+                                <th width=100px>Dag</th>
+                                <th width=150px>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
+                                <th width=150px>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
+                                <th width=100px>@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
                             </tr>
                         </table>
                         @for (int i = 0; i < Model.OpeningHours.Count; i++)
@@ -72,16 +71,16 @@
                             @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
                             <table>
                                 <tr>
-                                    <th width=200px>
+                                    <th width=100px>
                                         @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
                                     </th>
-                                    <th>
+                                    <th width=150px>
                                         @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
                                     </th>
-                                    <th>
+                                    <th width=150px>
                                         @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
                                     </th>
-                                    <th>
+                                    <th width=100px>
                                         @Html.EditorFor(model => model.OpeningHours[i].IsClosed)
                                     </th>
                                 </tr>
@@ -92,22 +91,29 @@
                             </div>
                         }
                     </div>
-                    <div class="row edit-box">
-                        <h5 class="text-center">Speciale openingstijden</h5>
-                        <div class="btn-warning text-center">
-                            @Html.ActionLink("Voeg toe", "AddSpecialOpeningHour", "Branch", new { id = Model.Id })
+                    <div class="col edit-box">
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <div class="m-2">
+                                <h5 class="text-center">Speciale openingstijden</h5>
+                            </div>
+                            <div class="m-2">
+                                <div class="btn btn-warning text-center">
+                                    @Html.ActionLink("Voeg toe", "AddSpecialOpeningHour", "Branch", new { id = Model.Id })
+                                </div>
+                            </div>
                         </div>
-                        @if (Model.SpecialOpeningHours.Count != 0)
-                        {
-                            <div class="row edit-box">
-                                <table>
-                                    <tr>
-                                        <th width=200px>Dag</th>
-                                        <th width=200px>Openingstijd</th>
-                                        <th width=200px>Sluitingstijd</th>
-                                        <th width=200px>Actie</th>
-                                    </tr>
-                                </table>
+                        <div class="row">
+                            <table>
+                                <tr>
+                                    <th width=200px>Dag</th>
+                                    <th width=200px>Openingstijd</th>
+                                    <th width=200px>Sluitingstijd</th>
+                                    <th width=200px>Actie</th>
+                                </tr>
+                            </table>
+                            @if (Model.SpecialOpeningHours.Count != 0)
+                            {
+
                                 @for (int i = 0; i < Model.SpecialOpeningHours.Count; i++)
                                 {
                                     <table>
@@ -127,8 +133,14 @@
                                         </tr>
                                     </table>
                                 }
-                            </div>
-                        }
+                            }
+                            else
+                            {
+                                <td colspan="4" class="text-center">
+                                    <p>Er zijn geen speciale openingstijden gevonden.</p>
+                                </td>
+                            }
+                        </div>
                     </div>
                 </div>
 
@@ -138,7 +150,7 @@
                             <a class="btn btn-danger h-100" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
                         </div>
                         <div class="m-2">
-                            <input class="btn btn-success h-100" btn-lgtype="submit" value="Veranderingen Opslaan!" form="EditForm" />
+                            <input type="submit" value="Veranderingen Opslaan!" form="EditForm" class="btn btn-primary btn-lg" />
                         </div>
                     </div>
                 </div>
