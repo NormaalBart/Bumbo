@@ -37,7 +37,7 @@
         </a>
     </div>
 </div>
-@*
+
 <!--Display of all days in line, selected day is highlighted-->
 <div class="row border-bottom border-2 border-dark">
     @for (int i = 0; i < 7; i++)
@@ -59,7 +59,7 @@
     }
 </div>
 
-*@
+
 
 <div >
     @if (Model.shifts.Count() == 0)
@@ -152,7 +152,6 @@
                 <h3>@shift.StartTime.Day</h3>
                 <p>@shift.StartTime.ToString("ddd")</p>
             </div>
-
 
             <div class="d-flex row justify-content-around border-bottom border-dark p-3">
 
