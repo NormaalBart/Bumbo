@@ -459,6 +459,9 @@ body.swal2-shown > [aria-hidden="true"] {
 .nav {
     z-index: 100 !important;
 }
+.nav-link {
+    cursor: pointer;
+}
 
 .sticky-top {
     z-index: 50 !important;
