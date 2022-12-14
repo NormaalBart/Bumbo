@@ -1,0 +1,47 @@
+﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsListViewModel
+<div id="modal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-dialog modal-content">
+        <span class="close position-absolute">&times;</span>
+        <label> </label>
+        <div class="m-3 align-content-center text-center m-3">
+            <form asp-action="CopyFromDay">
+                <h2 class="text-center modal-header">Kopieer afwezigheid van dag</h2>
+                <div class="modal-body">
+                    <div class="row">
+                        <span class="col-4 text-end">Dag</span>
+                        <input id="modal-input-from" asp-for="CopyFrom" class="col-5 asp-format="{0:yyyy-MM-dd}" />
+                        <span asp-validation-for="CopyFrom" class="text-danger col-2"></span>
+                    </div>
+
+                    <div class="row">
+                        <span class="col-2"></span>
+                        <span class="col-6 m-2">Kopieren naar</span>
+
+                    </div>
+
+
+                    <div class="row">
+                        <span class="col-4 text-end">Dag</span>
+                        <input id="modal-input-to" asp-for="CopyTo" class="col-5" asp-format="{0:yyyy-MM-dd}" />
+                        <span asp-validation-for="CopyTo" class="text-danger col-" 4"></span>
+                    </div>
+                </div>
+
+                <input type="submit" value="Kopiëren" class="btn btn-success btn-sm m-3" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onRowClick(starttime, endtime) {
+        // if user clicks on a row, we open the copy to and from modal adding a week.
+        var modal = document.getElementById("modal");
+        modal.style.display = "block";
+        document.getElementById('modal-input-from').value = starttime;
+        document.getElementById('modal-input-to').value = endtime;
+
+    }
+
+</script>
