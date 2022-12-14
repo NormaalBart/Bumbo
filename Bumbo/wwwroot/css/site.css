@@ -442,3 +442,20 @@ body.swal2-shown > [aria-hidden="true"] {
 .border-standard {
     max-width: 70%;
 }
+
+.white-fade-bottom {
+    background-image: linear-gradient(white, white, white, transparent);
+}
+
+.week-legenda {
+    display: none;
+}
+
+@media (min-width: 1400px) {
+    .seven-cols .col-xl-2 {
+        width: 14.28%; /* 100 / 7 */
+    }
+    .week-legenda {
+        display: flex;
+    }
+}
