@@ -140,6 +140,14 @@ input[type="search"] {
     width: 20%;
 }
 
+.employee-roster-box-dep {
+    background-color: aqua;
+    padding: 5px;
+    border: 1px solid blue;
+    border-radius: 25px;
+}
+
+
 
 .selected {
     height: 25px;
@@ -417,6 +425,11 @@ p {
     }
 }
 
+@media only screen and (max-width: 800px) {
+    .employee-roster-box-time {
+        margin-left: 30px;
+    }
+}
 
 @media only screen and (min-width: 800px) {
     .employee-roster-box {

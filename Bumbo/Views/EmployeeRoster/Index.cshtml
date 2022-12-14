@@ -6,8 +6,6 @@
 }
 
 
-
-
 <h1 class="text-center">
     Diensten deze week
 </h1>
@@ -57,6 +55,7 @@
         </div>
             
     }
+
 </div>
 
 
@@ -148,7 +147,7 @@
              <!--Normal shift-->
         }else{
         <div class="d-flex flex-row justify-content-around mx-auto align-items-center employee-roster-box">
-            <div class="d-flex flex-column row date-display text-center">
+            <div class="d-flex flex-column row date-display text-center ">
                 <h3>@shift.StartTime.Day</h3>
                 <p>@shift.StartTime.ToString("ddd")</p>
             </div>
@@ -156,60 +155,31 @@
             <div class="d-flex row justify-content-around border-bottom border-dark p-3">
 
 
-                <div class="d-flex flow-row justify-content-between ">
-                    <h5>@shift.StartTime.ToShortTimeString() - @shift.EndTime.ToShortTimeString()</h5>
+                <div class="d-flex flow-row justify-content-between">
+                        <h5 class="employee-roster-box-time">@shift.StartTime.ToShortTimeString() - @shift.EndTime.ToShortTimeString()</h5>
                     <p>@shift.Street  @shift.HouseNumber</p>
                 </div>
 
 
                 <div class="d-flex flow-row justify-content-between">
-                    <p>@shift.DepartmentName</p>
+
+                        <div class="employee-roster-box-dep employee-roster-box-time">
+                            <p>@shift.DepartmentName Afdeling</p>
+                        </div>
+                   
                     <p>@shift.City</p>
                 </div>
             </div>
         </div>
-
-
-
-
         }
-
 
     }
 </div>
 
 @section Scripts {
-
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
-
-
 }
-@*
-
-    <div class="card mb-3 employee-roster-box d-flex flex-row justify-content-around mx-auto align-items-center">
-        <div class="row g-0">
-            <div class="col-md-4 text-center border border-1 ">
-                <h3>@shift.StartTime.Day</h3>
-                <p>@shift.StartTime.ToString("ddd")</p>
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <div class="d-flex flow-row justify-content-between ">
-                        <h5>@shift.StartTime.ToShortTimeString() - @shift.EndTime.ToShortTimeString()</h5>
-                        <p>@shift.Street  @shift.HouseNumber</p>
-                    </div>
-
-
-                    <div class="d-flex flow-row justify-content-between">
-                        <p>@shift.DepartmentName</p>
-                        <p>@shift.City</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-*@
