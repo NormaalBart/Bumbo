@@ -23,7 +23,6 @@
         $('#setBranchActive').modal('show');
         var paragraph = document.getElementById("modalTextActive");
         paragraph.textContent = "Wilt u " + name + " op actief zetten?";
-        console.log(paragraph.textContent)
         var form = document.getElementById("ActiveForm");
         form.attributes['action'].value = "/Branch/SetActive/" + id;
     }
