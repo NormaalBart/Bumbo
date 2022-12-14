@@ -192,6 +192,7 @@
         $('#starttimeinput').prop('disabled', shiftinfo.shiftIsSick);
         $('#endtimeinput').prop('disabled', shiftinfo.shiftIsSick);
         $('#departmentIdInput').prop('disabled', shiftinfo.shiftIsSick);
+        $('#saveEditShift').prop('disabled', shiftinfo.shiftIsSick);
         
         let sickBtn = $('#setSickBtn')
         sickBtn.prop('disabled', shiftinfo.shiftIsSick);
@@ -500,7 +501,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
                 <button id="deleteShiftBtn" type="button" class="btn btn-danger" onclick="confirmDeleteShift()">Verwijder dienst</button>
                 <button id="setSickBtn" type="button" class="btn btn-warning" onclick="setShiftSick()">Medewerker ziek melden</button>
-                <input type="submit" value="Opslaan" form="editShiftForm" class="btn btn-success btn "/>
+                <input id="saveEditShift" type="submit" value="Opslaan" form="editShiftForm" class="btn btn-success btn "/>
             </div>
         </div>
     </div>
