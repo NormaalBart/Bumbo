@@ -5,9 +5,9 @@ namespace BumboData.Enums
 {
     public enum EmployeeSortingOption
     {
-        [Display(Name = "Naam A-Z")]
+        [Display(Name = "Voornaam A-Z")]
         Name_Asc,
-        [Display(Name = "Naam Z-A")]
+        [Display(Name = "Achternaam Z-A")]
         Name_Desc,
         [Display(Name = "Geboortedatum Nieuwste-Oudste")]
         Birthdate_Desc,
