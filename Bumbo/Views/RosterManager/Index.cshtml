@@ -86,11 +86,11 @@
 
                         @if (Model.CassierePrognoseHours == -1)
                         {
-                            <span> Geen informatie</span>
+                            <span>Geen info</span>
                         }
                         else
                         {
-                            <span> @Model.CassierePrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Kassa")</span>
+                            <span> @Model.GetTotalPlannedHoursPerDepartment("Kassa") / @Model.CassierePrognoseHours </span>
                             if (Model.GetTotalPlannedHoursPerDepartment("Kassa") >= Model.CassierePrognoseHours)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
@@ -106,12 +106,12 @@
 
                         @if (Model.CassierePrognoseWorkers == -1)
                         {
-                            <span> Geen informatie</span>
+                            <span>Geen info</span>
                         }
                         else
                         {
 
-                            <span> @Model.CassierePrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Kassa")</span>
+                            <span> @Model.GetTotalPlannedWorkersPerDepartment("Kassa") / @Model.CassierePrognoseWorkers </span>
                             if (Model.GetTotalPlannedWorkersPerDepartment("Kassa") >= Model.CassierePrognoseWorkers)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het medewerker aantal van de prognose is behaald." data-toggle="tooltip" data-placement="top"></i>
@@ -136,11 +136,11 @@
 
                         @if (Model.FreshPrognoseHours == -1)
                         {
-                            <span>Geen Info</span>
+                            <span>Geen info</span>
                         }
                         else
                         {
-                            <span>@Model.FreshPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vers")</span>
+                            <span> @Model.GetTotalPlannedHoursPerDepartment("Vers") / @Model.FreshPrognoseHours</span>
                             if (Model.GetTotalPlannedHoursPerDepartment("Vers") >= Model.FreshPrognoseHours)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
@@ -158,12 +158,12 @@
 
                         @if (Model.FreshPrognoseWorkers == -1)
                         {
-                            <span>Geen Info</span>
+                            <span>Geen info</span>
                         }
                         else
                         {
-                            <span>@Model.FreshPrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Vers")</span>
-                            if (Model.GetTotalPlannedWorkersPerDepartment("Vers") >= Model.FreshPrognoseHours)
+                            <span> @Model.GetTotalPlannedWorkersPerDepartment("Vers") / @Model.FreshPrognoseWorkers</span>
+                            if (Model.GetTotalPlannedWorkersPerDepartment("Vers") >= Model.FreshPrognoseWorkers)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het medewerker aantal van de prognose is behaald." data-toggle="tooltip" data-placement="top"></i>
                             }
@@ -185,11 +185,11 @@
 
                         @if (Model.StockersPrognoseHours == -1)
                         {
-                            <span>Geen informatie</span>
+                            <span>Geen info</span>
                         }
                         else
                         {
-                            <span>@Model.StockersPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vullers")</span>
+                            <span>@Model.GetTotalPlannedHoursPerDepartment("Vullers") / @Model.StockersPrognoseHours</span>
                             if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
