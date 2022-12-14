@@ -90,12 +90,12 @@ input[type="search"] {
         text-decoration: none;
     }
 
-.center-table{
-  margin-right: auto;
-  margin-left: auto;
+.center-table {
+    margin-right: auto;
+    margin-left: auto;
 }
 
-    .center-table td{ 
+    .center-table td {
         padding: 5px;
     }
 
@@ -138,7 +138,7 @@ input[type="search"] {
         color: black;
         text-decoration: none;
         cursor: pointer;
-    } 
+    }
 
 
 .date-display {
@@ -158,14 +158,12 @@ input[type="search"] {
 }
 
 .active {
-    background-color: #666;
-    border-radius: 25px;
+    background-color: lightgray !important;
 }
 
-    .active a {
-        color: white !important;
-    }
-
+.border-active {
+    border-radius: 25px;
+}
 
 .logo-nav {
     height: 50px;
@@ -236,7 +234,6 @@ p {
     border: 1px solid darkgrey;
     min-width: 50px !important;
     padding: 0px !important;
-   
 }
 
 .roster-table {
@@ -253,7 +250,6 @@ p {
     outline-color: darkgrey;
     outline-width: 1px;
     background-color: #D3D3D3 !important;
-
 }
 
 /* Div which is the planned shift in the roster*/
@@ -392,7 +388,7 @@ p {
     background-color: #F5F5F5;
 }
 
-.moments-collumn{
+.moments-collumn {
     width: 30%;
 }
 
@@ -455,7 +451,61 @@ body.swal2-shown > [aria-hidden="true"] {
     .seven-cols .col-xl-2 {
         width: 14.28%; /* 100 / 7 */
     }
+
     .week-legenda {
         display: flex;
     }
 }
+
+.nav {
+    z-index: 100 !important;
+}
+
+.sticky-top {
+    z-index: 50 !important;
+}
+
+
+/* ============ desktop view ============ */
+@media all and (min-width: 992px) {
+
+    .dropdown-menu {
+        left: 12.5px !important;
+    }
+
+    .dropdown-menu li {
+        position: relative;
+    }
+
+    .dropdown-menu .submenu {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: -7px;
+    }
+
+    .dropdown-menu .submenu-left {
+        right: 100%;
+        left: auto;
+    }
+
+    .dropdown-menu > li:hover {
+        background-color: #f1f1f1
+    }
+
+        .dropdown-menu > li:hover > .submenu {
+            display: block;
+        }
+}
+/* ============ desktop view .end// ============ */
+
+/* ============ small devices ============ */
+@media (max-width: 991px) {
+
+    .dropdown-menu .dropdown-menu {
+        margin-left: 0.7rem;
+        margin-right: 0.7rem;
+        margin-bottom: .5rem;
+    }
+}
+/* ============ small devices .end// ============ */
