@@ -45,7 +45,7 @@
                             <div class="col-md-2 justify-content-center text-center my-auto">
                                 <div class="form-group top-header-content">
                                     <label asp-for="CurrentSort" class="control-label"></label>
-                                    <select asp-for="CurrentSort" class="form-control">
+                                    <select asp-for="CurrentSort" class="form-control form-select">
                                         @foreach (var item in Model.AvailableSortOptions)
                                         {
                                             <option value="@item">@Model.GetSortingDisplayName(item)</option>
@@ -87,6 +87,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if (Model.Branches.Count == 0)
+                    {
+                        <tr class="alert-info text-center">
+                            <td colspan="5">
+                                <p>Er zijn geen filialen gevonden.</p>
+                            </td>
+                        </tr>
+                    }
                     @foreach (var item in Model.Branches)
                     {
                         <tr>
