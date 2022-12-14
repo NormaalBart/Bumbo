@@ -1,5 +1,10 @@
 ﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
 
+@section Head
+{
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+}
+
 @{
     ViewBag.data = "Roster";
     if (Model.ErrorMessage != null)
@@ -445,21 +450,20 @@
                         </select>
                     </div>
 
+                    <div class="row pt-2">
+                        <p class="col">Startijd:</p>
+                        <input id="starttimeinput" asp-for="SelectedStartTime" class="timepicker form-control col"/>
 
-                    <div class="row m-2">
-                        <p> Dienst tijden:</p>
+                        <p class="col">Eindtijd:</p>
+                        <input id="endtimeinput" asp-for="SelectedEndTime" class="timepicker form-control col"/>
                     </div>
                     
-                    <div class="row">
-                        <span class="col">Startijd:</span>
-                        <input id="starttimeinput" asp-for="SelectedStartTime" class="form-control col"/>
-
-                        <span class="col">Eindtijd:</span>
-                        <input id="endtimeinput" asp-for="SelectedEndTime" class="form-control col"/>
-                    </div>
-                    <div class="row m-2 text-center border-top border-dark border-1">
-                        <span class="col">Winkel opent: @Model.OpenTime </span>
-                        <span class="col">Winkel sluit: @Model.CloseTime</span>
+                    <hr/>
+                    <div class="row my-3">
+                        <p class="col">Winkel opent:</p>
+                        <p class="col">@Model.OpenTime </p>
+                        <p class="col">Winkel sluit:</p>
+                        <p class="col">@Model.CloseTime </p>
                     </div> 
                     </form>
             </div>
@@ -475,8 +479,23 @@
 
 @section Scripts
 {
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
     <script>
-        $(document).ready(function () {
+
+        $(document).ready(function () {     
+            $('.timepicker').timepicker({
+                timeFormat: 'HH:mm',
+                interval: 15,
+                minTime: '@Model.OpenTime',
+                maxTime: '@Model.CloseTime',
+                defaultTime: '@Model.OpenTime',
+                startTime: '1',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+            });
+        
             //change selectboxes to selectize mode to be searchable
             $("#selectemployee").select2({
                 dropdownParent: $('#createNewShiftModal'),
@@ -501,64 +520,64 @@
         });
         
         $(document).ready(function(){          
-        $('#generate-roster-spinner').hide()
-        // On click button, generate roster
-        let genBtn = $('#generate-roster')
-        genBtn.click(function() {
-            // Show loading indicator
-             $('#generate-roster-spinner').show()
-             genBtn.prop('disabled', true);
-             // Hide tooltip
-             genBtn.tooltip('hide')
-              $.ajax({
-                  type: "POST",
-                  url: '@Url.Action("GenerateRoster", "RosterManager")',
-                  data: {
-                      date: '@Model.Date'
-                  },
-                  success: function (data) {
-                      if (data.value.incomplete) {
+            $('#generate-roster-spinner').hide()
+            // On click button, generate roster
+            let genBtn = $('#generate-roster')
+            genBtn.click(function() {
+                // Show loading indicator
+                 $('#generate-roster-spinner').show()
+                 genBtn.prop('disabled', true);
+                 // Hide tooltip
+                 genBtn.tooltip('hide')
+                  $.ajax({
+                      type: "POST",
+                      url: '@Url.Action("GenerateRoster", "RosterManager")',
+                      data: {
+                          date: '@Model.Date'
+                      },
+                      success: function (data) {
+                          if (data.value.incomplete) {
+                              Swal.fire({
+                                   title: 'Oeps!',
+                                   text: "Rooster is aangemaakt, maar de prognose kon niet behaald worden. Handmatige bewerking is nog nodig!",
+                                   icon: 'warning',
+                                   confirmButtonText: 'Verversen'
+                              }).then(function() {
+                                 location.reload();    
+                              });
+                          } else {
+                           // Refresh page toast
+                           const Toast = Swal.mixin({
+                             toast: true,
+                             position: 'top-end',
+                             showConfirmButton: true,
+                             timer: 3000,
+                             timerProgressBar: true,
+                             confirmButtonText: 'Verversen'
+                           })
+                           Toast.fire({
+                             icon: 'success',
+                             title: 'Rooster succesvol gegenereerd.'
+                           }).then(function() {
+                              location.reload();    
+                           });
+                          }
+                      },
+                      error: function (error) {
+                          // Hide loading
+                          $('#generate-roster-spinner').hide()
+                          $('#generate-roster').prop('disabled', false);
+                          // Show error                      
                           Swal.fire({
-                               title: 'Oeps!',
-                               text: "Rooster is aangemaakt, maar de prognose kon niet behaald worden. Handmatige bewerking is nog nodig!",
-                               icon: 'warning',
-                               confirmButtonText: 'Verversen'
-                          }).then(function() {
-                             location.reload();    
-                          });
-                      } else {
-                       // Refresh page toast
-                       const Toast = Swal.mixin({
-                         toast: true,
-                         position: 'top-end',
-                         showConfirmButton: true,
-                         timer: 3000,
-                         timerProgressBar: true,
-                         confirmButtonText: 'Verversen'
-                       })
-                       Toast.fire({
-                         icon: 'success',
-                         title: 'Rooster succesvol gegenereerd.'
-                       }).then(function() {
-                          location.reload();    
-                       });
+                            title: 'Oeps!',
+                            text: error.responseText,
+                            icon: 'error',
+                            confirmButtonText: 'Oke'
+                          })
                       }
-                  },
-                  error: function (error) {
-                      // Hide loading
-                      $('#generate-roster-spinner').hide()
-                      $('#generate-roster').prop('disabled', false);
-                      // Show error                      
-                      Swal.fire({
-                        title: 'Oeps!',
-                        text: error.responseText,
-                        icon: 'error',
-                        confirmButtonText: 'Oke'
-                      })
-                  }
-                  // TODO: Handle errors
-              });
-        });
+                      // TODO: Handle errors
+                  });
+            });
         });
 
 
