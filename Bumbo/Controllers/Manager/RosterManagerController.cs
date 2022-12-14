@@ -24,6 +24,7 @@ namespace Bumbo.Controllers.Manager
         private readonly IPlannedShiftsRepository _shiftRepository;
         private readonly IUnavailableMomentsRepository _unavailableRepository;
         private readonly IPrognosesService _prognosesServices;
+        private readonly IWorkedShiftRepository _workedShiftRepository;
         private readonly IDepartmentsRepository _departmentsRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly ICAOService _caoService;
@@ -32,7 +33,7 @@ namespace Bumbo.Controllers.Manager
         public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee,
             IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts,
             IUnavailableMomentsRepository unavailableMoments, IPrognosesService prognosesService,
-            IDepartmentsRepository departments, IBranchRepository branches, ICAOService caoService, IRosterService rosterService)
+            IDepartmentsRepository departments, IBranchRepository branches, ICAOService caoService, IRosterService rosterService, IWorkedShiftRepository workedShiftRepository)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -45,6 +46,7 @@ namespace Bumbo.Controllers.Manager
             _branchRepository = branches;
             _caoService = caoService;
             _rosterService = rosterService;
+            _workedShiftRepository = workedShiftRepository;
         }
 
         public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
@@ -181,6 +183,56 @@ namespace Bumbo.Controllers.Manager
             overviewList.Date = date;
 
             return View(overviewList);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterSick(int shiftId, bool sick)
+        {
+            // Update planned shift
+            var shift = _shiftRepository.Get(shiftId);
+            if (shift == null)
+            {
+                return BadRequest();
+            }
+            
+            shift.Sick = true;
+            _shiftRepository.Update(shift);
+            
+            // Immediately create the worked shift as well
+            var workedShift = new WorkedShift()
+            {
+                Approved = true,
+                BranchId = shift.BranchId,
+                EmployeeId = shift.EmployeeId,
+                StartTime = shift.StartTime,
+                EndTime = shift.EndTime,
+                Sick = true
+            };
+            _workedShiftRepository.Create(workedShift);
+            
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult DeleteShift(int shiftId)
+        {
+            var shift = _shiftRepository.Get(shiftId);
+            if (shift == null)
+            {
+                return BadRequest();
+            }
+            _shiftRepository.Delete(shift);
+            
+            // If the shift was a sick shift, try and find and delete the worked shift as well.
+            var workedShift = _workedShiftRepository.Get(s=>s.Sick && s.EmployeeId == shift.EmployeeId && s.StartTime == shift.StartTime && s.EndTime == shift.EndTime);
+
+            if (workedShift == null)
+            {
+                return Ok();
+            }
+            
+            _workedShiftRepository.Delete(workedShift);
+            return Ok();
         }
 
         [HttpPost]

@@ -14,6 +14,8 @@ namespace Bumbo.Models.RosterManager
 
         public List<ICAORule> ViolatedRules { get; set; }
 
+        public bool Sick { get; set; }
+
         public ShiftViewModel()
         {
             ViolatedRules = new List<ICAORule>();
