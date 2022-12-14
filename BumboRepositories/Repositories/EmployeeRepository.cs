@@ -45,60 +45,7 @@ namespace BumboRepositories.Repositories
                 .Select(role => role.UserId).ToList();
 
             var employees = DbSet.Where(employee => users.Contains(employee.Id));
-            if (!includeInactive && !includeActive)
-            {
-                employees = employees.Where(e => e.Active);
-            }
-            else if (!includeInactive && includeActive)
-            {
-                employees = employees.Where(e => e.Active);
-            }
-            else if (includeInactive && !includeActive)
-            {
-                employees = employees.Where(e => !e.Active);
-            }
-
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                // search in employees if any of the columns contains the searchstring
-                searchString = searchString.ToLower();
-                employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString) || e.LastName.ToLower().Contains(searchString));
-            }
-
-            switch (sortingOption)
-            {
-                // case for each sortingoption, with asc and desc
-                case EmployeeSortingOption.Name_Asc:
-                    employees = employees.OrderBy(e => e.FirstName);
-                    break;
-                case EmployeeSortingOption.Name_Desc:
-                    employees = employees.OrderByDescending(e => e.FirstName);
-                    break;
-                case EmployeeSortingOption.Function_Desc:
-                    employees = employees.OrderByDescending(e => e.Function);
-                    break;
-                case EmployeeSortingOption.Function_Asc:
-                    employees = employees.OrderBy(e => e.Function);
-                    break;
-                case EmployeeSortingOption.Birthdate_Asc:
-                    employees = employees.OrderBy(e => e.Birthdate);
-                    break;
-                case EmployeeSortingOption.Birthdate_Desc:
-                    employees = employees.OrderByDescending(e => e.Birthdate);
-                    break;
-                case EmployeeSortingOption.EmployeeSince_Asc:
-                    employees = employees.OrderBy(e => e.EmployeeSince);
-                    break;
-                case EmployeeSortingOption.EmployeeSince_Desc:
-                    employees = employees.OrderByDescending(e => e.EmployeeSince);
-                    break;
-                default:
-                    employees = employees.OrderBy(e => e.FirstName);
-                    break;
-            }
-
-            return employees.Skip(start).Take(amount).ToList();
+            return SortAndOrderBy(start, amount, searchString, includeActive, includeInactive, sortingOption, employees);
         }
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
@@ -109,6 +56,11 @@ namespace BumboRepositories.Repositories
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch, int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
         {
             var employees = DbSet.Where(employee => employee.DefaultBranchId == branch);
+            return SortAndOrderBy(start, amount, searchString, includeActive, includeInactive, sortingOption, employees);
+        }
+
+        private static IEnumerable<Employee> SortAndOrderBy(int start, int amount, string searchString, bool includeActive, bool includeInactive, EmployeeSortingOption sortingOption, IQueryable<Employee> employees)
+        {
             if (!includeInactive && !includeActive)
             {
                 employees = employees.Where(e => e.Active);

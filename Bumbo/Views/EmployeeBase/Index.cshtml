@@ -76,33 +76,6 @@
                             </div>
                         </div>
                     </form>
-                    <nav aria-label="Page navigation" class="p-1">
-                        <ul class="pagination float-end">
-                            <li class="page-item">
-                                @if (Model.Page >= 2)
-                                {
-                                    <form asp-action="Index">
-                                        <input asp-for="Page" hidden value="@{Write( Model.Page - 1);}" />
-                                        <input asp-for="CurrentSort" hidden value="@Model.CurrentSort" />
-                                        <input asp-for="SearchString" hidden value="@Model.SearchString" />
-                                        <input asp-for="IncludeActive" hidden value="@Model.IncludeActive" />
-                                        <input asp-for="IncludeInactive" hidden value="@Model.IncludeInactive" />
-                                        <input type="submit" value="Ga naar pagina @{Write( Model.Page - 1);}" class="page-link" />
-                                    </form>
-                                }
-                            </li>
-                            <li class="page-item">
-                                <form asp-action="Index">
-                                    <input asp-for="Page" hidden value="@{Write( Model.Page + 1);}" />
-                                    <input asp-for="CurrentSort" hidden value="@Model.CurrentSort"/>
-                                    <input asp-for="SearchString" hidden value="@Model.SearchString" />
-                                    <input asp-for="IncludeActive" hidden value="@Model.IncludeActive" />
-                                    <input asp-for="IncludeInactive" hidden value="@Model.IncludeInactive" />
-                                    <input type="submit" value="Ga naar pagina @{Write( Model.Page + 1);}" class="page-link" />
-                                </form>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
 
@@ -166,3 +139,13 @@
         </tr>
     </thead>
 </table>
+<nav aria-label="Page navigation" class="p-1">
+    <ul class="pagination float-end">
+        <li class="page-item">
+            <a class="btn btn-primary page-link m-1" asp-action="Index" asp-route-Page="@(Model.Page - 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Vorige</a>
+        </li>
+        <li class="page-item">
+            <a class="btn btn-primary page-link m-1" asp-action="Index" asp-route-Page="@(Model.Page + 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Volgende</a>
+        </li>
+    </ul>
+</nav>

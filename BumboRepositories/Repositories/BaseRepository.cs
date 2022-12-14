@@ -85,7 +85,7 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
     public IEnumerable<TEntity> GetList(int start, int amount)
     {
         return DbSet
-        .AsQueryable().Skip(start).Take(amount)
-        .ToList();
+         .AsQueryable().Skip(start).Take(amount)
+         .ToList();
     }
 }
