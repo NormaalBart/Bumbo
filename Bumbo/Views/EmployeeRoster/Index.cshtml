@@ -60,121 +60,123 @@
 
 
 
-<div >
-    @if (Model.shifts.Count() == 0)
+<div class="container ">
+
+     @if (Model.shifts.Count() == 0)
     {
         <p class="text-center mt-2">Geen ingeplande diensten komende week.</p>
     }
-    @foreach (var shift in Model.shifts)
+    @foreach (var item in Model.shifts)
     {
-        // if there's no type we have an unavailable moment
-        @if (shift.Type != null)
-        {
-            <div class="p-3 mx-auto employee-roster-box">
-                <div class="card d-flex row justify-content-around border-bottom employee-roster-box flex-column">
-                    <div class="card-header text-center">
-                       <span class="fw-bold">Onbeschikbaar</span>
-                        @if (shift.StartTime.Date == shift.EndTime.Date)
-                        {
-                            <div colspan="5">
-                                @shift.StartTime.ToString("dddd d-M-yyyy ")
-                            </div>
+        <div class="row employee-roster-box employee-roster-box-shift rounded rounded-4 m-2 p-2 d-flex flex-row justify-content-center mx-auto border-bottom border-1 border-dark">
 
-                        }
-                        else
-                        {
-                            <div colspan="5">
-                                @shift.StartTime.ToString("dddd d-M-yyyy") ->  @shift.EndTime.ToString("ddd d-M-yyyy")
-                            </div>
-                        }
-           
+            <div class="col-2 date-display text-center">
+                <h3>@item.StartTime.Day</h3>
+                <p>@item.StartTime.ToString("ddd")</p>
+            </div>
+            <div class="col-6 ">
 
-                     </div>
-                    <div class="card-body text-center">
+                <div class="row ">
+                    <div class="col">
+
+                        <h5 class="employee-roster-box-time">@item.StartTime.ToShortTimeString() - @item.EndTime.ToShortTimeString()</h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
                         <div class="row">
-                            <div class="col">
-                                start tijd: <span class="fw-bold">@shift.StartTime.ToString("HH:mm") </span>
-                            </div>
-                            <div class="col">
-                                eind tijd: <span class="fw-bold"> @shift.EndTime.ToString("HH:mm") </span>
-                            </div>
-                        </div>
-                       
-                        <div class="container">
-                            <div class="row">
-                                <div class="col m-2">
-                                    Type: @Html.DisplayFor(modelItem => shift.Type)
+                            @if (item.Type == null)
+                            {
+                                <div class="employee-roster-box-dep employee-roster-box-time col-auto">
+                                    <p>@item.DepartmentName Afdeling</p>
                                 </div>
-                                <div class="col">
-                                    @if (shift.ReviewStatus == null)
+                            }else{
+                                <div class="employee-roster-box-reason employee-roster-box-time col-auto">
+                                    @Html.DisplayFor(modelItem => item.Type) 
+                                </div>
+                                <div class="col-auto ">
+                                    @if (item.ReviewStatus == null)
                                     {
 
-                                        <p>Status: <span class="bi bi-exclamation-circle text-danger text-large"></span></p>
+                                        <span class="bi bi-exclamation-circle text-danger text-large"></span>
                                     }
-                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
+                                    @if (item.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
                                     {
                                         <div data-toggle="tooltip" data-placement="top" title="Dit moment is goedgekeurd door de manager">
-                                            <p>Status: <span class="bi bi-check text-success text-large"></span></p>
+                                            <span class="bi bi-check text-success text-large"></span>
                                         </div>
 
-                                       
+
                                     }
-                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
+                                    @if (item.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
                                     {
                                         <div data-toggle="tooltip" data-placement="top" title="Dit moment is nog niet gekeurd door de manager">
-                                            <p>Status: <span class="bi bi-patch-question-fill text-primary text-large"></span></p>
+                                            <span class="bi bi-patch-question-fill text-primary text-large"></span>
                                         </div>
-                                        
+
                                     }
-                                    @if (shift.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
+                                    @if (item.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
                                     {
                                         <div data-toggle="tooltip" data-placement="top" title="Dit moment is niet goedgekeurd door de manager. ">
-                                            <p>Status: <span class="bi bi-x text-danger text-large"></span></p>
+                                            <span> <span class="bi bi-x text-danger text-large"></span></span>
                                         </div>
                                     }
-
                                 </div>
-                            </div>
-                        </div>
-
- 
+                            }
+                         
                     
+                        </div>
                     </div>
+                </div>
 
-                 </div>
-             </div>
-
-             <!--Normal shift-->
-        }else{
-        <div class="d-flex flex-row justify-content-around mx-auto align-items-center employee-roster-box employee-roster-box-shift rounded rounded-3 m-2">
-            <div class="d-flex flex-column row date-display text-center ">
-                <h3>@shift.StartTime.Day</h3>
-                <p>@shift.StartTime.ToString("ddd")</p>
             </div>
 
-            <div class="d-flex row justify-content-around border-bottom border-dark p-3">
+            <div class="col-4 ">
 
-
-                <div class="d-flex flow-row justify-content-between">
-                        <h5 class="employee-roster-box-time">@shift.StartTime.ToShortTimeString() - @shift.EndTime.ToShortTimeString()</h5>
-                    <p>@shift.Street  @shift.HouseNumber</p>
-                </div>
-
-
-                <div class="d-flex flow-row justify-content-between">
-
-                        <div class="employee-roster-box-dep employee-roster-box-time">
-                            <p>@shift.DepartmentName Afdeling</p>
+                @if (item.Type == null)
+                {
+                    <div class="row">
+                        <div class="col">
+                            <small>@item.Street  @item.HouseNumber</small>
                         </div>
-                   
-                    <p>@shift.City</p>
-                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>@item.City</p>
+                        </div>
+                    </div>
+                }else{
+                    <div class="row">
+                        <div class="col">
+                            <!--Decided to only show the length if it lasts longer than a day, because otherwise the view gets too cluttered when viewing on mobile.-->
+                            @if (item.StartTime.Date != item.EndTime.Date)
+                            {
+                                <small>  @item.GetLengthDays()</small>
+                            }
+                                          
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @if (item.StartTime.Date != item.EndTime.Date)
+                            {
+                                <small>Eindigt @item.EndTime.ToString("d-M-yyyy")</small>
+                            }
+
+                        </div>
+                    </div>
+                }
+              
+
             </div>
         </div>
+
         }
 
-    }
 </div>
+
+
 
 @section Scripts {
     <script>
