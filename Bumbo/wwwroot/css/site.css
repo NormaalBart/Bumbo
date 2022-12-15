@@ -21,7 +21,7 @@ body {
     margin: 10px;
 }
 
-a{
+a {
     text-decoration: none;
     color: black;
 }
@@ -320,7 +320,6 @@ p {
 .department-success {
     background-image: linear-gradient(to bottom right, mediumspringgreen, springgreen);
     border-radius: 10px;
-
 }
 
 .department-warning {
@@ -459,7 +458,7 @@ body.swal2-shown > [aria-hidden="true"] {
     cursor: pointer;
 }
 
-input[type='checkbox'] {
+input[type='checkbox']:not(.normal-checkbox) {
     -webkit-appearance: none;
     width: 30px;
     height: 30px;
@@ -468,9 +467,9 @@ input[type='checkbox'] {
     border: 2px solid #555;
 }
 
-    input[type='checkbox']:checked {
-        background: #888;
-    }
+input[type='checkbox']:checked:not(normal-checkbox) {
+    background: #888;
+}
 
 .sticky-top {
     z-index: 50 !important;
