@@ -25,7 +25,7 @@ namespace BumboServices.Prognoses
             _standardRepository = standardRepository;
             _branchRepository = branchRepository;
         }
-        
+
         public (int Workers, Double Hours) GetCassierePrognose(DateTime date, int branchId)
         {
             var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(), branchId);

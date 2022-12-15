@@ -123,7 +123,6 @@ namespace Bumbo.Controllers.Manager
             viewModel.FreshPrognoseWorkers = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Workers;
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
                 .ToList();
-            viewModel.UpdatePrognosis(shiftsOnDay);
             viewModel.PrognosisDayId = _prognosisRepository.GetIdByDate(date);
 
             viewModel.SelectedStartTime = viewModel.Date.AddHours(8);
