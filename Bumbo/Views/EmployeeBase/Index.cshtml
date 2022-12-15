@@ -126,14 +126,14 @@
                                     @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
                                 </td>
                                 <td class="text-center">
-                                    <a asp-action="Edit" class="btn btn-primary">Verander</a>
-                                    <a asp-action="ChangePassword" class="btn btn-warning">Reset wachtwoord</a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Verander</a>
+                                    <a asp-action="ChangePassword" asp-route-id="@item.Id" class="btn btn-warning">Reset wachtwoord</a>
                                     @if (item.Active)
                                     {
-                                        <a asp-action="ToggleInactive" class="btn btn-danger">Zet inactief</a>
+                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-danger">Zet inactief</a>
                                     } else
                                     {
-                                        <a asp-action="ToggleActive" class="btn btn-success">Zet actief</a>
+                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-success">Zet actief</a>
                                     }
                                 </td>
                             </tr>
