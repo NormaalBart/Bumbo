@@ -27,5 +27,8 @@ public class PlannedShift: IEntity
     [Required]
     public Branch Branch { get; set; }
 
+    [Required] 
+    public bool Sick { get; set; }
+
     public int BranchId { get; set; }
 }

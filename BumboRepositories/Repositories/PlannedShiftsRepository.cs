@@ -122,8 +122,6 @@ namespace BumboRepositories.Repositories
 
             var shiftsOnDay = DbSet.Where(s => s.BranchId == branchId && s.StartTime.Date == date.Date).Select(s => (s.EndTime - s.StartTime).TotalHours).ToList();
             return Math.Round(shiftsOnDay.Sum());
-
-
         }
     }
 }
