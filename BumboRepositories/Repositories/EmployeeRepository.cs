@@ -12,6 +12,13 @@ namespace BumboRepositories.Repositories
         public EmployeeRepository(BumboContext context) : base(context)
         {
         }
+        
+        public List<Employee> Search(int? branchId, string query)
+        {
+            return DbSet
+                .Where(e => (e.FirstName + e.LastName).Contains(query))
+                .Where(e=>branchId == null || e.DefaultBranchId == branchId).ToList();
+        }
 
         public bool EmployeeIsInDepartment(string employeeId, int departmentId)
         {
