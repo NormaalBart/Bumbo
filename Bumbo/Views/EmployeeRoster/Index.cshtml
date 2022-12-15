@@ -68,11 +68,21 @@
     }
     @foreach (var item in Model.shifts)
     {
-        <div class="row employee-roster-box employee-roster-box-shift rounded rounded-4 m-2 p-2 d-flex flex-row justify-content-center mx-auto border-bottom border-1 border-dark">
 
+        <div class="row employee-roster-box employee-roster-box-shift rounded rounded-4 m-2 p-2 d-flex flex-row justify-content-center mx-auto border-bottom border-1 border-dark position-relative">
+    
+
+                @if (item.Type != null)
+                {
+                <div class="position-absolute top-50 start-50 translate-middle">
+                        <i class="bi bi-box-arrow-right "></i>
+                    </div>
+
+                }
             <div class="col-2 date-display text-center">
                 <h3>@item.StartTime.Day</h3>
                 <p>@item.StartTime.ToString("ddd")</p>
+            
             </div>
             <div class="col-6 ">
 
@@ -92,6 +102,7 @@
                                     <p>@item.DepartmentName Afdeling</p>
                                 </div>
                             }else{
+                                
                                 <div class="employee-roster-box-reason employee-roster-box-time col-auto">
                                     @Html.DisplayFor(modelItem => item.Type) 
                                 </div>
