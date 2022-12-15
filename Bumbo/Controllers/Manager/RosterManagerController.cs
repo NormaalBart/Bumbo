@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Globalization;
+using System.Text.Json.Nodes;
 using AutoMapper;
 using Bumbo.Models.RosterManager;
 using BumboData.Interfaces.Repositories;
@@ -23,6 +24,7 @@ namespace Bumbo.Controllers.Manager
         private readonly IPlannedShiftsRepository _shiftRepository;
         private readonly IUnavailableMomentsRepository _unavailableRepository;
         private readonly IPrognosesService _prognosesServices;
+        private readonly IWorkedShiftRepository _workedShiftRepository;
         private readonly IDepartmentsRepository _departmentsRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly ICAOService _caoService;
@@ -31,7 +33,7 @@ namespace Bumbo.Controllers.Manager
         public RosterManagerController(UserManager<Employee> userManager, IMapper mapper, IEmployeeRepository employee,
             IPrognosisRepository prognosis, IPlannedShiftsRepository plannedShifts,
             IUnavailableMomentsRepository unavailableMoments, IPrognosesService prognosesService,
-            IDepartmentsRepository departments, IBranchRepository branches, ICAOService caoService, IRosterService rosterService)
+            IDepartmentsRepository departments, IBranchRepository branches, ICAOService caoService, IRosterService rosterService, IWorkedShiftRepository workedShiftRepository)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -44,14 +46,12 @@ namespace Bumbo.Controllers.Manager
             _branchRepository = branches;
             _caoService = caoService;
             _rosterService = rosterService;
+            _workedShiftRepository = workedShiftRepository;
         }
 
         public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
         {
-            if (dateInput == null)
-            {
-                dateInput = DateTime.Today.ToString();
-            }
+            dateInput ??= DateTime.Today.ToString(CultureInfo.CurrentCulture);
 
             var date = DateTime.Parse(dateInput).Date;
             var viewModel = new RosterDayViewModel
@@ -68,9 +68,8 @@ namespace Bumbo.Controllers.Manager
             viewModel.CloseTime = openAndCloseTimes.Item2;
             viewModel.TableMinHour = viewModel.OpenTime.Hour - 1;
             viewModel.TableMaxHour = viewModel.CloseTime.Hour + 1;
-
-
-            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetList(e=>e.DefaultBranchId == (manager.DefaultBranchId ?? -1)));
+            
+            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId ?? -1));
             
             // Start CAO
             // Filter shifts to only display that of today
@@ -88,7 +87,7 @@ namespace Bumbo.Controllers.Manager
                     emp.PlannedShifts.ForEach(shift =>
                     {
                         // Add invalid shift validated rules to the viewmodel.
-                        shift.ValidatesRules.AddRange(invalidShifts.Where(s =>
+                        shift.ViolatedRules.AddRange(invalidShifts.Where(s =>
                                 s.Value.Any(s => s.Id == shift.Id))
                             .Select(s => s.Key));
 
@@ -112,13 +111,15 @@ namespace Bumbo.Controllers.Manager
 
             // Sort by the amount of rules violated.
             viewModel.RosteredEmployees = viewModel.RosteredEmployees
-                .OrderByDescending(e => e.PlannedShifts.Sum(s => s.ValidatesRules.Count)).ToList();
+                .OrderByDescending(e => e.PlannedShifts.Sum(s => s.ViolatedRules.Count)).ToList();
 
             viewModel.InvalidShifts = invalidShifts;
 
-            viewModel.CassierePrognose = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1 );
-            viewModel.StockersPrognose = _prognosesServices.GetStockersPrognose(date, manager.DefaultBranchId ?? -1);
-            viewModel.FreshPrognose = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1);
+            viewModel.CassierePrognoseHours = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Hours;
+            viewModel.CassierePrognoseWorkers = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Workers;
+            viewModel.StockersPrognoseHours = _prognosesServices.GetStockersPrognoseHours(date, manager.DefaultBranchId ?? -1);
+            viewModel.FreshPrognoseHours = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Hours;
+            viewModel.FreshPrognoseWorkers = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Workers;
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
                 .ToList();
             viewModel.UpdatePrognosis(shiftsOnDay);
@@ -139,20 +140,18 @@ namespace Bumbo.Controllers.Manager
                 viewModel.ErrorMessage = errormessage;
             }
 
-            if (viewModel.TableMinHour < 0 || viewModel.TableMinHour > 24)
+            if (viewModel.TableMinHour is < 0 or > 24)
             {
                 viewModel.TableMinHour = 0;
             }
-            if (viewModel.TableMaxHour < 0 || viewModel.TableMaxHour > 24)
+            if (viewModel.TableMaxHour is < 0 or > 24)
             {
                 viewModel.TableMinHour = 24;
             }
 
             return View(viewModel);
         }
-
-
-
+        
         public async Task<IActionResult> Overview(string? dateInput)
         {
             var employee = await _userManager.GetUserAsync(User);
@@ -170,9 +169,9 @@ namespace Bumbo.Controllers.Manager
                 OverviewItem item = new OverviewItem();
                 item.Date = new DateTime(date.Year, date.Month, i);
                 // gets the sum of the prognosis hours of departments
-                item.PrognosisHours = _prognosesServices.GetCassierePrognose(item.Date, employee.DefaultBranchId ?? -1)
-                                        + _prognosesServices.GetStockersPrognose(item.Date, employee.DefaultBranchId ?? -1)
-                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1);
+                item.PrognosisHours = _prognosesServices.GetCassierePrognose(item.Date, employee.DefaultBranchId ?? -1).Hours
+                                        + _prognosesServices.GetStockersPrognoseHours(item.Date, employee.DefaultBranchId ?? -1)
+                                        + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1).Hours;
                 item.PrognosisHours = Math.Round(item.PrognosisHours);
                 if (item.PrognosisHours < 0)
                 {
@@ -186,6 +185,56 @@ namespace Bumbo.Controllers.Manager
             overviewList.Date = date;
 
             return View(overviewList);
+        }
+
+        [HttpPost]
+        public IActionResult RegisterSick(int shiftId)
+        {
+            // Update planned shift
+            var shift = _shiftRepository.Get(shiftId);
+            if (shift == null)
+            {
+                return BadRequest();
+            }
+            
+            shift.Sick = true;
+            _shiftRepository.Update(shift);
+            
+            // Immediately create the worked shift as well
+            var workedShift = new WorkedShift()
+            {
+                Approved = true,
+                BranchId = shift.BranchId,
+                EmployeeId = shift.EmployeeId,
+                StartTime = shift.StartTime,
+                EndTime = shift.EndTime,
+                Sick = true
+            };
+            _workedShiftRepository.Create(workedShift);
+            
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult DeleteShift(int shiftId)
+        {
+            var shift = _shiftRepository.Get(shiftId);
+            if (shift == null)
+            {
+                return BadRequest();
+            }
+            _shiftRepository.Delete(shift);
+            
+            // If the shift was a sick shift, try and find and delete the worked shift as well.
+            var workedShift = _workedShiftRepository.Get(s=>s.Sick && s.EmployeeId == shift.EmployeeId && s.StartTime == shift.StartTime && s.EndTime == shift.EndTime);
+
+            if (workedShift == null)
+            {
+                return Ok();
+            }
+            
+            _workedShiftRepository.Delete(workedShift);
+            return Ok();
         }
 
         [HttpPost]
