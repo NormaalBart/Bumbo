@@ -2,7 +2,8 @@
 
 @section Head
 {
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 }
 
 @{
@@ -21,60 +22,60 @@
 
 <body class="roster-body">
 
-    <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
+<h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
 
-    <!-- if modelstate that returned is not valid, say that saving failed-->
-    @if (Model.ErrorMessage != null)
-    {
-        <div class="alert alert-danger text-center" role="alert">
-            <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden omdat @Model.ErrorMessage
-        </div>
-    }
-
-    @* Display CAO errors *@
-    @if (Model.InvalidShifts.Count > 0)
-    {
-        <div class="alert alert-danger text-left" role="alert">
-            <i class="bi-exclamation-triangle-fill"></i><strong> Oeps!</strong> Er zijn CAO overtredingen, deze zullen verholpen moeten worden voordat een nieuwe dienst aangemaakt kan worden.
-            <ul>
-                @foreach (var modelInvalidShift in Model.InvalidShifts)
-                {
-                    <li>@modelInvalidShift.Key.GetErrorMessage()</li>
-                    <ul>
-                        @foreach (var shift in modelInvalidShift.Value)
-                        {
-                            <li>
-                                <strong>@shift.Employee.FullName():</strong> @shift.StartTime.ToString("HH\\:mm") - @shift.EndTime.ToString("HH\\:mm")
-                            </li>
-                        }
-                    </ul>
-                }
-            </ul>
-        </div>
-    }
-
-    <div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
-        <div>
-            <!--Arrow to left, using an online arrow png-->
-            <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
-                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z" />
-                </svg>
-            </a>
-        </div>
-        <div>
-            <!--Week  number, date information which is in the center.-->
-            <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToString("dddd") @Model.Date.ToShortDateString() </p>
-        </div>
-        <div>
-            <!--Arrow to right, using an online arrow png on the right side of the bar.-->
-            <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
-                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z" />
-                </svg>
-            </a>
-        </div>
+<!-- if modelstate that returned is not valid, say that saving failed-->
+@if (Model.ErrorMessage != null)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden omdat @Model.ErrorMessage
     </div>
+}
+
+@* Display CAO errors *@
+@if (Model.InvalidShifts.Count > 0)
+{
+    <div class="alert alert-danger text-left" role="alert">
+        <i class="bi-exclamation-triangle-fill"></i><strong> Oeps!</strong> Er zijn CAO overtredingen, deze zullen verholpen moeten worden voordat een nieuwe dienst aangemaakt kan worden.
+        <ul>
+            @foreach (var modelInvalidShift in Model.InvalidShifts)
+            {
+                <li>@modelInvalidShift.Key.GetErrorMessage()</li>
+                <ul>
+                    @foreach (var shift in modelInvalidShift.Value)
+                    {
+                        <li>
+                            <strong>@shift.Employee.FullName():</strong> @shift.StartTime.ToString("HH\\:mm") - @shift.EndTime.ToString("HH\\:mm")
+                        </li>
+                    }
+                </ul>
+            }
+        </ul>
+    </div>
+}
+
+<div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
+    <div>
+        <!--Arrow to left, using an online arrow png-->
+        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
+            </svg>
+        </a>
+    </div>
+    <div>
+        <!--Week  number, date information which is in the center.-->
+        <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToString("dddd") @Model.Date.ToShortDateString() </p>
+    </div>
+    <div>
+        <!--Arrow to right, using an online arrow png on the right side of the bar.-->
+        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
+            </svg>
+        </a>
+    </div>
+</div>
 
     <div>
         <div class="row ">
@@ -159,33 +160,33 @@
                             </div>
                         </div>
 
-        @if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
-        {
-            @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
-        }
-        else
-        {
-            @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
-        }
-                                <div class="vstack">
-                                    <div>
-                @Html.DisplayNameFor(model => model.StockersPrognoseHours) :
+    @if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
+    {
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
+    }
+    else
+    {
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
+    }
+    <div class="vstack">
+        <div>
+            @Html.DisplayNameFor(model => model.StockersPrognoseHours) :
 
-                @if (Model.StockersPrognoseHours == -1)
-                {
-                                            <span>Geen informatie</span>
-                }
-                else
-                {
-                                            <span>@Model.StockersPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vullers")</span>
-                }
-                                    </div>
-                                </div>
-                            </div>
+            @if (Model.StockersPrognoseHours == -1)
+            {
+                <span>Geen informatie</span>
+            }
+            else
+            {
+                <span>@Model.StockersPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vullers")</span>
+            }
+        </div>
+    </div>
+</div>
 
 
-                        </div>
-                    </div>
+</div>
+</div>
 
                     <script>
                         'use strict';
@@ -443,131 +444,200 @@
                     </div>
 
 
-                    <!-- Modal for creating a new shift-->
-                    <div class="modal fade" id="createNewShiftModal" tabindex="-1" aria-labelledby="nieuwedienst" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content m-2">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="addShiftModal">Nieuwe dienst toevoegen</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Modal for creating a new shift-->
+<div class="modal fade" id="createNewShiftModal" tabindex="-1" aria-labelledby="nieuwedienst" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content m-2">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addShiftModal">Nieuwe dienst toevoegen</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body m-2">
+                <form asp-action="CreateShift" id="createShiftForm">
+                    <input type="hidden" asp-for="Date"/>
+
+
+                    @Html.HiddenFor(s => s.SelectedEmployeeId, new {@id = "select-employee-id"})
+                    <div class="row center">
+                        <span class="col">Medewerker:</span>
+                        <div class="col">
+                            <div id="search-employees" class="ui search">
+                                <div class="ui icon input">
+                                    <input class="prompt" type="text" placeholder="Medewerker zoeken">
+                                    <i class="search icon"></i>
                                 </div>
-                                <div class="modal-body m-2">
-                                    <form asp-action="CreateShift" id="createShiftForm">
-                                        <input type="hidden" asp-for="Date" />
-                                        <div class="row">
-                                            <span class="col">Medewerker:</span>
-                                            <select id="selectemployee" asp-for="SelectedEmployeeId" class="form-control col w-100">
-                                                <option selected value="">Kies een medewerker</option>
-                                @foreach (var employee in Model.AvailableEmployees)
-                                {
-                                                    <option value="@employee.Id">@employee.FullName</option>
-                                }
-                                            </select>
+                                <div class="results"></div>
 
-                            @*TODO make it so you can only select department for employee who have them.*@
-                                            <label class="col">In afdeling:</label>
-
-                                            <select id="CreateShiftDepartment" asp-for="SelectedDepartmentId" class="form-control col">
-                                @foreach (var dep in Model.Departments)
-                                {
-                                                    <option value="@dep.Id">@dep.DepartmentName</option>
-                                }
-                                            </select>
-                                        </div>
-
-                                        <div class="row pt-2">
-                                            <p class="col">Startijd:</p>
-                                            <input id="CreateShiftStartTime" asp-for="SelectedStartTime" class="form-control timepicker col" />
-
-                                            <p class="col">Eindtijd:</p>
-                                            <input id="CreateShiftEndTime" asp-for="SelectedEndTime" class="form-control timepicker col" />
-                                        </div>
-
-                                        <hr />
-                                        <div class="row my-3">
-                                            <p class="col">Winkel opent:</p>
-                                            <p class="col">@Model.OpenTime </p>
-                                            <p class="col">Winkel sluit:</p>
-                                            <p class="col">@Model.CloseTime </p>
-                                        </div>
-                                    </form>
-
-                                </div>
-                                <div class="text-center modal-footer">
-                                    <button type="button" class="btn btn-secondary text-center" data-bs-dismiss="modal">Annuleren</button>
-                                    <input type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn " />
+                                <div class="form-check my-2 ms-2">
+                                    <input class="form-check-input" type="checkbox" value="" id="searchExternal">
+                                    <label class="form-check-label" for="searchExternal">Extern zoeken</label>
                                 </div>
                             </div>
                         </div>
+
+
+                        @*TODO make it so you can only select department for employee who have them.*@
+                        <label class="col">In afdeling:</label>
+
+                        <select id="CreateShiftDepartment" asp-for="SelectedDepartmentId" class="form-control col" style="height: fit-content">
+                            @foreach (var dep in Model.Departments)
+                            {
+                                <option value="@dep.Id">@dep.DepartmentName</option>
+                            }
+                        </select>
                     </div>
 
-                    <!-- Modal for editing a shift-->
-                    <div class="modal fade" id="editExistingShiftModal" tabindex="-1" aria-labelledby="wijzigdienst" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="addShiftModal">Dienst wijzigen</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form asp-action="EditShift" id="editShiftForm">
-                                        <input type="hidden" asp-for="Date" />
-                                        <input id="shiftIdInput" type="hidden" asp-for="SelectedShiftId" />
-                                        <div class="row">
-                                            <p class="col">Medewerker:</p>
+                    <div class="row pt-2">
+                        <p class="col">Startijd:</p>
+                        <input id="CreateShiftStartTime" asp-for="SelectedStartTime" class="form-control timepicker col"/>
 
-                                            <select id="employeeIdInputEdit" disabled asp-for="SelectedEmployeeId" class="form-control col">
-                                @foreach (var employee in Model.AvailableEmployees)
-                                {
-                                                    <option value="@employee.Id">@employee.FullName</option>
-                                }
-                                            </select>
-                            @*TODO make it so you can only select department for employee who have them.*@
-                                            <p class="col">In afdeling:</p>
-
-                                            <select id="departmentIdInput" asp-for="SelectedDepartmentId" class="form-control col">
-
-                                @foreach (var dep in Model.Departments)
-                                {
-                                                    <option value="@dep.Id">@dep.DepartmentName</option>
-                                }
-                                            </select>
-                                        </div>
-
-                                        <div class="row pt-2">
-                                            <p class="col">Startijd:</p>
-                                            <input id="starttimeinput" asp-for="SelectedStartTime" class="timepicker form-control col" />
-
-                                            <p class="col">Eindtijd:</p>
-                                            <input id="endtimeinput" asp-for="SelectedEndTime" class="timepicker form-control col" />
-                                        </div>
-
-                                        <hr />
-                                        <div class="row my-3">
-                                            <p class="col">Winkel opent:</p>
-                                            <p class="col">@Model.OpenTime </p>
-                                            <p class="col">Winkel sluit:</p>
-                                            <p class="col">@Model.CloseTime </p>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                                    <button id="deleteShiftBtn" type="button" class="btn btn-danger" onclick="confirmDeleteShift()">Verwijder dienst</button>
-                                    <button id="setSickBtn" type="button" class="btn btn-warning" onclick="setShiftSick()">Medewerker ziek melden</button>
-                                    <input id="saveEditShift" type="submit" value="Opslaan" form="editShiftForm" class="btn btn-success btn " />
-                                </div>
-                            </div>
-                        </div>
+                        <p class="col">Eindtijd:</p>
+                        <input id="CreateShiftEndTime"asp-for="SelectedEndTime" class="form-control timepicker col"/>
                     </div>
 
+                    <hr/>
+                    <div class="row my-3">
+                        <p class="col">Winkel opent:</p>
+                        <p class="col">@Model.OpenTime </p>
+                        <p class="col">Winkel sluit:</p>
+                        <p class="col">@Model.CloseTime </p>
+                    </div>
+                </form>
+
+            </div>
+            <div class="text-center modal-footer">
+                <button type="button" class="btn btn-secondary text-center" data-bs-dismiss="modal">Annuleren</button>
+                <input type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn "/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for editing a shift-->
+<div class="modal fade" id="editExistingShiftModal" tabindex="-1" aria-labelledby="wijzigdienst" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addShiftModal">Dienst wijzigen</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="EditShift" id="editShiftForm">
+                    <input type="hidden" asp-for="Date"/>
+                    <input id="shiftIdInput" type="hidden" asp-for="SelectedShiftId"/>
+                    <div class="row">
+                        <p class="col">Medewerker:</p>
+
+                        <select id="employeeIdInputEdit" disabled asp-for="SelectedEmployeeId" class="form-control col">
+                            @foreach (var employee in Model.AvailableEmployees)
+                            {
+                                <option value="@employee.Id">@employee.FullName</option>
+                            }
+                        </select>
+                        @*TODO make it so you can only select department for employee who have them.*@
+                        <p class="col">In afdeling:</p>
+
+                        <select id="departmentIdInput" asp-for="SelectedDepartmentId" class="form-control col">
+
+                            @foreach (var dep in Model.Departments)
+                            {
+                                <option value="@dep.Id">@dep.DepartmentName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="row pt-2">
+                        <p class="col">Startijd:</p>
+                        <input id="starttimeinput" asp-for="SelectedStartTime" class="timepicker form-control col"/>
+
+                        <p class="col">Eindtijd:</p>
+                        <input id="endtimeinput" asp-for="SelectedEndTime" class="timepicker form-control col"/>
+                    </div>
+
+                    <hr/>
+                    <div class="row my-3">
+                        <p class="col">Winkel opent:</p>
+                        <p class="col">@Model.OpenTime </p>
+                        <p class="col">Winkel sluit:</p>
+                        <p class="col">@Model.CloseTime </p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                <button id="deleteShiftBtn" type="button" class="btn btn-danger" onclick="confirmDeleteShift()">Verwijder dienst</button>
+                <button id="setSickBtn" type="button" class="btn btn-warning" onclick="setShiftSick()">Medewerker ziek melden</button>
+                <input id="saveEditShift" type="submit" value="Opslaan" form="editShiftForm" class="btn btn-success btn "/>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 @section Scripts
 {
-<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+    
+    // Translate semantic ui
+    $.fn.search.settings.error.noResults = 'Geen resultaten gevonden'
+    // Only way to translate the header is by completely overwriting it
+    $.fn.search.settings.templates.message = function(message, type) {
+        let html = '';
+        if (message !== undefined && type !== undefined) {
+            html += '' + '<div class="message ' + type + '">';;
+            // message type
+            if (type == 'empty') {
+                html += '' +
+                    '<div class="header">Geen resultaten</div class="header">' +
+                    '<div class="description">' + message + '</div class="description">';;
+            } else {
+                html += ' <div class="description">' + message + '</div>';
+            }
+            html += '</div>';
+        }
+        return html;
+    }
 
-<script>
+    // Employee search change mode when external checkmark is clicked
+    $(document).ready(function() {
+        changeExternalEmployeeSearchMode(false)
+        $('#searchExternal').change(function() {
+            changeExternalEmployeeSearchMode(this.checked);
+        });
+    });
+
+    // Changes the employee search mode from external to internal depending on given boolean
+    function changeExternalEmployeeSearchMode(external) {
+        if (external) {
+            // Setup search employee
+            $('#search-employees')
+                .search({
+                    type: 'category',
+                    maxResults: 20,
+                    cache: false,
+                    apiSettings: {
+                        url: 'SearchEmployees/?q={query}&external=true'
+                    },
+                    onSelect: function(result, response) {
+                        $('#select-employee-id').val(result.id);
+                    },
+                });
+        } else {
+            $('#search-employees')
+                .search({
+                    maxResults: 20,
+                    cache: false,
+                    apiSettings: {
+                        url: 'SearchEmployees/?q={query}'
+                    },
+                    onSelect: function(result, response) {
+                        $('#select-employee-id').val(result.id);
+                    }
+                })
+        }
+    }
 
     function showToast(message) {
         const Toast = Swal.mixin({
@@ -659,19 +729,6 @@
             dynamic: false,
             dropdown: true,
             scrollbar: true,
-        });
-
-        //change selectboxes to selectize mode to be searchable
-        $("#selectemployee").select2({
-            dropdownParent: $('#createNewShiftModal'),
-            width: 'resolve',
-            theme: "classic",
-            placeholder: "Kies een medewerker",
-            language: {
-                noResults: function(params) {
-                    return "Geen resultaten gevonden";
-                }
-            }
         });
     });
 

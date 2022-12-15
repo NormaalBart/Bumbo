@@ -12,6 +12,7 @@ namespace BumboData.Interfaces.Repositories
         IEnumerable<Employee> GetAllEmployeesOfBranch(int defaultBranchId);
         bool EmployeeIsInDepartment(string employeeKey, int id);
         bool Exists(Employee newEmployee);
-        public void Import(List<Employee> employees);
+        void Import(List<Employee> employees);
+        List<Employee> Search(int? branchId, string query);
     }
 }
