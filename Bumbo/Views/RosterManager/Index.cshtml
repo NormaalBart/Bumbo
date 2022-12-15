@@ -161,11 +161,11 @@
 
         @if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
         {
-                @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
-            }
+            @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
+        }
         else
         {
-                @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
+            @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
         }
                                 <div class="vstack">
                                     <div>
@@ -416,15 +416,24 @@
                     }
                     else
                     {
-                                        <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" onclick="onRowClick()">
-                                            <td colspan="25" class="roster-table-employee-cell text-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                                </svg>
-                                                Dienst toevoegen
-                                            </td>
+                                    <td colspan="25" class=text-center>
+                            @if (Model.RosteredEmployees.Count == 0 && !(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00"))
+                            {
+                                            <div class="justify-content-center mx-auto d-flex justify-content-center">
 
-                                        </tr>
+                                                <span class="alert alert-primary text-center "> Er zijn op dit moment nog geen medewerkers ingepland, voeg een nieuwe medewerker toe aan het rooster met de knop hieronder.</span>
+                                            </div>
+                            }
+                                    </td>
+                                    <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" onclick="onRowClick()">
+                                        <td colspan="25" class="roster-table-employee-cell text-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                            </svg>
+                                            Dienst toevoegen
+                                        </td>
+
+                                    </tr>
                     }
                 }
 
@@ -432,15 +441,6 @@
                         </table>
 
                     </div>
-
-
-    @if (Model.RosteredEmployees.Count == 0 && !(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00"))
-    {
-                        <div class="justify-content-center mx-auto d-flex justify-content-center">
-
-                            <span class="alert alert-primary text-center "> Er zijn op dit moment nog geen medewerkers ingepland, voeg een nieuwe medewerker toe aan het rooster met de knop hierboven.</span>
-                        </div>
-    }
 
 
                     <!-- Modal for creating a new shift-->
