@@ -469,10 +469,8 @@ body.swal2-shown > [aria-hidden="true"] {
     z-index: 50 !important;
 }
 
-
 /* ============ desktop view ============ */
 @media all and (min-width: 992px) {
-
     .dropdown-menu {
         left: 12.5px !important;
     }
