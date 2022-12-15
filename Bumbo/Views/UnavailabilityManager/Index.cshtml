@@ -60,8 +60,6 @@
             <th>
                 Acties
             </th>
-            <th>
-            </th>
         </tr>
     </thead>
     <tbody>
@@ -71,9 +69,7 @@
                 <td colspan="7">
                     <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
                 </td>
-
             </tr>
-
         }
         @foreach (var item in Model.UnavailableMoments)
         {
@@ -93,17 +89,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ReviewStatus)
                 </td>
-                <td class="text-center">
-                    <!--Approve button-->
+                <td class="row text-center">
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <!--Approve button-->
                     <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" method="post">
-                        <input type="submit" value="Goedkeuren" class="btn btn-success" />
-                    </form>
-                </td>
-                <td class="text-center">
-                    <!--reject button-->
-                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" method="post">
-                        <input type="submit" value="Afkeuren" class="btn btn-danger" />
-                    </form>
+                            <input type="submit" value="Goedkeuren" class="btn btn-success" />
+                        </form>
+                        <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" method="post">
+                            <input type="submit" value="Afkeuren" class="btn btn-danger" />
+                        </form>
+                    </div>
                 </td>
             </tr>
         }
@@ -115,32 +110,32 @@
 @if (Model.UnavailableMoments.Count() != 0)
 {
     <!-- The Modal -->
-<div id="modal" class="modal ">
-    <!-- Modal content -->
+    <div id="modal" class="modal ">
+        <!-- Modal content -->
     <div class="modal-content modal-dialog text-center prognosis-textarea">
-        <span class="close position-absolute">&times;</span>
-        <label> </label>
-        <div class="m-3 text-center align-content-center">
-            <form method="post" asp-action="ReviewAll">
-                
-                <!--We pass all ids of items on screen.-->
-                @foreach (var item in Model.Ids)
-                {
-                    <input hidden asp-for="Ids" value="@item" name="ids" />
-                }
-                <div class="m-3">
-                    <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
-                </div>
-                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
-            </form>
+            <span class="close position-absolute">&times;</span>
+            <label> </label>
+            <div class="m-3 text-center align-content-center">
+                <form method="post" asp-action="ReviewAll">
+
+                    <!--We pass all ids of items on screen.-->
+                    @foreach (var item in Model.Ids)
+                    {
+                        <input hidden asp-for="Ids" value="@item" name="ids" />
+                    }
+                    <div class="m-3">
+                        <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
+                    </div>
+                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
+                </form>
+            </div>
         </div>
     </div>
-</div>
 }
 
 @section Scripts
-{ 
-    <script>
+{
+<script>
     $('#openModalBTN').click(function() {
         // Show no new items to accept
         if(@Model.UnavailableMoments.Count() == 0){
@@ -150,8 +145,8 @@
             icon: 'warning'
         })
         }
-       
+
     })
-    </script>
+</script>
 }
 
