@@ -62,9 +62,9 @@ namespace BumboData
         private void SeedDepartments(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Department>().HasData(
-                new Department { Id = DepartmentType.CASSIERS.DepartmentId, DepartmentName = DepartmentType.CASSIERS.Name },
-                new Department { Id = DepartmentType.FRESH.DepartmentId, DepartmentName = DepartmentType.FRESH.Name },
-                new Department { Id = DepartmentType.FILLERS.DepartmentId, DepartmentName = DepartmentType.FILLERS.Name }
+                new Department { Id = DepartmentType.Cassiers.DepartmentId, DepartmentName = DepartmentType.Cassiers.Name },
+                new Department { Id = DepartmentType.Fresh.DepartmentId, DepartmentName = DepartmentType.Fresh.Name },
+                new Department { Id = DepartmentType.Fillers.DepartmentId, DepartmentName = DepartmentType.Fillers.Name }
             ); ;
         }
 
@@ -174,7 +174,7 @@ namespace BumboData
                     EmailConfirmed = true,
                     Postalcode = "1234AA",
                     Housenumber = "10",
-                    Function = DepartmentType.FRESH.Name,
+                    Function = DepartmentType.Fresh.Name,
                 },
                 // Medewerker
                 new Employee
@@ -195,7 +195,7 @@ namespace BumboData
                     EmailConfirmed = true,
                     Postalcode = "1234AA",
                     Housenumber = "15",
-                    Function = DepartmentType.FRESH.Name,
+                    Function = DepartmentType.Fresh.Name,
                 });
 
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(

@@ -56,7 +56,7 @@ namespace BumboUnitTests
             };
             _standardRepositoryMock.Setup(x => x.Get(standardType, branch)).Returns(standardDto);
             //Act
-            var result = _prognosisService.GetCassierePrognose(date, branchId);
+            var result = _prognosisService.GetCashierPrognose(date, branchId);
             var timeOpen = openingTimesDto.Item2 - openingTimesDto.Item1;
             var customersPerHours = customerCount / timeOpen.TotalHours;
             //Assert
@@ -81,7 +81,7 @@ namespace BumboUnitTests
             };
             _standardRepositoryMock.Setup(x => x.Get(standardType, branch)).Returns(standardDto);
             //Act
-            var result = _prognosisService.GetCassierePrognose(date, branchId);
+            var result = _prognosisService.GetCashierPrognose(date, branchId);
             //Assert
             Assert.AreEqual((-1,-1), result);
         }
@@ -106,7 +106,7 @@ namespace BumboUnitTests
             _prognosisRepositoryMock.Setup(x => x.GetByDate(date.ToDateOnly(), branchId)).Returns(prognosisDto);
             _standardRepositoryMock.Setup(x => x.Get(It.IsAny<StandardType>(), It.IsAny<Branch>())).Returns(() => null);
             //Act
-            var result = _prognosisService.GetCassierePrognose(date, branchId);
+            var result = _prognosisService.GetCashierPrognose(date, branchId);
             //Assert
             Assert.AreEqual((-1,-1), result);
         }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BumboData.Enums;
 
 namespace BumboServices.Prognoses
 {
@@ -25,8 +26,29 @@ namespace BumboServices.Prognoses
             _standardRepository = standardRepository;
             _branchRepository = branchRepository;
         }
+
+        public (int Workers, double Hours) GetByDepartment(Department dep, DateTime date, int branchId)
+        {
+            // Can't be a switch because the department id's 'aren't know at compile time'
+            if (dep.Id == DepartmentType.Cassiers.DepartmentId)
+            {
+                return GetCashierPrognose(date, branchId);
+            }
+
+            if (dep.Id == DepartmentType.Fillers.DepartmentId)
+            {
+                return (-1, GetStockersPrognoseHours(date, branchId));
+            }
+
+            if (dep.Id == DepartmentType.Fresh.DepartmentId)
+            { 
+                return GetFreshPrognose(date, branchId);
+            }
+
+            return (-1, -1);
+        }
         
-        public (int Workers, Double Hours) GetCassierePrognose(DateTime date, int branchId)
+        public (int Workers, Double Hours) GetCashierPrognose(DateTime date, int branchId)
         {
             var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(), branchId);
             if (prognosis != null)
