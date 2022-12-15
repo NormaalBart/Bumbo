@@ -94,12 +94,12 @@ namespace Bumbo.Models.RosterManager
         public double GetTotalPlannedHoursPerDepartment(string departmentName)
         {
             var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
-            return allEmployeesOfDepartment.Sum(employee => employee.PlannedShifts.Sum(plannedShift => (plannedShift.EndTime - plannedShift.StartTime).TotalHours));
+            return allEmployeesOfDepartment.Sum(employee => employee.PlannedShifts.Where(s=>!s.Sick).Sum(plannedShift => (plannedShift.EndTime - plannedShift.StartTime).TotalHours));
         }
 
         public int GetTotalPlannedWorkersPerDepartment(string departmentName)
         {
-            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Where(s=>!s.Sick).Any(p => p.Department.DepartmentName == departmentName));
             return allEmployeesOfDepartment.Count();
         }
         

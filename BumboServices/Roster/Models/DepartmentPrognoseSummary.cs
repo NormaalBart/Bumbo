@@ -5,7 +5,8 @@ namespace BumboServices.Roster.Models;
 // Stores the departments and their prognosis
 public class DepartmentPrognoseSummary
 {
-    public Dictionary<Department, (int Workers, double Hours)> Dict { get; } = new();
+    // Department id, and workers in that department
+    public Dictionary<int, (int Workers, double Hours)> Dict { get; } = new();
 
     public bool Exceeds(DepartmentPrognoseSummary sum)
     {
@@ -23,7 +24,7 @@ public class DepartmentPrognoseSummary
     }
 
     // With given target prognosis, calculate the difference and check which department has the most difference in hours and workers.
-    public Department SuggestNextDepartment(DepartmentPrognoseSummary target)
+    public int SuggestNextDepartmentId(DepartmentPrognoseSummary target)
     {
         // First check if current and target prognoses have the same departments
         if (Dict.Keys.Count != target.Dict.Keys.Count && !Dict.Keys.All(target.Dict.Keys.Contains))
@@ -36,10 +37,22 @@ public class DepartmentPrognoseSummary
         foreach (var (department, (workers, hours)) in Dict)
         {
             var targetValue = target.Dict[department];
-            diff.Dict.Add(department, (targetValue.Workers - workers, targetValue.Hours - hours));
+            diff.Dict.Add(department, (targetValue.Workers == -1 ? 0 : targetValue.Workers - workers, targetValue.Hours - hours));
+        }
+
+        return diff.Dict.Select(d => (d.Key, d.Value))
+            .OrderByDescending(d => d.Value.Hours)
+            .ThenByDescending(d => d.Value.Workers).ToList().First().Key;
+    }
+
+    public bool DepartmentStillRequiresWork(int departmentId, DepartmentPrognoseSummary target)
+    {
+        if (!Dict.ContainsKey(departmentId))
+        {
+            return false;
         }
         
-        
-        return null;
+        return Dict[departmentId].Hours < target.Dict[departmentId].Hours || 
+            Dict[departmentId].Workers < target.Dict[departmentId].Workers;
     }
 }

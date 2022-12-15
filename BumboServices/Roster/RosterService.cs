@@ -97,7 +97,7 @@ public class RosterService : IRosterService
         var departmentPrognosis = new DepartmentPrognoseSummary();
         foreach (var department in _departmentsRepository.GetList())
         {
-            departmentPrognosis.Dict[department] =
+            departmentPrognosis.Dict[department.Id] =
                     _prognosesService.GetByDepartment(department, day.ToDateTime(TimeOnly.MinValue), branchId);
         }
         
@@ -142,13 +142,13 @@ public class RosterService : IRosterService
         // Start by putting all departments with 0 into it.
         foreach (var department in _departmentsRepository.GetList())
         {
-            sum.Dict[department] = (0, 0);
+            sum.Dict[department.Id] = (0, 0);
         }
         
         // Add all the shifts to the dictionary. Except shifts that are registered as sick.
         foreach (var shift in shifts.Where(s=>!s.Sick))
         {
-            var department = shift.Department;
+            var department = shift.DepartmentId;
             var cur = sum.Dict[department];
             sum.Dict[department] = (cur.Workers + 1, cur.Hours + (shift.EndTime - shift.StartTime).TotalHours);
         }
@@ -189,10 +189,23 @@ public class RosterService : IRosterService
             
             var emp = employeesMapped.First().Item1;
             employeesMapped.RemoveAt(0);
+            
+            if (emp == null) continue;
 
-            var preferredDepartment = curPrognose.SuggestNextDepartment(plannedPrognose);
+            int? preferredDepartment = curPrognose.SuggestNextDepartmentId(plannedPrognose);
+            
+            // Check if employee can work on that department, and if not check if it can work on any other department.
+            if (emp.AllowedDepartments.All(d => d.Id != preferredDepartment))
+            {
+                preferredDepartment = emp.AllowedDepartments
+                    .FirstOrDefault(d => curPrognose.DepartmentStillRequiresWork(d.Id, plannedPrognose))?.Id;
+                if (preferredDepartment == null)
+                {
+                    continue;
+                }
+            }
 
-            var suggested = TryGenerateShift(branchId, emp, openTime, closeTime, allWeekShifts, currentShifts, day, preferredDepartment.Id);
+            var suggested = TryGenerateShift(branchId, emp, openTime, closeTime, allWeekShifts, currentShifts, day, preferredDepartment ?? -1);
             if (suggested != null)
             {
                 currentShifts.Add(suggested);
@@ -212,7 +225,7 @@ public class RosterService : IRosterService
      * Tries to generate a shift with given parameters.
      */
     private PlannedShift? TryGenerateShift(int branch, Employee emp, DateTime openTime, DateTime closeTime,
-        List<PlannedShift> allWeekShifts, List<PlannedShift> currentShifts, DateOnly day, int departmentId = -1)
+        IEnumerable<PlannedShift> allWeekShifts, List<PlannedShift> currentShifts, DateOnly day, int departmentId = -1)
     {
         var tempShiftsOrigin = new List<PlannedShift>();
         tempShiftsOrigin.AddRange(allWeekShifts);
