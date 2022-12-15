@@ -67,7 +67,7 @@ public class RosterService : IRosterService
         // filter out managers from remaining employees
         // Check if all remaining employees roles
         employees.AddRange(from remainingEmployee in remainingEmployees
-            where !_userManager.GetRolesAsync(remainingEmployee).Result.Contains(RoleType.MANAGER.Name)
+            where _userManager.GetRolesAsync(remainingEmployee).Result.Contains(RoleType.EMPLOYEE.Name)
             select (remainingEmployee.Id, 0.0));
 
         if (employees.Count == 0)
