@@ -18,57 +18,69 @@ namespace BumboServices.Prognoses
         private readonly int MinutesInHour = 60;
         private readonly IPrognosisRepository _prognosisRepository;
         private readonly IStandardRepository _standardRepository;
-        public PrognosisService(IPrognosisRepository prognosisRepository, IStandardRepository standardRepository)
+        private readonly IBranchRepository _branchRepository;
+        public PrognosisService(IPrognosisRepository prognosisRepository, IStandardRepository standardRepository , IBranchRepository branchRepository)
         {
             _prognosisRepository = prognosisRepository;
             _standardRepository = standardRepository;
+            _branchRepository = branchRepository;
         }
-
-        public double GetCassierePrognose(DateTime date, int branchId)
+        
+        public (int Workers, Double Hours) GetCassierePrognose(DateTime date, int branchId)
         {
             var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(), branchId);
             if (prognosis != null)
             {
+                var openingsHours = _branchRepository.GetOpenAndCloseTimes(branchId, date.ToDateOnly());
                 var standard = _standardRepository.Get(StandardType.CHECKOUT_EMPLOYEES, prognosis.Branch);
                 if (standard != null)
                 {
                     Double customerCount = prognosis.CustomerCount;
                     Double cassierePerCustomersPerHour = standard.Value;
-                    return customerCount / cassierePerCustomersPerHour;
+
+                    var timeOpen = openingsHours.Item2 - openingsHours.Item1;
+                    var customersPerHours =  customerCount / timeOpen.TotalHours;
+
+                    return ((int)Math.Ceiling(customersPerHours / standard.Value), customerCount / cassierePerCustomersPerHour);
                 }
                 else
                 {
-                    return -1;
+                    return (-1,-1);
                 }
             }
             else
             {
-                return -1;
+                return (-1, -1);
             }
         }
-        public double GetFreshPrognose(DateTime date, int branchId)
+        public (int Workers, Double Hours) GetFreshPrognose(DateTime date, int branchId)
         {
             var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(),branchId);
             if (prognosis != null)
             {
+                var openingsHours = _branchRepository.GetOpenAndCloseTimes(branchId, date.ToDateOnly());
                 var standard = _standardRepository.Get(StandardType.FRESH_EMPLOYEES, prognosis.Branch);
                 if (standard != null)
                 {
                     Double customerCount = prognosis.CustomerCount;
                     Double freshEmployeePerCustomersPerHour = standard.Value;
-                    return customerCount / freshEmployeePerCustomersPerHour;
+
+                    var timeOpen = openingsHours.Item2 - openingsHours.Item1;
+                    var customersPerHours = customerCount / timeOpen.TotalHours;
+
+                    return ((int)Math.Ceiling(customersPerHours / standard.Value), customerCount / freshEmployeePerCustomersPerHour);
                 }
                 else
                 {
-                    return -1;
+                    return (-1, -1);
                 }
             }
             else
             {
-                return -1;
+                return (-1, -1);
             }
         }
-        public double GetStockersPrognose(DateTime date, int branchId)
+        public double GetStockersPrognoseHours(DateTime date, int branchId)
         {
             var prognosis = _prognosisRepository.GetByDate(date.ToDateOnly(),branchId);
             if (prognosis != null)
