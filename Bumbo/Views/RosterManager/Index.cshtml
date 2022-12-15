@@ -18,39 +18,40 @@
 
 }
 
+
 <body class="roster-body">
 
-<h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
+    <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
 
-<!-- if modelstate that returned is not valid, say that saving failed-->
-@if (Model.ErrorMessage != null)
-{
-    <div class="alert alert-danger text-center" role="alert">
-        <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden omdat @Model.ErrorMessage
-    </div>
-}
+    <!-- if modelstate that returned is not valid, say that saving failed-->
+    @if (Model.ErrorMessage != null)
+    {
+        <div class="alert alert-danger text-center" role="alert">
+            <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden omdat @Model.ErrorMessage
+        </div>
+    }
 
-@* Display CAO errors *@
-@if (Model.InvalidShifts.Count > 0)
-{
-    <div class="alert alert-danger text-left" role="alert">
-        <i class="bi-exclamation-triangle-fill"></i><strong> Oeps!</strong> Er zijn CAO overtredingen, deze zullen verholpen moeten worden voordat een nieuwe dienst aangemaakt kan worden.
-        <ul>
-            @foreach (var modelInvalidShift in Model.InvalidShifts)
-            {
-                <li>@modelInvalidShift.Key.GetErrorMessage()</li>
-                <ul>
-                    @foreach (var shift in modelInvalidShift.Value)
-                    {
-                        <li>
-                            <strong>@shift.Employee.FullName():</strong> @shift.StartTime.ToString("HH\\:mm") - @shift.EndTime.ToString("HH\\:mm")
-                        </li>
-                    }
-                </ul>
-            }
-        </ul>
-    </div>
-}
+    @* Display CAO errors *@
+    @if (Model.InvalidShifts.Count > 0)
+    {
+        <div class="alert alert-danger text-left" role="alert">
+            <i class="bi-exclamation-triangle-fill"></i><strong> Oeps!</strong> Er zijn CAO overtredingen, deze zullen verholpen moeten worden voordat een nieuwe dienst aangemaakt kan worden.
+            <ul>
+                @foreach (var modelInvalidShift in Model.InvalidShifts)
+                {
+                    <li>@modelInvalidShift.Key.GetErrorMessage()</li>
+                    <ul>
+                        @foreach (var shift in modelInvalidShift.Value)
+                        {
+                            <li>
+                                <strong>@shift.Employee.FullName():</strong> @shift.StartTime.ToString("HH\\:mm") - @shift.EndTime.ToString("HH\\:mm")
+                            </li>
+                        }
+                    </ul>
+                }
+            </ul>
+        </div>
+    }
 
 <div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
     <div>
@@ -63,7 +64,7 @@
     </div>
     <div>
         <!--Week  number, date information which is in the center.-->
-        <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToShortDateString() </p>
+            <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToString("dddd") @Model.Date.ToShortDateString() </p>
     </div>
     <div>
         <!--Arrow to right, using an online arrow png on the right side of the bar.-->
@@ -79,60 +80,115 @@
     <div class="row border ">
         <div class="border col-sm d-flex justify-content-center flex-nowrap ">
 
-            <div>
-                @Html.DisplayNameFor(model => model.CassierePrognose) :
-            </div>
-            <div>
-                @if (Model.CassierePrognose == -1)
+
+            @if (Model.GetTotalPlannedHoursPerDepartment("Kassa") >= Model.CassierePrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Kassa") >= Model.CassierePrognoseWorkers)
+            {
+                @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
+            }
+            else
+            {
+                @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
+            }
+                    <div class="vstack">
+                        <div>
+                    @Html.DisplayNameFor(model => model.CassierePrognoseHours):
+
+                    @if (Model.CassierePrognoseHours == -1)
+                    {
+                                <span> Geen informatie</span>
+                    }
+                    else
+                    {
+                                <span> @Model.CassierePrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Kassa")</span>
+                    }
+                        </div>
+                        <div>
+                    @Html.DisplayNameFor(model => model.CassierePrognoseWorkers):
+
+                    @if (Model.CassierePrognoseWorkers == -1)
+                    {
+                                <span> Geen informatie</span>
+                    }
+                    else
+                    {
+                                <span> @Model.CassierePrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Kassa")</span>
+                    }
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+        @if (Model.GetTotalPlannedHoursPerDepartment("Vers") >= Model.FreshPrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Vers") >= Model.FreshPrognoseHours)
+        {
+            @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
+        }
+        else
+        {
+            @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
+        }
+                        <div class="vstack">
+                            <div>
+                @Html.DisplayNameFor(model => model.FreshPrognoseHours):
+
+                @if (Model.FreshPrognoseHours == -1)
                 {
-                    <span>Geen informatie</span>
+                                    <span>Geen Info</span>
                 }
                 else
                 {
-                    <span>@Model.CassierePrognose Uren</span>
+                                    <span>@Model.FreshPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vers")</span>
                 }
-            </div>
-        </div>
+                            </div>
 
-        <div class="border col-sm d-flex justify-content-center flex-nowrap">
-            <div>
-                @Html.DisplayNameFor(model => model.FreshPrognose) :
-            </div>
-            <div>
-                @if (Model.FreshPrognose == -1)
+
+                            <div>
+                @Html.DisplayNameFor(model => model.FreshPrognoseWorkers):
+
+                @if (Model.FreshPrognoseWorkers == -1)
                 {
-                    <span>Geen Info</span>
+                                    <span>Geen Info</span>
                 }
                 else
                 {
-                    <span>@Model.FreshPrognose Uren</span>
+                                    <span>@Model.FreshPrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Vers")</span>
                 }
-            </div>
-        </div>
+                            </div>
 
-        <div class="border col-sm d-flex justify-content-center flex-nowrap">
-            <div>
-                @Html.DisplayNameFor(model => model.StockersPrognose) :
-            </div>
-            <div>
-                @if (Model.StockersPrognose == -1)
-                {
-                    <span>Geen informatie</span>
-                }
-                else
-                {
-                    <span>@Model.StockersPrognose Uren</span>
-                }
-            </div>
-        </div>
+                        </div>
+                    </div>
+
+    @if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
+    {
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
+    }
+    else
+    {
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
+    }
+                            <div class="vstack">
+                                <div>
+            @Html.DisplayNameFor(model => model.StockersPrognoseHours) :
+
+            @if (Model.StockersPrognoseHours == -1)
+            {
+                                        <span>Geen informatie</span>
+            }
+            else
+            {
+                                        <span>@Model.StockersPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vullers")</span>
+            }
+                                </div>
+                            </div>
+                        </div>
 
 
-    </div>
-</div>
-
+                    </div>
+                </div>
 
 <script>
-    'use strict';
+'use strict';
 
     // list of all shifts on screen.
     var listshifts = []; 
@@ -212,7 +268,6 @@
     }
 
 </script>
-
 <div class="text-center m-3">
     <!-- Button trigger modal -->
     <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
