@@ -21,6 +21,10 @@ body {
     margin: 10px;
 }
 
+a{
+    text-decoration: none;
+    color: black;
+}
 
 .edit-box {
     background-color: rgb(232, 232, 232);
