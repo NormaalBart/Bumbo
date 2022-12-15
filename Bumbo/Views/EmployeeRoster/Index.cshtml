@@ -88,7 +88,7 @@
                         <div class="row">
                             @if (item.Type == null)
                             {
-                                <div class="employee-roster-box-dep employee-roster-box-time col-auto">
+                                <div class="employee-roster-box-time  col-auto @(item.Sick ? "employee-roster-box-dep-sick" : "employee-roster-box-dep")" data-toggle="tooltip" data-placement="top" @(item.Sick ? "title=Ziek" : "")>
                                     <p>@item.DepartmentName Afdeling</p>
                                 </div>
                             }else{

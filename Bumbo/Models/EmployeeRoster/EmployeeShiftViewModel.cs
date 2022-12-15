@@ -13,6 +13,8 @@ namespace Bumbo.Models.EmployeeRoster
         public string Street { get; set; }
         public string HouseNumber { get; set; }
 
+        public bool Sick { get; set; } = false;
+
 
         public virtual UnavailableMomentType? Type { get; set; }
 
