@@ -83,9 +83,9 @@ namespace Bumbo.Controllers.Admin
         public ActionResult Create()
         {
             var viewModel = new BranchCreateViewModel();
-            foreach (DayOfWeek dayOfWeek in Enum.GetValues(typeof(DayOfWeek)))
+            foreach (DayOfWeek dayOfWeek in new DayOfWeek[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday})
             {
-                viewModel.OpeningHours.Add(new OpeningHoursViewModel { DayOfWeek = (DayOfWeekViewModel)dayOfWeek, OpenTime = new TimeSpan(8, 00, 00), CloseTime = new TimeSpan(18, 00, 00) });
+                viewModel.OpeningHours.Add(new OpeningHoursViewModel { DayOfWeek = dayOfWeek, OpenTime = new TimeSpan(8, 00, 00), CloseTime = new TimeSpan(18, 00, 00) });
             }
             return View(viewModel);
         }

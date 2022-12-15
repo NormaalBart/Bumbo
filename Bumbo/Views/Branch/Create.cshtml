@@ -1,4 +1,5 @@
 ﻿@using Bumbo.Models.BranchController
+@using System.Globalization
 @model BranchCreateViewModel
 @{
     ViewBag.data = "Branch";
@@ -73,7 +74,7 @@
                                 <table>
                                     <tr>
                                         <th width=200px>
-                                            @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
+                                            @Html.DisplayFor(model => @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[(int)Model.OpeningHours[i].DayOfWeek]);
                                         </th>
                                         <th>
                                             @Html.EditorFor(model => model.OpeningHours[i].OpenTime)

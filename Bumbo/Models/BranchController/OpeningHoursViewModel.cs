@@ -8,7 +8,7 @@ namespace Bumbo.Models.BranchController
 
         public int BranchId { get; set; }
 
-        public DayOfWeekViewModel DayOfWeek { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
 
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
