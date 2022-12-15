@@ -17,21 +17,15 @@ body {
     margin-bottom: 60px;
 }
 
-
-.top-header {
-    background-color: lightgray;
-    height: 100px;
-}
-
 .top-header-content {
     margin: 10px;
 }
 
 
 .edit-box {
-    background-color: lightgray;
+    background-color: rgb(232, 232, 232);
     border: 2px solid;
-    border-color: darkgray;
+    border-color: rgb(202, 203, 204);
     border-radius: 25px;
     padding: 20px;
     margin: 5px;
@@ -156,8 +150,12 @@ input[type="search"] {
     visibility: hidden;
 }
 
+.navbar {
+    background-image: linear-gradient(rgb(232, 232, 232), white);
+}
+
 .active {
-    background-color: lightgray !important;
+    background-color: rgb(202, 203, 204) !important;
 }
 
 .border-active {
@@ -215,7 +213,7 @@ p {
 
 /*This is the top header row which contains the time collumns*/
 .roster-table-header-cell {
-    background-color: grey !important;
+    background-color: rgb(232, 232, 232) !important;
     white-space: nowrap;
     font-size: 14px;
 }
@@ -271,8 +269,6 @@ p {
     background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
 }
 
-
-
 /*Rooster overview */
 .roster-overview-iteminfo {
     font-size: 11px;
@@ -317,23 +313,16 @@ p {
     margin-left: -15px;
 }
 
-/*.roster-overview-SufficientRostering {*/
-/*    border: 5px solid;*/
-/*    background: linear-gradient(to bottom right, mediumspringgreen, springgreen) !important;*/
-/*    border-image: linear-gradient(45deg, #568203, #018749) 1 !important;*/
-/*}*/
+.department-success {
+    background-image: linear-gradient(to bottom right, mediumspringgreen, springgreen);
+    border-radius: 10px;
 
-/*.roster-overview-InsufficientRostering {*/
-/*    border: 5px solid;*/
-/*    background: linear-gradient(to bottom right, yellow, #FFD700) !important;*/
-/*    border-image: linear-gradient(45deg, #e6c300, #ccad00) 1 !important;*/
-/*}*/
+}
 
-/*.roster-overview-box {*/
-/*    border: 5px solid;*/
-/*    border-image: linear-gradient(45deg, #888888, #909090) 1;*/
-/*    background: linear-gradient(to bottom right, #C0C0C0, #C8C8C8);*/
-/*}*/
+.department-warning {
+    background-image: linear-gradient(to bottom right, rgb(226, 97, 97), rgb(234, 117, 117));
+    border-radius: 10px;
+}
 
 .helpmenu {
     display: none;
@@ -436,8 +425,8 @@ body.swal2-shown > [aria-hidden="true"] {
     max-width: 70%;
 }
 
-.ui-timepicker-container{
-    z-index:3000 !important;
+.ui-timepicker-container {
+    z-index: 3000 !important;
 }
 
 .white-fade-bottom {
@@ -461,9 +450,23 @@ body.swal2-shown > [aria-hidden="true"] {
 .nav {
     z-index: 100 !important;
 }
+
 .nav-link {
     cursor: pointer;
 }
+
+input[type='checkbox'] {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 5px;
+    border: 2px solid #555;
+}
+
+    input[type='checkbox']:checked {
+        background: #888;
+    }
 
 .sticky-top {
     z-index: 50 !important;
@@ -475,29 +478,29 @@ body.swal2-shown > [aria-hidden="true"] {
         left: 12.5px !important;
     }
 
-    .dropdown-menu li {
-        position: relative;
-    }
-
-    .dropdown-menu .submenu {
-        display: none;
-        position: absolute;
-        left: 100%;
-        top: -7px;
-    }
-
-    .dropdown-menu .submenu-left {
-        right: 100%;
-        left: auto;
-    }
-
-    .dropdown-menu > li:hover {
-        background-color: #f1f1f1
-    }
-
-        .dropdown-menu > li:hover > .submenu {
-            display: block;
+        .dropdown-menu li {
+            position: relative;
         }
+
+        .dropdown-menu .submenu {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: -7px;
+        }
+
+        .dropdown-menu .submenu-left {
+            right: 100%;
+            left: auto;
+        }
+
+        .dropdown-menu > li:hover {
+            background-color: #f1f1f1
+        }
+
+            .dropdown-menu > li:hover > .submenu {
+                display: block;
+            }
 }
 /* ============ desktop view .end// ============ */
 
