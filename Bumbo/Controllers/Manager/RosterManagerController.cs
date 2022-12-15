@@ -186,7 +186,7 @@ namespace Bumbo.Controllers.Manager
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterSick(int shiftId, bool sick)
+        public IActionResult RegisterSick(int shiftId)
         {
             // Update planned shift
             var shift = _shiftRepository.Get(shiftId);
