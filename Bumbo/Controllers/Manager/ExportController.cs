@@ -151,7 +151,7 @@ public class ExportController : NotificationController
 
         if (viewModel.ImportEmployees != null)
         {
-            _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.DefaultBranchId ?? -1);
+            await _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.DefaultBranchId ?? -1);
             ShowMessage(MessageType.Success, "Laden van personeel is voltooid");
         }
 

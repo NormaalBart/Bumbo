@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using AutoMapper;
 using Bumbo.Models.RosterManager;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -60,7 +61,6 @@ namespace Bumbo.Controllers.Manager
             };
 
             var manager = await _userManager.GetUserAsync(User);
-
 
             var openAndCloseTimes = _branchRepository.GetOpenAndCloseTimes(manager.DefaultBranchId ?? -1, date.ToDateOnly());
             // TableMinHour and TableMaxHour are for the width of the table. 
@@ -214,6 +214,52 @@ namespace Bumbo.Controllers.Manager
             return Ok();
         }
 
+        [HttpGet]
+        // Search through employees for semantic ui
+        public async Task<IActionResult> SearchEmployees(string q, bool? external)
+        {
+            var manager = await _userManager.GetUserAsync(User);
+
+            var users = _employeeRepository.Search(external == true ? null : manager.DefaultBranchId, q)
+                .ToList();
+            
+            // Only allow employees
+            users = users.Where(u => _userManager.GetRolesAsync(u).Result.Contains(RoleType.EMPLOYEE.Name)).Take(50).ToList();
+
+            // If external is false or not found, return only employees from the same branch.
+            if (external is null or false)
+            {
+                var resp = new SemanticResultList<List<SemanticResult>>
+                {
+                    Results = users.Select(e => new SemanticResult()
+                    {
+                        Id = e.Id,
+                        Title = e.FullName(),
+                        Description = e.Email,
+                    }).ToList()
+                };
+                return Json(resp);
+            }
+            else
+            {
+                // Return as categorized list by branch.
+                var resp = new SemanticResultList<List<SemanticResultCategory>>
+                {
+                    Results = users.GroupBy(e => e.DefaultBranchId).Select(g => new SemanticResultCategory()
+                    {
+                        Name = _branchRepository.Get(g.Key ?? -1)?.Name ?? "onbekend",
+                        Results = g.Select(e => new SemanticResult()
+                        {
+                            Id = e.Id,
+                            Title = e.FullName(),
+                            Description = e.Email,
+                        }).ToList()
+                    }).ToList()
+                };
+                return Json(resp);
+            }
+        }
+
         [HttpPost]
         public IActionResult DeleteShift(int shiftId)
         {
@@ -291,7 +337,7 @@ namespace Bumbo.Controllers.Manager
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateShift(string selectedEmployeeId, int selectedDepartmentId,
+        public async Task<IActionResult> CreateShift(string? selectedEmployeeId, int selectedDepartmentId,
             string selectedStartTime, string selectedEndTime, string date)
         {
             var plannedShift = new PlannedShift();
@@ -301,15 +347,22 @@ namespace Bumbo.Controllers.Manager
                 .AddMinutes(DateTime.Parse(selectedStartTime).Minute);
             plannedShift.EndTime = DateTime.Parse(date).AddHours(DateTime.Parse(selectedEndTime).Hour)
                 .AddMinutes(DateTime.Parse(selectedEndTime).Minute);
+            
+            if (selectedEmployeeId == null)
+            {
+                return RedirectToAction("Index", "RosterManager",
+                    new {dateInput = date, errormessage = "er geen medewerker geselecteerd was."}); 
+            }
 
             plannedShift.Employee = _employeeRepository.Get(selectedEmployeeId);
             plannedShift.Department = _departmentsRepository.Get(selectedDepartmentId);
             var manager = await _userManager.GetUserAsync(User);
 
             plannedShift.Branch = _branchRepository.Get(manager.DefaultBranchId ?? -1);
+            
 
             // time is valid
-            if (plannedShift.StartTime > plannedShift.EndTime)
+            if (plannedShift.StartTime >= plannedShift.EndTime)
             {
                 return RedirectToAction("Index", "RosterManager",
                     new {dateInput = date, errormessage = "eindtijd niet na de starttijd mag komen."});
@@ -319,7 +372,7 @@ namespace Bumbo.Controllers.Manager
             if (_shiftRepository.ShiftOverlapsWithOtherShifts(plannedShift))
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "Medewerker is al ingepland for deze tijden."});
+                    new {dateInput = date, errormessage = "medewerker is al ingepland for deze tijden."});
             }
 
             // check availability employee

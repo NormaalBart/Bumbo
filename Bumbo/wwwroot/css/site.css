@@ -17,23 +17,25 @@ body {
     margin-bottom: 60px;
 }
 
-
-.top-header {
-    background-color: lightgray;
-    height: 100px;
-}
-
 .top-header-content {
     margin: 10px;
 }
 
-
-.employee-create-box {
-    background-color: grey;
-    padding: 20px;
+a {
+    text-decoration: none;
+    color: black;
 }
 
-    .employee-create-box input {
+.edit-box {
+    background-color: rgb(232, 232, 232);
+    border: 2px solid;
+    border-color: rgb(202, 203, 204);
+    border-radius: 25px;
+    padding: 20px;
+    margin: 5px;
+}
+
+    .edit-box input {
         padding: 10px;
     }
 
@@ -85,6 +87,14 @@ input[type="search"] {
         text-decoration: none;
     }
 
+.center-table {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+    .center-table td {
+        padding: 5px;
+    }
 
 /* The Modal (background) */
 .modal {
@@ -125,12 +135,62 @@ input[type="search"] {
         color: black;
         text-decoration: none;
         cursor: pointer;
-    } 
-
+    }
 
 .date-display {
-    width: 20%;
+    border-right: solid;
+    border-width: 1px;
+    border-color: black;
 }
+
+/* In the employee roster page, the department and reason are highlighted*/
+.employee-roster-box-dep {
+    background-color: aqua;
+    padding: 5px;
+    border: 1px solid blue;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.employee-roster-box-dep-sick {
+    background-color: #D00000;
+    padding: 5px;
+    border: 2px solid #700000;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.employee-roster-box-reason {
+    background-color: #F0E68C;
+    padding: 5px;
+    border: 1px solid #999900;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.employee-roster-box-time {
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 800px) {
+    .employee-roster-box-time {
+        margin-left: 15px;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .employee-roster-box {
+        width: 800px;
+    }
+}
+
+.employee-roster-box-shift {
+    background-color: white;
+}
+
+
+
+
 
 .selected {
     height: 25px;
@@ -144,15 +204,17 @@ input[type="search"] {
     visibility: hidden;
 }
 
-.active {
-    background-color: #666;
-    border-radius: 25px;
+.navbar {
+    background-image: linear-gradient(rgb(232, 232, 232), white);
 }
 
-    .active a {
-        color: white !important;
-    }
+.active {
+    background-color: rgb(202, 203, 204) !important;
+}
 
+.border-active {
+    border-radius: 25px;
+}
 
 .logo-nav {
     height: 50px;
@@ -205,7 +267,7 @@ p {
 
 /*This is the top header row which contains the time collumns*/
 .roster-table-header-cell {
-    background-color: grey !important;
+    background-color: rgb(232, 232, 232) !important;
     white-space: nowrap;
     font-size: 14px;
 }
@@ -223,7 +285,6 @@ p {
     border: 1px solid darkgrey;
     min-width: 50px !important;
     padding: 0px !important;
-   
 }
 
 .roster-table {
@@ -240,7 +301,6 @@ p {
     outline-color: darkgrey;
     outline-width: 1px;
     background-color: #D3D3D3 !important;
-
 }
 
 /* Div which is the planned shift in the roster*/
@@ -262,8 +322,6 @@ p {
 .roster-table-addbtn {
     background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
 }
-
-
 
 /*Rooster overview */
 .roster-overview-iteminfo {
@@ -309,23 +367,15 @@ p {
     margin-left: -15px;
 }
 
-/*.roster-overview-SufficientRostering {*/
-/*    border: 5px solid;*/
-/*    background: linear-gradient(to bottom right, mediumspringgreen, springgreen) !important;*/
-/*    border-image: linear-gradient(45deg, #568203, #018749) 1 !important;*/
-/*}*/
+.department-success {
+    background-image: linear-gradient(to bottom right, mediumspringgreen, springgreen);
+    border-radius: 10px;
+}
 
-/*.roster-overview-InsufficientRostering {*/
-/*    border: 5px solid;*/
-/*    background: linear-gradient(to bottom right, yellow, #FFD700) !important;*/
-/*    border-image: linear-gradient(45deg, #e6c300, #ccad00) 1 !important;*/
-/*}*/
-
-/*.roster-overview-box {*/
-/*    border: 5px solid;*/
-/*    border-image: linear-gradient(45deg, #888888, #909090) 1;*/
-/*    background: linear-gradient(to bottom right, #C0C0C0, #C8C8C8);*/
-/*}*/
+.department-warning {
+    background-image: linear-gradient(to bottom right, rgb(226, 97, 97), rgb(234, 117, 117));
+    border-radius: 10px;
+}
 
 .helpmenu {
     display: none;
@@ -377,7 +427,7 @@ p {
     background-color: #F5F5F5;
 }
 
-.moments-collumn{
+.moments-collumn {
     width: 30%;
 }
 
@@ -407,19 +457,23 @@ p {
 }
 
 
-@media only screen and (min-width: 800px) {
-    .employee-roster-box {
-        width: 800px;
-    }
-}
-
 body.swal2-shown > [aria-hidden="true"] {
     transition: 0.1s filter;
     filter: blur(10px);
 }
 
-.ui-timepicker-container{
-    z-index:3000 !important;
+.input-max-width-40 {
+    display: inline;
+    width: 40px;
+    max-width: 40px;
+}
+
+.border-standard {
+    max-width: 70%;
+}
+
+.ui-timepicker-container {
+    z-index: 3000 !important;
 }
 
 .white-fade-bottom {
@@ -434,7 +488,76 @@ body.swal2-shown > [aria-hidden="true"] {
     .seven-cols .col-xl-2 {
         width: 14.28%; /* 100 / 7 */
     }
+
     .week-legenda {
         display: flex;
     }
 }
+
+.nav {
+    z-index: 100 !important;
+}
+
+.nav-link {
+    cursor: pointer;
+}
+
+input[type='checkbox']:not(.normal-checkbox) {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 5px;
+    border: 2px solid #555;
+}
+
+input[type='checkbox']:checked:not(normal-checkbox) {
+    background: #888;
+}
+
+.sticky-top {
+    z-index: 50 !important;
+}
+
+/* ============ desktop view ============ */
+@media all and (min-width: 992px) {
+    .dropdown-menu {
+        left: 12.5px !important;
+    }
+
+        .dropdown-menu li {
+            position: relative;
+        }
+
+        .dropdown-menu .submenu {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: -7px;
+        }
+
+        .dropdown-menu .submenu-left {
+            right: 100%;
+            left: auto;
+        }
+
+        .dropdown-menu > li:hover {
+            background-color: #f1f1f1
+        }
+
+            .dropdown-menu > li:hover > .submenu {
+                display: block;
+            }
+}
+/* ============ desktop view .end// ============ */
+
+/* ============ small devices ============ */
+@media (max-width: 991px) {
+
+    .dropdown-menu .dropdown-menu {
+        margin-left: 0.7rem;
+        margin-right: 0.7rem;
+        margin-bottom: .5rem;
+    }
+}
+/* ============ small devices .end// ============ */

@@ -17,10 +17,10 @@
         <form asp-action="Create" id="CreateForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
-                <div class="col border border-3 border-dark employee-create-box">
+                <div class="col edit-box">
                     <!--Persoonlijke informatie column-->
                     <div class="col">
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row">
                             <h5 class="text-center">Naam</h5>
                             <div class="form-group col-4">
                                 <input asp-for="FirstName" class="form-control" placeholder="Voornaam" />
@@ -39,7 +39,7 @@
 
 
                     <div class="p-3">
-                        <h5>Persoonlijke informatie</h5>
+                        <h5 class="text-center">Persoonlijke informatie</h5>
                         <div class="form-group">
                             <label asp-for="Birthdate" class="control-label"></label>
                             <input asp-for="Birthdate" class="form-control" />
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col border border-3 border-dark employee-create-box">
+                            <div class="col edit-box">
                                 <div class="p-3">
                                     <h5>Wachtwoord</h5>
                                     <div class="form-group">
@@ -99,7 +99,8 @@
                     </div>
                 </div>
 
-                <div class="col border border-3 border-dark employee-create-box">
+                <div class="col edit-box">
+                    <h5 class="text-center">Bedrijf informatie</h5>
                     <!--Bedrijfs informatie column-->
                     <div class="form-group">
                         <label asp-for="EmployeeJoinedCompany" class="control-label"></label>
