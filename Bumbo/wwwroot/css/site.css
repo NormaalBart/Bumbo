@@ -137,10 +137,60 @@ input[type="search"] {
         cursor: pointer;
     }
 
-
 .date-display {
-    width: 20%;
+    border-right: solid;
+    border-width: 1px;
+    border-color: black;
 }
+
+/* In the employee roster page, the department and reason are highlighted*/
+.employee-roster-box-dep {
+    background-color: aqua;
+    padding: 5px;
+    border: 1px solid blue;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.employee-roster-box-dep-sick {
+    background-color: #D00000;
+    padding: 5px;
+    border: 2px solid #700000;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.employee-roster-box-reason {
+    background-color: #F0E68C;
+    padding: 5px;
+    border: 1px solid #999900;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.employee-roster-box-time {
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 800px) {
+    .employee-roster-box-time {
+        margin-left: 15px;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .employee-roster-box {
+        width: 800px;
+    }
+}
+
+.employee-roster-box-shift {
+    background-color: white;
+}
+
+
+
+
 
 .selected {
     height: 25px;
@@ -406,12 +456,6 @@ p {
     }
 }
 
-
-@media only screen and (min-width: 800px) {
-    .employee-roster-box {
-        width: 800px;
-    }
-}
 
 body.swal2-shown > [aria-hidden="true"] {
     transition: 0.1s filter;

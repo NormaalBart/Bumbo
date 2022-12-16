@@ -30,7 +30,7 @@
                     <div class=" text-center my-auto flex-column m-3">
                         <div class="justify-content-center text-center my-auto ">
                             <div class=" text-center">
-                                <a class="btn btn-success" id="openModalBTN"> Alles accepteren </a>
+                                <a class="btn btn-success" id="openModalBTN"> Alles goedkeuren </a>
                             </div>
                         </div>
                     </div>
@@ -113,22 +113,26 @@
     <div id="modal" class="modal ">
         <!-- Modal content -->
     <div class="modal-content modal-dialog text-center prognosis-textarea">
-            <span class="close position-absolute">&times;</span>
-            <label> </label>
-            <div class="m-3 text-center align-content-center">
-                <form method="post" asp-action="ReviewAll">
-
-                    <!--We pass all ids of items on screen.-->
-                    @foreach (var item in Model.Ids)
-                    {
-                        <input hidden asp-for="Ids" value="@item" name="ids" />
-                    }
-                    <div class="m-3">
-                        <span> Weet je zeker dat je alle @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">Accepteren?</span>
-                    </div>
-                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
-                </form>
-            </div>
+        <span class="close position-absolute">&times;</span>
+        <label> </label>
+        <div class="m-3 text-center align-content-center">
+            <form method="post" asp-action="ReviewAll">
+                
+                <!--We pass all ids of items on screen.-->
+                @foreach (var item in Model.Ids)
+                {
+                    <input hidden asp-for="Ids" value="@item" name="ids" />
+                }
+                <div class="m-3">
+                        @if (@Model.UnavailableMoments.Count() == 1)
+                        {
+                            <span> Weet je zeker dat je @Model.UnavailableMoments.Count() moment wilt </span> <span class="text-success">goedkeuren?</span>
+                        }else{
+                             <span> Weet je zeker dat je @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">goedkeuren?</span>
+                        }
+                </div>
+                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
+            </form>
         </div>
     </div>
 }
