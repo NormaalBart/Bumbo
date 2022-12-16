@@ -18,6 +18,7 @@ namespace Bumbo.Models.BranchController
 
         public List<BranchSortingOption> AvailableSortOptions { get; set; }
 
+        public int AmountOfPages { get; set; }
         public int Page { get; set; }
 
         public BranchListIndexViewModel()

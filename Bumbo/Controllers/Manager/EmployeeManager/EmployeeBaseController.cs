@@ -55,7 +55,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
             resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
 
-            resultingListViewModel.AmountOfPages = (GetAmountOfEmployees(searchString, includeActive, includeInactive) - ((page - 1) * ItemsPerPage + ItemsPerPage)) / ItemsPerPage + 1;
+            resultingListViewModel.AmountOfPages = Math.Max(amountOfEmployees / ItemsPerPage, 1);
 
             return View("Views/EmployeeBase/Index.cshtml", resultingListViewModel);
         }
