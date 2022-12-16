@@ -467,17 +467,7 @@
 
                 </div>
 
-
-                  @if (Model.RosteredEmployees.Count == 0 && !(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00"))
-                        {
-                        <div class="justify-content-center mx-auto d-flex justify-content-center">
-
-                        <span class="alert alert-primary text-center "> Er zijn op dit moment nog geen medewerkers ingepland, voeg een nieuwe medewerker toe aan het rooster met de knop hierboven.</span>
-                        </div>
-                        }
-
-
-<!-- Modal for creating a new shift-->
+                <!-- Modal for creating a new shift-->
 <div class="modal fade" id="createNewShiftModal" tabindex="-1" aria-labelledby="nieuwedienst" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content m-2">
