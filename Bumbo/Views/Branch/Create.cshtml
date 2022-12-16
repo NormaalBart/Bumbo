@@ -1,4 +1,5 @@
 ﻿@using Bumbo.Models.BranchController
+@using System.Globalization
 @model BranchCreateViewModel
 @{
     ViewBag.data = "Branch";
@@ -17,11 +18,11 @@
         <form asp-action="Create" id="CreateForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
-                <div class="col border border-3 border-dark employee-create-box">
+                <div class="col edit-box">
                     <!--Branch informatie column-->
                     <div class="col">
                         <h5 class="text-center">Bedrijfsinformatie</h5>
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row">
                             <div class="form-group col-4">
                                 <label asp-for="Name" class="control-label"></label>
                                 <input asp-for="Name" class="form-control" placeholder="Naam" />
@@ -36,7 +37,7 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row">
                             <h5 class="text-center">Plaats</h5>
                             <div class="form-group col-4">
                                 <label asp-for="City" class="control-label"></label>
@@ -56,9 +57,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col border border-3 border-dark employee-create-box">
+                <div class="col edit-box">
                     <div class="p-3">
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row">
                             <table>
                                 <tr>
                                     <th width=200px>Dag</th>
@@ -73,7 +74,7 @@
                                 <table>
                                     <tr>
                                         <th width=200px>
-                                            @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
+                                            @Html.DisplayFor(model => @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[(int)Model.OpeningHours[i].DayOfWeek]);
                                         </th>
                                         <th>
                                             @Html.EditorFor(model => model.OpeningHours[i].OpenTime)

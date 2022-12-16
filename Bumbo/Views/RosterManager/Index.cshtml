@@ -77,94 +77,96 @@
     </div>
 </div>
 
-<div>
-    <div class="row border ">
-        <div class="border col-sm d-flex justify-content-center flex-nowrap ">
+    <div>
+        <div class="row ">
+            <div class="col-sm d-flex justify-content-center flex-nowrap ">
 
 
-            @if (Model.GetTotalPlannedHoursPerDepartment("Kassa") >= Model.CassierePrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Kassa") >= Model.CassierePrognoseWorkers)
+                @if (Model.GetTotalPlannedHoursPerDepartment("Kassa") >= Model.CassierePrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Kassa") >= Model.CassierePrognoseWorkers)
+                {
+                    @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
+                }
+                else
+                {
+                    @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
+                }
+                        <div class="vstack">
+                            <div>
+                        @Html.DisplayNameFor(model => model.CassierePrognoseHours):
+
+                        @if (Model.CassierePrognoseHours == -1)
+                        {
+                                    <span> Geen informatie</span>
+                        }
+                        else
+                        {
+                                    <span> @Model.CassierePrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Kassa")</span>
+                        }
+                            </div>
+                            <div>
+                        @Html.DisplayNameFor(model => model.CassierePrognoseWorkers):
+
+                        @if (Model.CassierePrognoseWorkers == -1)
+                        {
+                                    <span> Geen informatie</span>
+                        }
+                        else
+                        {
+                                    <span> @Model.CassierePrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Kassa")</span>
+                        }
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+            @if (Model.GetTotalPlannedHoursPerDepartment("Vers") >= Model.FreshPrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Vers") >= Model.FreshPrognoseHours)
             {
-                @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
+                @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
             }
             else
             {
-                @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
+                @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
             }
-            <div class="vstack">
-                <div>
-                    @Html.DisplayNameFor(model => model.CassierePrognoseHours):
+                            <div class="vstack">
+                                <div>
+                    @Html.DisplayNameFor(model => model.FreshPrognoseHours):
 
-                    @if (Model.CassierePrognoseHours == -1)
+                    @if (Model.FreshPrognoseHours == -1)
                     {
-                        <span> Geen informatie</span>
+                                        <span>Geen Info</span>
                     }
                     else
                     {
-                        <span> @Model.CassierePrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Kassa")</span>
+                                        <span>@Model.FreshPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vers")</span>
                     }
-                </div>
-                <div>
-                    @Html.DisplayNameFor(model => model.CassierePrognoseWorkers):
+                                </div>
 
-                    @if (Model.CassierePrognoseWorkers == -1)
+
+                                <div>
+                    @Html.DisplayNameFor(model => model.FreshPrognoseWorkers):
+
+                    @if (Model.FreshPrognoseWorkers == -1)
                     {
-                        <span> Geen informatie</span>
+                                        <span>Geen Info</span>
                     }
                     else
                     {
-                        <span> @Model.CassierePrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Kassa")</span>
+                                        <span>@Model.FreshPrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Vers")</span>
                     }
-                </div>
-            </div>
-        </div>
+                                </div>
 
-
-        @if (Model.GetTotalPlannedHoursPerDepartment("Vers") >= Model.FreshPrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Vers") >= Model.FreshPrognoseHours)
-        {
-            @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
-        }
-        else
-        {
-            @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
-        }
-        <div class="vstack">
-            <div>
-                @Html.DisplayNameFor(model => model.FreshPrognoseHours):
-
-                @if (Model.FreshPrognoseHours == -1)
-                {
-                    <span>Geen Info</span>
-                }
-                else
-                {
-                    <span>@Model.FreshPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vers")</span>
-                }
-            </div>
-
-
-            <div>
-                @Html.DisplayNameFor(model => model.FreshPrognoseWorkers):
-
-                @if (Model.FreshPrognoseWorkers == -1)
-                {
-                    <span>Geen Info</span>
-                }
-                else
-                {
-                    <span>@Model.FreshPrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Vers")</span>
-                }
-            </div>
-
-        </div>
-    </div>
+                            </div>
+                        </div>
 
     @if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
     {
-        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
     }
     else
     {
-        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
     }
     <div class="vstack">
         <div>
@@ -186,261 +188,260 @@
 </div>
 </div>
 
-<script>
-'use strict';
+                    <script>
+                        'use strict';
 
-    // list of all shifts on screen.
-    var listshifts = []; 
+                            // list of all shifts on screen.
+                            var listshifts = [];
 
-    // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
-    function getWidthOfbase(elem, hours, minutepercstart, minutepercend) {
-        // So what we do here is we get the normal width of the first cell in the table
-        // we'll use this as a template for the width.
-        // We calculate the final width of the div
-        // using the width of a normal cell, times the amount of hours.
-        // We then calculate the offset of the div, using the time percentages.
+                            // we use a script to get the width of a normal cell and base the width of the shift div on that, so that it should resize along with the screen if it changes.
+                            function getWidthOfbase(elem, hours, minutepercstart, minutepercend) {
+                                // So what we do here is we get the normal width of the first cell in the table
+                                // we'll use this as a template for the width.
+                                // We calculate the final width of the div
+                                // using the width of a normal cell, times the amount of hours.
+                                // We then calculate the offset of the div, using the time percentages.
 
-        let cell = document.querySelector('.roster-table-cell');
+                                let cell = document.querySelector('.roster-table-cell');
 
-        // gets width of cell, including the decimal numbers (incase a cell is half a pixel bigger than normal)!
-        let width = cell.getBoundingClientRect().width;
+                                // gets width of cell, including the decimal numbers (incase a cell is half a pixel bigger than normal)!
+                                let width = cell.getBoundingClientRect().width;
 
-        let finalwidth = (width * hours);
+                                let finalwidth = (width * hours);
 
-        // this is the offset of the div caused by any minutes in the shift.
-        let startoffset = (width * (minutepercstart * 0.01));
-        let endoffset = (width * (minutepercend * 0.01));
-            
-        // We set the width of the div using the calculated values.
-        elem.style.width = finalwidth - startoffset + endoffset + 'px';
-        
-        // We move the div right using the minute percentages.
-        elem.style.marginLeft = startoffset + 'px';   
+                                // this is the offset of the div caused by any minutes in the shift.
+                                let startoffset = (width * (minutepercstart * 0.01));
+                                let endoffset = (width * (minutepercend * 0.01));
+
+                                // We set the width of the div using the calculated values.
+                                elem.style.width = finalwidth - startoffset + endoffset + 'px';
+
+                                // We move the div right using the minute percentages.
+                                elem.style.marginLeft = startoffset + 'px';
+                            }
+
+                            function resize(shift){
+                                getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
+                            }
+
+                            // Everytime the screen is resized, we resize every shift that's in the list along with it.
+                            window.addEventListener("resize", function () {
+                                listshifts.forEach(resize);
+                            });
+
+                            window.addEventListener('load', function () {
+                                    listshifts.forEach(resize);
+
+                        });
+
+                            // When you click on a shift, this function is called.
+                            // This opens the edit modal
+                            // and sets the id of the shift.
+                            function onShiftClick(shiftinfo){
+                                $('#editExistingShiftModal').modal('show');
+                                document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
+                                document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
+                                document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
+
+                                document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
+
+                                // Disable editing when shift is set as sick
+                                $('#starttimeinput').prop('disabled', shiftinfo.shiftIsSick);
+                                $('#endtimeinput').prop('disabled', shiftinfo.shiftIsSick);
+                                $('#departmentIdInput').prop('disabled', shiftinfo.shiftIsSick);
+                                $('#saveEditShift').prop('disabled', shiftinfo.shiftIsSick);
+
+                                let sickBtn = $('#setSickBtn')
+                                sickBtn.prop('disabled', shiftinfo.shiftIsSick);
+                                $('#employeeIdInputEdit').val(shiftinfo.shiftEmployeeId);
+                            }
+
+                            function onRowClick() {
+                                $('#createNewShiftModal').modal('show');
+                            }
+
+                            function replaceShift(start, end, departmentId) {
+                                document.getElementById("CreateShiftStartTime").value = start;
+                                document.getElementById("CreateShiftEndTime").value = end;
+                                document.getElementById("CreateShiftDepartment").value = departmentId
+
+                                onRowClick();
+                            }
+
+                    </script>
+                    <div class="text-center m-3">
+                        <!-- Button trigger modal -->
+                        <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
+                            Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
+                        </button>
+
+                        <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")">
+                            <span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span>
+                        </button>
+                    </div>
+
+    @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
+    {
+                        <div class="alert alert-warning text-center text-large">
+                            <span>De winkel is op deze datum gesloten.</span>
+                        </div>
     }
+                    <div class="table-responsive-sm">
 
-    function resize(shift){
-        getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
-    }
-
-    // Everytime the screen is resized, we resize every shift that's in the list along with it.
-    window.addEventListener("resize", function () {
-        listshifts.forEach(resize);
-    });
-
-    window.addEventListener('load', function () {
-            listshifts.forEach(resize);
-
-});
-
-    // When you click on a shift, this function is called.
-    // This opens the edit modal
-    // and sets the id of the shift.
-    function onShiftClick(shiftinfo){
-        $('#editExistingShiftModal').modal('show');
-        document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
-        document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
-        document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
-           
-        document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
-        
-        // Disable editing when shift is set as sick
-        $('#starttimeinput').prop('disabled', shiftinfo.shiftIsSick);
-        $('#endtimeinput').prop('disabled', shiftinfo.shiftIsSick);
-        $('#departmentIdInput').prop('disabled', shiftinfo.shiftIsSick);
-        $('#saveEditShift').prop('disabled', shiftinfo.shiftIsSick);
-        
-        let sickBtn = $('#setSickBtn')
-        sickBtn.prop('disabled', shiftinfo.shiftIsSick);
-        $('#employeeIdInputEdit').val(shiftinfo.shiftEmployeeId);
-    }
-
-    function onRowClick() {
-        $('#createNewShiftModal').modal('show');
-    }
-    
-    function replaceShift(start, end, departmentId) {
-        document.getElementById("CreateShiftStartTime").value = start;
-        document.getElementById("CreateShiftEndTime").value = end;
-        document.getElementById("CreateShiftDepartment").value = departmentId
-        
-        onRowClick();
-    }
-
-</script>
-<div class="text-center m-3">
-    <!-- Button trigger modal -->
-    <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
-        Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
-    </button>
-
-    <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")">
-        <span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span>
-    </button>
-</div>
-
-@if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
-{
-    <div class="alert alert-warning text-center text-large">
-        <span>De winkel is op deze datum gesloten.</span>
-    </div>
-}
-<div class="table-responsive-sm">
-
-    <!--table, 24 long horizontal -->
-    <table class="table roster-table table-hover" style="background-color: white;">
-        <thead>
-        <tr class="">
-            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
-            @*Important note: The text in the header blocks must be equal characters long.*@
-            @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
-            {
-                <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
-            }
-        </tr>
-        </thead>
-
-        <tbody>
-
-        <!--For each available employee, create a row-->
-        @if (Model.RosteredEmployees != null)
-        {
-            foreach (var employee in Model.RosteredEmployees)
-            {
-                <tr class="roster-shift-containter" style="height: 4em">
-                    <td class="small roster-table-employee-cell text-center" style="vertical-align: middle;">
-                        <p>@employee.FullName</p>
-                    </td>
-
+                        <!--table, 24 long horizontal -->
+                        <table class="table roster-table table-hover" style="background-color: white;">
+                            <thead>
+                                <tr class="">
+                                    <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
+                    @*Important note: The text in the header blocks must be equal characters long.*@
                     @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
                     {
-                        var shift = Model.GetShiftOnHourOfEmployee(employee, i);
-                        @if (shift != null)
-                        {
-                            var invalidPairs = shift.ViolatedRules;
-                            var showError = invalidPairs.Any();
-                            // Red background when shift is invalid.
-                            var background = showError ? "background: red;" : shift.Sick ? "background: orange;" : "";
-                            var error = showError ? string.Join(" | ", invalidPairs.Select(s => s.GetErrorMessage())) : "";
+                                        <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                    }
+                                </tr>
+                            </thead>
 
-                            <td id="roster-start" class="roster-table-cell @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")" title="@error">
-                                <div id="roster-start-div" class="roster-shift text-center h-100" style="@background" runat="server">
-                                    @*If the shift is very short, we use a different string not make it ugly.*@
-                                    @if (Model.GetShiftHourLength(employee, i) < 2)
-                                    {
-                                        <p class="align-self-center"> @shift.Department.DepartmentName </p>
-                                    }
-                                    else
-                                    {
-                                        <p class="align-self-center"> * @shift.Department.DepartmentName *</p>
-                                    }
-                                    @*@if (shift.Sick)
-                                     {
-                                         <p class="fw-bold d-inline-block">Ziek -</p>
-                                         <a class="d-inline-block" data-toggle="tooltip" data-placement="top" title="Maak de shift opnieuw aan een selecteer een nieuwe medewerker die de shift zal overnemen." href="" onclick="(function(e){
+                            <tbody>
+
+                                <!--For each available employee, create a row-->
+                @if (Model.RosteredEmployees != null)
+                {
+                    foreach (var employee in Model.RosteredEmployees)
+                    {
+                                        <tr class="roster-shift-containter" style="height: 4em">
+                                            <td class="small roster-table-employee-cell text-center" style="vertical-align: middle;">
+                                                <p>@employee.FullName</p>
+                                            </td>
+
+                            @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
+                            {
+                                var shift = Model.GetShiftOnHourOfEmployee(employee, i);
+                                @if (shift != null)
+                                {
+                                    var invalidPairs = shift.ViolatedRules;
+                                    var showError = invalidPairs.Any();
+                                    // Red background when shift is invalid.
+                                    var background = showError ? "background: red;" : shift.Sick ? "background: orange;" : "";
+                                    var error = showError ? string.Join(" | ", invalidPairs.Select(s => s.GetErrorMessage())) : "";
+
+                                                    <td id="roster-start" class="roster-table-cell @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")" title="@error">
+                                                        <div id="roster-start-div" class="roster-shift text-center h-100" style="@background" runat="server">
+                                            @*If the shift is very short, we use a different string not make it ugly.*@
+                                            @if (Model.GetShiftHourLength(employee, i) < 2)
+                                            {
+                                                                <p class="align-self-center"> @shift.Department.DepartmentName </p>
+                                            }
+                                            else
+                                            {
+                                                                <p class="align-self-center"> * @shift.Department.DepartmentName *</p>
+                                            }
+                                            @if (shift.Sick)
+                                            {
+                                                                <p class="fw-bold d-inline-block">Ziek -</p>
+                                                                <a class="d-inline-block" data-toggle="tooltip" data-placement="top" title="Maak de shift opnieuw aan een selecteer een nieuwe medewerker die de shift zal overnemen." href="" onclick="(function(e){
                                             let shiftStartTime ='@shift.StartTime.ToString("HH:mm")';
                                             let shiftEndTime = '@shift.EndTime.ToString("HH:mm")';
 
                                             e.stopPropagation();
                                             replaceShift(shiftStartTime, shiftEndTime, @shift.Department.Id)
                                          })(arguments[0]);return false;">Opnieuw inplannen</a>
-                                     }*@
+                                            }
 
-                                    <script>
-                                            // gets the div above, and passes it to a function which then sets the div length based on the shift length.
-                                            var divs = document.querySelectorAll('div');
-                                            var above_div = divs[divs.length - 1];
+                                                            <script>
+                                                                // gets the div above, and passes it to a function which then sets the div length based on the shift length.
+                                                                var divs = document.querySelectorAll('div');
+                                                                var above_div = divs[divs.length - 1];
 
-                                            getWidthOfbase(above_div, @Model.GetShiftHourLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
+                                                                getWidthOfbase(above_div, @Model.GetShiftHourLength(employee, i), @Model.GetShiftStartPercentage(employee, i), @Model.GetShiftEndPercentage(employee, i));
 
-                                            // we add this shift to the list of shifts:
-                                            var shift = { 
-                                                element: above_div, 
-                                            sick: @shift.Sick.ToString().ToLower(), 
-                                            shiftlength: @Model.GetShiftHourLength(employee, i), 
-                                            shiftstartperc: @Model.GetShiftStartPercentage(employee, i), 
-                                            shiftendperc: @Model.GetShiftEndPercentage(employee, i), 
-                                            shiftid: @shift.Id,
-                                            shiftStartTime: '@shift.StartTime.ToString("HH:mm")', 
-                                            shiftEndTime: '@shift.EndTime.ToString("HH:mm")'};
-                          
-                                            listshifts.push(shift);
+                                                                // we add this shift to the list of shifts:
+                                                                var shift = {
+                                                                    element: above_div,
+                                                                sick: @shift.Sick.ToString().ToLower(),
+                                                                shiftlength: @Model.GetShiftHourLength(employee, i),
+                                                                shiftstartperc: @Model.GetShiftStartPercentage(employee, i),
+                                                                shiftendperc: @Model.GetShiftEndPercentage(employee, i),
+                                                                shiftid: @shift.Id,
+                                                                shiftStartTime: '@shift.StartTime.ToString("HH:mm")',
+                                                                shiftEndTime: '@shift.EndTime.ToString("HH:mm")'};
 
-                                            // possibly in the future 
-                                            // shiftid, employeename, employeeid, departmentname, departmentid, starttime, endtime 
-                                            // pass these values along with the function to auto fill the modal.
+                                                                listshifts.push(shift);
 
-                                            var shiftinfo = { 
-                                                shiftid: shift.shiftid, 
-                                                shiftStartHour: shift.shiftStartTime, 
-                                                shiftEndTimeHour: shift.shiftEndTime, 
-                                                shiftDepartmentId: '@shift.Department.Id', 
-                                                shiftEmployeeId: '@employee.Id',
-                                                shiftIsSick: shift.sick
-                                            };
+                                                                // possibly in the future
+                                                                // shiftid, employeename, employeeid, departmentname, departmentid, starttime, endtime
+                                                                // pass these values along with the function to auto fill the modal.
 
-                                            above_div.addEventListener("click", onShiftClick.bind(this, shiftinfo), false);
-                                            </script>
-                                </div>
+                                                                var shiftinfo = {
+                                                                    shiftid: shift.shiftid,
+                                                                    shiftStartHour: shift.shiftStartTime,
+                                                                    shiftEndTimeHour: shift.shiftEndTime,
+                                                                    shiftDepartmentId: '@shift.Department.Id',
+                                                                    shiftEmployeeId: '@employee.Id',
+                                                                    shiftIsSick: shift.sick
+                                                                };
 
-                            </td>
-                        }
-                        else
-                        {
-                            if (Model.IsPlanned(employee, i))
-                            {
-                                <td class="roster-table-cell @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")">
-                                </td>
+                                                                above_div.addEventListener("click", onShiftClick.bind(this, shiftinfo), false);
+                                                            </script>
+                                                        </div>
+
+                                                    </td>
+                                }
+                                else
+                                {
+                                    if (Model.IsPlanned(employee, i))
+                                    {
+                                                        <td class="roster-table-cell @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")">
+                                                        </td>
+                                    }
+                                    else
+                                    {
+                                                        <td class="roster-table-cell roster-table-cell-empty @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")" title="@(Model.IsOutSideOfOpeningTimes(i) ? "Winkel is gesloten" : "")">
+                                                        </td>
+                                    }
+                                }
                             }
-                            else
-                            {
-                                <td class="roster-table-cell roster-table-cell-empty @(Model.IsOutSideOfOpeningTimes(i) ? "roster-table-cell-closed" : "")" title="@(Model.IsOutSideOfOpeningTimes(i) ? "Winkel is gesloten" : "")">
 
-                                </td>
-                            }
-                        }
+                                        </tr>
                     }
 
-                </tr>
-            }
+                                    <!--Add new shift row.-->
+                    @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
+                    {
+                                        <tr class="roster-shift-containter roster-table-cell-closed border border-3 ">
+                                            <td colspan="25" class="roster-table-employee-cell text-center">
 
-            <!--Add new shift row.-->
-            @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
-            {
-                <tr class="roster-shift-containter roster-table-cell-closed border border-3 ">
-                    <td colspan="25" class="roster-table-employee-cell text-center">
+                                                <a class="btn btn-primary text-large text-decoration-none" asp-controller="Branch" asp-action="EditManager">Openingstijden aanpassen</a>
+                                            </td>
 
-                        <a class="btn btn-primary text-large text-decoration-none" asp-controller="Branch" asp-action="EditManager">Openingstijden aanpassen</a>
-                    </td>
+                                        </tr>
+                    }
+                    else
+                    {
+                                    <td colspan="25" class=text-center>
+                            @if (Model.RosteredEmployees.Count == 0 && !(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00"))
+                            {
+                                            <div class="justify-content-center mx-auto d-flex justify-content-center">
 
-                </tr>
-            }
-            else
-            {
-                <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" onclick="onRowClick()">
-                    <td colspan="25" class="roster-table-employee-cell text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                        </svg>
-                        Dienst toevoegen
-                    </td>
+                                                <span class="alert alert-primary text-center "> Er zijn op dit moment nog geen medewerkers ingepland, voeg een nieuwe medewerker toe aan het rooster met de knop hieronder.</span>
+                                            </div>
+                            }
+                                    </td>
+                                    <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" onclick="onRowClick()">
+                                        <td colspan="25" class="roster-table-employee-cell text-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                            </svg>
+                                            Dienst toevoegen
+                                        </td>
 
-                </tr>
-            }
-        }
+                                    </tr>
+                    }
+                }
 
-        </tbody>
-    </table>
+                            </tbody>
+                        </table>
 
-</div>
-
-
-@if (Model.RosteredEmployees.Count == 0 && !(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00"))
-{
-    <div class="justify-content-center mx-auto d-flex justify-content-center">
-
-        <span class="alert alert-primary text-center "> Er zijn op dit moment nog geen medewerkers ingepland, voeg een nieuwe medewerker toe aan het rooster met de knop hierboven.</span>
-    </div>
-}
+                    </div>
 
 
 <!-- Modal for creating a new shift-->
@@ -468,7 +469,7 @@
                                 <div class="results"></div>
 
                                 <div class="form-check my-2 ms-2">
-                                    <input class="form-check-input" type="checkbox" value="" id="searchExternal">
+                                    <input class="form-check-input normal-checkbox" type="checkbox" value="" id="searchExternal">
                                     <label class="form-check-label" for="searchExternal">Extern zoeken</label>
                                 </div>
                             </div>
@@ -571,7 +572,6 @@
         </div>
     </div>
 </div>
-
 </body>
 
 @section Scripts
@@ -686,7 +686,7 @@
             }
         })
     }
-    
+
     function setShiftSick() {
         $('#editExistingShiftModal').modal('hide');
         Swal.fire({
@@ -717,7 +717,7 @@
             }
         })
     }
-    
+
     $(document).ready(function() {
         $('.timepicker').timepicker({
             timeFormat: 'HH:mm',
@@ -731,15 +731,15 @@
             scrollbar: true,
         });
     });
-    
+
     const emptycells = Array.from(document.getElementsByClassName('roster-table-cell-empty'));
-    
+
     emptycells.forEach(cell => {
         cell.addEventListener('click', function handleClick(event) {
             onRowClick();
         });
     });
-    
+
     $(document).ready(function() {
         $('#generate-roster-spinner').hide()
         // On click button, generate roster
@@ -775,7 +775,7 @@
                     // Hide loading
                     $('#generate-roster-spinner').hide()
                     $('#generate-roster').prop('disabled', false);
-                    // Show error                      
+                    // Show error
                     Swal.fire({
                         title: 'Oeps!',
                         text: error.responseText,

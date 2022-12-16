@@ -83,7 +83,7 @@ namespace Bumbo.Controllers.Admin
         public ActionResult Create()
         {
             var viewModel = new BranchCreateViewModel();
-            foreach (DayOfWeek dayOfWeek in Enum.GetValues(typeof(DayOfWeek)))
+            foreach (DayOfWeek dayOfWeek in new DayOfWeek[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday})
             {
                 viewModel.OpeningHours.Add(new OpeningHoursViewModel { DayOfWeek = dayOfWeek, OpenTime = new TimeSpan(8, 00, 00), CloseTime = new TimeSpan(18, 00, 00) });
             }
@@ -164,36 +164,12 @@ namespace Bumbo.Controllers.Admin
         }
 
         [Authorize(Roles = "Administrator")]
-        public ActionResult SetInactive(int id)
-        {
-            var branch = _branchRepository.Get(id);
-            if (branch == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            var branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
-            return View(branchViewModel);
-        }
-
-        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SetInactive(int id, IFormCollection collection)
         {
             _branchRepository.SetInactive(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        [Authorize(Roles = "Administrator")]
-        public ActionResult SetActive(int id)
-        {
-            var branch = _branchRepository.Get(id);
-            if (branch == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            var branchViewModel = _mapper.Map<BranchCreateViewModel>(branch);
-            return View(branchViewModel);
         }
 
         [Authorize(Roles = "Administrator")]

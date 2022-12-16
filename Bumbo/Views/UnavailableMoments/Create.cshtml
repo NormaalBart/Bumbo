@@ -36,7 +36,6 @@
                 <div class="col border border-3 border-dark moments-create-box">
                     <div class="col">
                         <div class="row p-1">
-                            
                             <div class="form-group text-center">
                                 <span>Van:</span>
                                     <input id="startdate" onchange="setTimes(true)" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
@@ -57,7 +56,6 @@
 
                             <div class="form-group text-center">
                                 <h5>Reden van afwezigheid:</h5>
-                                
                                 <tr>
                                     @Html.RadioButtonFor(model => model.Type, UnavailableMomentType.School)School
                                     @Html.RadioButtonFor(model => model.Type, UnavailableMomentType.Other)Anders
