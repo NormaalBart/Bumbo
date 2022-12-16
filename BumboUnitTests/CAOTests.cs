@@ -77,7 +77,7 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment> { unavailableMoment });
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(1));
         }
 
@@ -142,7 +142,7 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment> { unavailableMoment });
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(0));
         }
 
@@ -197,7 +197,7 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(0));
         }
 
@@ -252,7 +252,7 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(1));
         }
 
@@ -308,8 +308,8 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(1));
         }
 
         [Test, Description("the employee (15) has 0 hours of school but also 44 hours of work")]
@@ -364,8 +364,8 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(1));
         }
 
         [Test, Description("the employee (15) has 0 hours of school but works 6 days this week")]
@@ -420,8 +420,8 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(6));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(0));
         }
 
         [Test, Description("the employee (15) has 0 hours of school but works 5 days this week")]
@@ -476,7 +476,7 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(0));
         }
 
@@ -532,8 +532,8 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(1));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(0));
         }
 
         //employee is now 17
@@ -600,7 +600,7 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment> { unavailableMoment });
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(1));
         }
 
@@ -665,7 +665,7 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment> { unavailableMoment });
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(0));
         }
 
@@ -721,8 +721,8 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(1));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(0));
         }
 
 
@@ -781,7 +781,7 @@ namespace BumboUnitTests
             {
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(0));
         }
 
@@ -841,8 +841,8 @@ namespace BumboUnitTests
             {
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(1));
         }
 
 
@@ -911,8 +911,8 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment> { unavailableMoment });
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(1));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(0));
         }
 
         [Test, Description("the employee (17) 13 hours of work")]
@@ -976,8 +976,8 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment> { unavailableMoment });
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
+            Assert.That(result.Count, Is.EqualTo(1));
         }
 
 
@@ -1036,7 +1036,7 @@ namespace BumboUnitTests
             {
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(0));
         }
 
@@ -1092,11 +1092,11 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByDay(employee.Id, day)).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
-            for (int i = 1; i < 5; i++)
+            for (int i = 1; i < plannedShifts.Count; i++)
             {
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
-            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts, day);
+            var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
             Assert.That(result.Count, Is.EqualTo(0));
         }
 
