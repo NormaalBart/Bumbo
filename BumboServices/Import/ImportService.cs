@@ -1,9 +1,11 @@
 using System.Globalization;
 using AutoMapper;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboServices.Interface;
 using CsvHelper;
+using Microsoft.AspNetCore.Identity;
 
 namespace BumboServices.Import;
 
@@ -12,18 +14,22 @@ public class ImportService : IImportService
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IWorkedShiftRepository _workedShiftRepository;
     private readonly IPlannedShiftsRepository _plannedShiftsRepository;
+    private readonly UserManager<Employee> _userManager;
+    private readonly IDepartmentsRepository _departmentsRepository;
     private readonly IMapper _mapper;
 
     public ImportService(IEmployeeRepository employeeRepository, IWorkedShiftRepository workedShiftRepository,
-        IMapper mapper, IPlannedShiftsRepository plannedShiftsRepository)
+        IMapper mapper, IPlannedShiftsRepository plannedShiftsRepository, UserManager<Employee> userManager, IDepartmentsRepository departmentsRepository)
     {
         _employeeRepository = employeeRepository;
         _workedShiftRepository = workedShiftRepository;
         _mapper = mapper;
         _plannedShiftsRepository = plannedShiftsRepository;
+        _userManager = userManager;
+        _departmentsRepository = departmentsRepository;
     }
 
-    public void ImportEmployees(Stream file, int branchId)
+    public async Task ImportEmployees(Stream file, int branchId)
     {
         var csv = CsvFromStream(file);
 
@@ -40,6 +46,22 @@ public class ImportService : IImportService
         });
 
         _employeeRepository.Import(mappedEmployees);
+        
+        // Add employee role by default
+        foreach (var mappedEmployee in mappedEmployees)
+        { 
+            await _userManager.AddToRoleAsync(mappedEmployee, RoleType.EMPLOYEE.Name);
+            
+            // Add all departments to employee
+            var usr = _employeeRepository.Get(mappedEmployee.Id);
+            
+            foreach (var department in _departmentsRepository.GetList())
+            {
+                usr.AllowedDepartments.Add(department);
+            }
+
+            _employeeRepository.Update(usr);
+        }
     }
 
     public void ImportClockEvents(Stream file, int branchId, ImportClockEventsType type)

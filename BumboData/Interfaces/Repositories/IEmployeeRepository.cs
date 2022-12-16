@@ -18,5 +18,6 @@ namespace BumboData.Interfaces.Repositories
         bool Exists(Employee newEmployee);
         public void Import(List<Employee> employees);
         public int GetAmountOfEmployeesOfBranch(int branch, string searchString = "", bool includeActive = true, bool includeInactive = false);
+        List<Employee> Search(int? branchId, string query);
     }
 }

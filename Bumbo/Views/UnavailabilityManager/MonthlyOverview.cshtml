@@ -1,7 +1,7 @@
 ﻿@model Bumbo.Models.UnavailableMoments.UnavailabilityManagerListViewModel
 
 @{
-    ViewBag.data = "Unavailability";
+    ViewBag.data = "UnavailabilityMonthly";
     ViewData["Title"] = "Index";
 }
 
@@ -11,7 +11,7 @@
 
 <h1 class="text-center">Afwezigheid overzicht</h1>
 
-<div class="roster-overview-date">
+<div class="roster-overview-date ">
     <div class=" d-flex justify-content-between m-2 align-items-center">
         <div>
             <!--Arrow to left, using an online arrow png-->
@@ -38,7 +38,7 @@
 </div>
 
 
-<div class="top-header">
+<div class="top-header edit-box">
     <div class="top-header-content">
         <form asp-action="MonthlyOverview" method="get" class="container align-content-center">
             <div class="form-actions no-color row   d-flex justify-content-center m-2 align-items-center">

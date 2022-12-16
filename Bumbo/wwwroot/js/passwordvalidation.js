@@ -2,6 +2,9 @@
 // Validate capital letters
 $(document).ready(function () {
     var myInput = document.getElementById("Password");
+    if (myInput == null) {
+        return;
+    }
     var capital = document.getElementById("password-capital");
     var number = document.getElementById("password-number");
     var length = document.getElementById("password-length");
