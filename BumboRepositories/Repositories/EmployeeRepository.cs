@@ -47,6 +47,13 @@ namespace BumboRepositories.Repositories
             var employees = DbSet.Where(employee => users.Contains(employee.Id));
             return SortAndOrderBy(start, amount, searchString, includeActive, includeInactive, sortingOption, employees);
         }
+        public int GetAmountOfManagers(string searchString = "", bool includeActive = true, bool includeInactive = false)
+        {
+            var users = Context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId)
+                .Select(role => role.UserId).ToList();
+            var employees = DbSet.Where(employee => users.Contains(employee.Id));
+            return SortAndOrderBy(0, int.MaxValue, searchString, includeActive, includeInactive, EmployeeSortingOption.Name_Asc, employees).Count();
+        }
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
         {
@@ -56,7 +63,12 @@ namespace BumboRepositories.Repositories
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch, int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
         {
             var employees = DbSet.Where(employee => employee.DefaultBranchId == branch);
-            return SortAndOrderBy(start, amount, searchString, includeActive, includeInactive, sortingOption, employees);
+            return SortAndOrderBy(start, amount, searchString, includeActive, includeInactive, sortingOption, employees).ToList();
+        }
+        public int GetAmountOfEmployeesOfBranch(int branch, string searchString = "", bool includeActive = true, bool includeInactive = false)
+        {
+            var employees = DbSet.Where(employee => employee.DefaultBranchId == branch);
+            return SortAndOrderBy(0, int.MaxValue, searchString, includeActive, includeInactive, EmployeeSortingOption.Name_Asc, employees).Count();
         }
 
         private static IEnumerable<Employee> SortAndOrderBy(int start, int amount, string searchString, bool includeActive, bool includeInactive, EmployeeSortingOption sortingOption, IQueryable<Employee> employees)
@@ -114,7 +126,7 @@ namespace BumboRepositories.Repositories
                     break;
             }
 
-            return employees.Skip(start).Take(amount).ToList();
+            return employees.Skip(start).Take(amount);
         }
 
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)

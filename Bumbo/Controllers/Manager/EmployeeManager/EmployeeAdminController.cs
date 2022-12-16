@@ -83,5 +83,9 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         {
             return _employeesRepository.GetAllManagers(start, amount);
         }
+        public override int GetAmountOfEmployees(string searchString = "", bool includeActive = true, bool includeInactive = false)
+        {
+            return _employeesRepository.GetAmountOfManagers(searchString, includeActive, includeInactive);
+        }
     }
 }

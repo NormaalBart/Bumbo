@@ -33,16 +33,18 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         }
 
         public abstract IEnumerable<Employee> GetAllEmployees(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc);
-
+        public abstract int GetAmountOfEmployees(string searchString = "", bool includeActive = true, bool includeInactive = false);
         public IActionResult Index(string searchString, bool includeInactive = false, bool includeActive = true, EmployeeSortingOption currentSort = EmployeeSortingOption.Name_Asc, int page = 1)
         {
             if (page < 1) page = 1;
-            var employees = GetAllEmployees((page - 1) * ItemsPerPage, ItemsPerPage, searchString, includeActive, includeInactive, currentSort);
-            if (employees.Count() == 0 && page != 1)
+            var amountOfEmployees = GetAmountOfEmployees(searchString, includeActive, includeInactive);
+            if (amountOfEmployees == 0 && page != 1)
             {
                 page--;
                 return RedirectToAction(nameof(Index), new { page, searchString, includeInactive, includeActive, currentSort });
             }
+
+            var employees = GetAllEmployees((page - 1) * ItemsPerPage, ItemsPerPage, searchString, includeActive, includeInactive, currentSort);
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
             resultingListViewModel.Page = page;
@@ -52,6 +54,9 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             resultingListViewModel.IncludeActive = includeActive;
 
             resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
+
+            resultingListViewModel.AmountOfPages = (GetAmountOfEmployees(searchString, includeActive, includeInactive) - ((page - 1) * ItemsPerPage + ItemsPerPage)) / ItemsPerPage + 1;
+
             return View("Views/EmployeeBase/Index.cshtml", resultingListViewModel);
         }
 

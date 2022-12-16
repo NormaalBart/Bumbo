@@ -108,6 +108,11 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             int? defaultBranchId = _userManager.GetUserAsync(User).Result.DefaultBranchId;
             return _employeesRepository.GetAllEmployeesOfBranch(defaultBranchId ?? 0, start, amount, searchString, includeActive, includeInactive, sortingOption);
         }
+        public override int GetAmountOfEmployees(string searchString = "", bool includeActive = true, bool includeInactive = false)
+        {
+            int? defaultBranchId = _userManager.GetUserAsync(User).Result.DefaultBranchId;
+            return _employeesRepository.GetAmountOfEmployeesOfBranch(defaultBranchId ?? 0, searchString, includeActive, includeInactive);
+        }
 
         private void PopulateDepartments(EmployeeEditViewModel viewModel)
         {

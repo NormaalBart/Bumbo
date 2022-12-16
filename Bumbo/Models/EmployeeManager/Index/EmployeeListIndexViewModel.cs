@@ -17,6 +17,7 @@ namespace Bumbo.Models.EmployeeManager.Index
         public List<EmployeeSortingOption> AvailableSortOptions { get; set; }
 
         public int Page { get; set; }
+        public int AmountOfPages { get; set; }
 
         public EmployeeListIndexViewModel()
         {
