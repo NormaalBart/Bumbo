@@ -50,7 +50,7 @@ namespace Bumbo.Models
                 .ForMember(dest => dest.SelectedBranch, opt => opt.MapFrom(src => src.DefaultBranchId))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
             CreateMap<Employee, EmployeeListItemViewModel>().ForMember(dest => dest.EmployeeJoinedCompany, opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
-            CreateMap<Employee, EmployeeRosterViewModel>();
+            CreateMap<Employee, EmployeeRosterViewModel>().ForMember(dest => dest.AllowedDepartments, opt => opt.MapFrom(src => src.AllowedDepartments));
             CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));
             CreateMap<PrognosisViewModel, Prognosis>().ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateOnly()));
             CreateMap<Department, EmployeeDepartmentViewModel>()

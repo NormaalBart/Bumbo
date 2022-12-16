@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <!--Create new button and sorting buttons in a header above the table-->
-            <div class="top-header align-items-center align-items-center">
+            <div class="edit-box align-items-center align-items-center">
                 <div class="top-header-content">
                     <form asp-action="Index" method="get" class="container ">
                         <div class="form-actions no-color row ">
@@ -56,9 +56,8 @@
                             </div>
                             <div class="col-md-2 justify-content-center text-center my-auto">
                                 <div class="form-group top-header-content">
-                                    <label>sortering:</label>
-
-                                    <select asp-for="CurrentSort" class="form-control">
+                                    <label asp-for="CurrentSort" class="control-label"></label>
+                                    <select asp-for="CurrentSort" class="form-control form-select">
                                         <option value="">Selecteer een afdeling</option>
                                         @foreach (var item in Model.AvailableSortOptions)
                                         {
@@ -101,38 +100,44 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Employees)
+                    @if (Model.Employees.Count == 0)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FullName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Function)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.Birthdate)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
-                            </td>
-                            <td>
-                                @Html.ActionLink("Verander", "Edit", new { item.Id }) |
-                                @Html.ActionLink("Reset wachtwoord", "ChangePassword", new { item.Id })
-                                @if (item.Active)
-                                {
-                                    <div class="alert-danger">
-                                        @Html.ActionLink("Zet inactief", "ToggleActive", new { item.Id })
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="alert-success">
-                                        @Html.ActionLink("Zet actief", "ToggleActive", new { item.Id })
-                                    </div>
-                                }
+                        <tr class="alert-info text-center">
+                            <td colspan="5">
+                                <p>Er zijn geen medewekers gevonden.</p>
                             </td>
                         </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.Employees)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Function)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.Birthdate)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Verander</a>
+                                    <a asp-action="ChangePassword" asp-route-id="@item.Id" class="btn btn-warning">Reset wachtwoord</a>
+                                    @if (item.Active)
+                                    {
+                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-danger">Zet inactief</a>
+                                    } else
+                                    {
+                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-success">Zet actief</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
