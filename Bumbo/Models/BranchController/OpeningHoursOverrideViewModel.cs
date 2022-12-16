@@ -25,10 +25,13 @@ namespace Bumbo.Models.BranchController
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
         [DisplayName("Sluitingstijd")]
         public TimeSpan CloseTime { get; set; }
+        
+        [DisplayName("Gesloten")]
+        public bool IsClosed { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (OpenTime >= CloseTime)
+            if (OpenTime >= CloseTime && !IsClosed)
             {
                 yield return new ValidationResult("Openingstijd is later of gelijk aan de sluitingstijd.", new string[] { "OpenTime" });
             }

@@ -289,17 +289,22 @@
                     <div class="table-responsive-sm">
 
                         <!--table, 24 long horizontal -->
-                        <table class="table roster-table table-hover" style="background-color: white;">
-                            <thead>
-                                <tr class="">
-                                    <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
-                    @*Important note: The text in the header blocks must be equal characters long.*@
-                    @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
+                    <table class="table roster-table table-hover" style="background-color: white;">
+                    
+                    @if (Model.CloseTime != TimeOnly.MinValue && Model.OpenTime != TimeOnly.MinValue)
                     {
-                                        <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                        <thead>
+                        <tr class="">
+                            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
+                            @*Important note: The text in the header blocks must be equal characters long.*@
+                            @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
+                            {
+                                <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                            }
+                        </tr>
+                        </thead>
                     }
-                                </tr>
-                            </thead>
+                        
 
                             <tbody>
 

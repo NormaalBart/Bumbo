@@ -113,18 +113,28 @@
                             {
                                 @for (int i = 0; i < Model.SpecialOpeningHours.Count; i++)
                                 {
+                                    var item = Model.SpecialOpeningHours[i];
                                     <tr>
                                         <td class="w-25">
-                                            @Html.DisplayFor(model => model.SpecialOpeningHours[i].Date)
+                                            @Html.DisplayFor(model => item.Date)
                                         </td>
+                                        @if (item.IsClosed)
+                                        {
+                                            <td class="w-50" colspan="2">
+                                                <p>Gesloten</p>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="w-25">
+                                                @Html.DisplayFor(model => item.OpenTime)
+                                            </td>
+                                            <td class="w-25">
+                                                @Html.DisplayFor(model => item.CloseTime)
+                                            </td>
+                                        }
                                         <td class="w-25">
-                                            @Html.DisplayFor(model => model.SpecialOpeningHours[i].OpenTime)
-                                        </td>
-                                        <td class="w-25">
-                                            @Html.DisplayFor(model => model.SpecialOpeningHours[i].CloseTime)
-                                        </td>
-                                        <td class="w-25">
-                                            <a class="btn btn-link" asp-action="DeleteSpecialOpeningHour" asp-route-id="@Model.Id" asp-route-date="@Model.SpecialOpeningHours[i].Date">Verwijder</a>
+                                            <a class="btn btn-link" asp-action="DeleteSpecialOpeningHour" asp-route-id="@Model.Id" asp-route-date="@item.Date">Verwijder</a>
                                         </td>
                                     </tr>
                                 }

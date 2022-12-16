@@ -21,7 +21,7 @@ namespace BumboRepositories.Repositories
             var over = Context.OpeningHoursOverride.FirstOrDefault(s => s.Date == day && s.BranchId == branchId);
             if (over != null)
             {
-                return (over.OpenTime, over.CloseTime);
+                return over.IsClosed ? (TimeOnly.MinValue, TimeOnly.MinValue) : (over.OpenTime, over.CloseTime);
             }
             
             // Check regular opening times
