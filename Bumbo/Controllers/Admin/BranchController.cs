@@ -38,7 +38,7 @@ namespace Bumbo.Controllers.Admin
             if (branches.Count() == 0 && page > 1)
             {
                 page--;
-                branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
+                return RedirectToAction("Index", new { page, searchString, includeInactive, includeActive, currentSort });
             }
             resultingListViewModel.Page = page;
             resultingListViewModel.CurrentSort = currentSort;

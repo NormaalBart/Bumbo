@@ -32,16 +32,16 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
         }
 
-        public abstract IEnumerable<Employee> GetAllEmployeesAsync(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc);
+        public abstract IEnumerable<Employee> GetAllEmployees(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc);
 
         public IActionResult Index(string searchString, bool includeInactive = false, bool includeActive = true, EmployeeSortingOption currentSort = EmployeeSortingOption.Name_Asc, int page = 1)
         {
             if (page < 1) page = 1;
-            var employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage, searchString, includeActive, includeInactive, currentSort);
+            var employees = GetAllEmployees((page - 1) * ItemsPerPage, ItemsPerPage, searchString, includeActive, includeInactive, currentSort);
             if (employees.Count() == 0 && page != 1)
             {
                 page--;
-                employees = GetAllEmployeesAsync((page - 1) * ItemsPerPage, ItemsPerPage, searchString, includeActive, includeInactive, currentSort);
+                return RedirectToAction(nameof(Index), new { page, searchString, includeInactive, includeActive, currentSort });
             }
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();

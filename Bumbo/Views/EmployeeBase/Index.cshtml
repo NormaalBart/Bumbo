@@ -2,6 +2,7 @@
 @using BumboData.Models
 @using Microsoft.AspNetCore.Identity
 @using BumboData.Enums
+@using System.Web;
 @model EmployeeListIndexViewModel
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
@@ -141,9 +142,12 @@
 </table>
 <nav aria-label="Page navigation" class="p-1">
     <ul class="pagination float-end">
-        <li class="page-item">
-            <a class="btn btn-primary page-link m-1" asp-action="Index" asp-route-Page="@(Model.Page - 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Vorige</a>
-        </li>
+        @if (Model.Page > 1)
+        {
+            <li class="page-item">
+                <a class="btn btn-primary page-link m-1" asp-action="Index" asp-route-Page="@(Model.Page - 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Vorige</a>
+            </li>
+        }
         <li class="page-item">
             <a class="btn btn-primary page-link m-1" asp-action="Index" asp-route-Page="@(Model.Page + 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Volgende</a>
         </li>

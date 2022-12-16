@@ -103,9 +103,10 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             return RedirectToAction(nameof(Index));
         }
 
-        public override IEnumerable<Employee> GetAllEmployeesAsync(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
+        public override IEnumerable<Employee> GetAllEmployees(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
         {
-            return _employeesRepository.GetAllManagers(start, amount, searchString, includeActive, includeInactive, sortingOption);
+            int? defaultBranchId = _userManager.GetUserAsync(User).Result.DefaultBranchId;
+            return _employeesRepository.GetAllEmployeesOfBranch(defaultBranchId ?? 0, start, amount, searchString, includeActive, includeInactive, sortingOption);
         }
 
         private void PopulateDepartments(EmployeeEditViewModel viewModel)
