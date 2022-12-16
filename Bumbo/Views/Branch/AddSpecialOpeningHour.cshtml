@@ -10,27 +10,27 @@
     </div>
 }
 
-<div class="container ">
+<div class="container d-flex justify-content-center">
     <div>
         <form asp-action="AddSpecialOpeningHour" id="AddSpecialOpeningHourForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @Html.HiddenFor(model => model.BranchId)
             <div class="row">
                 <div class="col edit-box">
-                    <div class="p-3">
-                        <div class="form-group">
+                    <div class="p-2">
+                        <div class="form-group py-2">
                             <label asp-for="Date" class="control-label"></label>
-                            @Html.EditorFor(model => model.Date)
+                            @Html.EditorFor(model => model.Date)<br>
                             <span asp-validation-for="Date" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group py-2">
                             <label asp-for="OpenTime" class="control-label"></label>
-                            @Html.EditorFor(model => model.OpenTime)
+                            @Html.EditorFor(model => model.OpenTime)<br>
                             <span asp-validation-for="OpenTime" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group py-2">
                             <label asp-for="CloseTime" class="control-label"></label>
-                            @Html.EditorFor(model => model.CloseTime)
+                            @Html.EditorFor(model => model.CloseTime)<br>
                             <span asp-validation-for="CloseTime" class="text-danger"></span>
                         </div>
                     </div>
@@ -43,11 +43,9 @@
     <input type="submit" value="Voeg uitwijkende openingstijd toe!" form="AddSpecialOpeningHourForm" class="btn btn-success btn-lg" />
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    @Html.ActionLink("Ga terug", "Edit", "Branch", new { Id = Model.BranchId })
+    <a asp-action="Edit" asp-route-id="@Model.BranchId" class="btn btn-danger">Ga terug</a>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

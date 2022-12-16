@@ -4,6 +4,7 @@ using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -183,7 +184,16 @@ namespace Bumbo.Controllers.Admin
  
         public ActionResult AddSpecialOpeningHour(int id)
         {
-            var viewModel = new OpeningHoursOverrideViewModel { BranchId = id};
+            // Get default opening time of today
+            var openAndCloseTimes = _branchRepository.GetOpenAndCloseTimes(id, DateTime.Now.ToDateOnly());
+            
+            var viewModel = new OpeningHoursOverrideViewModel
+            {
+                BranchId = id,
+                OpenTime = openAndCloseTimes.Item1.ToTimeSpan(),
+                CloseTime = openAndCloseTimes.Item2.ToTimeSpan(),
+                Date = DateTime.Now
+            };
             return View(viewModel);
         }
 
@@ -191,25 +201,32 @@ namespace Bumbo.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult AddSpecialOpeningHour(OpeningHoursOverrideViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
             var branch = _branchRepository.Get(viewModel.BranchId);
-            if(branch == null)
+            if (branch == null)
             {
                 // We have no idea what the branch of the user is. Let accountcontroller figure it out and redirect him.
                 return RedirectToAction("Login", "Account");
             }
+
+            if (_branchRepository.HasSpecialOpeningTimeOnDay(branch.Id, viewModel.Date.ToDateOnly()))
+            {
+                ModelState.AddModelError("Date", "Er is al een uitzondering gepland voor deze datum.");
+                return View(viewModel);
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
             var openingHour = _mapper.Map<OpeningHoursOverride>(viewModel);
             branch.OpeningHoursOverrides.Add(openingHour);
             _branchRepository.Update(branch);
             return RedirectToAction(nameof(Edit), new { Id = viewModel.BranchId });
         }
 
-        public ActionResult DeleteSpecialOpeningHour(DateTime date, int id)
+        public ActionResult DeleteSpecialOpeningHour(string date, int id)
         {
-            _branchRepository.RemoveSpecialOpeningHour(id, DateOnly.FromDateTime(date));
+            _branchRepository.RemoveSpecialOpeningHour(id, DateOnly.FromDateTime(DateTime.Parse(date)));
             return RedirectToAction(nameof(Edit), new { Id = id});
         }
     }
