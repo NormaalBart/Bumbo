@@ -162,11 +162,11 @@
 
     @if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
     {
-        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-success">
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
     }
     else
     {
-        @:<div class="border col-sm d-flex justify-content-center flex-nowrap bg-danger">
+        @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
     }
     <div class="vstack">
         <div>

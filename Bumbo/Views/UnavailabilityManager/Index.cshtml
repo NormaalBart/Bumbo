@@ -1,4 +1,5 @@
-﻿@model Bumbo.Models.UnavailableMoments.UnavailabilityManagerListViewModel
+﻿@using Bumbo.Models.UnavailableMoments
+@model UnavailabilityManagerListViewModel
 
 @{
     ViewBag.data = "Unavailability";
@@ -35,6 +36,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </form>
     </div>
 </div>
@@ -103,36 +105,36 @@
             </tr>
         }
     </tbody>
-
 </table>
-
 
 @if (Model.UnavailableMoments.Count() != 0)
 {
     <!-- The Modal -->
     <div id="modal" class="modal ">
         <!-- Modal content -->
-    <div class="modal-content modal-dialog text-center prognosis-textarea">
-        <span class="close position-absolute">&times;</span>
-        <label> </label>
-        <div class="m-3 text-center align-content-center">
-            <form method="post" asp-action="ReviewAll">
-                
-                <!--We pass all ids of items on screen.-->
-                @foreach (var item in Model.Ids)
-                {
-                    <input hidden asp-for="Ids" value="@item" name="ids" />
-                }
-                <div class="m-3">
+        <div class="modal-content modal-dialog text-center prognosis-textarea">
+            <span class="close position-absolute">&times;</span>
+            <label> </label>
+            <div class="m-3 text-center align-content-center">
+                <form method="post" asp-action="ReviewAll">
+                    <!--We pass all ids of items on screen.-->
+                    @foreach (var item in Model.Ids)
+                    {
+                        <input hidden asp-for="Ids" value="@item" name="ids" />
+                    }
+                    <div class="m-3">
                         @if (@Model.UnavailableMoments.Count() == 1)
                         {
                             <span> Weet je zeker dat je @Model.UnavailableMoments.Count() moment wilt </span> <span class="text-success">goedkeuren?</span>
-                        }else{
-                             <span> Weet je zeker dat je @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">goedkeuren?</span>
                         }
-                </div>
-                <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
-            </form>
+                        else
+                        {
+                            <span> Weet je zeker dat je @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">goedkeuren?</span>
+                        }
+                    </div>
+                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
+                </form>
+            </div>
         </div>
     </div>
 }
