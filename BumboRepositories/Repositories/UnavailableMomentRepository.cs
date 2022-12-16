@@ -61,7 +61,7 @@ namespace BumboRepositories.Repositories
         // returns next full week of unavailable moments.
         public List<UnavailableMoment> GetWeekOfUnavailableMomentsAfterDateForEmployee(DateTime date, string employeeId)
         {
-            return DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date >= date && u.StartTime <= date.AddDays(7)).ToList();
+            return DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date >= date && u.StartTime <= date.AddDays(8)).ToList();
 
         }
 

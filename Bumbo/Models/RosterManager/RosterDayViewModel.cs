@@ -13,15 +13,15 @@ namespace Bumbo.Models.RosterManager
         public int PrognosisDayId { get; set; }
         public DateTime Date { get; set; }
 
-        [DisplayName("Kassa Afdeling Uren")]
+        [DisplayName("Kassa afdeling uren")]
         public double CassierePrognoseHours { get; set; }
-        [DisplayName("Kassa Afdeling Medewerkers")]
+        [DisplayName("Kassa afdeling medewerkers")]
         public double CassierePrognoseWorkers { get; set; }
-        [DisplayName("Vers Afdeling Uren")]
+        [DisplayName("Vers afdeling uren")]
         public double FreshPrognoseHours { get; set; }
-        [DisplayName("Vers Afdeling Medewerkers")]
+        [DisplayName("Vers afdeling medewerkers")]
         public double FreshPrognoseWorkers { get; set; }
-        [DisplayName("VakkenVullers Afdeling Uren")]
+        [DisplayName("Vakken vullers afdeling uren")]
         public double StockersPrognoseHours { get; set; }
         
         // All employees who are already rostered.
@@ -32,9 +32,9 @@ namespace Bumbo.Models.RosterManager
         // selected stuff for creating a new shift
         public string SelectedEmployeeId { get; set; }
         public int SelectedDepartmentId { get; set; }
-        [DataType(DataType.Time)]
+        [DataType(DataType.Text)]
         public DateTime SelectedStartTime { get; set; }
-        [DataType(DataType.Time)]
+        [DataType(DataType.Text)]
         public DateTime SelectedEndTime { get; set; }
 
         public int SelectedShiftId { get; set; }

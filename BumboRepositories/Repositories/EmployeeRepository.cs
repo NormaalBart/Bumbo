@@ -12,6 +12,13 @@ namespace BumboRepositories.Repositories
         public EmployeeRepository(BumboContext context) : base(context)
         {
         }
+        
+        public List<Employee> Search(int? branchId, string query)
+        {
+            return DbSet
+                .Where(e => (e.FirstName + e.LastName).Contains(query))
+                .Where(e=>branchId == null || e.DefaultBranchId == branchId).ToList();
+        }
 
         public bool EmployeeIsInDepartment(string employeeId, int departmentId)
         {
@@ -35,7 +42,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<Employee> GetAllEmployeesOfBranch(int branch)
         {
-            return DbSet.Where(employee => employee.DefaultBranchId == branch).ToList();
+            return DbSet.Where(employee => employee.DefaultBranchId == branch).Include(e=>e.AllowedDepartments).ToList();
         }
 
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
