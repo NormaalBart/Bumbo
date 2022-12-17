@@ -75,14 +75,23 @@ namespace Bumbo
             // Configure the HTTP request pipeline.
             if (!webHostEnvironment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("Errors/Index");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             } else
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("Errors/Index");
             }
 
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/Errors/NotFound";
+                    await next();
+                }
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

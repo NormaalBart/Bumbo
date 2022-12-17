@@ -1,9 +1,12 @@
-﻿using Bumbo.Models.AccountController;
+﻿using Bumbo.Models;
+using Bumbo.Models.AccountController;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Bumbo.Controllers
 {
@@ -91,6 +94,11 @@ namespace Bumbo.Controllers
                 return RedirectToAction("Index", "EmployeeRoster");
             }
             return BadRequest();
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View("~/Views/Errors/AccessDenied.cshtml");
         }
 
         public async Task<IActionResult> Logout()
