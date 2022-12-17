@@ -8,35 +8,37 @@ namespace Bumbo.Models.BranchController
 
         public int BranchId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Datum is verplicht")]
         [DataType(DataType.Date)]
         [DisplayName("Datum")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd-MM-yyyy}")]
         public DateTime Date { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Openingstijd is verplicht")]
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
         [DisplayName("Openingstijd")]
         public TimeSpan OpenTime { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Sluitingstijd is verplicht")]
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
         [DisplayName("Sluitingstijd")]
         public TimeSpan CloseTime { get; set; }
+        
+        [DisplayName("Gesloten")]
+        public bool IsClosed { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (OpenTime >= CloseTime)
+            if (OpenTime >= CloseTime && !IsClosed)
             {
-                yield return new ValidationResult("Openingstijd is later of gelijk aan de sluitingstijd", new string[] { "OpenTime" });
+                yield return new ValidationResult("Openingstijd is later of gelijk aan de sluitingstijd.", new string[] { "OpenTime" });
             }
-            if (Date.CompareTo(new DateTime()) <= 0)
+            if (Date < DateTime.Now)
             {
-                yield return new ValidationResult("Datum kan niet in het verleden of vandaag zijn", new string[] { "Date" });
+                yield return new ValidationResult("Datum kan niet in het verleden of vandaag zijn.", new string[] { "Date" });
             }
         }
-
     }
 }

@@ -289,17 +289,22 @@
                     <div class="table-responsive-sm">
 
                         <!--table, 24 long horizontal -->
-                        <table class="table roster-table table-hover" style="background-color: white;">
-                            <thead>
-                                <tr class="">
-                                    <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
-                    @*Important note: The text in the header blocks must be equal characters long.*@
-                    @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
+                    <table class="table roster-table table-hover" style="background-color: white;">
+                    
+                    @if (Model.CloseTime != TimeOnly.MinValue && Model.OpenTime != TimeOnly.MinValue)
                     {
-                                        <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                        <thead>
+                        <tr class="">
+                            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
+                            @*Important note: The text in the header blocks must be equal characters long.*@
+                            @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
+                            {
+                                <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                            }
+                        </tr>
+                        </thead>
                     }
-                                </tr>
-                            </thead>
+                        
 
                             <tbody>
 
@@ -426,14 +431,12 @@
                                             </div>
                             }
                                     </td>
-                                    <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" onclick="onRowClick()">
-                                        <td colspan="25" class="roster-table-employee-cell text-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                            </svg>
-                                            Dienst toevoegen
+                                    <tr class="roster-shift-containter roster-table-addbtn border-3" id="AddShiftRow" onclick="onRowClick()">
+                                        <td colspan="25" class="p-0">
+                                            <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary w-100 h-100" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
+                                                Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
+                                            </button>
                                         </td>
-
                                     </tr>
                     }
                 }
