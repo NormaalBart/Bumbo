@@ -285,6 +285,7 @@ p {
     border: 1px solid darkgrey;
     min-width: 50px !important;
     padding: 0px !important;
+    cursor: pointer;
 }
 
 .roster-table {
