@@ -9,7 +9,7 @@ namespace Bumbo.Models.EmployeeManager.Index
         public List<EmployeeListItemViewModel> Employees { get; set; }
         [DisplayName("Toon medewerkers in dienst")]
         public bool IncludeActive { get; set; }
-        [DisplayName("Toon medewerkers niet in dients")]
+        [DisplayName("Toon medewerkers niet in dienst")]
         public bool IncludeInactive { get; set; }
         public string SearchString { get; set; }
 
