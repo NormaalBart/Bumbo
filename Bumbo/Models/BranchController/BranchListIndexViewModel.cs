@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.BranchController
 {
-    public class BranchListIndexViewModel
+    public class BranchListIndexViewModel: PaginatedViewModel
     {
         public List<ListIndexBranchViewModel> Branches { get; set; }
         [DisplayName("Toon actieve filialen")]
@@ -17,10 +17,7 @@ namespace Bumbo.Models.BranchController
         public BranchSortingOption CurrentSort { get; set; }
 
         public List<BranchSortingOption> AvailableSortOptions { get; set; }
-
-        public int AmountOfPages { get; set; }
-        public int Page { get; set; }
-
+        
         public BranchListIndexViewModel()
         {
             Branches = new List<ListIndexBranchViewModel>();

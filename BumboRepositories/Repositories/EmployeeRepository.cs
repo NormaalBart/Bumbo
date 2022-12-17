@@ -101,51 +101,32 @@ namespace BumboRepositories.Repositories
                 employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString) || e.LastName.ToLower().Contains(searchString));
             }
 
-            switch (sortingOption)
+            employees = sortingOption switch
             {
                 // case for each sortingoption, with asc and desc
-                case EmployeeSortingOption.Name_Asc:
-                    employees = employees.OrderBy(e => e.FirstName);
-                    break;
-                case EmployeeSortingOption.Name_Desc:
-                    employees = employees.OrderByDescending(e => e.FirstName);
-                    break;
-                case EmployeeSortingOption.Function_Desc:
-                    employees = employees.OrderByDescending(e => e.Function);
-                    break;
-                case EmployeeSortingOption.Function_Asc:
-                    employees = employees.OrderBy(e => e.Function);
-                    break;
-                case EmployeeSortingOption.Birthdate_Asc:
-                    employees = employees.OrderBy(e => e.Birthdate);
-                    break;
-                case EmployeeSortingOption.Birthdate_Desc:
-                    employees = employees.OrderByDescending(e => e.Birthdate);
-                    break;
-                case EmployeeSortingOption.EmployeeSince_Asc:
-                    employees = employees.OrderBy(e => e.EmployeeSince);
-                    break;
-                case EmployeeSortingOption.EmployeeSince_Desc:
-                    employees = employees.OrderByDescending(e => e.EmployeeSince);
-                    break;
-                default:
-                    employees = employees.OrderBy(e => e.FirstName);
-                    break;
-            }
+                EmployeeSortingOption.Name_Asc => employees.OrderBy(e => e.FirstName),
+                EmployeeSortingOption.Name_Desc => employees.OrderByDescending(e => e.FirstName),
+                EmployeeSortingOption.Function_Desc => employees.OrderByDescending(e => e.Function),
+                EmployeeSortingOption.Function_Asc => employees.OrderBy(e => e.Function),
+                EmployeeSortingOption.Birthdate_Asc => employees.OrderBy(e => e.Birthdate),
+                EmployeeSortingOption.Birthdate_Desc => employees.OrderByDescending(e => e.Birthdate),
+                EmployeeSortingOption.EmployeeSince_Asc => employees.OrderBy(e => e.EmployeeSince),
+                EmployeeSortingOption.EmployeeSince_Desc => employees.OrderByDescending(e => e.EmployeeSince),
+                _ => employees.OrderBy(e => e.FirstName)
+            };
 
             return employees.Skip(start).Take(amount);
         }
 
         public IEnumerable<Department> GetDepartmentsOfEmployee(string id)
         {
-            return DbSet.Where(e => e.Id == id).Include(e => e.AllowedDepartments).FirstOrDefault().AllowedDepartments;
+            return DbSet.Where(e => e.Id == id).Include(e => e.AllowedDepartments).FirstOrDefault()?.AllowedDepartments;
         }
 
         public bool Exists(Employee newEmployee)
         {
-            return DbSet.Where(e =>
-                e.NormalizedEmail == newEmployee.NormalizedEmail ||
-                e.NormalizedUserName == newEmployee.NormalizedUserName).Any();
+            return DbSet.Any(e => e.NormalizedEmail == newEmployee.NormalizedEmail ||
+                                  e.NormalizedUserName == newEmployee.NormalizedUserName);
         }
 
         public override Employee? Get(string id)

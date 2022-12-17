@@ -48,7 +48,7 @@ namespace Bumbo.Controllers.Admin
             resultingListViewModel.IncludeActive = includeActive;
             resultingListViewModel.SearchString = searchString;
 
-            resultingListViewModel.AmountOfPages = Math.Max(amountOfBranches / ItemsPerPage, 1);
+            resultingListViewModel.MaxPage = Math.Max(amountOfBranches / ItemsPerPage, 1);
 
             if (!includeInactive && !includeActive)
             {

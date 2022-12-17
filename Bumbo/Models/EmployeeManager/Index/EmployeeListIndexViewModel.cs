@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.EmployeeManager.Index
 {
-    public class EmployeeListIndexViewModel
+    public class EmployeeListIndexViewModel: PaginatedViewModel
     {
         public List<EmployeeListItemViewModel> Employees { get; set; }
         [DisplayName("Toon medewerkers in dienst")]
@@ -17,9 +17,6 @@ namespace Bumbo.Models.EmployeeManager.Index
         public EmployeeSortingOption CurrentSort { get; set; }
 
         public List<EmployeeSortingOption> AvailableSortOptions { get; set; }
-
-        public int Page { get; set; }
-        public int AmountOfPages { get; set; }
 
         public EmployeeListIndexViewModel()
         {
