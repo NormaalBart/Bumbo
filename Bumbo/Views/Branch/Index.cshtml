@@ -122,7 +122,7 @@
                                 @Html.DisplayFor(modelItem => item.Employees)
                             </td>
                             <td>
-                                @Html.ActionLink("Verander", "Edit", new {  id=item.Id }) |
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Verander</a> |
                                 @if (item.Inactive)
                                 {
                                     <button type="button" onclick="setActiveClick(@item.Id, '@item.Name')" class="btn btn-success" data-toggle="modal" data-target="#setBranchActive">
