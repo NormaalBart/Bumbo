@@ -26,7 +26,9 @@
 
 @if (Model.CopiedShifts != 0)
 {
-    <p class="alert-success text-center">@Model.CopiedShifts diensten succesvol gekopiëerd naar een andere dag.</p>
+    <div class="alert alert-success text-center" role="alert">
+        @Model.CopiedShifts diensten succesvol gekopiëerd naar een andere dag.
+    </div>
 }
 
 
