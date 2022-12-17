@@ -58,7 +58,7 @@
 <div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
     <div class="d-flex justify-content-between m-2 align-items-center text-center">
         <div>
-            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1)">
                 <i class="bi bi-caret-left"></i> Vorige dag
             </a>
         </div>
@@ -67,7 +67,7 @@
             Week @Model.GetWeekNumber(Model.Date)<br><span style="font-size:18px">@Model.Date.ToString("dddd d MMMM") @Model.Date.ToString("yyyy")</span>
         </div>
         <div>
-            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1)">
                 Volgende dag <i class="bi bi-caret-right"></i>
             </a>
         </div>
