@@ -6,17 +6,25 @@
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren bekijken</h1>
 
 
-<div class="d-flex justify-content-between m-4 border rounded-2">
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(-7).Date"> Vorige week</a>
-    </button>
-
-    <p>Week @Model.Date.GetWeekNumber()</p>
-
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(7).Date"> Volgende week</a>
-    </button>
+<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
+    <div class="d-flex justify-content-between m-2 align-items-center text-center">
+        <div>
+            <a class="btn btn-primary" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(-7).Date">
+                <i class="bi bi-caret-left"></i> Vorige dag
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            <span style="font-size:18px">@Model.Date.ToString("yyyy")</span> Week @Model.Date.GetWeekNumber()
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(7).Date">
+                Volgende dag <i class="bi bi-caret-right"></i>
+            </a>
+        </div>
+    </div>
 </div>
+
 
 <table class="table">
     <thead>

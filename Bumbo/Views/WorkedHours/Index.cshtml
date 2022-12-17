@@ -7,18 +7,23 @@
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren accorderen</h1>
 
-<div class="d-flex justify-content-between m-4 border rounded-2">
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date"> Vorige dag </a>
-    </button>
-
-    <p>Week @Model.Date.GetWeekNumber() | @Model.Date.ToShortDateString() </p>
-
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date"> Volgende dag </a>
-    </button>
-
-
+<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
+    <div class="d-flex justify-content-between m-2 align-items-center text-center">
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
+                <i class="bi bi-caret-left"></i> Vorige dag
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            Week @Model.Date.GetWeekNumber()<br><span style="font-size:18px">@Model.Date.ToString("dddd d MMMM") @Model.Date.ToString("yyyy")</span>
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
+                Volgende dag <i class="bi bi-caret-right"></i>
+            </a>
+        </div>
+    </div>
 </div>
 
 
