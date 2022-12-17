@@ -1,6 +1,7 @@
 ﻿using BumboData.Enums;
 using BumboRepositories.Utils;
 using BumboServices.CAO;
+using BumboServices.CAO.Rules;
 
 namespace BumboUnitTests
 {
@@ -78,7 +79,11 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(1));
+
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.AtLeast(1));
+            }
         }
 
         [Test, Description("the employee (15) has 4 hours of school but also 4 hours of work")]
@@ -143,7 +148,11 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
         [Test, Description("the employee (15) has 0 hours of school but also 8 hours of work")]
@@ -198,7 +207,11 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
         [Test, Description("the employee (15) has 0 hours of school but also 9 hours of work")]
@@ -253,7 +266,11 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(1));
+
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(1));
+            }
         }
 
         [Test, Description("the employee (15) has 0 hours of school but also 36 hours of work")]
@@ -309,7 +326,12 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(1));
+            int count = 0;
+            foreach (var plannedShift in plannedShifts)
+            {
+                count += result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count();
+            }
+            Assert.That(count, Is.EqualTo(1));
         }
 
         [Test, Description("the employee (15) has 0 hours of school but also 44 hours of work")]
@@ -365,7 +387,12 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(1));
+            int count = 0;
+            foreach (var plannedShift in plannedShifts)
+            {
+                count += result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count();
+            }
+            Assert.That(count, Is.EqualTo(1));
         }
 
         [Test, Description("the employee (15) has 0 hours of school but works 6 days this week")]
@@ -421,7 +448,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkDaysInWeek && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
         [Test, Description("the employee (15) has 0 hours of school but works 5 days this week")]
@@ -477,7 +507,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkDaysInWeek && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
         [Test, Description("the employee (15) works til after 19:00")]
@@ -533,7 +566,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxShiftEndTime && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
         //employee is now 17
@@ -601,7 +637,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(1));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(1));
+            }
         }
 
         [Test, Description("the employee (17) has 4 hours of school but also 4 hours of work")]
@@ -666,7 +705,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
 
@@ -722,7 +764,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
 
@@ -782,7 +827,10 @@ namespace BumboUnitTests
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
 
@@ -834,6 +882,7 @@ namespace BumboUnitTests
                     EmployeeId = employee.Id
                 });
             }
+            _unavailableMomentsRepositoryMock.Reset();
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByDay(employee.Id, day)).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.GetSchoolUnavailableMomentsByWeek(employee.Id, day.Year, timeOfTheDay.GetWeekNumber())).Returns(new List<UnavailableMoment>());
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
@@ -842,7 +891,13 @@ namespace BumboUnitTests
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(1));
+
+            int count = 0;
+            foreach (var plannedShift in plannedShifts)
+            {
+                count += result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count();
+            }
+            Assert.That(count, Is.EqualTo(1));
         }
 
 
@@ -912,7 +967,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
         [Test, Description("the employee (17) 13 hours of work")]
@@ -977,7 +1035,10 @@ namespace BumboUnitTests
             _unavailableMomentsRepositoryMock.Setup(e => e.EmployeeSchoolWeek(employee.Id, 2022, 1)).Returns(true);
             _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(plannedShifts);
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(1));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxConsecutiveHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(1));
+            }
         }
 
 
@@ -1037,7 +1098,10 @@ namespace BumboUnitTests
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
 
@@ -1097,7 +1161,10 @@ namespace BumboUnitTests
                 _plannedShiftsRepositoryMock.Setup(e => e.GetPlannedShiftsInBetween(branch.Id, employee.Id, plannedShifts[i - 1].StartTime.Date, plannedShifts[i - 1].StartTime.Date)).Returns(plannedShifts.Where(f => f.StartTime.GetWeekNumber() == i).ToList());
             }
             var result = _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(), day);
-            Assert.That(result.Count, Is.EqualTo(0));
+            foreach (var plannedShift in plannedShifts)
+            {
+                Assert.That(result.Keys.Where(e => e is MaxWorkHours && result[e].Contains(plannedShift)).Count(), Is.EqualTo(0));
+            }
         }
 
     }
