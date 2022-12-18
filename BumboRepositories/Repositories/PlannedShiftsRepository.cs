@@ -116,11 +116,6 @@ namespace BumboRepositories.Repositories
             return DbSet.Where(s => s.BranchId == branchId && s.EmployeeId == employeeId
                                                            && s.StartTime >= from && s.EndTime <= until).ToList();
         }
-        public List<PlannedShift> GetPlannedShiftsInBetween(int branchId, DateTime from, DateTime until)
-        {
-            return DbSet.Where(s => s.BranchId == branchId && s.StartTime >= from && s.StartTime <= until).ToList();
-        }
-
         public double GetTotalHoursPlannedOnDay(int branchId, DateTime date)
         {
 

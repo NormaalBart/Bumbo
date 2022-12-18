@@ -459,7 +459,7 @@ namespace Bumbo.Controllers.Manager
         public async Task<IActionResult> CopyRoster(string date, DateTime copyFrom, DateTime copyTo)
         {
             var employee = await _userManager.GetUserAsync(User);
-            var shifts = _shiftRepository.GetPlannedShiftsInBetween((int)employee.DefaultBranchId, copyFrom, copyFrom.AddDays(1));
+            var shifts = _shiftRepository.GetAllShiftsDay((int)employee.DefaultBranchId, copyFrom.ToDateOnly());
             var diff = copyTo - copyFrom;
             int numberOfCopiedShifts = 0;
             foreach (var shift in shifts)

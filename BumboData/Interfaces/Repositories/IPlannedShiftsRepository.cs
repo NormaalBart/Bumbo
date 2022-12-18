@@ -24,7 +24,6 @@ namespace BumboData.Interfaces.Repositories
 
         void Import(List<PlannedShift> list);
         List<PlannedShift> GetPlannedShiftsInBetween(int branchId, string employeeId, DateTime from, DateTime until);
-        List<PlannedShift> GetPlannedShiftsInBetween(int branchId, DateTime from, DateTime until);
         double GetTotalHoursPlannedOnDay(int branchId, DateTime date);
 
         IEnumerable<PlannedShift> GetOfEmployeeOnDay(DateTime date, string employeeId);
