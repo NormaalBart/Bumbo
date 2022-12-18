@@ -98,7 +98,7 @@ namespace Bumbo.Controllers
 
         public IActionResult AccessDenied()
         {
-            return View("~/Views/Errors/AccessDenied.cshtml");
+            return View("~/Views/Error/AccessDenied.cshtml");
         }
 
         public async Task<IActionResult> Logout()
