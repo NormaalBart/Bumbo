@@ -205,7 +205,7 @@ input[type="search"] {
 }
 
 .navbar {
-    background-image: linear-gradient(rgb(232, 232, 232), white);
+    background-image: linear-gradient(to top, rgb(232, 232, 232), white);
 }
 
 .active {
