@@ -12,7 +12,7 @@ using System.Data;
 namespace Bumbo.Controllers.Manager
 {
     [Authorize(Roles = "Manager")]
-    public class UnavailabilityManagerController : Controller
+    public class UnavailabilityManagerController : NotificationController
     {
         private readonly UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace Bumbo.Controllers.Manager
 
         public async Task<IActionResult> Index(string? searchString)
         {
-  
+
             var manager = await _userManager.GetUserAsync(User);
             // Returns all unavailability moments that haven't been approved yet.
 
@@ -68,25 +68,29 @@ namespace Bumbo.Controllers.Manager
         [HttpPost]
         public async Task<IActionResult> Review(int id, bool isApproved)
         {
-            
+
             var unavailabilityMoment = _unavailableMomentsRepository.Get(id);
             if (unavailabilityMoment == null)
             {
+                ShowMessage(MessageType.Error, "Er is iets fout gegaan");
                 return NotFound();
             }
 
             if (unavailabilityMoment.ReviewStatus != BumboData.Enums.ReviewStatus.Pending)
             {
+                ShowMessage(MessageType.Error, "Afwezigheidsverzoek is al geupdate");
                 return BadRequest();
             }
 
             if (isApproved)
             {
                 unavailabilityMoment.ReviewStatus = BumboData.Enums.ReviewStatus.Approved;
+                ShowMessage(MessageType.Success, "Afwezigheidsverzoek goedgekeurd");
             }
             else
             {
-               unavailabilityMoment.ReviewStatus = BumboData.Enums.ReviewStatus.Rejected;
+                unavailabilityMoment.ReviewStatus = BumboData.Enums.ReviewStatus.Rejected;
+                ShowMessage(MessageType.Success, "Afwezigheidsverzoek afgekeurd");
             }
             _unavailableMomentsRepository.Update(unavailabilityMoment);
             return RedirectToAction(nameof(Index));
@@ -100,7 +104,7 @@ namespace Bumbo.Controllers.Manager
             // Currently there's only a button to approve all, as I am not sure if a reject all is neccesesary.
             // I still made this method work for a reject all button incase it is ever requested in the future. 
             // But there's almost no situation in which a manager would use such a button.
-            
+
             var manager = await _userManager.GetUserAsync(User);
 
             // We set the status of each moment in the list to the given status
@@ -110,12 +114,12 @@ namespace Bumbo.Controllers.Manager
                 newStatus = ReviewStatus.Rejected;
             }
 
-            
-            _unavailableMomentsRepository.UpdateRange(newStatus, ids);
 
-            return RedirectToAction("Index");
+            _unavailableMomentsRepository.UpdateRange(newStatus, ids);
+            ShowMessage(MessageType.Success, "Afwezigheidsverzoeken geupdate");
+            return RedirectToAction(nameof(Index));
         }
 
-        
+
     }
 }

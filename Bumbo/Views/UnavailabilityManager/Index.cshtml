@@ -94,11 +94,13 @@
                 <td class=" text-center" colspan="2">
                     <div class=" d-flex align-items-center justify-content-center">
                         <!--Approve button-->
-                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" method="post">
-                            <input type="submit" value="Goedkeuren" class="btn btn-success" />
+                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" id="AcceptForm" method="post">
+                            <i class="ms-1 bi-check-circle-fill" href="javascript:{}" onclick="document.getElementById('AcceptForm').submit();" style="color: green" title="Accepteer dit afwezigheidsverzoek" data-toggle="tooltip" data-placement="top">
+                            </i>
                         </form>
-                        <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" method="post">
-                            <input type="submit" value="Afkeuren" class="btn btn-danger" />
+                        <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" id="DenyForm" method="post">
+                            <i class="ms-1 bi-x-circle-fill" href="javascript:{}" onclick="document.getElementById('DenyForm').submit();" style="color: red" title="Keur dit afwezigheidsverzoek af" data-toggle="tooltip" data-placement="top">
+                            </i>
                         </form>
                     </div>
                 </td>
@@ -112,7 +114,7 @@
     <!-- The Modal -->
     <div id="modal" class="modal ">
         <!-- Modal content -->
-        <div class="modal-content modal-dialog text-center prognosis-textarea">
+    <div class="modal-content modal-dialog text-center prognosis-textarea">
             <span class="close position-absolute">&times;</span>
             <label> </label>
             <div class="m-3 text-center align-content-center">
