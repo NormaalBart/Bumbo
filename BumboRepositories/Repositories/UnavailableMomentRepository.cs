@@ -29,7 +29,7 @@ namespace BumboRepositories.Repositories
             // check if employee is unavailable in unavailable moments 
             var unavailableMoments = DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date == startTime.Date)
                 .ToList();
-            return !unavailableMoments.Any(moment => startTime < moment.EndTime && 
+            return !unavailableMoments.Any(moment => startTime < moment.EndTime &&
                                                     moment.StartTime < endTime);
         }
 
@@ -52,7 +52,7 @@ namespace BumboRepositories.Repositories
                 s.Type == UnavailableMomentType.School).ToList();
         }
 
-        public List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day)
+        public List<UnavailableMoment> GetUnavailableMomentsByDay(string employee, DateOnly day)
         {
             return DbSet.Where(s => s.EmployeeId == employee && s.StartTime.Date.DayOfYear == day.DayOfYear
                                                              && s.StartTime.Date.Year == day.Year).ToList();
@@ -65,7 +65,7 @@ namespace BumboRepositories.Repositories
 
         }
 
-        public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId,ReviewStatus status, string search)
+        public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId, ReviewStatus status, string search)
         {
             if (search == null)
             {
@@ -76,7 +76,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<UnavailableMoment> GetAllMomentsFromMonth(int branchId, DateTime date, string search)
         {
-            if (search == null  )
+            if (search == null)
             {
                 return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId).Include(u => u.Employee).ToList();
             }
@@ -93,7 +93,7 @@ namespace BumboRepositories.Repositories
                 // potentially throw exception here if it is null? Or continue with rest of list? Even if this situation is incredibly rare.
                 if (moment != null)
                 {
-                    
+
                     if (moment.ReviewStatus == ReviewStatus.Pending)
                     {
                         moment.ReviewStatus = newStatus;

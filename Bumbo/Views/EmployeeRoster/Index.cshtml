@@ -8,51 +8,50 @@
 
 
 <h1 class="text-center">
-    Diensten deze week
+    Diensten deze dag
 </h1>
+
+
+<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
+    <div class="d-flex justify-content-between m-2 align-items-center text-center">
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-7)">
+                <i class="bi bi-caret-left"></i>Vorige week
+            </a>
+        </div>
+        <div class="fw-bold">
+            @Model.Date.ToString("yyyy MMM") Week @Model.Date.ToDateTime(new TimeOnly()).GetWeekNumber()
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(7)">
+                Volgende week<i class="bi bi-caret-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
 
 <div class="row border-bottom border-2 border-dark">
     @for (int i = 0; i < 7; i++)
     {
         <div class="col text-center m-0">
             <a class="text-decoration-none " asp-action="Index" asp-route-dateInput="@Model.GetDayDate(i)">
-            <div class="day-header text-black @(Model.DayIsSelected(i) ? "selected" : "") @(Model.IsToday(i) ? "today" : "") ">
-                @Model.GetDayDate(i).Day
-            </div>
-            <div class="text-black">
-                @Model.GetDay(i)
-            </div>
+                <div class="day-header text-black @(Model.DayIsSelected(i) ? "selected" : "") @(Model.IsToday(i) ? "today" : "") ">
+                    @Model.GetDayDate(i).Day
+                </div>
+                <div class="text-black">
+                    @Model.GetDay(i)
+                </div>
             </a>
         </div>
     }
 </div>
-
-<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
-    <div class="d-flex justify-content-between m-2 align-items-center text-center">
-        <div>
-            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-7)">
-                <i class="bi bi-caret-left"></i> Vorige week
-            </a>
-        </div>
-        <div class="fw-bold">
-            @Model.Date.ToString("yyyy") Week @Model.Date.ToDateTime(new TimeOnly()).GetWeekNumber()
-        </div>
-        <div>
-            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(7)">
-                Volgende week <i class="bi bi-caret-right"></i>
-            </a>
-        </div>
-    </div>
-</div>
-
-
 
 
 <div class="container ">
 
      @if (Model.shifts.Count() == 0)
     {
-        <p class="text-center mt-2">Geen ingeplande diensten komende week.</p>
+        <p class="text-center mt-2">Geen ingeplande diensten deze dag.</p>
     }
     @foreach (var item in Model.shifts)
     {
@@ -123,8 +122,6 @@
                                     }
                                 </div>
                             }
-                         
-                    
                         </div>
                     </div>
                 </div>
