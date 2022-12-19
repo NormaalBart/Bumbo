@@ -561,3 +561,30 @@ input[type='checkbox']:checked:not(normal-checkbox) {
     }
 }
 /* ============ small devices .end// ============ */
+
+
+
+
+.errorpage {
+    background-color: #95c2de;
+    margin: auto;
+    min-height: 500px;
+    max-width: 800px;
+    padding: 20px;
+}
+
+
+.errorpagemsg {
+    text-align: center;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 1.6rem;
+}
+
+.errorpage a {
+    text-decoration: none;
+    color: white;
+}
+
+    .errorpage a:hover {
+        text-decoration: underline;
+    }

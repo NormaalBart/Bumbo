@@ -2,10 +2,23 @@
     ViewData["Title"] = "Geen rechten";
 }
 
-<h1 class="text-center">Je hebt niet de juiste rechten om deze pagina te bekijken.</h1>
 
-<h3 class="text-center">Ben je wel ingelogd?</h3>
 
-<br />
+<div class="errorpage border border-1 border-dark rounded rounded-3">
 
-<h4 class="text-center">Is dit een fout? Neem contact op met de helpdesk. </h4>
+    <div class="errorpagemsg">
+        <div>
+            <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
+                <img src="~/images/bumbo.png" class="img-fluid" alt="Bumbo logo" />
+            </a>
+        </div>
+        <h2>Onvoldoende rechten</h2>
+        <br />
+        <p>Je voldoet niet aan juiste rechten om deze pagina te bekijken. Check dat je juist bent ingelogd.</p>
+        <br />
+        <p>Ga naar de <a asp-area="" asp-controller="Account" asp-action="Login">home</a> pagina en probeer het opnieuw.</p>
+        <br />
+        <p>Is dit een fout? Neem dan contact op met de helpdesk.</p>
+     
+    </div>
+</div>
