@@ -7,71 +7,66 @@ namespace BumboUnitTests
 {
     public class CAOTests
     {
-        private BaseCAOService _baseCAOService;
         private readonly Mock<IUnavailableMomentsRepository> _unavailableMomentsRepositoryMock = new Mock<IUnavailableMomentsRepository>();
         private readonly Mock<IPlannedShiftsRepository> _plannedShiftsRepositoryMock = new Mock<IPlannedShiftsRepository>();
+        private BaseCAOService _baseCAOService;
 
-        private Branch _branch;
-        private Department _freshDepartment;
-        private Employee _fifteenYearOldEmployee;
-        private Employee _seventeenYearOldEmployee;
-        private Employee _nineteenYearOldEmployee;
+        private Branch _branch = new Branch
+        {
+            Id = 1,
+            Name = "name",
+            ShelvingDistance = 0,
+            City = "city",
+            HouseNumber = "housenumber",
+            Street = "street",
+            Inactive = false
+        };
+        private Department _department = new Department
+        {
+            Id = 2,
+            DepartmentName = "departmentName"
+        };
+        private Employee _fifteenYearOldEmployee = new Employee
+        {
+            Id = "id",
+            FirstName = "firstName",
+            LastName = "lastName",
+            Birthdate = DateTime.Now.AddYears(-15).ToDateOnly(),
+            Active = true,
+            EmployeeSince = new DateOnly(2014, 2, 4),
+            Postalcode = "postalcode",
+            Housenumber = "housenumber"
+        };
+        private Employee _seventeenYearOldEmployee = new Employee
+        {
+            Id = "id",
+            FirstName = "firstName",
+            LastName = "lastName",
+            Birthdate = DateTime.Now.AddYears(-17).ToDateOnly(),
+            Active = true,
+            EmployeeSince = new DateOnly(2014, 2, 4),
+            Postalcode = "postalcode",
+            Housenumber = "housenumber"
+        };
+        private Employee _nineteenYearOldEmployee = new Employee
+        {
+            Id = "id",
+            FirstName = "firstName",
+            LastName = "lastName",
+            Birthdate = DateTime.Now.AddYears(-19).ToDateOnly(),
+            Active = true,
+            EmployeeSince = new DateOnly(2014, 2, 4),
+            Postalcode = "postalcode",
+            Housenumber = "housenumber"
+        };
 
         [SetUp]
         public void Setup()
         {
             _baseCAOService = new DutchCAOService(_unavailableMomentsRepositoryMock.Object, _plannedShiftsRepositoryMock.Object);
-            _branch = new Branch
-            {
-                Id = 1,
-                Name = "d",
-                ShelvingDistance = 0,
-                City = "d",
-                HouseNumber = "3",
-                Street = "ddd",
-                Inactive = false
-            };
-            _freshDepartment = new Department
-            {
-                Id = 2,
-                DepartmentName = "vers"
-            };
-            _fifteenYearOldEmployee = new Employee
-            {
-                Id = "thisIsAnEmployeeID",
-                FirstName = "hey",
-                LastName = "die",
-                DefaultBranch = _branch,
-                Birthdate = DateTime.Now.AddYears(-15).ToDateOnly(),
-                Active = true,
-                EmployeeSince = new DateOnly(2014, 2, 4),
-                Postalcode = "1",
-                Housenumber = "1"
-            };
-            _seventeenYearOldEmployee = new Employee
-            {
-                Id = "thisIsAnEmployeeID",
-                FirstName = "hey",
-                LastName = "die",
-                DefaultBranch = _branch,
-                Birthdate = DateTime.Now.AddYears(-17).ToDateOnly(),
-                Active = true,
-                EmployeeSince = new DateOnly(2014, 2, 4),
-                Postalcode = "1",
-                Housenumber = "1"
-            };
-            _nineteenYearOldEmployee = new Employee
-            {
-                Id = "thisIsAnEmployeeID",
-                FirstName = "hey",
-                LastName = "die",
-                DefaultBranch = _branch,
-                Birthdate = DateTime.Now.AddYears(-19).ToDateOnly(),
-                Active = true,
-                EmployeeSince = new DateOnly(2014, 2, 4),
-                Postalcode = "1",
-                Housenumber = "1"
-            };
+            _fifteenYearOldEmployee.DefaultBranch = _branch;
+            _seventeenYearOldEmployee.DefaultBranch = _branch;
+            _nineteenYearOldEmployee.DefaultBranch = _branch;
         }
 
         [Test, Description("the employee (15) has 4 hours of school but also 6 hours of work")]
@@ -87,10 +82,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-6),
                     EndTime = timeOfTheDay,
                     Employee = _fifteenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_fifteenYearOldEmployee.Id
                 }
             };
@@ -129,10 +124,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-4),
                     EndTime = timeOfTheDay,
                     Employee = _fifteenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_fifteenYearOldEmployee.Id
                 }
             };
@@ -171,10 +166,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-8),
                     EndTime = timeOfTheDay,
                     Employee = _fifteenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_fifteenYearOldEmployee.Id
                 }
             };
@@ -203,10 +198,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-9),
                     EndTime = timeOfTheDay,
                     Employee = _fifteenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_fifteenYearOldEmployee.Id
                 }
             };
@@ -236,10 +231,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i),
                     EndTime = timeOfTheDay.AddHours(9).AddDays(i),
                     Employee = _fifteenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _fifteenYearOldEmployee.Id
                 });
             }
@@ -270,10 +265,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i),
                     EndTime = timeOfTheDay.AddHours(11).AddDays(i),
                     Employee = _fifteenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _fifteenYearOldEmployee.Id
                 });
             }
@@ -304,10 +299,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i),
                     EndTime = timeOfTheDay.AddHours(1).AddDays(i),
                     Employee = _fifteenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _fifteenYearOldEmployee.Id
                 });
             }
@@ -336,10 +331,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i),
                     EndTime = timeOfTheDay.AddHours(1).AddDays(i),
                     Employee = _fifteenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _fifteenYearOldEmployee.Id
                 });
             }
@@ -367,10 +362,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(1),
                     EndTime = timeOfTheDay.AddHours(3).AddDays(1),
                     Employee = _fifteenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _fifteenYearOldEmployee.Id
                 }
             };
@@ -402,10 +397,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-6),
                     EndTime = timeOfTheDay,
                     Employee = _seventeenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_seventeenYearOldEmployee.Id
                 }
             };
@@ -443,10 +438,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-4),
                     EndTime = timeOfTheDay,
                     Employee = _seventeenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_seventeenYearOldEmployee.Id
                 }
             };
@@ -485,10 +480,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-9),
                     EndTime = timeOfTheDay,
                     Employee = _seventeenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_seventeenYearOldEmployee.Id
                 }
             };
@@ -518,10 +513,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i * 7),
                     EndTime = timeOfTheDay.AddHours(8).AddDays(i * 7),
                     Employee = _seventeenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _seventeenYearOldEmployee.Id
                 });
             }
@@ -554,10 +549,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i * 7),
                     EndTime = timeOfTheDay.AddHours(10).AddDays(i * 7),
                     Employee = _seventeenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _seventeenYearOldEmployee.Id
                 });
             }
@@ -597,10 +592,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-6),
                     EndTime = timeOfTheDay,
                     Employee = _nineteenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_nineteenYearOldEmployee.Id
                 }
             };
@@ -638,10 +633,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddHours(-2),
                     EndTime = timeOfTheDay.AddHours(11),
                     Employee = _nineteenYearOldEmployee,
-                    Department=_freshDepartment,
+                    Department=_department,
                     Branch=_branch,
                     BranchId=_branch.Id,
-                    DepartmentId=_freshDepartment.Id,
+                    DepartmentId=_department.Id,
                     EmployeeId=_nineteenYearOldEmployee.Id
                 }
             };
@@ -681,10 +676,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i * 7),
                     EndTime = timeOfTheDay.AddHours(8).AddDays(i * 7),
                     Employee = _nineteenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _nineteenYearOldEmployee.Id
                 });
             }
@@ -717,10 +712,10 @@ namespace BumboUnitTests
                     StartTime = timeOfTheDay.AddDays(i * 7),
                     EndTime = timeOfTheDay.AddHours(12).AddDays(i * 7),
                     Employee = _nineteenYearOldEmployee,
-                    Department = _freshDepartment,
+                    Department = _department,
                     Branch = _branch,
                     BranchId = _branch.Id,
-                    DepartmentId = _freshDepartment.Id,
+                    DepartmentId = _department.Id,
                     EmployeeId = _nineteenYearOldEmployee.Id
                 });
             }
