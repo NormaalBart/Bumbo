@@ -8,11 +8,11 @@ namespace Bumbo.Models.PrognosisManager
         public int Id { get; set; }
 
         [DisplayName("Aantal Collies")]
-        [Required]
+        [Required(ErrorMessage = "Dit is een verplicht veld")]
         [Range(0, 100000, ErrorMessage = "Aantal Collies moet tussen 0 en 100.000 liggen")]
         public int ColiCount { get; set; }
         [DisplayName("Aantal Klanten")]
-        [Required]
+        [Required(ErrorMessage = "Dit is een verplicht veld")]
         [Range(0, 100000, ErrorMessage = "Aantal klanten moet tussen 0 en 100.000 liggen")]
         public int CustomerCount { get; set; }
 
