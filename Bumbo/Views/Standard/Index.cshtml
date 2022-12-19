@@ -10,48 +10,61 @@
         <form asp-action="Save" id="SaveForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="@Model.BranchId" />
-            <div class="border-standard border border-dark rounded center-table">
-                <table>
+            <div class="edit-box center-table">
+                <table class="standard-table table table-striped table-bordered">
                     <tr>
                         <th class="text-center">Activiteit</th>
                         <th class="text-center">Normering</th>
-                        <th width=200px></th>
                     </tr>
                     <tr>
                         <td class="text-center">@Html.DisplayNameFor(model => model.CheckoutEmployees)</td>
                         <td><input class="input-max-width-40" asp-for="CheckoutEmployees" type="text" inputmode="numeric" /> klanten per uur</td>
-                        <td><span asp-validation-for="CheckoutEmployees" class="text-danger"></span></td>
-
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="min-height-standard"><span asp-validation-for="CheckoutEmployees" class="text-danger"></span></td>
                     </tr>
                     <tr>
                         <td class="text-center">@Html.DisplayNameFor(model => model.ColiTime)</td>
                         <td><input class="input-max-width-40" asp-for="ColiTime" type="text" inputmode="numeric" /> minuten per coli</td>
-                        <td><span asp-validation-for="ColiTime" class="text-danger"></span></td>
-
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="min-height-standard"><span asp-validation-for="ColiTime" class="text-danger"></span></td>
                     </tr>
                     <tr>
                         <td class="text-center">@Html.DisplayNameFor(model => model.ShelfStockingTimes)</td>
                         <td><input class="input-max-width-40" asp-for="ShelfStockingTimes" type="text" inputmode="numeric" /> minuten per coli inruimen</td>
-                        <td><span asp-validation-for="ShelfStockingTimes" class="text-danger"></span></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="min-height-standard"><span asp-validation-for="ShelfStockingTimes" class="text-danger"></span></td>
                     </tr>
                     <tr>
                         <td class="text-center">@Html.DisplayNameFor(model => model.FreshEmployees)</td>
                         <td><input class="input-max-width-40" asp-for="FreshEmployees" type="text" inputmode="numeric" /> klanten per uur</td>
-                        <td><span asp-validation-for="FreshEmployees" class="text-danger"></span></td>
-
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="min-height-standard"><span asp-validation-for="FreshEmployees" class="text-danger"></span></td>
                     </tr>
                     <tr>
                         <td class="text-center">@Html.DisplayNameFor(model => model.ShelfArrangement)</td>
                         <td><input class="input-max-width-40" asp-for="ShelfArrangement" type="text" inputmode="numeric" /> seconde per meter spiegelen </td>
-                        <td><span asp-validation-for="ShelfArrangement" class="text-danger"></span></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="min-height-standard"><span asp-validation-for="ShelfArrangement" class="text-danger"></span></td>
                     </tr>
                 </table>
+
+                <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
+                    <input type="submit" value="Veranderingen Opslaan!" form="SaveForm" class="btn btn-success btn-lg" />
+                </div>
             </div>
         </form>
 
-        <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-            <input type="submit" value="Veranderingen Opslaan!" form="SaveForm" class="btn btn-success btn-lg" />
-        </div>
+
     </div>
 </div>
 
