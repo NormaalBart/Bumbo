@@ -24,7 +24,7 @@
         </div>
         <div class="fw-bold">
             <!--Week  number, date information which is in the center.-->
-            Week @Model.PrognosisList[0].Date.GetWeekNumber()<br><span style="font-size:18px">@Model.PrognosisList[0].Date.ToString("dddd d MMMM") @Model.PrognosisList[0].Date.ToString("yyyy")</span>
+            <span style="font-size:18px">@Model.PrognosisList[0].Date.ToString("yyyy") Week @Model.PrognosisList[0].Date.GetWeekNumber()</span>
         </div>
         <div>
             <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.PrognosisList[0].Date"asp-route-next="@true">
