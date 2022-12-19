@@ -24,6 +24,14 @@
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Rooster</h1>
 
+@if (Model.CopiedShifts != 0)
+{
+    <div class="alert alert-success text-center" role="alert">
+        @Model.CopiedShifts diensten succesvol gekopiëerd naar een andere dag.
+    </div>
+}
+
+
 <!-- if modelstate that returned is not valid, say that saving failed-->
 @if (Model.ErrorMessage != null)
 {
@@ -91,6 +99,7 @@
                         <div class="vstack">
                             <div>
                         @Html.DisplayNameFor(model => model.CassierePrognoseHours):
+
 
                         @if (Model.CassierePrognoseHours == -1)
                         {
@@ -268,6 +277,9 @@
 
                     </script>
                     <div class="text-center m-3">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#copyRosterModal" class="btn btn-primary">
+                            Rooster kopiëren
+                        </button>
                         <!-- Button trigger modal -->
                         <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
                             Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
@@ -429,14 +441,12 @@
                                             </div>
                             }
                                     </td>
-                                    <tr class="roster-shift-containter roster-table-addbtn border border-3" id="AddShiftRow" onclick="onRowClick()">
-                                        <td colspan="25" class="roster-table-employee-cell text-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-                                            </svg>
-                                            Dienst toevoegen
+                                    <tr class="roster-shift-containter roster-table-addbtn border-3" id="AddShiftRow" onclick="onRowClick()">
+                                        <td colspan="25" class="p-0">
+                                            <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary w-100 h-100" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
+                                                Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
+                                            </button>
                                         </td>
-
                                     </tr>
                     }
                 }
@@ -516,6 +526,42 @@
     </div>
 </div>
 
+<!-- The Modal -->
+<div id="copyRosterModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content -->
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="copyRosterModal">Kopieer rooster van dag naar dag</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="m-3 align-content-center">
+                <form asp-action="CopyRoster">
+                    <div class="row justify-content-center">
+                        <span class="col-auto text-end">Dag: </span>
+                        @Html.EditorFor(model => model.CopyFrom, new { htmlAttributes = new { @class = "col-auto" } })
+                    </div>
+                    <div class="row">
+                        <span asp-validation-for="CopyFrom" class="text-danger col-4"></span>
+                    </div>
+                    <div class="row justify-content-center">
+                        <span class="col-5">Kopieren naar</span>
+                    </div>
+                    <div class="row justify-content-center">
+                        <span class="col-auto">Dag: </span>
+                        @Html.EditorFor(model => model.CopyTo, new { htmlAttributes = new { @class = "col-auto" } })
+                    </div>
+                    <div class="row">
+                        <span asp-validation-for="CopyTo" class="text-danger col"></span>
+                    </div>
+                    <input type="submit" value="Kopiëren" class="btn btn-primary float-end" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal for editing a shift-->
 <div class="modal fade" id="editExistingShiftModal" tabindex="-1" aria-labelledby="wijzigdienst" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -576,7 +622,6 @@
     </div>
 </div>
 </body>
-
 @section Scripts
 {
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
@@ -789,6 +834,6 @@
                 // TODO: Handle errors
             });
         });
-    });
-</script>
+        });
+    </script>
 }

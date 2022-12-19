@@ -1,17 +1,19 @@
-﻿using System.Globalization;
-using System.Text.Json.Nodes;
+
 using AutoMapper;
 using Bumbo.Models.RosterManager;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
+using BumboServices.CAO.Rules;
 using BumboServices.Interface;
+using BumboServices.Roster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using BumboServices.CAO.Rules;
-using BumboServices.Roster;
+using System.Globalization;
+using System.Text.Json.Nodes;
+
 
 namespace Bumbo.Controllers.Manager
 {
@@ -50,7 +52,7 @@ namespace Bumbo.Controllers.Manager
             _workedShiftRepository = workedShiftRepository;
         }
 
-        public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage)
+        public async Task<IActionResult> IndexAsync(string? dateInput, string? errormessage, int copiedShifts = 0)
         {
             dateInput ??= DateTime.Today.ToString(CultureInfo.CurrentCulture);
 
@@ -62,15 +64,22 @@ namespace Bumbo.Controllers.Manager
 
             var manager = await _userManager.GetUserAsync(User);
 
+            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId ?? -1));
+
+            viewModel.Date = date;
+            viewModel.CopyFrom = date;
+            viewModel.CopyTo = date.AddDays(7);
+            viewModel.CopiedShifts = copiedShifts;
+
             var openAndCloseTimes = _branchRepository.GetOpenAndCloseTimes(manager.DefaultBranchId ?? -1, date.ToDateOnly());
             // TableMinHour and TableMaxHour are for the width of the table. 
             viewModel.OpenTime = openAndCloseTimes.Item1;
             viewModel.CloseTime = openAndCloseTimes.Item2;
             viewModel.TableMinHour = viewModel.OpenTime.Hour - 1;
             viewModel.TableMaxHour = viewModel.CloseTime.Hour + 1;
-            
-            var employeeList = _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_employeeRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId ?? -1));
-            
+
+
+
             // Start CAO
             // Filter shifts to only display that of today
             // Setup invalid shifts
@@ -99,7 +108,7 @@ namespace Bumbo.Controllers.Manager
                         }
                         if (shift.StartTime.Hour < viewModel.TableMinHour)
                         {
-                            viewModel.TableMinHour = shift.StartTime.Hour -1;
+                            viewModel.TableMinHour = shift.StartTime.Hour - 1;
                         }
                     });
 
@@ -115,11 +124,13 @@ namespace Bumbo.Controllers.Manager
 
             viewModel.InvalidShifts = invalidShifts;
 
+
             viewModel.CassierePrognoseHours = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Hours;
             viewModel.CassierePrognoseWorkers = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Workers;
             viewModel.StockersPrognoseHours = _prognosesServices.GetStockersPrognoseHours(date, manager.DefaultBranchId ?? -1);
             viewModel.FreshPrognoseHours = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Hours;
             viewModel.FreshPrognoseWorkers = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Workers;
+
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
                 .ToList();
             viewModel.UpdatePrognosis(shiftsOnDay);
@@ -131,8 +142,9 @@ namespace Bumbo.Controllers.Manager
             viewModel.Departments = new List<DepartmentRosterViewModel>();
             foreach (var dep in _departmentsRepository.GetList().ToList())
             {
+
                 viewModel.Departments.Add(new DepartmentRosterViewModel()
-                    {Id = dep.Id, DepartmentName = dep.DepartmentName});
+                { Id = dep.Id, DepartmentName = dep.DepartmentName });
             }
 
             if (!string.IsNullOrEmpty(errormessage))
@@ -151,7 +163,7 @@ namespace Bumbo.Controllers.Manager
 
             return View(viewModel);
         }
-        
+
         public async Task<IActionResult> Overview(string? dateInput)
         {
             var employee = await _userManager.GetUserAsync(User);
@@ -162,7 +174,7 @@ namespace Bumbo.Controllers.Manager
             }
 
             OverviewList overviewList = new OverviewList();
-            
+
             // loops through month
             for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
             {
@@ -196,10 +208,10 @@ namespace Bumbo.Controllers.Manager
             {
                 return BadRequest();
             }
-            
+
             shift.Sick = true;
             _shiftRepository.Update(shift);
-            
+
             // Immediately create the worked shift as well
             var workedShift = new WorkedShift()
             {
@@ -211,7 +223,7 @@ namespace Bumbo.Controllers.Manager
                 Sick = true
             };
             _workedShiftRepository.Create(workedShift);
-            
+
             return Ok();
         }
 
@@ -223,7 +235,7 @@ namespace Bumbo.Controllers.Manager
 
             var users = _employeeRepository.Search(external == true ? null : manager.DefaultBranchId, q)
                 .ToList();
-            
+
             // Only allow employees
             users = users.Where(u => _userManager.GetRolesAsync(u).Result.Contains(RoleType.EMPLOYEE.Name)).Take(50).ToList();
 
@@ -270,15 +282,15 @@ namespace Bumbo.Controllers.Manager
                 return BadRequest();
             }
             _shiftRepository.Delete(shift);
-            
+
             // If the shift was a sick shift, try and find and delete the worked shift as well.
-            var workedShift = _workedShiftRepository.Get(s=>s.Sick && s.EmployeeId == shift.EmployeeId && s.StartTime == shift.StartTime && s.EndTime == shift.EndTime);
+            var workedShift = _workedShiftRepository.Get(s => s.Sick && s.EmployeeId == shift.EmployeeId && s.StartTime == shift.StartTime && s.EndTime == shift.EndTime);
 
             if (workedShift == null)
             {
                 return Ok();
             }
-            
+
             _workedShiftRepository.Delete(workedShift);
             return Ok();
         }
@@ -288,7 +300,7 @@ namespace Bumbo.Controllers.Manager
         {
             var requestedDate = DateTime.Parse(date);
             var employee = await _userManager.GetUserAsync(User);
-            
+
             // check for cAO violations
             var invalidshifts = InvalidPlannedShiftsFollowigCAO(requestedDate, employee.DefaultBranchId ?? -1);
             // if there are invalid shifts, we return true otherwise false
@@ -302,7 +314,7 @@ namespace Bumbo.Controllers.Manager
             var forDate = DateTime.Parse(date);
 
             var manager = await _userManager.GetUserAsync(User);
-            
+
             // Get already planned shifts
             var plannedShifts = _shiftRepository.GetAllShiftsDay(manager.DefaultBranchId ?? -1, forDate.ToDateOnly());
 
@@ -347,11 +359,11 @@ namespace Bumbo.Controllers.Manager
                 .AddMinutes(DateTime.Parse(selectedStartTime).Minute);
             plannedShift.EndTime = DateTime.Parse(date).AddHours(DateTime.Parse(selectedEndTime).Hour)
                 .AddMinutes(DateTime.Parse(selectedEndTime).Minute);
-            
+
             if (selectedEmployeeId == null)
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "er geen medewerker geselecteerd was."}); 
+                    new { dateInput = date, errormessage = "er geen medewerker geselecteerd was." });
             }
 
             plannedShift.Employee = _employeeRepository.Get(selectedEmployeeId);
@@ -359,20 +371,21 @@ namespace Bumbo.Controllers.Manager
             var manager = await _userManager.GetUserAsync(User);
 
             plannedShift.Branch = _branchRepository.Get(manager.DefaultBranchId ?? -1);
-            
+
 
             // time is valid
             if (plannedShift.StartTime >= plannedShift.EndTime)
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "eindtijd niet na de starttijd mag komen."});
+                    new { dateInput = date, errormessage = "eindtijd niet na de starttijd mag komen." });
             }
 
             // overlapping shifts
             if (_shiftRepository.ShiftOverlapsWithOtherShifts(plannedShift))
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "medewerker is al ingepland for deze tijden."});
+
+                    new { dateInput = date, errormessage = "medewerker is al ingepland for deze tijden." });
             }
 
             // check availability employee
@@ -380,8 +393,9 @@ namespace Bumbo.Controllers.Manager
                     plannedShift.EndTime))
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd."});
+                    new { dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd." });
             }
+
 
             var dateDt = DateTime.Parse(date);
             // First check if all shifts present follow the cao, prevent creating new shifts when cao is validated.
@@ -399,7 +413,7 @@ namespace Bumbo.Controllers.Manager
 
             _shiftRepository.Create(plannedShift);
 
-            return RedirectToAction("Index", "RosterManager", new {dateInput = date});
+            return RedirectToAction("Index", "RosterManager", new { dateInput = date });
         }
 
         public async Task<IActionResult> EditShift(string selectedEmployeeId, int selectedDepartmentId,
@@ -419,14 +433,14 @@ namespace Bumbo.Controllers.Manager
             if (plannedShift.StartTime > plannedShift.EndTime)
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "eindtijd niet na de starttijd mag komen."});
+                    new { dateInput = date, errormessage = "eindtijd niet na de starttijd mag komen." });
             }
 
             // overlapping shifts
             if (_shiftRepository.ShiftOverlapsWithOtherShifts(plannedShift))
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "Medewerker is al ingepland for deze tijden."});
+                    new { dateInput = date, errormessage = "Medewerker is al ingepland for deze tijden." });
             }
 
             // check availability employee
@@ -434,12 +448,36 @@ namespace Bumbo.Controllers.Manager
                     plannedShift.EndTime))
             {
                 return RedirectToAction("Index", "RosterManager",
-                    new {dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd."});
+                    new { dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd." });
             }
 
             _shiftRepository.Update(plannedShift);
 
-            return RedirectToAction("Index", "RosterManager", new {dateInput = date});
+            return RedirectToAction("Index", "RosterManager", new { dateInput = date });
+        }
+
+        public async Task<IActionResult> CopyRoster(string date, DateTime copyFrom, DateTime copyTo)
+        {
+            var employee = await _userManager.GetUserAsync(User);
+            var shifts = _shiftRepository.GetAllShiftsDay((int)employee.DefaultBranchId, copyFrom.ToDateOnly());
+            var diff = copyTo - copyFrom;
+            int numberOfCopiedShifts = 0;
+            foreach (var shift in shifts)
+            {
+                var oldShift = _shiftRepository.GetPlannedShiftById(shift.Id);
+                var newShift = new PlannedShift();
+                newShift.StartTime = oldShift.StartTime + diff;
+                newShift.EndTime = oldShift.EndTime + diff;
+                newShift.BranchId = oldShift.BranchId;
+                newShift.EmployeeId = oldShift.EmployeeId;
+                newShift.DepartmentId = oldShift.DepartmentId;
+                if (!_shiftRepository.ShiftOverlapsWithOtherShifts(newShift))
+                {
+                    _shiftRepository.Create(newShift);
+                    numberOfCopiedShifts++;
+                }
+            }
+            return RedirectToAction("Index", "RosterManager", new { dateInput = copyTo.ToString(), copiedShifts = numberOfCopiedShifts });
         }
     }
 }
