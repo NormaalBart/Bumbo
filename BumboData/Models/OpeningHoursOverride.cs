@@ -17,4 +17,7 @@ public class OpeningHoursOverride
 
     [Required]
     public TimeOnly CloseTime { get; set; }
+    
+    [Required]
+    public bool IsClosed { get; set; }
 }
