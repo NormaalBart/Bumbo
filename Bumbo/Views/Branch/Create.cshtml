@@ -1,4 +1,5 @@
 ﻿@using Bumbo.Models.BranchController
+@using System.Globalization
 @model BranchCreateViewModel
 @{
     ViewBag.data = "Branch";
@@ -17,11 +18,11 @@
         <form asp-action="Create" id="CreateForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
-                <div class="col border border-3 border-dark employee-create-box">
+                <div class="col edit-box">
                     <!--Branch informatie column-->
                     <div class="col">
                         <h5 class="text-center">Bedrijfsinformatie</h5>
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row">
                             <div class="form-group col-4">
                                 <label asp-for="Name" class="control-label"></label>
                                 <input asp-for="Name" class="form-control" placeholder="Naam" />
@@ -36,7 +37,7 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row">
                             <h5 class="text-center">Plaats</h5>
                             <div class="form-group col-4">
                                 <label asp-for="City" class="control-label"></label>
@@ -56,41 +57,42 @@
                         </div>
                     </div>
                 </div>
-                <div class="col border border-3 border-dark employee-create-box">
+                <div class="col edit-box">
                     <div class="p-3">
-                        <div class="row border border-3 border-dark p-1">
-                            <table>
+                        <h5 class="text-center">Openingstijden</h5>
+                        <div class="row">
+                            <table class="w-100 text-center">
                                 <tr>
-                                    <th width=200px>Dag</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
+                                    <th class="w-25">Dag</th>
+                                    <th class="w-25">@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
+                                    <th class="w-25">@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
+                                    <th class="w-25">@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
                                 </tr>
-                            </table>
-                            @for (int i = 0; i < Model.OpeningHours.Count; i++)
-                            {
-                                @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
-                                <table>
-                                    <tr>
-                                        <th width=200px>
-                                            @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
-                                        </th>
-                                        <th>
+                                @for (int i = 0; i < Model.OpeningHours.Count; i++)
+                                {
+                                    @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
+                                    <tr class="py-2">
+                                        <td class="w-25">
+                                            @Html.DisplayFor(model => @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[(int) Model.OpeningHours[i].DayOfWeek])
+                                        </td>
+                                        <td class="w-25">
                                             @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
-                                        </th>
-                                        <th>
+                                        </td>
+                                        <td class="w-25">
                                             @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
-                                        </th>
-                                        <th>
+                                        </td>
+                                        <td class="w-25">
                                             @Html.EditorFor(model => model.OpeningHours[i].IsClosed)
-                                        </th>
+                                        </td>
                                     </tr>
-                                </table>
-                                <div class="text-center">
-                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
-                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
-                                </div>
-                            }
+                                    <tr class="text-center">
+                                        <td colspan="4">
+                                            @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
+                                            @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
                         </div>
                     </div>
                 </div>

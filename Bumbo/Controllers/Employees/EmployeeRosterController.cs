@@ -44,7 +44,7 @@ namespace Bumbo.Controllers.Employees
             EmployeeShiftsListViewModel shiftsVM = new EmployeeShiftsListViewModel();
             shiftsVM.Date = date.ToDateOnly();
             var dbshifts = _shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, employee.Id);
-            var dbMoments = _unavailableMomentsRepository.GetWeekOfUnavailableMomentsAfterDateForEmployee(date, employee.Id);
+            var dbMoments = _unavailableMomentsRepository.GetWeekOfUnavailableMomentsAfterDateForEmployee(date.Date, employee.Id);
 
             shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
             shiftsVM.shifts.AddRange(_mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbMoments).ToList());

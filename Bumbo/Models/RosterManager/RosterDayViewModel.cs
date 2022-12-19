@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Models;
+using BumboServices.CAO.Rules;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using BumboData.Models;
-using BumboServices.CAO.Rules;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
+
 
 namespace Bumbo.Models.RosterManager
 {
@@ -13,13 +13,17 @@ namespace Bumbo.Models.RosterManager
         public int PrognosisDayId { get; set; }
         public DateTime Date { get; set; }
 
-        [DisplayName("Kassa Afdeling")]
-        public double CassierePrognose { get; set; }
-        [DisplayName("Vers Afdeling")]
-        public double FreshPrognose { get; set; }
-        [DisplayName("VakkenVullers Afdeling")]
-        public double StockersPrognose { get; set; }
-        
+        [DisplayName("Kassa afdeling uren")]
+        public double CassierePrognoseHours { get; set; }
+        [DisplayName("Kassa afdeling medewerkers")]
+        public double CassierePrognoseWorkers { get; set; }
+        [DisplayName("Vers afdeling uren")]
+        public double FreshPrognoseHours { get; set; }
+        [DisplayName("Vers afdeling medewerkers")]
+        public double FreshPrognoseWorkers { get; set; }
+        [DisplayName("Vakken vullers afdeling uren")]
+        public double StockersPrognoseHours { get; set; }
+
         // All employees who are already rostered.
         public List<EmployeeRosterViewModel> RosteredEmployees { get; set; }
         // all employees who are available to be chosen when planning a new shift.
@@ -28,9 +32,9 @@ namespace Bumbo.Models.RosterManager
         // selected stuff for creating a new shift
         public string SelectedEmployeeId { get; set; }
         public int SelectedDepartmentId { get; set; }
-        [DataType(DataType.Time)]
+        [DataType(DataType.Text)]
         public DateTime SelectedStartTime { get; set; }
-        [DataType(DataType.Time)]
+        [DataType(DataType.Text)]
         public DateTime SelectedEndTime { get; set; }
 
         public int SelectedShiftId { get; set; }
@@ -40,6 +44,13 @@ namespace Bumbo.Models.RosterManager
         public Dictionary<ICAORule, List<PlannedShift>> InvalidShifts { get; set; }
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
+
+
+        [DataType(DataType.Date)]
+        public DateTime CopyFrom { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime CopyTo { get; set; }
+        public int CopiedShifts { get; set; }
 
         public TimeOnly OpenTime { get; set; }
         public TimeOnly CloseTime { get; set; }
@@ -55,7 +66,7 @@ namespace Bumbo.Models.RosterManager
             AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
 
-        
+
         public int GetWeekNumber(DateTime date)
         {
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
@@ -75,7 +86,7 @@ namespace Bumbo.Models.RosterManager
             }
             return false;
         }
-        
+
         public bool IsUnavailable(EmployeeRosterViewModel employee, int hour)
         {
 
@@ -127,10 +138,9 @@ namespace Bumbo.Models.RosterManager
                     StockersPrognose = StockersPrognose - timespan.TotalHours;
                 }*/
             }
-            CassierePrognose = Math.Round(CassierePrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
-            FreshPrognose = Math.Round(FreshPrognose,2); //moet dit omhoog afgerond worden? of is dit goed zo?
-            StockersPrognose = Math.Round(StockersPrognose, 2);
-            
+            CassierePrognoseHours = Math.Ceiling(CassierePrognoseHours);
+            FreshPrognoseHours = Math.Ceiling(FreshPrognoseHours);
+            StockersPrognoseHours = Math.Ceiling(StockersPrognoseHours);
         }
 
 
@@ -164,6 +174,31 @@ namespace Bumbo.Models.RosterManager
                 return shifts.First().EndTime.Hour - shifts.First().StartTime.Hour;
             }
             return 0;
+        }
+
+        public double GetTotalPlannedHoursPerDepartment(string departmentName)
+        {
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
+            double total = 0;
+            foreach (var employee in allEmployeesOfDepartment)
+            {
+                foreach (var plannedShift in employee.PlannedShifts)
+                {
+                    total += (plannedShift.EndTime - plannedShift.StartTime).TotalHours;
+                }
+            }
+            return total;
+        }
+
+        public int GetTotalPlannedWorkersPerDepartment(string departmentName)
+        {
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
+            int total = 0;
+            foreach (var employee in allEmployeesOfDepartment)
+            {
+                total++;
+            }
+            return total;
         }
 
 

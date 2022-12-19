@@ -4,6 +4,7 @@ using BumboData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BumboData.Migrations
 {
     [DbContext(typeof(BumboContext))]
-    partial class BumboContextModelSnapshot : ModelSnapshot
+    [Migration("20221215184517_FixMerge")]
+    partial class FixMerge
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -324,9 +326,6 @@ namespace BumboData.Migrations
                     b.Property<DateTime>("CloseTime")
                         .HasColumnType("datetime");
 
-                    b.Property<bool>("IsClosed")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("datetime");
 
@@ -478,57 +477,57 @@ namespace BumboData.Migrations
                         {
                             BranchId = 1,
                             DayOfWeek = 1,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 15, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 15, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 2,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 15, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 15, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 3,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 15, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 15, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 4,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 15, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 15, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 5,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 15, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 15, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 6,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 15, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 15, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 0,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 15, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 15, 8, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 

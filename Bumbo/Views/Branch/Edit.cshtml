@@ -1,10 +1,10 @@
 ﻿@using Bumbo.Models.BranchController
+@using System.Globalization
 @model BranchEditViewModel
 @{
     ViewBag.data = "Branch";
 }
 
-<h1 class="text-center">Filiaalinformatie veranderen</h1>
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger text-center" role="alert">
@@ -12,137 +12,157 @@
     </div>
 }
 
-<div class="container ">
+<div class="container">
     <div>
         <form asp-action="Edit" id="EditForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row">
-                <div class="col border border-3 border-dark employee-create-box">
-                    <!--Branch informatie column-->
+            <div class="col edit-box">
+                <div class="row edit-box">
+                    <h3 class="text-center">Bedrijfsinformatie</h3>
                     @Html.HiddenFor(model => model.Id)
                     <div class="col">
-                        <h3 class="text-center">Bedrijfsinformatie</h3>
-                        <div class="row border border-3 border-dark p-1">
+                        <div class="row">
                             <div class="form-group col-4">
                                 <label asp-for="Name" class="control-label"></label>
-                                <input asp-for="Name" class="form-control" placeholder="Naam" />
+                                <input asp-for="Name" class="form-control" placeholder="Naam"/>
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
                                 <label asp-for="ShelvingDistance" class="control-label"></label>
-
-                                <input asp-for="ShelvingDistance" class="form-control" placeholder="Spiegelmeters" />
+                                <input asp-for="ShelvingDistance" class="form-control" placeholder="Spiegelmeters"/>
                                 <span asp-validation-for="ShelvingDistance" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col">
-                        <div class="row border border-3 border-dark p-1">
-                            <h5 class="text-center">Plaats</h5>
+                        <div class="row">
                             <div class="form-group col-4">
                                 <label asp-for="City" class="control-label"></label>
-                                <input asp-for="City" class="form-control" placeholder="Stad" />
+                                <input asp-for="City" class="form-control" placeholder="Stad"/>
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
                                 <label asp-for="Street" class="control-label"></label>
-                                <input asp-for="Street" class="form-control" placeholder="Straat" />
+                                <input asp-for="Street" class="form-control" placeholder="Straat"/>
                                 <span asp-validation-for="Street" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
                                 <label asp-for="HouseNumber" class="control-label"></label>
-                                <input asp-for="HouseNumber" class="form-control" placeholder="Huisnummer" />
+                                <input asp-for="HouseNumber" class="form-control" placeholder="Huisnummer"/>
                                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col border border-3 border-dark employee-create-box">
-                    <div class="p-3">
-                        <h3 class="text-center">Openingstijden</h3>
-                        <div class="row border border-3 border-dark p-1">
-                            <table>
-                                <tr>
-                                    <th width=200px>Dag</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
-                                </tr>
-                            </table>
-                            @for (int i = 0; i < Model.OpeningHours.Count; i++)
+                <div class="row m-0">
+                    <div class="col edit-box">
+                        <div class="m-2 mb-4">
+                            <h5 class="text-center">Reguliere openingstijden</h5>
+                        </div>
+                        <table class="w-100 text-center">
+                            <tr>
+                                <th class="w-25">Dag</th>
+                                <th class="w-25">@Html.DisplayNameFor(model => model.OpeningHours[0].OpenTime)</th>
+                                <th class="w-25">@Html.DisplayNameFor(model => model.OpeningHours[0].CloseTime)</th>
+                                <th class="w-25">@Html.DisplayNameFor(model => model.OpeningHours[0].IsClosed)</th>
+                            </tr>
+                            @for (var i = 0; i < Model.OpeningHours.Count; i++)
                             {
                                 @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
-                                <table>
-                                    <tr>
-                                        <th width=200px>
-                                            @Html.DisplayFor(model => model.OpeningHours[i].DayOfWeek)
-                                        </th>
-                                        <th>
-                                            @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
-                                        </th>
-                                        <th>
-                                            @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
-                                        </th>
-                                        <th>
-                                            @Html.EditorFor(model => model.OpeningHours[i].IsClosed)
-                                        </th>
-                                    </tr>
-                                </table>
-                                <div class="text-center">
-                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
-                                    @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
-                                </div>
+                                <tr>
+                                    <td class="w-25">
+                                        @Html.DisplayFor(model => @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[(int) Model.OpeningHours[i].DayOfWeek])
+                                    </td>
+                                    <td class="w-25">
+                                        @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
+                                    </td>
+                                    <td class="w-25">
+                                        @Html.EditorFor(model => model.OpeningHours[i].CloseTime)
+                                    </td>
+                                    <td class="w-25">
+                                        @Html.EditorFor(model => model.OpeningHours[i].IsClosed)
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td colspan="4">
+                                        @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
+                                        @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
+                                    </td>
+                               </tr>
                             }
-                        </div>
+                        </table>
                     </div>
-                    <div class="p-3">
-                        <h3 class="text-center">Speciale openingstijden</h3>
-                        <div class="btn-warning text-center">
-                            @Html.ActionLink("Voeg toe", "AddSpecialOpeningHour", "Branch", new { id = Model.Id })
+                    <div class="col edit-box">
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <div class="m-2">
+                                <h5 class="text-center">Speciale openingstijden</h5>
+                            </div>
+                            <div class="m-2">
+                                <a asp-action="AddSpecialOpeningHour" asp-route-id="@Model.Id" class="btn btn-primary">Voeg toe</a>
+                            </div>
                         </div>
-                        @if (Model.SpecialOpeningHours.Count != 0)
-                        {
-                            <div class="row border border-3 border-dark p-1">
-                                <table>
-                                    <tr>
-                                        <th width=200px>Dag</th>
-                                        <th width=200px>Openingstijd</th>
-                                        <th width=200px>Sluitingstijd</th>
-                                        <th width=200px>Actie</th>
-                                    </tr>
-                                </table>
+                        <div class="row">
+                        <table class="w-100 text-center">
+                            <tr>
+                                <th class="w-25">Dag</th>
+                                <th class="w-25">Openingstijd</th>
+                                <th class="w-25">Sluitingstijd</th>
+                                <th class="w-25">Actie</th>
+                            </tr>
+                            @if (Model.SpecialOpeningHours.Count != 0)
+                            {
                                 @for (int i = 0; i < Model.SpecialOpeningHours.Count; i++)
                                 {
-                                    <table>
-                                        <tr>
-                                            <th width=200px>
-                                                @Html.DisplayFor(model => model.SpecialOpeningHours[i].Date)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayFor(model => model.SpecialOpeningHours[i].OpenTime)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayFor(model => model.SpecialOpeningHours[i].CloseTime)
-                                            </th>
-                                            <th>
-                                                @Html.ActionLink("Verwijder", "DeleteSpecialOpeningHour", new { date = Model.SpecialOpeningHours[i].Date, id = Model.Id } )
-                                            </th>
-                                        </tr>
-                                    </table>
+                                    var item = Model.SpecialOpeningHours[i];
+                                    <tr>
+                                        <td class="w-25">
+                                            @Html.DisplayFor(model => item.Date)
+                                        </td>
+                                        @if (item.IsClosed)
+                                        {
+                                            <td class="w-50" colspan="2">
+                                                <p>Gesloten</p>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="w-25">
+                                                @Html.DisplayFor(model => item.OpenTime)
+                                            </td>
+                                            <td class="w-25">
+                                                @Html.DisplayFor(model => item.CloseTime)
+                                            </td>
+                                        }
+                                        <td class="w-25">
+                                            <a class="btn btn-link" asp-action="DeleteSpecialOpeningHour" asp-route-id="@Model.Id" asp-route-date="@item.Date">Verwijder</a>
+                                        </td>
+                                    </tr>
                                 }
-                            </div>
-                        }
+                            }
+                            else
+                            {
+                                <td colspan="4" class="text-center py-2">
+                                    <p>Er zijn geen speciale openingstijden gevonden.</p>
+                                </td>
+                            }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <div class="m-2">
+                            <a class="btn btn-danger h-100" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
+                        </div>
+                        <div class="m-2">
+                            <input type="submit" value="Veranderingen opslaan!" form="EditForm" class="btn btn-succes"/>
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-</div>
-<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <input type="submit" value="Veranderingen Opslaan!" form="EditForm" class="btn btn-success btn-lg" />
-</div>
-<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
 </div>
 
 @section Scripts

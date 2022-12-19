@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using BumboData;
+﻿using BumboData;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -37,6 +36,7 @@ namespace BumboRepositories.Repositories
 
         public bool ShiftOverlapsWithOtherShifts(PlannedShift plannedShift)
         {
+            if (plannedShift == null || plannedShift.Employee == null) return false;
             var overlappingShifts = DbSet.Where(p =>
                 p.Employee.Id == plannedShift.Employee.Id && p.StartTime.Date == plannedShift.StartTime.Date).ToList();
             if (overlappingShifts.Count > 0)
@@ -86,12 +86,12 @@ namespace BumboRepositories.Repositories
 
         public List<PlannedShift> GetAllShiftsDay(int branchId, DateOnly day)
         {
-            return DbSet.Where(s => s.BranchId == branchId && 
+            return DbSet.Where(s => s.BranchId == branchId &&
                                     s.StartTime.Day == day.Day && s.StartTime.Month == day.Month && s.StartTime.Year == day.Year)
                 .Include(s => s.Employee)
                 .ToList();
         }
-        
+
         public List<PlannedShift> GetShiftsByMonth(int branchId, int year, int month)
         {
             return DbSet.Where(s => s.BranchId == branchId && s.StartTime.Year == year &&
@@ -116,14 +116,11 @@ namespace BumboRepositories.Repositories
             return DbSet.Where(s => s.BranchId == branchId && s.EmployeeId == employeeId
                                                            && s.StartTime >= from && s.EndTime <= until).ToList();
         }
-
         public double GetTotalHoursPlannedOnDay(int branchId, DateTime date)
         {
 
             var shiftsOnDay = DbSet.Where(s => s.BranchId == branchId && s.StartTime.Date == date.Date).Select(s => (s.EndTime - s.StartTime).TotalHours).ToList();
             return Math.Round(shiftsOnDay.Sum());
-
-
         }
     }
 }

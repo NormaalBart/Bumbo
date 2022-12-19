@@ -9,12 +9,13 @@ namespace BumboUnitTests
         private PrognosisService _prognosisService;
         private readonly Mock<IPrognosisRepository> _prognosisRepositoryMock = new Mock<IPrognosisRepository>();
         private readonly Mock<IStandardRepository> _standardRepositoryMock = new Mock<IStandardRepository>();
+        private readonly Mock<IBranchRepository> _branchRepository = new Mock<IBranchRepository>();
 
 
         [SetUp]
         public void Setup()
         {
-            _prognosisService = new PrognosisService(_prognosisRepositoryMock.Object, _standardRepositoryMock.Object);
+            _prognosisService = new PrognosisService(_prognosisRepositoryMock.Object, _standardRepositoryMock.Object, _branchRepository.Object);
         }
 
         [Test]
@@ -38,6 +39,12 @@ namespace BumboUnitTests
             _prognosisRepositoryMock.Setup(x => x.GetByDate(date.ToDateOnly(), branchId)).Returns(prognosisDto);
 
 
+            var startTime = new TimeOnly(9);
+            var endTime = new TimeOnly(17);
+            var openingTimesDto = (startTime, endTime);
+            _branchRepository.Setup(x => x.GetOpenAndCloseTimes(branchId, date.ToDateOnly())).Returns(openingTimesDto);
+
+
             var standardType = StandardType.CHECKOUT_EMPLOYEES;
             var value = 30;
 
@@ -50,8 +57,11 @@ namespace BumboUnitTests
             _standardRepositoryMock.Setup(x => x.Get(standardType, branch)).Returns(standardDto);
             //Act
             var result = _prognosisService.GetCassierePrognose(date, branchId);
+            var timeOpen = openingTimesDto.Item2 - openingTimesDto.Item1;
+            var customersPerHours = customerCount / timeOpen.TotalHours;
             //Assert
-            Assert.AreEqual(customerCount / value, result);
+
+            Assert.AreEqual(((int)Math.Ceiling(customersPerHours / value), customerCount / value), result);
         }
         [Test]
         public void GetCassierePrognoseTest_NoPrognoses()
@@ -73,7 +83,7 @@ namespace BumboUnitTests
             //Act
             var result = _prognosisService.GetCassierePrognose(date, branchId);
             //Assert
-            Assert.AreEqual(-1, result);
+            Assert.AreEqual((-1,-1), result);
         }
         [Test]
         public void GetCassierePrognoseTest_NoStandard()
@@ -98,7 +108,7 @@ namespace BumboUnitTests
             //Act
             var result = _prognosisService.GetCassierePrognose(date, branchId);
             //Assert
-            Assert.AreEqual(-1, result);
+            Assert.AreEqual((-1,-1), result);
         }
         [Test]
         public void GetFreshPrognose_CorrectInput()
@@ -121,6 +131,12 @@ namespace BumboUnitTests
             _prognosisRepositoryMock.Setup(x => x.GetByDate(date.ToDateOnly(), branchId)).Returns(prognosisDto);
 
 
+            var startTime = new TimeOnly(9);
+            var endTime = new TimeOnly(17);
+            var openingTimesDto = (startTime, endTime);
+            _branchRepository.Setup(x => x.GetOpenAndCloseTimes(branchId, date.ToDateOnly())).Returns(openingTimesDto);
+
+
             var standardType = StandardType.FRESH_EMPLOYEES;
             var value = 100;
 
@@ -133,8 +149,11 @@ namespace BumboUnitTests
             _standardRepositoryMock.Setup(x => x.Get(standardType, branch)).Returns(standardDto);
             //Act
             var result = _prognosisService.GetFreshPrognose(date, branchId);
+            var timeOpen = openingTimesDto.Item2 - openingTimesDto.Item1;
+            var customersPerHours = customerCount / timeOpen.TotalHours;
             //Assert
-            Assert.AreEqual(customerCount / value, result);
+
+            Assert.AreEqual(((int)Math.Ceiling(customersPerHours / value), customerCount / value), result);
         }
         [Test]
         public void GetFreshPrognose_NoPrognosis()
@@ -157,7 +176,7 @@ namespace BumboUnitTests
             //Act
             var result = _prognosisService.GetFreshPrognose(date, branchId);
             //Assert
-            Assert.AreEqual(-1, result);
+            Assert.AreEqual((-1,-1), result);
         }
         [Test]
         public void GetFreshPrognose_NoStandard()
@@ -187,7 +206,7 @@ namespace BumboUnitTests
             //Act
             var result = _prognosisService.GetFreshPrognose(date, branchId);
             //Assert
-            Assert.AreEqual(-1, result);
+            Assert.AreEqual((-1,-1), result);
         }
 
         [Test]
@@ -247,12 +266,13 @@ namespace BumboUnitTests
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfStocking, branch)).Returns(standardShelfStockingDto);
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfArrangement, branch)).Returns(standardShelfArrangement);
             //Act
-            var result = _prognosisService.GetStockersPrognose(date, branchId);
-            //Assert
+            var result = _prognosisService.GetStockersPrognoseHours(date, branchId);
             var timeSpentOnColiInMin = (valueColi + valueShelfStocking) * coliCount;
             var timeSpentOnShelfsInMin = (valueShelfArrangement * branch.ShelvingDistance) / 60;
 
             var timeNeeded = (Double)(timeSpentOnColiInMin + timeSpentOnShelfsInMin) / 60;
+            //Assert
+
             Assert.AreEqual(timeNeeded, result);
         }
         [Test]
@@ -304,7 +324,7 @@ namespace BumboUnitTests
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfStocking, branch)).Returns(standardShelfStockingDto);
             _standardRepositoryMock.Setup(x => x.Get(standardTypeShelfArrangement, branch)).Returns(standardShelfArrangement);
             //Act
-            var result = _prognosisService.GetStockersPrognose(date, branchId);
+            var result = _prognosisService.GetStockersPrognoseHours(date, branchId);
             //Assert
 
             Assert.AreEqual(-1, result);
@@ -346,7 +366,7 @@ namespace BumboUnitTests
 
             _standardRepositoryMock.Setup(x => x.Get(It.IsAny<StandardType>(), It.IsAny<Branch>())).Returns(() => null);
             //Act
-            var result = _prognosisService.GetStockersPrognose(date, branchId);
+            var result = _prognosisService.GetStockersPrognoseHours(date, branchId);
             //Assert
 
             Assert.AreEqual(-1, result);

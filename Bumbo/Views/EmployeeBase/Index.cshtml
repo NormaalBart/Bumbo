@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <!--Create new button and sorting buttons in a header above the table-->
-            <div class="top-header align-items-center align-items-center">
+            <div class="edit-box align-items-center align-items-center">
                 <div class="top-header-content">
                     <form asp-action="Index" method="get" class="container ">
                         <div class="form-actions no-color row ">
@@ -125,20 +125,15 @@
                                 <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
                                 </td>
-                                <td>
-                                    @Html.ActionLink("Verander", "Edit", new { item.Id }) |
-                                    @Html.ActionLink("Reset wachtwoord", "ChangePassword", new { item.Id })
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Verander</a>
+                                    <a asp-action="ChangePassword" asp-route-id="@item.Id" class="btn btn-warning">Reset wachtwoord</a>
                                     @if (item.Active)
                                     {
-                                        <div class="alert-danger">
-                                            @Html.ActionLink("Zet inactief", "ToggleActive", new { item.Id })
-                                        </div>
-                                    }
-                                    else
+                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-danger">Zet inactief</a>
+                                    } else
                                     {
-                                        <div class="alert-success">
-                                            @Html.ActionLink("Zet actief", "ToggleActive", new { item.Id })
-                                        </div>
+                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-success">Zet actief</a>
                                     }
                                 </td>
                             </tr>
