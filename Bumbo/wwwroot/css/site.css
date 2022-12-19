@@ -270,6 +270,7 @@ p {
     background-color: rgb(232, 232, 232) !important;
     white-space: nowrap;
     font-size: 14px;
+    outline: solid 1px black;
 }
 
 .roster-body {
