@@ -166,7 +166,7 @@ namespace Bumbo.Controllers.Admin
                 var branch = _branchRepository.Get(branchViewModel.Id);
                 _mapper.Map<BranchEditViewModel, Branch>(branchViewModel, branch);
                 _branchRepository.Update(branch);
-                return RedirectToAction("Index", "Branch");
+                return RedirectToAction("Edit", "Branch");
             }
             catch
             {
