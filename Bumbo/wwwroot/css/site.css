@@ -270,6 +270,7 @@ p {
     background-color: rgb(232, 232, 232) !important;
     white-space: nowrap;
     font-size: 14px;
+    /*Outline is important, because it does not dissapear when scrolling due to the sticky header*/
     outline: solid 1px black;
 }
 
@@ -294,6 +295,7 @@ p {
     position: relative;
     margin-left: auto;
     margin-right: auto;
+    background-color: white;
 }
 
 /* Cells that are within closing time */

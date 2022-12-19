@@ -80,8 +80,7 @@ namespace Bumbo
                 app.UseHsts();
             } else
             {
-                app.UseExceptionHandler("/Error/Index");
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
             }
 
             app.Use(async (context, next) =>
