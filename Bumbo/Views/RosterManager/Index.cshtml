@@ -318,6 +318,9 @@
 
 
     <div class="text-center m-3">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#copyRosterModal" class="btn btn-primary">
+            Rooster kopiëren
+        </button>
         <!-- Button trigger modal -->
         <button @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
             Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
