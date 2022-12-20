@@ -333,18 +333,23 @@
     }
     <div class="table-responsive-sm">
 
-        <!--table, 24 long horizontal -->
-        <table class="table roster-table table-hover" style="background-color: white;">
-            <thead>
-                <tr class="">
-                    <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
-                    @*Important note: The text in the header blocks must be equal characters long.*@
-                    @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
+                        <!--table, 24 long horizontal -->
+                    <table class="table roster-table table-hover">
+                    
+                    @if (Model.CloseTime != TimeOnly.MinValue && Model.OpenTime != TimeOnly.MinValue)
                     {
-                        <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                        <thead class="sticky-lg-top">
+                        <tr>
+                            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
+                            @*Important note: The text in the header blocks must be equal characters long.*@
+                            @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
+                            {
+                                <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
+                            }
+                        </tr>
+                        </thead>
                     }
-                </tr>
-            </thead>
+                        
 
             <tbody>
 
@@ -550,6 +555,42 @@
             <div class="text-center modal-footer">
                 <button type="button" class="btn btn-secondary text-center" data-bs-dismiss="modal">Annuleren</button>
                 <input type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn "/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="copyRosterModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content -->
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="copyRosterModal">Kopieer rooster van dag naar dag</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="m-3 align-content-center">
+                <form asp-action="CopyRoster">
+                    <div class="row justify-content-center">
+                        <span class="col-auto text-end">Dag: </span>
+                        @Html.EditorFor(model => model.CopyFrom, new { htmlAttributes = new { @class = "col-auto" } })
+                    </div>
+                    <div class="row">
+                        <span asp-validation-for="CopyFrom" class="text-danger col-4"></span>
+                    </div>
+                    <div class="row justify-content-center">
+                        <span class="col-5">Kopieren naar</span>
+                    </div>
+                    <div class="row justify-content-center">
+                        <span class="col-auto">Dag: </span>
+                        @Html.EditorFor(model => model.CopyTo, new { htmlAttributes = new { @class = "col-auto" } })
+                    </div>
+                    <div class="row">
+                        <span asp-validation-for="CopyTo" class="text-danger col"></span>
+                    </div>
+                    <input type="submit" value="Kopiëren" class="btn btn-primary float-end" />
+                </form>
             </div>
         </div>
     </div>
