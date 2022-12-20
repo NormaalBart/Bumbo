@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bumbo.Models.EmployeeRoster;
+using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
@@ -19,7 +20,7 @@ namespace Bumbo.Controllers.Employees
         private readonly IMapper _mapper;
         private readonly IPlannedShiftsRepository _shiftRepository;
         private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
-        public EmployeeRosterController(UserManager<Employee> userManager, IMapper mapper, IPlannedShiftsRepository shiftsRepository, IUnavailableMomentsRepository unavailableMomentsRepository)
+        public EmployeeRosterController(UserManager<Employee> userManager, IMapper mapper, IPlannedShiftsRepository shiftsRepository, IUnavailableMomentsRepository unavailableMomentsRepository) 
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -42,11 +43,11 @@ namespace Bumbo.Controllers.Employees
 
             EmployeeShiftsListViewModel shiftsVM = new EmployeeShiftsListViewModel();
             shiftsVM.Date = date.ToDateOnly();
-            var shifts = _shiftRepository.GetOfEmployeeOnDay(date, employee.Id);
-            var moments = _unavailableMomentsRepository.GetUnavailableMomentsByDay(employee.Id, date.ToDateOnly());
+            var dbshifts = _shiftRepository.GetWeekOfShiftsAfterDateForEmployee(date, employee.Id);
+            var dbMoments = _unavailableMomentsRepository.GetWeekOfUnavailableMomentsAfterDateForEmployee(date.Date, employee.Id);
 
-            shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(shifts).ToList();
-            shiftsVM.shifts.AddRange(_mapper.Map<IEnumerable<EmployeeShiftViewModel>>(moments).ToList());
+            shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
+            shiftsVM.shifts.AddRange(_mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbMoments).ToList());
             shiftsVM.shifts = shiftsVM.shifts.OrderBy(s => s.StartTime).ToList();
             return View(shiftsVM);
         }

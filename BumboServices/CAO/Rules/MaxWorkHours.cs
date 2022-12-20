@@ -68,7 +68,7 @@ public class MaxWorkHours : CAORuleAppliesToAge
             if (_includeSchool)
             {
                 // Get school hours for that day
-                schoolHours = _unavailableMoments.GetUnavailableMomentsByDay(employId, group.Key.ToDateOnly())
+                schoolHours = _unavailableMoments.GetSchoolUnavailableMomentsByDay(employId, group.Key.ToDateOnly())
                     .SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours;
             }
 

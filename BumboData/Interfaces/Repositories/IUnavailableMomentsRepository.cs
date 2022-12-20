@@ -7,10 +7,10 @@ namespace BumboData.Interfaces.Repositories
     {
         bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime);
         IEnumerable<UnavailableMoment> GetAll(string employeeId);
-        IEnumerable<UnavailableMoment> GetOverlappingMoments(UnavailableMoment unavailableMoment);
+        IEnumerable<UnavailableMoment> GetOverlappingMoments(UnavailableMoment unavailableMoment); 
         bool EmployeeSchoolWeek(string employee, int year, int week);
-        List<UnavailableMoment> GetSchoolUnavailableMomentsByWeek(string employeeId, int year, int week);
-        List<UnavailableMoment> GetUnavailableMomentsByDay(string employeeId, DateOnly day);
+        List<UnavailableMoment> GetSchoolUnavailableMomentsByWeek(string employee, int year, int week);
+        List<UnavailableMoment> GetSchoolUnavailableMomentsByDay(string employee, DateOnly day);
 
         List<UnavailableMoment> GetWeekOfUnavailableMomentsAfterDateForEmployee(DateTime date, string employeeId);
 
@@ -18,5 +18,6 @@ namespace BumboData.Interfaces.Repositories
         IEnumerable<UnavailableMoment> GetAllMomentsFromMonth(int branchId, DateTime date, string search);
 
         void UpdateRange(ReviewStatus newStatus, List<int> momentIds);
+
     }
 }
