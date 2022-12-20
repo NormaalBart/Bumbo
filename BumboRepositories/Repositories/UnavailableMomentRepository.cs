@@ -128,7 +128,7 @@ namespace BumboRepositories.Repositories
                 UnavailabilitySortingOption.Status_Finished => set.OrderByDescending(u => u.ReviewStatus),
                 _ => set = set.OrderBy(u => u.Employee.FullName()),
             };
-            return set.Skip(momentsPerPage * ((page ?? 1) - 1))
+            return set.Skip(momentsPerPage * ((page ?? 1) - 1)).Take(momentsPerPage)
                 .ToList();
         }
     }
