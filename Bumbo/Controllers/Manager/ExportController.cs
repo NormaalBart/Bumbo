@@ -149,19 +149,39 @@ public class ExportController : NotificationController
         // get manager branch id
         var manager = await _userManager.GetUserAsync(User);
 
+
         if (viewModel.ImportEmployees != null)
         {
-            await _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.DefaultBranchId ?? -1);
-            ShowMessage(MessageType.Success, "Laden van personeel is voltooid");
+            try
+            {
+                await _importService.ImportEmployees(viewModel.ImportEmployees.OpenReadStream(), manager.DefaultBranchId ?? -1);
+                ShowMessage(MessageType.Success, "Laden van personeel is voltooid");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("ImportEmployees", "Het format van dit bestand klopt niet. " + (viewModel.ImportClockEvents != null ? "Andere imports zijn geannuleerd." : "" ));
+                return View();
+            }
+          
         }
 
         if (viewModel.ImportClockEvents != null)
         {
-            _importService.ImportClockEvents(viewModel.ImportClockEvents.OpenReadStream(),
-                manager.DefaultBranchId ?? -1, viewModel.ImportAsPlanned ? ImportClockEventsType.Planned : ImportClockEventsType.Worked);
-            ShowMessage(MessageType.Success, "Laden van " + (viewModel.ImportAsPlanned ? "geplande" : "gewerkte") + " diensten is voltooid");
+            try
+            {
+                _importService.ImportClockEvents(viewModel.ImportClockEvents.OpenReadStream(),
+               manager.DefaultBranchId ?? -1, viewModel.ImportAsPlanned ? ImportClockEventsType.Planned : ImportClockEventsType.Worked);
+                ShowMessage(MessageType.Success, "Laden van " + (viewModel.ImportAsPlanned ? "geplande" : "gewerkte") + " diensten is voltooid");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("ImportClockEvents", "Het format van dit bestand klopt niet." + (viewModel.ImportEmployees != null ? "Medewerkers importeren is wel gelukt." : ""));
+                return View();
+            }
+
+           
         }
-        
+
         // If both show different message
         if (viewModel.ImportClockEvents != null && viewModel.ImportEmployees != null)
         {
