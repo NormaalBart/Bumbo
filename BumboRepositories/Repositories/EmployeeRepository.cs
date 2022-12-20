@@ -1,4 +1,5 @@
-﻿using BumboData;
+﻿using System.Linq.Expressions;
+using BumboData;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
@@ -19,13 +20,6 @@ namespace BumboRepositories.Repositories
                 .Where(e=>branchId == null || e.DefaultBranchId == branchId).ToList();
         }
 
-        public bool EmployeeIsInDepartment(string employeeId, int departmentId)
-        {
-            // returns bool if an employee has a department with the department id
-            return DbSet.Where(e => e.Id == employeeId).Include(e => e.AllowedDepartments)
-                .Any(e => e.AllowedDepartments.Any(d => d.Id == departmentId));
-        }
-
         public Employee GetByEmail(string emailAddress)
         {
             return DbSet.Include(e => e.AllowedDepartments).Where(e => e.NormalizedEmail == emailAddress.ToUpper())
@@ -37,13 +31,6 @@ namespace BumboRepositories.Repositories
             var users = Context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId)
                 .Select(role => role.UserId).ToList();
             return DbSet.Where(employee => users.Contains(employee.Id));
-        }
-
-        public IEnumerable<Employee> GetAllManagers(int start, int amount)
-        {
-            var users = Context.UserRoles.Where(role => role.RoleId == RoleType.MANAGER.RoleId)
-                .Select(role => role.UserId).Skip(start).Take(amount);
-            return DbSet.Where(employee => users.Contains(employee.Id)).ToList();
         }
 
         public IEnumerable<Employee> GetAllManagers(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
@@ -122,13 +109,7 @@ namespace BumboRepositories.Repositories
         {
             return DbSet.Where(e => e.Id == id).Include(e => e.AllowedDepartments).FirstOrDefault()?.AllowedDepartments;
         }
-
-        public bool Exists(Employee newEmployee)
-        {
-            return DbSet.Any(e => e.NormalizedEmail == newEmployee.NormalizedEmail ||
-                                  e.NormalizedUserName == newEmployee.NormalizedUserName);
-        }
-
+        
         public override Employee? Get(string id)
         {
             return DbSet.Where(e => e.Id == id).Include(e => e.AllowedDepartments).First();
