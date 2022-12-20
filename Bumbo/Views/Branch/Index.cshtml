@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <!--Create new button and sorting buttons in a header above the table-->
-            <div class="top-header align-items-center align-items-center">
+            <div class="edit-box align-items-center align-items-center">
                 <div class="top-header-content">
                     <form asp-action="Index" method="get" class="container ">
                         <div class="form-actions no-color row ">
@@ -121,15 +121,15 @@
                                 @Html.ActionLink("Verander", "Edit", new {  id=item.Id }) |
                                 @if (item.Inactive)
                                 {
-                                    <div class="btn btn-info">
-                                        @Html.ActionLink("Zet actief", "SetActive", new {  id=item.Id })
-                                    </div>
+                                    <button type="button" onclick="setActiveClick(@item.Id, '@item.Name')" class="btn btn-success" data-toggle="modal" data-target="#setBranchActive">
+                                        Zet actief
+                                    </button>
                                 }
                                 else
                                 {
-                                    <div class="btn btn-warning">
-                                        @Html.ActionLink("Zet inactief", "SetInactive", new {  id=item.Id })
-                                    </div>
+                                    <button type="button" onclick="setInactiveClick(@item.Id, '@item.Name')" class="btn btn-danger" data-toggle="modal" data-target="#setBranchInactive">
+                                        Zet inactief
+                                    </button>
                                 }
                             </td>
                         </tr>
@@ -139,3 +139,6 @@
         </tr>
     </thead>
 </table>
+
+@Html.Partial("_SetInactive")
+@Html.Partial("_SetActive")

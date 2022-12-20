@@ -31,18 +31,19 @@ namespace Bumbo.Models.EmployeeRoster
             return ((int)Date.DayOfWeek) == dayNumber;
         }
 
-        public bool IsToday(int dayNumber)
+        public bool IsToday(int i)
         {
+            DateTime date = Date.ToDateTime(new TimeOnly(0,0,0)).GetMondayOfTheWeek();
+            date = date.AddDays(i);
             if(DateTime.Now.Month != Date.Month || DateTime.Now.Year != Date.Year)
             {
                return false;
             }
-            dayNumber++;
-            if (dayNumber == 7)
+            if (date == DateTime.Today.Date)
             {
-                dayNumber = 0;
+                return true;
             }
-            return ((int)DateTime.Today.DayOfWeek) == dayNumber;
+            return false;
         }
 
         public DateTime GetDayDate(int dayNumber)

@@ -15,23 +15,13 @@ namespace BumboRepositories.Repositories
 
         }
 
-        public IEnumerable<Branch> GetAllActiveBranches()
-        {
-            return DbSet.Where(branch => !branch.Inactive).ToList();
-        }
-
-        public List<Branch> GetUnmanagedBranches()
-        {
-            return DbSet.Where(branch => branch.Managers.Count == 0).ToList();
-        }
-        
         public (TimeOnly, TimeOnly) GetOpenAndCloseTimes(int branchId, DateOnly day)
         {
             // First check if any overrides are placed on given day
             var over = Context.OpeningHoursOverride.FirstOrDefault(s => s.Date == day && s.BranchId == branchId);
             if (over != null)
             {
-                return (over.OpenTime, over.CloseTime);
+                return over.IsClosed ? (TimeOnly.MinValue, TimeOnly.MinValue) : (over.OpenTime, over.CloseTime);
             }
             
             // Check regular opening times
@@ -103,5 +93,9 @@ namespace BumboRepositories.Repositories
             Update(branch);
         }
 
+        public bool HasSpecialOpeningTimeOnDay(int branch, DateOnly day)
+        {
+            return Context.OpeningHoursOverride.Any(o => o.BranchId == branch && o.Date == day);
+        }
     }
 }

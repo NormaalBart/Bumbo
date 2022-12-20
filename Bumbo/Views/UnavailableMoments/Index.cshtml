@@ -9,21 +9,23 @@
 <div>
 
     <div class="row">
-          <div class="col">
-        <!-- Trigger/Open The Modal -->
-        <button class="btn btn-primary h-100" id="openModalBTN">Schoolrooster kopieren tussen dagen</button>
+        <div class="col d-flex align-items-center justify-content-center">
+            <!-- Trigger/Open The Modal -->
+            <div class="m-2">
+                <button class="btn btn-primary h-100" id="openModalBTN">Afwezigheid kopieren tussen dagen</button>
+            </div>
+            <div class="m-2">
+                <a class="btn btn-primary h-100" asp-action="Create">Afwezigheid toevoegen</a>
+            </div>
+        </div>
     </div>
-    <p class="col ">
-        <a asp-action="Create" class="btn btn-success btn-lg h-100">Nieuw moment toevoegen</a>
-    </p>
-    </div>
-  
+
 </div>
 
 @if (Model.UnavailableMoments.Count > 0)
 {
-    <div class="alert-info small text-center m-2 border border-2">
-        <p>Hint: Klik op een specifiek moment om die snel te kunnen kopieren!</p>
+    <div class="alert alert-info text-center p-2 m-2">
+        Hint: Klik op een specifiek moment om die snel te kunnen kopieren!
     </div>
     <table class="table table-hover ">
         <thead>
@@ -45,7 +47,6 @@
             {
                 <tr class="">
                     <td colspan="5">
-                      
                     </td>
                 </tr>
 
@@ -55,19 +56,19 @@
                     {
                         <!--Currently uses multiple td objects instead of colspan element to force min sizes on side columns to center properly.-->
                         <td class="moments-collumn">
-
                         </td>
                         <td class="text-center ">
                             @moment.StartTime.ToString("dddd d-M-yyyy ")
                         </td>
                         <td class="moments-collumn">
-
                         </td>
 
-                    }else{
+                    }
+                    else
+                    {
                         <td>
                         </td>
-                        <td >
+                        <td>
                             @moment.StartTime.ToString("dddd d-M-yyyy") ->  @moment.EndTime.ToString("ddd d-M-yyyy")
                         </td>
                         <td>
@@ -82,115 +83,61 @@
                     <td class="text-center">
                         eind tijd: <span class="fw-bold"> @moment.EndTime.ToString("HH:mm") </span>
                     </td>
-                    <td >
-                       @Html.DisplayFor(modelItem => moment.Type)
+                    <td>
+                        @Html.DisplayFor(modelItem => moment.Type)
                     </td>
-                  
+
                 </tr>
                 <tr class="moments-row">
                     <td>
-
                     </td>
                     <td class="text-center">
                         <a asp-action="Delete" asp-route-id="@moment.Id" class="btn btn-sm btn-danger">Verwijder</a>
                     </td>
-  
-                        @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
-                        {
-                            <td>
-                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is goedgekeurd door de manager">
-                                    <p>Status: <span class="bi bi-check text-success text-large"></span></p>
-                                </div>
-                            </td>
-                        }
-                        @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
-                        {
-                            <td>
-                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is nog niet gekeurd door de manager">
-                                    <p>Status: <span class="bi bi-patch-question-fill text-primary text-large"></span></p>
-                                </div>
-                            </td>
-                          
-                        }
-                        @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
-                        {
-                            <td>
-                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is niet goedgekeurd door de manager. ">
-                                <p >Status: <span class="bi bi-x text-danger text-large"></span></p>
-                                </div>
-                            </td>
-                         
-                        }
 
+                    @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
+                    {
+                        <td>
+                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is goedgekeurd door de manager">
+                                <p>Status: <span class="bi bi-check text-success text-large"></span></p>
+                            </div>
+                        </td>
+                    }
+                    @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
+                    {
+                        <td>
+                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is nog niet gekeurd door de manager">
+                                <p>Status: <span class="bi bi-patch-question-fill text-primary text-large"></span></p>
+                            </div>
+                        </td>
+                    }
+                    @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
+                    {
+                        <td>
+                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is niet goedgekeurd door de manager. ">
+                                <p>Status: <span class="bi bi-x text-danger text-large"></span></p>
+                            </div>
+                        </td>
+                    }
                 </tr>
-                
             }
         </tbody>
     </table>
 }
 else
 {
-    <p class="text-center text-info">Je hebt nog geen onbeschikbare momenten. Voeg er een toe door op de voeg toe knop te drukken bovenaan het scherm.</p>
+    <div class="alert alert-primary text-center">
+        Je hebt nog geen onbeschikbare momenten. Voeg er een toe door op de voeg toe knop te drukken bovenaan het scherm.
+    </div>
 }
 
-
-<script>
-    function onRowClick(starttime, endtime) {
-        // if user clicks on a row, we open the copy to and from modal adding a week.
-        var modal = document.getElementById("modal");
-        modal.style.display = "block";
-        document.getElementById('modal-input-from').value = starttime;
-        document.getElementById('modal-input-to').value = endtime;
-
-    }
-
-</script>
-
-
-<div id="modal" class="modal">
-    <!-- Modal content -->
-    <div class="modal-dialog modal-content">
-        <span class="close position-absolute">&times;</span>
-        <label> </label>
-        <div class="m-3 align-content-center text-center m-3">
-            <form asp-action="CopyFromDay">
-                <h2 class="text-center modal-header">Kopieer schoolrooster van dag</h2>
-                <div class="modal-body">
-                     <div class="row">
-                    <span class="col-4 text-end">Dag</span>
-                    <input id="modal-input-from" asp-for="CopyFrom" class="col-5 asp-format="{0:yyyy-MM-dd}" />
-                    <span asp-validation-for="CopyFrom" class="text-danger col-2"></span>
-                </div>
-                
-                <div class="row">
-                    <span class="col-2"></span>
-                    <span class="col-6 m-2">Kopieren naar</span>
-                     
-                </div>
-                
-
-                <div class="row">
-                    <span class="col-4 text-end">Dag</span>
-                    <input id="modal-input-to" asp-for="CopyTo" class="col-5" asp-format="{0:yyyy-MM-dd}" />
-                    <span asp-validation-for="CopyTo" class="text-danger col-"4"></span>
-                </div>
-                </div>
-               
-                <input type="submit" value="Kopiëren" class="btn btn-success btn-sm m-3" />
-            </form>
-        </div>
-    </div>
-</div>
-
-
+@Html.Partial("_CopyRoster")
 
 @section Scripts {
 
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-    
-    </script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
 
-
+</script>
 }

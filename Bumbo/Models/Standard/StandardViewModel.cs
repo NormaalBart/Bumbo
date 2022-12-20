@@ -10,27 +10,27 @@ namespace Bumbo.Models.Standard
         public int BranchId { get; set; }
 
         [Required(ErrorMessage = "Dit moet zijn ingevuld")]
-        [DisplayName("Hoelang per coli uitladen?")]
+        [DisplayName("Coli uitladen")]
         [Range(0, int.MaxValue, ErrorMessage = "Dit getal moet positief zijn")]
         public int ColiTime{ get; set; }
 
         [Required(ErrorMessage = "Dit moet zijn ingevuld")]
-        [DisplayName("Hoeveel minuten per coli in de vakken zetten?")]
+        [DisplayName("Coli inruimen")]
         [Range(0, int.MaxValue, ErrorMessage = "Dit getal moet positief zijn")]
         public int ShelfStockingTimes { get; set;}
 
         [Required(ErrorMessage = "Dit moet zijn ingevuld")]
-        [DisplayName("1 Kassiere per hoeveel klanten per uur?")]
+        [DisplayName("Kassa draaien")]
         [Range(0, int.MaxValue, ErrorMessage = "Dit getal moet positief zijn")]
         public int CheckoutEmployees { get; set; }
 
         [Required(ErrorMessage = "Dit moet zijn ingevuld")]
-        [DisplayName("1 Medewerker per hoeveel klanten per uur?")]
+        [DisplayName("Klanten helpen bij vers afdeling")]
         [Range(0, int.MaxValue, ErrorMessage = "Dit getal moet positief zijn")]
         public int FreshEmployees { get; set; }
 
         [Required(ErrorMessage = "Dit moet zijn ingevuld")]
-        [DisplayName("Hoeveel seconde per meter?")]
+        [DisplayName("Spiegelen")]
         [Range(0, int.MaxValue, ErrorMessage = "Dit getal moet positief zijn")]
         public int ShelfArrangement { get; set; }
 

@@ -2,6 +2,12 @@
 @{
     ViewBag.data = "Branch";
 }
+
+@section Head
+{ 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+}
+
 <h1 class="text-center">Voeg een uitwijkende openingstijd toe</h1>
 @if (!ViewData.ModelState.IsValid)
 {
@@ -10,27 +16,32 @@
     </div>
 }
 
-<div class="container ">
+<div class="container d-flex justify-content-center">
     <div>
         <form asp-action="AddSpecialOpeningHour" id="AddSpecialOpeningHourForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @Html.HiddenFor(model => model.BranchId)
             <div class="row">
-                <div class="col border border-3 border-dark employee-create-box">
-                    <div class="p-3">
+                <div class="col edit-box">
+                    <div class="p-1">
                         <div class="form-group">
                             <label asp-for="Date" class="control-label"></label>
-                            @Html.EditorFor(model => model.Date)
+                            @Html.EditorFor(model => model.Date)<br>
                             <span asp-validation-for="Date" class="text-danger"></span>
                         </div>
+                        <div class="form-check">
+                            @Html.EditorFor(model => model.IsClosed)
+                            <label asp-for="IsClosed" class="form-check-label ps-2"></label>
+                        </div>
+                        <br>
                         <div class="form-group">
                             <label asp-for="OpenTime" class="control-label"></label>
-                            @Html.EditorFor(model => model.OpenTime)
+                            @Html.EditorFor(model => model.OpenTime)<br>
                             <span asp-validation-for="OpenTime" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="CloseTime" class="control-label"></label>
-                            @Html.EditorFor(model => model.CloseTime)
+                            @Html.EditorFor(model => model.CloseTime)<br>
                             <span asp-validation-for="CloseTime" class="text-danger"></span>
                         </div>
                     </div>
@@ -43,11 +54,39 @@
     <input type="submit" value="Voeg uitwijkende openingstijd toe!" form="AddSpecialOpeningHourForm" class="btn btn-success btn-lg" />
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    @Html.ActionLink("Ga terug", "Edit", "Branch", new { Id = Model.BranchId })
+    <a asp-action="Edit" asp-route-id="@Model.BranchId" class="btn btn-danger">Ga terug</a>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#Date').addClass('form-control');
+            $('#OpenTime').addClass('opening-time-picker form-control');
+            $('#CloseTime').addClass('opening-time-picker form-control');
+            $('#IsClosed').addClass('form-check-input');
+
+            $('.opening-time-picker').timepicker({
+                timeFormat: 'HH:mm',
+                interval: 15,
+                defaultTime: '8',
+                startTime: '0',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+            });
+            // Disable the timepicker when the checkbox is checked
+            $('#IsClosed').change(function() {
+                if ($(this).is(':checked')) {
+                    $('.opening-time-picker').prop('disabled', true);
+                } else {
+                    $('.opening-time-picker').prop('disabled', false);
+                }
+            });
+        });
+    
+    </script>
+}

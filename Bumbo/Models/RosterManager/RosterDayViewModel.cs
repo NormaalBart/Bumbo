@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Models;
+using BumboServices.CAO.Rules;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using BumboData.Models;
-using BumboServices.CAO.Rules;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
+
 
 namespace Bumbo.Models.RosterManager
 {
@@ -13,17 +13,17 @@ namespace Bumbo.Models.RosterManager
         public int PrognosisDayId { get; set; }
         public DateTime Date { get; set; }
 
-        [DisplayName("Kassa Afdeling Uren")]
+        [DisplayName("Kassa afdeling uren")]
         public double CassierePrognoseHours { get; set; }
-        [DisplayName("Kassa Afdeling Medewerkers")]
+        [DisplayName("Kassa afdeling medewerkers")]
         public double CassierePrognoseWorkers { get; set; }
-        [DisplayName("Vers Afdeling Uren")]
+        [DisplayName("Vers afdeling uren")]
         public double FreshPrognoseHours { get; set; }
-        [DisplayName("Vers Afdeling Medewerkers")]
+        [DisplayName("Vers afdeling medewerkers")]
         public double FreshPrognoseWorkers { get; set; }
-        [DisplayName("VakkenVullers Afdeling Uren")]
+        [DisplayName("Vakken vullers afdeling uren")]
         public double StockersPrognoseHours { get; set; }
-        
+
         // All employees who are already rostered.
         public List<EmployeeRosterViewModel> RosteredEmployees { get; set; }
         // all employees who are available to be chosen when planning a new shift.
@@ -32,9 +32,9 @@ namespace Bumbo.Models.RosterManager
         // selected stuff for creating a new shift
         public string SelectedEmployeeId { get; set; }
         public int SelectedDepartmentId { get; set; }
-        [DataType(DataType.Time)]
+        [DataType(DataType.Text)]
         public DateTime SelectedStartTime { get; set; }
-        [DataType(DataType.Time)]
+        [DataType(DataType.Text)]
         public DateTime SelectedEndTime { get; set; }
 
         public int SelectedShiftId { get; set; }
@@ -44,6 +44,13 @@ namespace Bumbo.Models.RosterManager
         public Dictionary<ICAORule, List<PlannedShift>> InvalidShifts { get; set; }
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
+
+
+        [DataType(DataType.Date)]
+        public DateTime CopyFrom { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime CopyTo { get; set; }
+        public int CopiedShifts { get; set; }
 
         public TimeOnly OpenTime { get; set; }
         public TimeOnly CloseTime { get; set; }
@@ -59,7 +66,7 @@ namespace Bumbo.Models.RosterManager
             AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
 
-        
+
         public int GetWeekNumber(DateTime date)
         {
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
@@ -79,7 +86,7 @@ namespace Bumbo.Models.RosterManager
             }
             return false;
         }
-        
+
         public bool IsUnavailable(EmployeeRosterViewModel employee, int hour)
         {
 
@@ -131,10 +138,9 @@ namespace Bumbo.Models.RosterManager
                     StockersPrognose = StockersPrognose - timespan.TotalHours;
                 }*/
             }
-            CassierePrognoseHours = Math.Ceiling(CassierePrognoseHours); 
-            FreshPrognoseHours = Math.Ceiling(FreshPrognoseHours); 
+            CassierePrognoseHours = Math.Ceiling(CassierePrognoseHours);
+            FreshPrognoseHours = Math.Ceiling(FreshPrognoseHours);
             StockersPrognoseHours = Math.Ceiling(StockersPrognoseHours);
-            
         }
 
 
