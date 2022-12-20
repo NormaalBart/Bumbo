@@ -1,4 +1,5 @@
-﻿using BumboData.Models;
+﻿using BumboData.Enums;
+using BumboData.Models;
 using BumboServices.CAO.Rules;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -98,15 +99,15 @@ namespace Bumbo.Models.RosterManager
             return 0;
         }
 
-        public double GetTotalPlannedHoursPerDepartment(string departmentName)
+        public double GetTotalPlannedHoursPerDepartment(DepartmentType department)
         {
-            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == department.Name));
             return allEmployeesOfDepartment.Sum(employee => employee.PlannedShifts.Sum(plannedShift => (plannedShift.EndTime - plannedShift.StartTime).TotalHours));
         }
 
-        public int GetTotalPlannedWorkersPerDepartment(string departmentName)
+        public int GetTotalPlannedWorkersPerDepartment(DepartmentType department)
         {
-            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == department.Name));
             return allEmployeesOfDepartment.Count();
         }
         

@@ -106,11 +106,11 @@
                         else
                         {
                             <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top">
-                                @Model.GetTotalPlannedHoursPerDepartment("Kassa")
+                                @Model.GetTotalPlannedHoursPerDepartment(BumboData.Enums.DepartmentType.CASSIERS)
                             </span>
                             <span>/</span>
                             <span title="Het aantal uren van de prognose." data-toggle="tooltip" data-placement="top"> @Model.CassierePrognoseHours </span>
-                            if (Model.GetTotalPlannedHoursPerDepartment("Kassa") >= Model.CassierePrognoseHours)
+                                if (Model.GetTotalPlannedHoursPerDepartment(BumboData.Enums.DepartmentType.CASSIERS) >= Model.CassierePrognoseHours)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
                             }
@@ -130,12 +130,12 @@
                         else
                         {
 
-                            <span title="Het aantal ingeplande medewerkers." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedWorkersPerDepartment("Kassa")</span>
+                            <span title="Het aantal ingeplande medewerkers." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedWorkersPerDepartment(BumboData.Enums.DepartmentType.CASSIERS)</span>
 
                             <span> /</span>
 
                             <span title="Het aantal medewerkers van de prognose." data-toggle="tooltip" data-placement="top"> @Model.CassierePrognoseWorkers </span>
-                            if (Model.GetTotalPlannedWorkersPerDepartment("Kassa") >= Model.CassierePrognoseWorkers)
+                                if (Model.GetTotalPlannedWorkersPerDepartment(BumboData.Enums.DepartmentType.CASSIERS) >= Model.CassierePrognoseWorkers)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het medewerker aantal van de prognose is behaald." data-toggle="tooltip" data-placement="top"></i>
                             }
@@ -163,10 +163,10 @@
                         }
                         else
                         {
-                            <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedHoursPerDepartment("Vers")</span>
+                            <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedHoursPerDepartment(BumboData.Enums.DepartmentType.FRESH)</span>
                             <span>/</span>
                             <span title="Het aantal uren van de prognose." data-toggle="tooltip" data-placement="top"> @Model.FreshPrognoseHours</span>
-                            if (Model.GetTotalPlannedHoursPerDepartment("Vers") >= Model.FreshPrognoseHours)
+                                if (Model.GetTotalPlannedHoursPerDepartment(BumboData.Enums.DepartmentType.FRESH) >= Model.FreshPrognoseHours)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
                             }
@@ -187,10 +187,10 @@
                         }
                         else
                         {
-                            <span title="Het aantal ingeplande medewerkers." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedWorkersPerDepartment("Vers")</span>
+                                <span title="Het aantal ingeplande medewerkers." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedWorkersPerDepartment(BumboData.Enums.DepartmentType.FRESH)</span>
                             <span> /</span> 
                             <span title="Het aantal medewerkers van de prognose." data-toggle="tooltip" data-placement="top"> @Model.FreshPrognoseWorkers</span>
-                            if (Model.GetTotalPlannedWorkersPerDepartment("Vers") >= Model.FreshPrognoseWorkers)
+                                if (Model.GetTotalPlannedWorkersPerDepartment(BumboData.Enums.DepartmentType.FRESH) >= Model.FreshPrognoseWorkers)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het medewerker aantal van de prognose is behaald." data-toggle="tooltip" data-placement="top"></i>
                             }
@@ -216,12 +216,12 @@
                         }
                         else
                         {
-                            <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top">@Model.GetTotalPlannedHoursPerDepartment("Vullers")</span>
+                            <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top">@Model.GetTotalPlannedHoursPerDepartment(BumboData.Enums.DepartmentType.FILLERS)</span>
 
                             <span> / </span>
 
                             <span title="Het aantal uren van de prognose." data-toggle="tooltip" data-placement="top">@Model.StockersPrognoseHours</span>
-                            if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
+                                if (Model.GetTotalPlannedHoursPerDepartment(BumboData.Enums.DepartmentType.FILLERS) >= Model.StockersPrognoseHours)
                             {
                                 <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
                             }
