@@ -10,5 +10,6 @@ public enum RosterCreationResponse
     NoBranch,
     ClosedOnDay,
     AlreadyReachedPrognosis,
-    CaoViolationsFound
+    CaoViolationsFound,
+    NoPrognoseFound
 }

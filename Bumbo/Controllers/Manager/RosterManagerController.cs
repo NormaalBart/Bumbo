@@ -1,4 +1,4 @@
-
+﻿
 using AutoMapper;
 using Bumbo.Models.RosterManager;
 using BumboData.Enums;
@@ -122,9 +122,10 @@ namespace Bumbo.Controllers.Manager
                 .OrderByDescending(e => e.PlannedShifts.Sum(s => s.ViolatedRules.Count)).ToList();
 
             viewModel.InvalidShifts = invalidShifts;
-            
-            viewModel.CassierePrognoseHours = Math.Ceiling(_prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Hours);
-            viewModel.CassierePrognoseWorkers = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Workers;
+
+
+            viewModel.CassierePrognoseHours = Math.Ceiling(_prognosesServices.GetCashierPrognose(date, manager.DefaultBranchId ?? -1).Hours);
+            viewModel.CassierePrognoseWorkers = _prognosesServices.GetCashierPrognose(date, manager.DefaultBranchId ?? -1).Workers;
             viewModel.StockersPrognoseHours = Math.Ceiling(_prognosesServices.GetStockersPrognoseHours(date, manager.DefaultBranchId ?? -1));
             viewModel.FreshPrognoseHours = Math.Ceiling(_prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Hours);
             viewModel.FreshPrognoseWorkers = _prognosesServices.GetFreshPrognose(date, manager.DefaultBranchId ?? -1).Workers;
@@ -179,7 +180,7 @@ namespace Bumbo.Controllers.Manager
                 OverviewItem item = new OverviewItem();
                 item.Date = new DateTime(date.Year, date.Month, i);
                 // gets the sum of the prognosis hours of departments
-                item.PrognosisHours = _prognosesServices.GetCassierePrognose(item.Date, employee.DefaultBranchId ?? -1).Hours
+                item.PrognosisHours = _prognosesServices.GetCashierPrognose(item.Date, employee.DefaultBranchId ?? -1).Hours
                                         + _prognosesServices.GetStockersPrognoseHours(item.Date, employee.DefaultBranchId ?? -1)
                                         + _prognosesServices.GetFreshPrognose(item.Date, employee.DefaultBranchId ?? -1).Hours;
                 item.PrognosisHours = Math.Round(item.PrognosisHours);
@@ -333,6 +334,7 @@ namespace Bumbo.Controllers.Manager
                     RosterCreationResponse.ClosedOnDay => "Winkel staat als gesloten geregistreerd op huidige dag.",
                     RosterCreationResponse.AlreadyReachedPrognosis => "Prognose is al behaald!",
                     RosterCreationResponse.CaoViolationsFound => "CAO overtredingen gevonden, verhelp deze eerst voor het rooster aangevuld kan worden.",
+                    RosterCreationResponse.NoPrognoseFound => "Geen prognose voor deze dag gevonden, maak deze eerst aan voor dat je automatisch het rooster kan genereren."
                 };
                 return BadRequest(err);
             }
