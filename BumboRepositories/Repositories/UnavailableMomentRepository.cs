@@ -29,7 +29,7 @@ namespace BumboRepositories.Repositories
             // check if employee is unavailable in unavailable moments 
             var unavailableMoments = DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date == startTime.Date)
                 .ToList();
-            return !unavailableMoments.Any(moment => startTime < moment.EndTime && 
+            return !unavailableMoments.Any(moment => startTime < moment.EndTime &&
                                                     moment.StartTime < endTime);
         }
 
@@ -65,7 +65,7 @@ namespace BumboRepositories.Repositories
 
         }
 
-        public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId,ReviewStatus status, string search)
+        public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId, ReviewStatus status, string search)
         {
             if (search == null)
             {
@@ -76,7 +76,7 @@ namespace BumboRepositories.Repositories
 
         public IEnumerable<UnavailableMoment> GetAllMomentsFromMonth(int branchId, DateTime date, string search)
         {
-            if (search == null  )
+            if (search == null)
             {
                 return DbSet.Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year && u.Employee.DefaultBranchId == branchId).Include(u => u.Employee).ToList();
             }
@@ -93,7 +93,7 @@ namespace BumboRepositories.Repositories
                 // potentially throw exception here if it is null? Or continue with rest of list? Even if this situation is incredibly rare.
                 if (moment != null)
                 {
-                    
+
                     if (moment.ReviewStatus == ReviewStatus.Pending)
                     {
                         moment.ReviewStatus = newStatus;
@@ -103,6 +103,33 @@ namespace BumboRepositories.Repositories
             }
             DbSet.UpdateRange(trackedMoments);
             Context.SaveChanges();
+        }
+
+        public int GetTotalMoments(int? defaultBranchId, string searchString, bool includeAccepted)
+        {
+            return DbSet.Where(u => u.EndTime.Year >= DateTime.Now.Year && u.EndTime.Month >= DateTime.Now.Month && u.EndTime.Day >= DateTime.Now.Day).Include(u => u.Employee).AsEnumerable()
+                .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()))
+                .Where(u => includeAccepted ? true : u.ReviewStatus == ReviewStatus.Pending)
+                .Count();
+        }
+
+        public IEnumerable<UnavailableMoment> GetAllMoments(int? defaultBranchId, string searchString, bool includeAccepted, UnavailabilitySortingOption sortingOption, int? page, int momentsPerPage)
+        {
+            var set = DbSet.Where(u => u.EndTime.Year >= DateTime.Now.Year && u.EndTime.Month >= DateTime.Now.Month && u.EndTime.Day >= DateTime.Now.Day).Include(u => u.Employee).AsEnumerable()
+                .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()))
+                .Where(u => includeAccepted ? true : u.ReviewStatus == ReviewStatus.Pending);
+            set = sortingOption switch
+            {
+                UnavailabilitySortingOption.Name_Asc => set.OrderBy(u => u.Employee.FullName()),
+                UnavailabilitySortingOption.Name_Desc => set.OrderByDescending(u => u.Employee.FullName()),
+                UnavailabilitySortingOption.Date_Desc => set.OrderByDescending(u => u.StartTime),
+                UnavailabilitySortingOption.Date_Asc => set.OrderBy(u => u.StartTime),
+                UnavailabilitySortingOption.Status_Todo => set.OrderBy(u => u.ReviewStatus),
+                UnavailabilitySortingOption.Status_Finished => set.OrderByDescending(u => u.ReviewStatus),
+                _ => set = set.OrderBy(u => u.Employee.FullName),
+            };
+            return set.Skip(momentsPerPage * ((page ?? 1) - 1))
+                .ToList();
         }
     }
 }

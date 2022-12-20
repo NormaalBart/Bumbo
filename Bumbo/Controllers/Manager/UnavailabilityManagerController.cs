@@ -18,6 +18,8 @@ namespace Bumbo.Controllers.Manager
         private readonly IMapper _mapper;
         private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
 
+        private const int _pageSize = 20;
+
         public UnavailabilityManagerController(UserManager<Employee> userManager, IMapper mapper, IUnavailableMomentsRepository unavailableMomentsRepository)
         {
             _userManager = userManager;
@@ -26,47 +28,34 @@ namespace Bumbo.Controllers.Manager
         }
 
 
-        public async Task<IActionResult> Index(string? searchString, bool? includeAccepted)
+        public async Task<IActionResult> Index(string? searchString = "", bool includeAccepted = false, UnavailabilitySortingOption sortingOption = UnavailabilitySortingOption.Status_Todo, int? Page = 1)
         {
-            var manager = await _userManager.GetUserAsync(User);
-            // Returns all unavailability moments that haven't been approved yet.
-
-            var unavailabilityMoments = _unavailableMomentsRepository.GetAllUnavailabilityMomentsByReviewStatus(manager.DefaultBranchId ?? -1, BumboData.Enums.ReviewStatus.Pending, searchString);
-
-            UnavailabilityManagerListViewModel viewModel = new UnavailabilityManagerListViewModel();
-            viewModel.UnavailableMoments = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(unavailabilityMoments).ToList();
-            viewModel.SearchString = searchString;
-            viewModel.IncludeAccepted = includeAccepted ?? false;
-
-            var selectedids = viewModel.UnavailableMoments.Select(u => u.Id).ToList();
-            viewModel.Ids = selectedids;
-            return View(viewModel);
-        }
-
-        public async Task<IActionResult> MonthlyOverview(string? dateInput, string? searchString)
-        {
-            DateTime inputtedDate = DateTime.Now;
-            if (dateInput != null)
+            if(String.IsNullOrEmpty(searchString))
             {
-                inputtedDate = DateTime.Parse(dateInput);
+                searchString = "";
             }
-            DateTime firstDateOfMonth = new DateTime(inputtedDate.Year, inputtedDate.Month, 1);
-
-            var manager = await _userManager.GetUserAsync(User);
-            // Returns all unavailability moments that haven't been approved yet.
-
-            var unavailabilityMoments = _unavailableMomentsRepository.GetAllMomentsFromMonth(manager.DefaultBranchId ?? -1, firstDateOfMonth, searchString);
-
+            if(Page <= 1)
+            {
+                Page = 1;
+            }
             UnavailabilityManagerListViewModel viewModel = new UnavailabilityManagerListViewModel();
+            var manager = await _userManager.GetUserAsync(User);
+            var total = _unavailableMomentsRepository.GetTotalMoments(manager.DefaultBranchId, searchString, includeAccepted);
+            var unavailabilityMoments = _unavailableMomentsRepository.GetAllMoments(manager.DefaultBranchId, searchString, includeAccepted, sortingOption, Page, _pageSize);
+
             viewModel.UnavailableMoments = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(unavailabilityMoments).ToList();
-            viewModel.Date = firstDateOfMonth;
             viewModel.SearchString = searchString;
+            viewModel.MaxPage = (total + _pageSize - 1) / _pageSize;
+            viewModel.Page = Page ?? 1;
+            viewModel.IncludeAccepted = includeAccepted;
+            viewModel.SortingOption = sortingOption;
+            viewModel.Ids = viewModel.UnavailableMoments.Select(u => u.Id).ToList();
             return View(viewModel);
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Review(int id, bool isApproved)
+        public IActionResult Review(int id, bool isApproved)
         {
 
             var unavailabilityMoment = _unavailableMomentsRepository.Get(id);
@@ -114,12 +103,9 @@ namespace Bumbo.Controllers.Manager
                 newStatus = ReviewStatus.Rejected;
             }
 
-
             _unavailableMomentsRepository.UpdateRange(newStatus, ids);
             ShowMessage(MessageType.Success, "Afwezigheidsverzoeken geupdate");
             return RedirectToAction(nameof(Index));
         }
-
-
     }
 }

@@ -28,15 +28,12 @@ namespace Bumbo.Models.EmployeeManager.Index
             foreach (var option in Enum.GetValues(typeof(EmployeeSortingOption)))
             {
                 AvailableSortOptions.Add((EmployeeSortingOption)option);
-
             }
-
         }
 
         public string GetSortingDisplayName(EmployeeSortingOption sortoption)
         {
             return sortoption.GetAttribute<DisplayAttribute>().Name;
         }
-
     }
 }
