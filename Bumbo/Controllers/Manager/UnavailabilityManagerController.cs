@@ -26,9 +26,8 @@ namespace Bumbo.Controllers.Manager
         }
 
 
-        public async Task<IActionResult> Index(string? searchString)
+        public async Task<IActionResult> Index(string? searchString, bool? includeAccepted)
         {
-
             var manager = await _userManager.GetUserAsync(User);
             // Returns all unavailability moments that haven't been approved yet.
 
@@ -37,6 +36,7 @@ namespace Bumbo.Controllers.Manager
             UnavailabilityManagerListViewModel viewModel = new UnavailabilityManagerListViewModel();
             viewModel.UnavailableMoments = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(unavailabilityMoments).ToList();
             viewModel.SearchString = searchString;
+            viewModel.IncludeAccepted = includeAccepted ?? false;
 
             var selectedids = viewModel.UnavailableMoments.Select(u => u.Id).ToList();
             viewModel.Ids = selectedids;

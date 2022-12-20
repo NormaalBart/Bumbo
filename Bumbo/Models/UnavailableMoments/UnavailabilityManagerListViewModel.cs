@@ -8,6 +8,8 @@
         
         public string SearchString { get; set; }
 
+        public bool IncludeAccepted { get; set; }
+
         public List<int> Ids { get; set; }
 
         public UnavailabilityManagerListViewModel()
