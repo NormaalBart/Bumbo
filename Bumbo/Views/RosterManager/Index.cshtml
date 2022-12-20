@@ -393,13 +393,13 @@
                                             @if (shift.Sick)
                                             {
                                                                 <p class="fw-bold d-inline-block">Ziek -</p>
-@*                                                                 <a class="d-inline-block" data-toggle="tooltip" data-placement="top" title="Maak de shift opnieuw aan een selecteer een nieuwe medewerker die de shift zal overnemen." href="" onclick="(function(e){ *@
-@*                                             let shiftStartTime ='@shift.StartTime.ToString("HH:mm")'; *@
-@*                                             let shiftEndTime = '@shift.EndTime.ToString("HH:mm")'; *@
-@* *@
-@*                                             e.stopPropagation(); *@
-@*                                             replaceShift(shiftStartTime, shiftEndTime, @shift.Department.Id) *@
-@*                                          })(arguments[0]);return false;">Opnieuw inplannen</a> *@
+                                                                <a class="d-inline-block" data-toggle="tooltip" data-placement="top" title="Maak de shift opnieuw aan een selecteer een nieuwe medewerker die de shift zal overnemen." href="" onclick="(function(e){
+                                            let shiftStartTime ='@shift.StartTime.ToString("HH:mm")';
+                                            let shiftEndTime = '@shift.EndTime.ToString("HH:mm")';
+
+                                            e.stopPropagation();
+                                            replaceShift(shiftStartTime, shiftEndTime, @shift.Department.Id)
+                                         })(arguments[0]);return false;">Opnieuw inplannen</a>
                                             }
 
                                                             <script>
