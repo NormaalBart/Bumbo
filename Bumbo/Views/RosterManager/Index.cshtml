@@ -270,19 +270,15 @@
                                 elem.style.marginLeft = startoffset + 'px';
                             }
 
-                            function resize(shift){
-                                getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
-                            }
+        // Everytime the screen is resized, we resize every shift that's in the list along with it.
+        window.addEventListener("resize", function () {
+            listshifts.forEach(resize);
+        });
 
-                            // Everytime the screen is resized, we resize every shift that's in the list along with it.
-                            window.addEventListener("resize", function () {
-                                listshifts.forEach(resize);
-                            });
+        window.addEventListener('load', function () {
+            listshifts.forEach(resize);
 
-                            window.addEventListener('load', function () {
-                                    listshifts.forEach(resize);
-
-                        });
+        });
 
                             // When you click on a shift, this function is called.
                             // This opens the edit modal
@@ -306,9 +302,9 @@
                                 $('#employeeIdInputEdit').val(shiftinfo.shiftEmployeeId);
                             }
 
-                            function onRowClick() {
-                                $('#createNewShiftModal').modal('show');
-                            }
+        function onRowClick() {
+            $('#createNewShiftModal').modal('show');
+        }
 
                             function replaceShift(start, end, departmentId) {
                                 document.getElementById("CreateShiftStartTime").value = start;
@@ -318,50 +314,41 @@
                                 onRowClick();
                             }
 
-                    </script>
-                    <div class="text-center m-3">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#copyRosterModal" class="btn btn-primary">
-                            Rooster kopiëren
-                        </button>
-                        <!-- Button trigger modal -->
-                        <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
-                            Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
-                        </button>
+    </script>
 
-                        <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")">
-                            <span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span>
-                        </button>
-                    </div>
+
+    <div class="text-center m-3">
+        <!-- Button trigger modal -->
+        <button @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
+            Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
+        </button>
+        <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")"><span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span></button>
+    </div>
 
     @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
     {
-                        <div class="alert alert-warning text-center text-large">
-                            <span>De winkel is op deze datum gesloten.</span>
-                        </div>
+        <div class="alert alert-warning text-center text-large">
+            <span>De winkel is op deze datum gesloten.</span>
+        </div>
     }
-                    <div class="table-responsive-sm">
+    <div class="table-responsive-sm">
 
-                        <!--table, 24 long horizontal -->
-                    <table class="table roster-table table-hover" style="background-color: white;">
-                    
-                    @if (Model.CloseTime != TimeOnly.MinValue && Model.OpenTime != TimeOnly.MinValue)
+        <!--table, 24 long horizontal -->
+        <table class="table roster-table table-hover" style="background-color: white;">
+            <thead>
+                <tr class="">
+                    <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
+                    @*Important note: The text in the header blocks must be equal characters long.*@
+                    @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
                     {
-                        <thead>
-                        <tr class="">
-                            <th class="border border-2 border-dark roster-table-employee-cell roster-table-header-cell text-center">Medewerker naam</th>
-                            @*Important note: The text in the header blocks must be equal characters long.*@
-                            @for (var i = Model.TableMinHour; i < Model.TableMaxHour; i++)
-                            {
-                                <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
-                            }
-                        </tr>
-                        </thead>
+                        <th class="border border-2 border-dark roster-table-header-cell text-center">@Model.GetHeaderTimeString(i)</th>
                     }
-                        
+                </tr>
+            </thead>
 
-                            <tbody>
+            <tbody>
 
-                                <!--For each available employee, create a row-->
+                <!--For each available employee, create a row-->
                 @if (Model.RosteredEmployees != null)
                 {
                     foreach (var employee in Model.RosteredEmployees)
@@ -462,7 +449,7 @@
                                         </tr>
                     }
 
-                                    <!--Add new shift row.-->
+                    <!--Add new shift row.-->
                     @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
                     {
                                         <tr class="roster-shift-containter roster-table-cell-closed border border-3 ">
@@ -494,13 +481,12 @@
                     }
                 }
 
-                            </tbody>
-                        </table>
+        </tbody>
+    </table>
 
-                    </div>
+                </div>
 
-
-<!-- Modal for creating a new shift-->
+                <!-- Modal for creating a new shift-->
 <div class="modal fade" id="createNewShiftModal" tabindex="-1" aria-labelledby="nieuwedienst" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content m-2">
@@ -564,42 +550,6 @@
             <div class="text-center modal-footer">
                 <button type="button" class="btn btn-secondary text-center" data-bs-dismiss="modal">Annuleren</button>
                 <input type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn "/>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- The Modal -->
-<div id="copyRosterModal" class="modal fade">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content -->
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" id="copyRosterModal">Kopieer rooster van dag naar dag</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="m-3 align-content-center">
-                <form asp-action="CopyRoster">
-                    <div class="row justify-content-center">
-                        <span class="col-auto text-end">Dag: </span>
-                        @Html.EditorFor(model => model.CopyFrom, new { htmlAttributes = new { @class = "col-auto" } })
-                    </div>
-                    <div class="row">
-                        <span asp-validation-for="CopyFrom" class="text-danger col-4"></span>
-                    </div>
-                    <div class="row justify-content-center">
-                        <span class="col-5">Kopieren naar</span>
-                    </div>
-                    <div class="row justify-content-center">
-                        <span class="col-auto">Dag: </span>
-                        @Html.EditorFor(model => model.CopyTo, new { htmlAttributes = new { @class = "col-auto" } })
-                    </div>
-                    <div class="row">
-                        <span asp-validation-for="CopyTo" class="text-danger col"></span>
-                    </div>
-                    <input type="submit" value="Kopiëren" class="btn btn-primary float-end" />
-                </form>
             </div>
         </div>
     </div>

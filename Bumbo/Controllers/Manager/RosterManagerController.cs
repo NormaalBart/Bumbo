@@ -133,7 +133,6 @@ namespace Bumbo.Controllers.Manager
 
             var shiftsOnDay = _mapper.Map<IEnumerable<ShiftViewModel>>(_prognosisRepository.GetShiftsOnDayByDate(date))
                 .ToList();
-            viewModel.UpdatePrognosis(shiftsOnDay);
             viewModel.PrognosisDayId = _prognosisRepository.GetIdByDate(date);
 
             viewModel.SelectedStartTime = viewModel.Date.AddHours(8);
