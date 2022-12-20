@@ -77,8 +77,7 @@ namespace Bumbo.Controllers.Manager
             viewModel.CloseTime = openAndCloseTimes.Item2;
             viewModel.TableMinHour = viewModel.OpenTime.Hour - 1;
             viewModel.TableMaxHour = viewModel.CloseTime.Hour + 1;
-
-
+            
 
             // Start CAO
             // Filter shifts to only display that of today

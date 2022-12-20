@@ -280,9 +280,8 @@
                                 document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
                                 document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
                                 document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
-
                                 document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
-
+                                
                                 // Disable editing when shift is set as sick
                                 $('#starttimeinput').prop('disabled', shiftinfo.shiftIsSick);
                                 $('#endtimeinput').prop('disabled', shiftinfo.shiftIsSick);
@@ -292,9 +291,14 @@
                                 let sickBtn = $('#setSickBtn')
                                 sickBtn.prop('disabled', shiftinfo.shiftIsSick);
                                 $('#employeeIdInputEdit').val(shiftinfo.shiftEmployeeId);
+                                
+                                selectedEmployee(shiftinfo.shiftEmployeeId, shiftinfo.shiftDepartmentId)
                             }
 
-        function onRowClick() {
+        function openCreateShift() {
+            // Clear departments in create shift modal
+            $('#CreateShiftDepartment').empty();
+                                
             $('#createNewShiftModal').modal('show');
         }
 
@@ -303,7 +307,7 @@
                                 document.getElementById("CreateShiftEndTime").value = end;
                                 document.getElementById("CreateShiftDepartment").value = departmentId
 
-                                onRowClick();
+                                openCreateShift();
                             }
 
     </script>
@@ -314,7 +318,7 @@
             Rooster kopiëren
         </button>
         <!-- Button trigger modal -->
-        <button @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
+        <button @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") type="button" class="btn btn-primary" onclick="openCreateShift()">
             Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
         </button>
         <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")"><span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span></button>
@@ -471,9 +475,9 @@
                                             </div>
                             }
                                     </td>
-                                    <tr class="roster-shift-containter roster-table-addbtn border-3" id="AddShiftRow" onclick="onRowClick()">
+                                    <tr class="roster-shift-containter roster-table-addbtn border-3" id="AddShiftRow" onclick="openCreateShift()">
                                         <td colspan="25" class="p-0">
-                                            <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary w-100 h-100" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
+                                            <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary w-100 h-100" onclick="openCreateShift()">
                                                 Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
                                             </button>
                                         </td>
@@ -517,15 +521,10 @@
                             </div>
                         </div>
 
-
-                        @*TODO make it so you can only select department for employee who have them.*@
                         <label class="col">In afdeling:</label>
 
-                        <select id="CreateShiftDepartment" asp-for="SelectedDepartmentId" class="form-control col" style="height: fit-content">
-                            @foreach (var dep in Model.Departments)
-                            {
-                                <option value="@dep.Id">@dep.DepartmentName</option>
-                            }
+                        <select id="CreateShiftDepartment" asp-for="SelectedDepartmentId" class="form-control col department-input" style="height: fit-content">
+                            
                         </select>
                     </div>
 
@@ -549,7 +548,7 @@
             </div>
             <div class="text-center modal-footer">
                 <button type="button" class="btn btn-secondary text-center" data-bs-dismiss="modal">Annuleren</button>
-                <input type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn "/>
+                <input id="create-shift-save" type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn "/>
             </div>
         </div>
     </div>
@@ -612,15 +611,10 @@
                                 <option value="@employee.Id">@employee.FullName</option>
                             }
                         </select>
-                        @*TODO make it so you can only select department for employee who have them.*@
+
                         <p class="col">In afdeling:</p>
+                        <select id="departmentIdInput" asp-for="SelectedDepartmentId" class="form-control col department-input">
 
-                        <select id="departmentIdInput" asp-for="SelectedDepartmentId" class="form-control col">
-
-                            @foreach (var dep in Model.Departments)
-                            {
-                                <option value="@dep.Id">@dep.DepartmentName</option>
-                            }
                         </select>
                     </div>
 
@@ -698,7 +692,7 @@
                         url: 'SearchEmployees/?q={query}&external=true'
                     },
                     onSelect: function(result, response) {
-                        $('#select-employee-id').val(result.id);
+                        selectedEmployee(result.id);
                     },
                 });
         } else {
@@ -710,10 +704,57 @@
                         url: 'SearchEmployees/?q={query}'
                     },
                     onSelect: function(result, response) {
-                        $('#select-employee-id').val(result.id);
+                        selectedEmployee(result.id);
                     }
                 })
         }
+    }
+    
+    function selectedEmployee(employeeId, departmentId) {
+        $('#select-employee-id').val(employeeId);
+        
+        $('.department-input').each(function() {
+           $(this).empty();
+        });
+        
+        // Start loading the allowed departments of the employee.
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AllowedDepartments", "EmployeeManager")',
+            data: {
+                employeeId: employeeId,
+            },
+            success: function(data) {
+                $('#create-shift-save').prop('disabled', data.length === 0);
+                $('#saveEditShift').prop('disabled', data.length === 0);
+                                                        
+                // Update the ui with the received departments.
+                $('.department-input').each(function() {
+                    let $el = $(this);
+                    
+                    $el.empty(); // Remove old options
+                    if (data.length > 0) {
+                       $.each(data, function(index,value) {
+                       $el.append($("<option></option>")
+                           .attr("value", value.id)
+                           .text(value.departmentName));
+                       });
+                    } else { 
+                    // If the employee has no departments, add a placeholder option.
+                        $el.append($("<option></option>")
+                          .attr("value", "").text("Geen afdelingen toegewezen"));
+                    }
+                    
+                    // Try and reselect value, only the edit form.
+                    if (departmentId != null && !($el.attr('id') === 'CreateShiftDepartment')) {
+                        $el.val(departmentId);
+                    }
+                });
+            },
+            error: function(error) {
+                console.log("Error: " + error);
+            }
+        })
     }
 
     function showToast(message) {
@@ -813,7 +854,7 @@
 
     emptycells.forEach(cell => {
         cell.addEventListener('click', function handleClick(event) {
-            onRowClick();
+            openCreateShift();
         });
     });
 
