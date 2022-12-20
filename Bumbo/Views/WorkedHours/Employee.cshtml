@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-between m-2 align-items-center text-center">
         <div>
             <a class="btn btn-primary" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(-7).Date">
-                <i class="bi bi-caret-left"></i> Vorige dag
+                <i class="bi bi-caret-left"></i> Vorige week
             </a>
         </div>
         <div class="fw-bold">
@@ -19,7 +19,7 @@
         </div>
         <div>
             <a class="btn btn-primary" asp-action="Employee" asp-route-dateInput="@Model.Date.AddDays(7).Date">
-                Volgende dag <i class="bi bi-caret-right"></i>
+                Volgende week <i class="bi bi-caret-right"></i>
             </a>
         </div>
     </div>
