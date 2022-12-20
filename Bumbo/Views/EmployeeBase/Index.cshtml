@@ -2,6 +2,7 @@
 @using BumboData.Models
 @using Microsoft.AspNetCore.Identity
 @using BumboData.Enums
+@using System.Web;
 @model EmployeeListIndexViewModel
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
@@ -12,6 +13,7 @@
 }
 
 <h1 class="text-center">Personeelsbeheer</h1>
+
 
 
 <table class="table">
@@ -72,7 +74,6 @@
                                     <input type="submit" value="Zoeken" class="btn btn-default search-bar" />
                                 </div>
                             </div>
-
                         </div>
                     </form>
                 </div>
@@ -144,3 +145,10 @@
         </tr>
     </thead>
 </table>
+
+
+<div class="py-3 d-flex justify-content-between">
+    <a class="btn btn-primary @(Model.Page <= 1 ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page - 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Vorige</a>
+    <p class="text-center">Pagina @Model.Page/@Model.MaxPage</p>
+    <a class="btn btn-primary @(Model.Page >= Model.MaxPage ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page + 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Volgende</a>
+</div>

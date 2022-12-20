@@ -2,7 +2,6 @@
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Nodes;
 
 namespace BumboRepositories.Repositories
 {
@@ -15,6 +14,16 @@ namespace BumboRepositories.Repositories
 
         }
 
+        public IEnumerable<Branch> GetAllActiveBranches()
+        {
+            return DbSet.Where(branch => !branch.Inactive).ToList();
+        }
+
+        public List<Branch> GetUnmanagedBranches()
+        {
+            return DbSet.Where(branch => branch.Managers.Count == 0).ToList();
+        }
+
         public (TimeOnly, TimeOnly) GetOpenAndCloseTimes(int branchId, DateOnly day)
         {
             // First check if any overrides are placed on given day
@@ -23,13 +32,13 @@ namespace BumboRepositories.Repositories
             {
                 return over.IsClosed ? (TimeOnly.MinValue, TimeOnly.MinValue) : (over.OpenTime, over.CloseTime);
             }
-            
+
             // Check regular opening times
             var regular =
                 Context.StandardOpeningHours.FirstOrDefault(o =>
                     o.DayOfWeek == day.DayOfWeek && o.BranchId == branchId);
 
-            if (regular is {IsClosed: false })
+            if (regular is { IsClosed: false })
             {
                 return (regular.OpenTime ?? TimeOnly.MinValue, regular.CloseTime ?? TimeOnly.MinValue);
             }

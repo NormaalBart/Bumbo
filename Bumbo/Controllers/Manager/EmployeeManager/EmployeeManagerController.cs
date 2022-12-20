@@ -43,7 +43,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
                 ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
                 return View(viewModel);
             }
-            if(_employeesRepository.GetByEmail(viewModel.Email) != null)
+            if (_employeesRepository.GetByEmail(viewModel.Email) != null)
             {
                 PopulateUnselectedDepartments(viewModel);
                 ModelState.AddModelError("Email", "Dit email is al in gebruik");
@@ -103,6 +103,17 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             return RedirectToAction(nameof(Index));
         }
 
+        public override IEnumerable<Employee> GetAllEmployees(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
+        {
+            int? defaultBranchId = _userManager.GetUserAsync(User).Result.DefaultBranchId;
+            return _employeesRepository.GetAllEmployeesOfBranch(defaultBranchId ?? 0, start, amount, searchString, includeActive, includeInactive, sortingOption);
+        }
+        public override int GetAmountOfEmployees(string searchString = "", bool includeActive = true, bool includeInactive = false)
+        {
+            int? defaultBranchId = _userManager.GetUserAsync(User).Result.DefaultBranchId;
+            return _employeesRepository.GetAmountOfEmployeesOfBranch(defaultBranchId ?? 0, searchString, includeActive, includeInactive);
+        }
+
         private void PopulateDepartments(EmployeeEditViewModel viewModel)
         {
             viewModel.EmployeeSelectedDepartments = _mapper.Map<List<EmployeeDepartmentViewModel>>(_employeesRepository.GetDepartmentsOfEmployee(viewModel.EmployeeKey));
@@ -121,10 +132,5 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             }
         }
 
-        public override IEnumerable<Employee> GetAllEmployeesAsync()
-        {
-            var employee = _userManager.GetUserAsync(User).Result;
-            return _employeesRepository.GetAllEmployeesOfBranch(employee.DefaultBranchId ?? -1);
-        }
     }
 }

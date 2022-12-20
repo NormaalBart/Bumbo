@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Bumbo.Models.BranchController;
-using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
@@ -18,6 +17,7 @@ namespace Bumbo.Controllers.Admin
         private readonly UserManager<Employee> _userManager;
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
+        private const int ItemsPerPage = 25;
 
         public BranchController(UserManager<Employee> userManager, IMapper mapper, IBranchRepository branchRepository)
         {
@@ -28,10 +28,27 @@ namespace Bumbo.Controllers.Admin
 
         [Authorize(Roles = "Administrator")]
         // GET: BranchController
-        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort)
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort, int page = 1)
         {
+
+            if (page < 1) { page = 1; }
             var resultingListViewModel = new BranchListIndexViewModel();
-            var branches = _branchRepository.GetList();
+
+            var branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
+            var amountOfBranches = _branchRepository.GetList().Count();
+
+            if (amountOfBranches == 0 && page != 1)
+            {
+                page--;
+                return RedirectToAction(nameof(Index), new { page, searchString, includeInactive, includeActive, currentSort });
+            }
+            resultingListViewModel.Page = page;
+            resultingListViewModel.CurrentSort = currentSort;
+            resultingListViewModel.IncludeInactive = includeInactive;
+            resultingListViewModel.IncludeActive = includeActive;
+            resultingListViewModel.SearchString = searchString;
+
+            resultingListViewModel.MaxPage = Math.Max(amountOfBranches / ItemsPerPage, 1);
 
             if (!includeInactive && !includeActive)
             {
@@ -84,7 +101,7 @@ namespace Bumbo.Controllers.Admin
         public ActionResult Create()
         {
             var viewModel = new BranchCreateViewModel();
-            foreach (DayOfWeek dayOfWeek in new DayOfWeek[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday})
+            foreach (DayOfWeek dayOfWeek in new DayOfWeek[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday })
             {
                 viewModel.OpeningHours.Add(new OpeningHoursViewModel { DayOfWeek = dayOfWeek, OpenTime = new TimeSpan(8, 00, 00), CloseTime = new TimeSpan(18, 00, 00) });
             }
@@ -174,7 +191,7 @@ namespace Bumbo.Controllers.Admin
             _branchRepository.SetActive(id);
             return RedirectToAction(nameof(Index));
         }
- 
+
         public ActionResult AddSpecialOpeningHour(int id)
         {
             // Get default opening time of today
