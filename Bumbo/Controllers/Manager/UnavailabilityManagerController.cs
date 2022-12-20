@@ -30,11 +30,11 @@ namespace Bumbo.Controllers.Manager
 
         public async Task<IActionResult> Index(string? searchString = "", bool includeAccepted = false, UnavailabilitySortingOption sortingOption = UnavailabilitySortingOption.Status_Todo, int? Page = 1)
         {
-            if(String.IsNullOrEmpty(searchString))
+            if (String.IsNullOrEmpty(searchString))
             {
                 searchString = "";
             }
-            if(Page <= 1)
+            if (Page <= 1)
             {
                 Page = 1;
             }
@@ -55,7 +55,7 @@ namespace Bumbo.Controllers.Manager
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Review(int id, bool isApproved)
+        public IActionResult Review(int id, bool isApproved, string? searchString = "", bool includeAccepted = false, UnavailabilitySortingOption sortingOption = UnavailabilitySortingOption.Status_Todo, int? Page = 1)
         {
 
             var unavailabilityMoment = _unavailableMomentsRepository.Get(id);
@@ -82,12 +82,12 @@ namespace Bumbo.Controllers.Manager
                 ShowMessage(MessageType.Success, "Afwezigheidsverzoek afgekeurd");
             }
             _unavailableMomentsRepository.Update(unavailabilityMoment);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { searchString = searchString, includeAccepted = includeAccepted, sortingOption = sortingOption, Page = Page });
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> ReviewAll(bool isApproved, List<int> ids)
+        public async Task<IActionResult> ReviewAll(bool isApproved, List<int> ids, string? searchString = "", bool includeAccepted = false, UnavailabilitySortingOption sortingOption = UnavailabilitySortingOption.Status_Todo, int? Page = 1)
         {
             // This method recieves a 'isApproved' bool to indicate if it is approved or reject.
             // Currently there's only a button to approve all, as I am not sure if a reject all is neccesesary.
@@ -105,7 +105,7 @@ namespace Bumbo.Controllers.Manager
 
             _unavailableMomentsRepository.UpdateRange(newStatus, ids);
             ShowMessage(MessageType.Success, "Afwezigheidsverzoeken geupdate");
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { searchString = searchString, includeAccepted = includeAccepted, sortingOption = sortingOption, Page = Page });
         }
     }
 }
