@@ -126,7 +126,7 @@ namespace BumboRepositories.Repositories
                 UnavailabilitySortingOption.Date_Asc => set.OrderBy(u => u.StartTime),
                 UnavailabilitySortingOption.Status_Todo => set.OrderBy(u => u.ReviewStatus),
                 UnavailabilitySortingOption.Status_Finished => set.OrderByDescending(u => u.ReviewStatus),
-                _ => set = set.OrderBy(u => u.Employee.FullName),
+                _ => set = set.OrderBy(u => u.Employee.FullName()),
             };
             return set.Skip(momentsPerPage * ((page ?? 1) - 1))
                 .ToList();
