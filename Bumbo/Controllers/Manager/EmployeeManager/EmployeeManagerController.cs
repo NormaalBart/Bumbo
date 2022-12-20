@@ -4,11 +4,13 @@ using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers.Manager.EmployeeManager
 {
+    [Authorize(Roles = "Manager")]
     public class EmployeeManagerController : EmployeeBaseController
     {
 
@@ -131,6 +133,22 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
                 }
             }
         }
+        
+        [HttpPost]
+        public IActionResult AllowedDepartments(string employeeId)
+        {
+            var employ = _employeesRepository.Get(employeeId);
 
+            if (employ == null)
+            {
+                return BadRequest("Medewerker niet gevonden");
+            }
+
+            // Clear employees from response
+            var data = _employeesRepository.GetDepartmentsOfEmployee(employeeId).ToList();
+            data.ForEach(d => d.AllowedEmployees = null);
+
+            return Json(data);
+        }
     }
 }

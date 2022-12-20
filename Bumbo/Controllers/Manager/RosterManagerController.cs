@@ -77,8 +77,7 @@ namespace Bumbo.Controllers.Manager
             viewModel.CloseTime = openAndCloseTimes.Item2;
             viewModel.TableMinHour = viewModel.OpenTime.Hour - 1;
             viewModel.TableMaxHour = viewModel.CloseTime.Hour + 1;
-
-
+            
 
             // Start CAO
             // Filter shifts to only display that of today
@@ -123,8 +122,7 @@ namespace Bumbo.Controllers.Manager
                 .OrderByDescending(e => e.PlannedShifts.Sum(s => s.ViolatedRules.Count)).ToList();
 
             viewModel.InvalidShifts = invalidShifts;
-
-
+            
             viewModel.CassierePrognoseHours = Math.Ceiling(_prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Hours);
             viewModel.CassierePrognoseWorkers = _prognosesServices.GetCassierePrognose(date, manager.DefaultBranchId ?? -1).Workers;
             viewModel.StockersPrognoseHours = Math.Ceiling(_prognosesServices.GetStockersPrognoseHours(date, manager.DefaultBranchId ?? -1));
