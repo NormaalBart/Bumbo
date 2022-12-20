@@ -1,12 +1,18 @@
 ﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsListViewModel
 <div id="modal" class="modal">
     <!-- Modal content -->
-    <div class="modal-dialog modal-content">
-        <span class="close position-absolute">&times;</span>
-        <label> </label>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Kopieer afwezigheid van dag</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                
+            </div>
+            <div class="modal-body">
         <div class="m-3 align-content-center text-center m-3">
             <form asp-action="CopyFromDay">
-                <h2 class="text-center modal-header">Kopieer afwezigheid van dag</h2>
                 <div class="modal-body">
                     <div class="row">
                         <span class="col-4 text-end">Dag</span>
@@ -31,7 +37,9 @@
                 <input type="submit" value="Kopiëren" class="btn btn-success btn-sm m-3" />
             </form>
         </div>
-    </div>
+            </div>
+        </div>
+</div>
 </div>
 
 <script>

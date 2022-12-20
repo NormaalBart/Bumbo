@@ -79,9 +79,13 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             return RedirectToAction(nameof(Index));
         }
 
-        public override IEnumerable<Employee> GetAllEmployeesAsync()
+        public override IEnumerable<Employee> GetAllEmployees(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
         {
-            return _employeesRepository.GetAllManagers();
+            return _employeesRepository.GetAllManagers(start, amount);
+        }
+        public override int GetAmountOfEmployees(string searchString = "", bool includeActive = true, bool includeInactive = false)
+        {
+            return _employeesRepository.GetAmountOfManagers(searchString, includeActive, includeInactive);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Bumbo.Models.BranchController;
-using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using BumboRepositories.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +17,7 @@ namespace Bumbo.Controllers.Admin
         private readonly UserManager<Employee> _userManager;
         private IMapper _mapper;
         private IBranchRepository _branchRepository;
+        private const int ItemsPerPage = 25;
 
         public BranchController(UserManager<Employee> userManager, IMapper mapper, IBranchRepository branchRepository)
         {
@@ -27,10 +28,27 @@ namespace Bumbo.Controllers.Admin
 
         [Authorize(Roles = "Administrator")]
         // GET: BranchController
-        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort)
+        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, BranchSortingOption currentSort, int page = 1)
         {
+
+            if (page < 1) { page = 1; }
             var resultingListViewModel = new BranchListIndexViewModel();
-            var branches = _branchRepository.GetList();
+
+            var branches = _branchRepository.GetList((page - 1) * ItemsPerPage, ItemsPerPage);
+            var amountOfBranches = _branchRepository.GetList().Count();
+
+            if (amountOfBranches == 0 && page != 1)
+            {
+                page--;
+                return RedirectToAction(nameof(Index), new { page, searchString, includeInactive, includeActive, currentSort });
+            }
+            resultingListViewModel.Page = page;
+            resultingListViewModel.CurrentSort = currentSort;
+            resultingListViewModel.IncludeInactive = includeInactive;
+            resultingListViewModel.IncludeActive = includeActive;
+            resultingListViewModel.SearchString = searchString;
+
+            resultingListViewModel.MaxPage = Math.Max(amountOfBranches / ItemsPerPage, 1);
 
             if (!includeInactive && !includeActive)
             {
@@ -83,7 +101,7 @@ namespace Bumbo.Controllers.Admin
         public ActionResult Create()
         {
             var viewModel = new BranchCreateViewModel();
-            foreach (DayOfWeek dayOfWeek in new DayOfWeek[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday})
+            foreach (DayOfWeek dayOfWeek in new DayOfWeek[] { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday })
             {
                 viewModel.OpeningHours.Add(new OpeningHoursViewModel { DayOfWeek = dayOfWeek, OpenTime = new TimeSpan(8, 00, 00), CloseTime = new TimeSpan(18, 00, 00) });
             }
@@ -148,14 +166,7 @@ namespace Bumbo.Controllers.Admin
                 var branch = _branchRepository.Get(branchViewModel.Id);
                 _mapper.Map<BranchEditViewModel, Branch>(branchViewModel, branch);
                 _branchRepository.Update(branch);
-                if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    return RedirectToAction("Login", "Account");
-                }
+                return RedirectToAction("Edit", "Branch");
             }
             catch
             {
@@ -180,10 +191,19 @@ namespace Bumbo.Controllers.Admin
             _branchRepository.SetActive(id);
             return RedirectToAction(nameof(Index));
         }
- 
+
         public ActionResult AddSpecialOpeningHour(int id)
         {
-            var viewModel = new OpeningHoursOverrideViewModel { BranchId = id};
+            // Get default opening time of today
+            var openAndCloseTimes = _branchRepository.GetOpenAndCloseTimes(id, DateTime.Now.ToDateOnly());
+            
+            var viewModel = new OpeningHoursOverrideViewModel
+            {
+                BranchId = id,
+                OpenTime = openAndCloseTimes.Item1.ToTimeSpan(),
+                CloseTime = openAndCloseTimes.Item2.ToTimeSpan(),
+                Date = DateTime.Now
+            };
             return View(viewModel);
         }
 
@@ -191,25 +211,32 @@ namespace Bumbo.Controllers.Admin
         [ValidateAntiForgeryToken]
         public ActionResult AddSpecialOpeningHour(OpeningHoursOverrideViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
             var branch = _branchRepository.Get(viewModel.BranchId);
-            if(branch == null)
+            if (branch == null)
             {
                 // We have no idea what the branch of the user is. Let accountcontroller figure it out and redirect him.
                 return RedirectToAction("Login", "Account");
             }
+
+            if (_branchRepository.HasSpecialOpeningTimeOnDay(branch.Id, viewModel.Date.ToDateOnly()))
+            {
+                ModelState.AddModelError("Date", "Er is al een uitzondering gepland voor deze datum.");
+                return View(viewModel);
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
             var openingHour = _mapper.Map<OpeningHoursOverride>(viewModel);
             branch.OpeningHoursOverrides.Add(openingHour);
             _branchRepository.Update(branch);
             return RedirectToAction(nameof(Edit), new { Id = viewModel.BranchId });
         }
 
-        public ActionResult DeleteSpecialOpeningHour(DateTime date, int id)
+        public ActionResult DeleteSpecialOpeningHour(string date, int id)
         {
-            _branchRepository.RemoveSpecialOpeningHour(id, DateOnly.FromDateTime(date));
+            _branchRepository.RemoveSpecialOpeningHour(id, DateOnly.FromDateTime(DateTime.Parse(date)));
             return RedirectToAction(nameof(Edit), new { Id = id});
         }
     }

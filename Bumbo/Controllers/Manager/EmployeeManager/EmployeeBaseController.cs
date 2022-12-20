@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Bumbo.Models.BranchController;
 using Bumbo.Models.EmployeeManager.Common;
 using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
@@ -20,6 +19,8 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
         protected readonly IMapper _mapper;
         protected readonly IBranchRepository _branchRepository;
         protected readonly IDepartmentsRepository _departmentsRepository;
+        private const int ItemsPerPage = 25;
+
 
         public EmployeeBaseController(UserManager<Employee> userManager, IEmployeeRepository employeeService, IMapper mapper, IBranchRepository branchService, IDepartmentsRepository departmentService)
         {
@@ -31,69 +32,31 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
 
         }
 
-        public abstract IEnumerable<Employee> GetAllEmployeesAsync();
-
-        public IActionResult Index(string searchString, bool includeInactive, bool includeActive, EmployeeSortingOption currentSort)
+        public abstract IEnumerable<Employee> GetAllEmployees(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc);
+        public abstract int GetAmountOfEmployees(string searchString = "", bool includeActive = true, bool includeInactive = false);
+        public IActionResult Index(string searchString, bool includeInactive = false, bool includeActive = true, EmployeeSortingOption currentSort = EmployeeSortingOption.Name_Asc, int page = 1)
         {
+            if (page < 1) page = 1;
+            var amountOfEmployees = GetAmountOfEmployees(searchString, includeActive, includeInactive);
+            if (amountOfEmployees == 0 && page != 1)
+            {
+                page--;
+                return RedirectToAction(nameof(Index), new { page, searchString, includeInactive, includeActive, currentSort });
+            }
+
+            var employees = GetAllEmployees((page - 1) * ItemsPerPage, ItemsPerPage, searchString, includeActive, includeInactive, currentSort);
 
             EmployeeListIndexViewModel resultingListViewModel = new EmployeeListIndexViewModel();
-            var employees = GetAllEmployeesAsync();
-
-            if (!includeInactive && !includeActive)
-            {
-                employees = employees.Where(e => e.Active).ToList();
-                resultingListViewModel.IncludeActive = true;
-            }
-            else if (!includeInactive && includeActive)
-            {
-                employees = employees.Where(e => e.Active).ToList();
-            }
-            else if (includeInactive && !includeActive)
-            {
-                employees = employees.Where(e => !e.Active).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                // search in employees if any of the columns contains the searchstring
-                resultingListViewModel.SearchString = searchString;
-                searchString = searchString.ToLower();
-                employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString) || e.LastName.ToLower().Contains(searchString));
-            }
-
-            switch (currentSort)
-            {
-                // case for each sortingoption, with asc and desc
-                case EmployeeSortingOption.Name_Asc:
-                    employees = employees.OrderBy(e => e.FirstName);
-                    break;
-                case EmployeeSortingOption.Name_Desc:
-                    employees = employees.OrderByDescending(e => e.FirstName);
-                    break;
-                case EmployeeSortingOption.Function_Desc:
-                    employees = employees.OrderByDescending(e => e.Function);
-                    break;
-                case EmployeeSortingOption.Function_Asc:
-                    employees = employees.OrderBy(e => e.Function);
-                    break;
-                case EmployeeSortingOption.Birthdate_Asc:
-                    employees = employees.OrderBy(e => e.Birthdate);
-                    break;
-                case EmployeeSortingOption.Birthdate_Desc:
-                    employees = employees.OrderByDescending(e => e.Birthdate);
-                    break;
-                case EmployeeSortingOption.EmployeeSince_Asc:
-                    employees = employees.OrderBy(e => e.EmployeeSince);
-                    break;
-                case EmployeeSortingOption.EmployeeSince_Desc:
-                    employees = employees.OrderByDescending(e => e.EmployeeSince);
-                    break;
-                default:
-                    employees = employees.OrderBy(e => e.FirstName);
-                    break;
-            }
+            resultingListViewModel.Page = page;
+            resultingListViewModel.SearchString = searchString;
+            resultingListViewModel.CurrentSort = currentSort;
+            resultingListViewModel.IncludeInactive = includeInactive;
+            resultingListViewModel.IncludeActive = includeActive;
 
             resultingListViewModel.Employees = _mapper.Map<IEnumerable<EmployeeListItemViewModel>>(employees).ToList();
+
+            resultingListViewModel.MaxPage = Math.Max(amountOfEmployees / ItemsPerPage, 1);
+
             return View("Views/EmployeeBase/Index.cshtml", resultingListViewModel);
         }
 

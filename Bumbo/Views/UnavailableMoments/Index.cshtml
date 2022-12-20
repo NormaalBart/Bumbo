@@ -24,8 +24,8 @@
 
 @if (Model.UnavailableMoments.Count > 0)
 {
-    <div class="alert-info small text-center m-2 border border-2">
-        <p>Hint: Klik op een specifiek moment om die snel te kunnen kopieren!</p>
+    <div class="alert alert-info text-center p-2 m-2">
+        Hint: Klik op een specifiek moment om die snel te kunnen kopieren!
     </div>
     <table class="table table-hover ">
         <thead>
@@ -126,7 +126,9 @@
 }
 else
 {
-    <h3 class="text-center text-info">Je hebt nog geen onbeschikbare momenten. Voeg er een toe door op de voeg toe knop te drukken bovenaan het scherm.</h3>
+    <div class="alert alert-primary text-center">
+        Je hebt nog geen onbeschikbare momenten. Voeg er een toe door op de voeg toe knop te drukken bovenaan het scherm.
+    </div>
 }
 
 @Html.Partial("_CopyRoster")

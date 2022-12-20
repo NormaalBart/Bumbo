@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+﻿using BumboData.Enums;
 using BumboData.Models;
 using BumboServices.CAO.Rules;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+
 
 namespace Bumbo.Models.RosterManager
 {
@@ -23,7 +24,7 @@ namespace Bumbo.Models.RosterManager
         public double FreshPrognoseWorkers { get; set; }
         [DisplayName("Vakken vullers afdeling uren")]
         public double StockersPrognoseHours { get; set; }
-        
+
         // All employees who are already rostered.
         public List<EmployeeRosterViewModel> RosteredEmployees { get; set; }
         // all employees who are available to be chosen when planning a new shift.
@@ -44,6 +45,13 @@ namespace Bumbo.Models.RosterManager
         public Dictionary<ICAORule, List<PlannedShift>> InvalidShifts { get; set; }
 
         public List<DepartmentRosterViewModel> Departments { get; set; }
+
+
+        [DataType(DataType.Date)]
+        public DateTime CopyFrom { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime CopyTo { get; set; }
+        public int CopiedShifts { get; set; }
 
         public TimeOnly OpenTime { get; set; }
         public TimeOnly CloseTime { get; set; }
@@ -91,15 +99,15 @@ namespace Bumbo.Models.RosterManager
             return 0;
         }
 
-        public double GetTotalPlannedHoursPerDepartment(string departmentName)
+        public double GetTotalPlannedHoursPerDepartment(DepartmentType department)
         {
-            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
-            return allEmployeesOfDepartment.Sum(employee => employee.PlannedShifts.Where(s=>!s.Sick).Sum(plannedShift => (plannedShift.EndTime - plannedShift.StartTime).TotalHours));
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == department.Name));
+            return allEmployeesOfDepartment.Sum(employee => employee.PlannedShifts.Sum(plannedShift => (plannedShift.EndTime - plannedShift.StartTime).TotalHours));
         }
 
-        public int GetTotalPlannedWorkersPerDepartment(string departmentName)
+        public int GetTotalPlannedWorkersPerDepartment(DepartmentType department)
         {
-            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Where(s=>!s.Sick).Any(p => p.Department.DepartmentName == departmentName));
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == department.Name));
             return allEmployeesOfDepartment.Count();
         }
         
