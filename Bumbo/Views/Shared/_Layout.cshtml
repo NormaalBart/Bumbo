@@ -11,6 +11,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Bumbo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Bumbo.styles.css" asp-append-version="true" />
@@ -62,17 +63,14 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="nav-item dropdown Employee Unavailability UnavailabilityMonthly">
+                                <li class="nav-item dropdown Employee Unavailability">
                                     <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Personeel management</a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a class="dropdown-item nav-link text-dark Employee" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Personeelsbeheer</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item nav-link text-dark Unavailability" asp-area="" asp-controller="UnavailabilityManager" asp-action="Index">Nieuwe afwezigheidverzoeken</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark UnavailabilityMonthly" asp-area="" asp-controller="UnavailabilityManager" asp-action="MonthlyOverview">Afwezigheidsoverzicht</a>
+                                            <a class="dropdown-item nav-link text-dark Unavailability" asp-area="" asp-controller="UnavailabilityManager" asp-action="Index">Afwezigheidverzoeken</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -129,7 +127,7 @@
         </header>
     }
 
-    <div class="container">
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @if (TempData["ValidationType"] != null)
             {

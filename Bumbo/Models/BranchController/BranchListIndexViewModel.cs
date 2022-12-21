@@ -26,9 +26,7 @@ namespace Bumbo.Models.BranchController
             foreach (var option in Enum.GetValues(typeof(BranchSortingOption)))
             {
                 AvailableSortOptions.Add((BranchSortingOption)option);
-
             }
-
         }
 
         public string GetSortingDisplayName(BranchSortingOption sortoption)

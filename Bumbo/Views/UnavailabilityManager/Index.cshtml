@@ -1,4 +1,5 @@
 ﻿@using Bumbo.Models.UnavailableMoments
+@using BumboData.Enums
 @model UnavailabilityManagerListViewModel
 
 @{
@@ -8,36 +9,57 @@
 
 <h1 class="text-center">Afwezigheid beheer</h1>
 
-<div class="text-center">
-    <a class="text-center text-decoration-none text-black btn btn-primary justify-content-center" asp-action="MonthlyOverview">Ga naar overzicht van alle afwezigheden</a>
-</div>
-
 <div class="top-header edit-box">
     <div class="top-header-content ">
-        <form asp-action="Index" method="get" class="container align-content-center">
-            <div class="form-actions no-color row   d-flex justify-content-center m-2 align-items-center">
-                <div class="d-flex justify-content-center text-center my-auto flex-row">
-                    <div class="form-group top-header-content form-check flex-column">
-                        <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
-                    </div>
-                    <div class=" text-center my-auto flex-column">
-                        <div class="justify-content-center text-center my-auto ">
+        <div class="align-items-center align-items-center">
+            <div class="top-header-content">
+                <form asp-action="Index" method="get" class="container ">
+                    <div class="form-actions no-color row ">
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="top-header-content">
+                                <div class=" text-center">
+                                    <a class="btn btn-success" id="openModalBTN" title="Dit keurt alle zichtbare aanvragen goed" data-toggle="tooltip" data-placement="top"> Zichtbare aanvragen goedkeuren </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-auto justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content form-check">
+                                <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label class="form-check-label">
+                                    @Html.DisplayNameFor(model => model.IncludeAccepted) <br /> <input class="form-check-input" asp-for="IncludeAccepted" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-auto justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label asp-for="SortingOption" class="control-label"></label>
+                                <select asp-for="SortingOption" class="form-control form-select">
+                                    <option value="@Model.SortingOption">@Model.GetSortingDisplayName(@Model.SortingOption)</option>
+                                    @foreach (var item in Model.AvailableSortOptions)
+                                    {
+                                        @if (Model.SortingOption != item)
+                                        {
+                                            <option value="@item">@Model.GetSortingDisplayName(item)</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-auto justify-content-center text-center my-auto">
                             <div class="btn btn-warning text-center">
                                 <input type="submit" value="Zoeken" class="btn btn-default search-bar" />
                             </div>
                         </div>
                     </div>
-
-                    <div class=" text-center my-auto flex-column m-3">
-                        <div class="justify-content-center text-center my-auto ">
-                            <div class=" text-center">
-                                <a class="btn btn-success" id="openModalBTN"> Alles goedkeuren </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -67,12 +89,16 @@
     <tbody>
         @if (Model.UnavailableMoments.Count == 0)
         {
-            <tr class="alert-info text-center">
-                <td colspan="7">
-                    <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
+            <tr>
+                <td colspan="6">
+                    <div class="alert alert-info text-center">
+                        <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
+                    </div>
                 </td>
             </tr>
         }
+
+
         @foreach (var item in Model.UnavailableMoments)
         {
             <tr>
@@ -89,17 +115,33 @@
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
+                    @if (item.ReviewStatus == ReviewStatus.Pending)
+                    {
+                        <i class="bi bi-patch-question-fill text-primary text-large" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top"></i>
+                    }
+                    else if (item.ReviewStatus == ReviewStatus.Approved)
+                    {
+                        <i class="ms-1 bi-check-circle-fill" style="color: green" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top" />
+                    }
+                    else if (item.ReviewStatus == ReviewStatus.Rejected)
+                    {
+                        <i class="ms-1 bi-check-circle-fill" style="color: red" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top" />
+                    }
                     @Html.DisplayFor(modelItem => item.ReviewStatus)
                 </td>
                 <td class=" text-center" colspan="2">
                     <div class=" d-flex align-items-center justify-content-center">
-                        <!--Approve button-->
-                    <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" method="post">
-                            <input type="submit" value="Goedkeuren" class="btn btn-success" />
-                        </form>
-                        <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" method="post">
-                            <input type="submit" value="Afkeuren" class="btn btn-danger" />
-                        </form>
+                        @if (item.ReviewStatus == ReviewStatus.Pending)
+                        {
+                            <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="AcceptForm" method="post">
+                                <i class="ms-1 bi-check-circle-fill" href="javascript:{}" onclick="document.getElementById('AcceptForm').submit();" style="color: green; cursor: pointer" title="Accepteer dit afwezigheidsverzoek" data-toggle="tooltip" data-placement="top">
+                                </i>
+                            </form>
+                            <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="DenyForm" method="post">
+                                <i class="ms-1 bi-x-circle-fill" href="javascript:{}" onclick="document.getElementById('DenyForm').submit();" style="color: red; cursor: pointer" title="Keur dit afwezigheidsverzoek af" data-toggle="tooltip" data-placement="top">
+                                </i>
+                            </form>
+                        }
                     </div>
                 </td>
             </tr>
@@ -109,11 +151,16 @@
 
 @if (Model.UnavailableMoments.Count() != 0)
 {
+    <div class="py-3 d-flex justify-content-between">
+        <a class="btn btn-primary @(Model.Page <= 1 ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption">Vorige</a>
+        <p>Pagina @Model.Page/@Model.MaxPage</p>
+        <a class="btn btn-primary @(Model.Page == Model.MaxPage ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page + 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption">Volgende</a>
+    </div>
     <!-- The Modal -->
     <div id="modal" class="modal ">
         <!-- Modal content -->
-        <div class="modal-content modal-dialog text-center prognosis-textarea">
-            <span class="close position-absolute">&times;</span>
+    <div class="modal-content modal-dialog text-center prognosis-textarea">
+            <span class="close" style="text-align: right">&times;</span>
             <label> </label>
             <div class="m-3 text-center align-content-center">
                 <form method="post" asp-action="ReviewAll">
@@ -123,16 +170,10 @@
                         <input hidden asp-for="Ids" value="@item" name="ids" />
                     }
                     <div class="m-3">
-                        @if (@Model.UnavailableMoments.Count() == 1)
-                        {
-                            <span> Weet je zeker dat je @Model.UnavailableMoments.Count() moment wilt </span> <span class="text-success">goedkeuren?</span>
-                        }
-                        else
-                        {
-                            <span> Weet je zeker dat je @Model.UnavailableMoments.Count() momenten wilt </span> <span class="text-success">goedkeuren?</span>
-                        }
+                        <span> Weet je zeker dat je alle zichtbare momenten wilt </span> <span class="text-success">goedkeuren?</span>
+
                     </div>
-                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" class="btn btn-success btn-sm " />
+                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" class="btn btn-success btn-lg " />
                 </form>
             </div>
         </div>
@@ -143,15 +184,15 @@
 {
 <script>
     $('#openModalBTN').click(function() {
+        console.log('hoi');
         // Show no new items to accept
-        if(@Model.UnavailableMoments.Count() == 0){
+        if(!@Model.UnavailableMoments.Any(u => u.ReviewStatus == ReviewStatus.Pending).ToString().ToLower()){
              Swal.fire({
             title: 'Oeps!',
             text: "Er zijn op dit moment geen nieuwe onbeschikbaarheids aanvragingen die je kunt accepteren.",
             icon: 'warning'
         })
         }
-
     })
 </script>
 }

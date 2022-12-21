@@ -35,7 +35,7 @@ namespace Bumbo.Controllers.Manager
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(StandardViewModel viewModel)
+        public async Task<IActionResult> Index(StandardViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
