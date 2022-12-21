@@ -1,52 +1,38 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
-namespace Bumbo.Models.RosterManager
+namespace Bumbo.Models.RosterManager;
+
+public class OverviewItem
 {
-    public class OverviewItem
+    [DataType(DataType.Date)] public DateTime Date { get; set; }
+
+    public double PrognosisHours { get; set; }
+    public double RosteredHours { get; set; }
+
+    public bool ItemIsToday()
     {
-        [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
-        public double PrognosisHours { get; set; }
-        public double RosteredHours { get; set; }
+        if (Date == DateTime.Now.Date) return true;
+        return false;
+    }
 
+    // if the rostered hours are more than the prognosis hours, return true.
+    public bool IsSufficientlyRostered()
+    {
+        if (RosteredHours >= PrognosisHours && RosteredHours > 0) return true;
+        return false;
+    }
 
-        public bool ItemIsToday()
-        {
-            if (Date == DateTime.Now.Date)
-            {
-                return true;
-            }
-            return false;
-        }
+    // if there are rostered hours, but it is not enough we return true
+    public bool IsInsufficientlyRostered()
+    {
+        if (RosteredHours <= PrognosisHours && RosteredHours > 0) return true;
+        return false;
+    }
 
-
-        // if the rostered hours are more than the prognosis hours, return true.
-        public bool IsSufficientlyRostered()
-        {
-            if (RosteredHours >= PrognosisHours && RosteredHours > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        // if there are rostered hours, but it is not enough we return true
-        public bool IsInsufficientlyRostered()
-        {
-            if (RosteredHours <= PrognosisHours && RosteredHours > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-        public string GetDayName()
-        {
-            // Get dutch culture
-            return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(Date.DayOfWeek);
-        }
-
+    public string GetDayName()
+    {
+        // Get dutch culture
+        return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(Date.DayOfWeek);
     }
 }

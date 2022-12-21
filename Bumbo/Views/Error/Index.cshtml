@@ -8,13 +8,13 @@
     <div class="errorpagemsg">
         <div>
             <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
-                <img src="~/images/bumbo.png" class="img-fluid" alt="Bumbo logo" />
+                <img src="~/images/bumbo.png" class="img-fluid" alt="Bumbo logo"/>
             </a>
         </div>
         <h2>Oeps, er ging iets fout!</h2>
-        <br />
+        <br/>
         <p>Als het probleem herhaald, neem contact op met de helpdesk.</p>
-        <br />
+        <br/>
         <p>Ga naar de <a asp-area="" asp-controller="Account" asp-action="Login">de thuispagina</a> pagina en probeer het opnieuw.</p>
         <p>Of <a href="">ververs</a> de pagina.</p>
     </div>
@@ -27,7 +27,7 @@
     <div class="collapse" id="collapseExample">
         <div class="card card-body">
             <p>Het kan zijn dat een helpdesk medewerker deze informatie nodig heeft:</p>
-            <br />
+            <br/>
             @if (Model.ShowRequestId)
             {
                 <p class="text-center">
@@ -44,6 +44,3 @@
         </div>
     </div>
 </div>
-
-
-

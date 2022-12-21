@@ -11,7 +11,7 @@
     <div>
         <form asp-action="ToggleActive" id="ToggleActiveForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="@Model.Id" />
+            <input type="hidden" asp-for="@Model.Id"/>
             <div class="row">
                 <div class="col border border-3 border-dark employee-create-box">
                     @if (Model.IsActive)
@@ -28,7 +28,7 @@
     </div>
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <input type="submit" value="Opslaan!" form="ToggleActiveForm" class="btn btn-success btn-lg" />
+    <input type="submit" value="Opslaan!" form="ToggleActiveForm" class="btn btn-success btn-lg"/>
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
@@ -38,4 +38,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    }
+}

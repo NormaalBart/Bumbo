@@ -6,21 +6,18 @@
 }
 
 <body class="h-100 ">
-    <div class=" text-center">
-       
-        <div class="d-flex align-items-center justify-content-center">
+<div class=" text-center">
 
+    <div class="d-flex align-items-center justify-content-center">
 
+        <dl class="row text-center moments-create-box rounded rounded-3 ">
+            <dt class="col-sm-6 ">
+                <span class="border-bottom text-large m-2">Wil je dit moment echt verwijderen?</span>
+            </dt>
+            <dd>
 
+            </dd>
 
-            <dl class="row text-center moments-create-box rounded rounded-3 ">
-             <dt class="col-sm-6 ">
-                    <span class="border-bottom text-large m-2">Wil je dit moment echt verwijderen?</span>
-                </dt>
-                <dd>
-
-                </dd>
-                
             @if (Model.StartTime.Date == Model.EndTime.Date)
             {
                 <dt class="col-sm-6 ">
@@ -32,23 +29,24 @@
                 <dt class="col-sm-6 ">
                     van:
                 </dt>
-                    <dd class="col-sm-6 ">
+                <dd class="col-sm-6 ">
                     @Model.StartTime.ToString("HH : mm") uur
                 </dd>
                 <dt class="col-sm-6 ">
                     Tot:
                 </dt>
-                    <dd class="col-sm-6 ">
+                <dd class="col-sm-6 ">
                     @Model.EndTime.ToString("HH : mm") uur
                 </dd>
-
-            }else{
+            }
+            else
+            {
                 <dt class="col-sm-6 ">
                     @Html.DisplayNameFor(model => model.StartTime)
                 </dt>
                 <dd class="col-sm-6">
                     @Model.StartTime.ToString("dddd dd MMMM yyyy")
-                    <br />
+                    <br/>
                     @Model.StartTime.ToString("HH : mm") uur
                 </dd>
                 <dt class="col-sm-6 ">
@@ -56,31 +54,28 @@
                 </dt>
                 <dd class="col-sm-6">
                     @Model.EndTime.ToString("dddd dd MMMM yyyy")
-                    <br />
+                    <br/>
                     @Model.EndTime.ToString("HH : mm") uur
                 </dd>
             }
 
-
             <dt class="col-sm-6 ">
                 @Html.DisplayNameFor(model => model.Type)
             </dt>
-            <dd class = "col-sm-6">
+            <dd class="col-sm-6">
                 @Html.DisplayFor(model => model.Type)
             </dd>
             <form asp-action="Delete" class="text-center m-3">
-            <input type="submit" value="Verwijder" class="btn btn-danger btn-lg" />
-        </form>
-   
-           
+                <input type="submit" value="Verwijder" class="btn btn-danger btn-lg"/>
+            </form>
+
         </dl>
 
     </div>
-    </div>
+</div>
 
-    <div class=" d-flex align-items-center justify-content-center m-5">
-        <a class="btn btn-success btn-lg" asp-action="Index">Terug naar de lijst</a>
-    </div>
-
+<div class=" d-flex align-items-center justify-content-center m-5">
+    <a class="btn btn-success btn-lg" asp-action="Index">Terug naar de lijst</a>
+</div>
 
 </body>

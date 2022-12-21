@@ -1,12 +1,11 @@
-namespace Bumbo.Models
+namespace Bumbo.Models;
+
+public class ErrorViewModel
 {
-    public class ErrorViewModel
-    {
-        public int ErrorCode { get; set; }
-        public string? RequestId { get; set; }
+    public int ErrorCode { get; set; }
+    public string? RequestId { get; set; }
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        public string ErrorMessage { get; set; }
-    }
+    public string ErrorMessage { get; set; }
 }

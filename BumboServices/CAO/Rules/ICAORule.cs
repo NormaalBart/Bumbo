@@ -14,7 +14,7 @@ public interface ICAORule
     public string GetErrorMessage();
 }
 
-public abstract class CAORuleAppliesToAge: ICAORule
+public abstract class CAORuleAppliesToAge : ICAORule
 {
     private readonly Range _range;
 
@@ -23,11 +23,11 @@ public abstract class CAORuleAppliesToAge: ICAORule
     {
         _range = ageRange;
     }
-    
+
     public bool AppliesTo(Employee employee)
     {
         // Check if age matches range
-        return employee.Birthdate.Age() >= _range.Start.Value  && 
+        return employee.Birthdate.Age() >= _range.Start.Value &&
                employee.Birthdate.Age() <= _range.End.Value;
     }
 

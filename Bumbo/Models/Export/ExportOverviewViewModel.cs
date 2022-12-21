@@ -1,9 +1,6 @@
-﻿using System.ComponentModel;
-using BumboData.Enums;
+﻿namespace Bumbo.Models.ExportManager;
 
-namespace Bumbo.Models.ExportManager;
-
-public class ExportOverviewViewModel: PaginatedViewModel
+public class ExportOverviewViewModel : PaginatedViewModel
 {
     public DateTime SelectedMonth { get; set; }
 
