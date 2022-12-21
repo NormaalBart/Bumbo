@@ -407,7 +407,7 @@ namespace Bumbo.Controllers.Manager
                     {
                         dateInput = date,
                         errormessage =
-                            "er zijn nog CAO overtreding(en) zijn op deze dag, los deze eerst op voordat je een nieuwe shift toe voegt."
+                            "er zijn nog CAO overtreding(en) zijn op deze dag, los deze eerst op voordat je een nieuwe dienst toe voegt."
                     });
             }
 

@@ -68,9 +68,17 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> EditAsync(string id)
         {
             var employee = _employeesRepository.Get(id);
+            // check if the employee is part of managers branch
+            var manager = await _userManager.GetUserAsync(User);
+            if (manager.DefaultBranchId != employee.DefaultBranchId)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
+
             var viewModel = _mapper.Map<EmployeeEditViewModel>(employee);
             viewModel.EmployeeSelectedDepartments.Clear();
             PopulateDepartments(viewModel);

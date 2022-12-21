@@ -262,6 +262,10 @@
                                 elem.style.marginLeft = startoffset + 'px';
                             }
 
+        function resize(shift) {
+            getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
+        }
+
         // Everytime the screen is resized, we resize every shift that's in the list along with it.
         window.addEventListener("resize", function () {
             listshifts.forEach(resize);
