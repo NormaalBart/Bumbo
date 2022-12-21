@@ -7,24 +7,20 @@
 
 <div class="container ">
 
-    <div class="form-group text-center p-2">
-        <input type="submit" value="Veranderingen Opslaan!" form="SaveForm" class="btn btn-success btn-lg" />
-    </div>
-
     <table class="table table-striped table-hover table-bordered">
         <thead class="table-dark">
-            <tr>
-                <th class="text-center">
-                    Activiteit
-                </th>
-                <th>
-                    Normering
-                </th>
-            </tr>
+        <tr>
+            <th class="text-center">
+                Activiteit
+            </th>
+            <th>
+                Normering
+            </th>
+        </tr>
         </thead>
         <tbody>
-            <form asp-action="Index" id="SaveForm">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Index" id="SaveForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <tr>
                 <td class="text-center">@Html.DisplayNameFor(model => model.CheckoutEmployees)</td>
                 <td class="form-group">
@@ -60,9 +56,13 @@
                     <span asp-validation-for="ShelfArrangement" class="text-danger"></span>
                 </td>
             </tr>
-            </form>
+        </form>
         </tbody>
     </table>
+    
+    <div class="form-group text-center p-2">
+        <input type="submit" value="Veranderingen Opslaan!" form="SaveForm" class="btn btn-success btn-lg" />
+    </div>
 </div>
 
 @section Scripts {
