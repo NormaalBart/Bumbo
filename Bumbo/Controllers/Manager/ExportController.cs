@@ -46,8 +46,14 @@ public class ExportController : NotificationController
             .Select(s => new DateTime(s.Key.Year, s.Key.Month, 1))
             .OrderBy(s => s.Date).Reverse().ToList();
 
+        if (selectableMonths == null || selectableMonths.Count <= 0)
+        {
+            selectableMonths = new List<DateTime>();
+            selectableMonths.Add(DateTime.Now);
+        }
+
         var monthSelected = SelectedMonth == null || SelectedMonth.Length != 7
-            ? selectableMonths.First()
+            ? selectableMonths.FirstOrDefault()
             : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
 
         var workedShiftsInMonth =
