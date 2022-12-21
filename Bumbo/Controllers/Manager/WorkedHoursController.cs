@@ -85,10 +85,18 @@ public class WorkedHoursController : NotificationController
     }
 
     [Authorize(Roles = "Manager")]
-    public IActionResult Edit(List<int> workedShiftId, string employeeId)
+    public async Task<IActionResult> Edit(List<int> workedShiftId, string employeeId)
     {
+        var employee = _employeeRepository.Get(employeeId);
         var employeeWorkedHoursViewModel =
-            _mapper.Map<EmployeeWorkedHoursViewModel>(_employeeRepository.Get(employeeId));
+            _mapper.Map<EmployeeWorkedHoursViewModel>(employee);
+
+        // check if the employee is part of managers branch
+        // The manager cannot edit hours of employees who are not apart of the branch
+        var manager = await _userManager.GetUserAsync(User);
+        if (manager.DefaultBranchId != employee.DefaultBranchId)
+            return RedirectToAction("AccessDenied", "Account");
+
         foreach (var id in workedShiftId)
         {
             var w = _mapper.Map<WorkedShiftViewModel>(_workedShiftRepository.Get(id));
