@@ -1,39 +1,36 @@
-﻿using BumboData.Enums;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using BumboData.Enums;
 
-namespace Bumbo.Models.UnavailableMoments
+namespace Bumbo.Models.UnavailableMoments;
+
+public class UnavailabilityManagerListViewModel : PaginatedViewModel
 {
-    public class UnavailabilityManagerListViewModel: PaginatedViewModel
+    public UnavailabilityManagerListViewModel()
     {
-        public List<UnavailableMomentsViewModel> UnavailableMoments { get; set; }
+        UnavailableMoments = new List<UnavailableMomentsViewModel>();
+        AvailableSortOptions = new List<UnavailabilitySortingOption>();
+        foreach (var option in Enum.GetValues(typeof(UnavailabilitySortingOption)))
+            AvailableSortOptions.Add((UnavailabilitySortingOption) option);
+    }
 
-        public DateTime Date { get; set; }
-        
-        public string SearchString { get; set; }
+    public List<UnavailableMomentsViewModel> UnavailableMoments { get; set; }
 
-        [DisplayName("Afgewerkte aanvragen weergeven")]
-        public bool IncludeAccepted { get; set; }
+    public DateTime Date { get; set; }
 
-        [DisplayName("Sorteeroptie")]
-        public UnavailabilitySortingOption SortingOption { get; set; }
+    public string SearchString { get; set; }
 
-        public List<UnavailabilitySortingOption> AvailableSortOptions { get; set; }
+    [DisplayName("Afgewerkte aanvragen weergeven")]
+    public bool IncludeAccepted { get; set; }
 
-        public List<int> Ids { get; set; }
+    [DisplayName("Sorteeroptie")] public UnavailabilitySortingOption SortingOption { get; set; }
 
-        public UnavailabilityManagerListViewModel()
-        {
-            UnavailableMoments = new List<UnavailableMomentsViewModel>();
-            AvailableSortOptions = new List<UnavailabilitySortingOption>();
-            foreach (var option in Enum.GetValues(typeof(UnavailabilitySortingOption)))
-            {
-                AvailableSortOptions.Add((UnavailabilitySortingOption)option);
-            }
-        }
-        public string GetSortingDisplayName(UnavailabilitySortingOption sortoption)
-        {
-            return sortoption.GetAttribute<DisplayAttribute>().Name;
-        }
+    public List<UnavailabilitySortingOption> AvailableSortOptions { get; set; }
+
+    public List<int> Ids { get; set; }
+
+    public string GetSortingDisplayName(UnavailabilitySortingOption sortoption)
+    {
+        return sortoption.GetAttribute<DisplayAttribute>().Name;
     }
 }

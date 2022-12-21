@@ -1,16 +1,15 @@
-﻿@model Bumbo.Models.ApproveWorkedHours.IndexWorkedHoursViewModel
-@using Bumbo.Utils;
+﻿@using Bumbo.Utils
+@model Bumbo.Models.ApproveWorkedHours.IndexWorkedHoursViewModel
 @{
     ViewBag.data = "WorkedHours";
 }
-
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren accorderen</h1>
 
 <div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
     <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z" />
+            <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
         </svg>
     </a>
 
@@ -21,11 +20,10 @@
 
     <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z" />
+            <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
         </svg>
     </a>
 </div>
-
 
 @if (Model.Employees.Count < 1)
 {
@@ -37,42 +35,41 @@ else
 {
     <table class="table table-striped table-hover table-bordered">
         <thead class="table table-dark">
-            <tr>
-                <th scope="col">Naam</th>
-                <th scope="col">Geplande uren</th>
-                <th scope="col">Werkelijke uren</th>
-                <th scope="col">Verschil</th>
-                <th scope="col">Status</th>
-            </tr>
+        <tr>
+            <th scope="col">Naam</th>
+            <th scope="col">Geplande uren</th>
+            <th scope="col">Werkelijke uren</th>
+            <th scope="col">Verschil</th>
+            <th scope="col">Status</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var employee in Model.Employees)
-            {
-                <tr>
-                    <td>@employee.FullName</td>
-                    <td>@employee.PlannedShiftsToString()</td>
-                    <td>
-                        @employee.WorkedShiftsToString()
-                        @if (!employee.WorkedShifts.All(w => w.Approved == true))
-                        {
-                            @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new { workedShiftId = employee.WorkedShifts.Select(w => w.Id),employeeId = employee.Id})
-                        }
-                    </td>
-                    <td>@employee.CalculateDifference()</td>
-                    <td>
-                        @if (employee.WorkedShifts.All(w => w.Approved == true))
-                        {
-                            <i class="ms-1 bi-check-circle" style="color: green" title="Uren zijn al goedgekeurd." data-toggle="tooltip" data-placement="top"></i>
-                        }
-                        else
-                        {
+        @foreach (var employee in Model.Employees)
+        {
+            <tr>
+                <td>@employee.FullName</td>
+                <td>@employee.PlannedShiftsToString()</td>
+                <td>
+                    @employee.WorkedShiftsToString()
+                    @if (!employee.WorkedShifts.All(w => w.Approved))
+                    {
+                        @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new {workedShiftId = employee.WorkedShifts.Select(w => w.Id), employeeId = employee.Id})
+                    }
+                </td>
+                <td>@employee.CalculateDifference()</td>
+                <td>
+                    @if (employee.WorkedShifts.All(w => w.Approved))
+                    {
+                        <i class="ms-1 bi-check-circle" style="color: green" title="Uren zijn al goedgekeurd." data-toggle="tooltip" data-placement="top"></i>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Goedkeuren", "Approve", "WorkedHours", new {ids = employee.WorkedShifts.Select(w => w.Id)})
+                    }
+                </td>
 
-                            @Html.ActionLink("Goedkeuren", "Approve", "WorkedHours", new { ids = employee.WorkedShifts.Select(w => w.Id)})
-                        }
-                    </td>
-
-                </tr>
-            }
+            </tr>
+        }
         </tbody>
     </table>
 }

@@ -1,6 +1,5 @@
-﻿@using Bumbo.Models.UnavailableMoments
-@using BumboData.Enums
-@model UnavailabilityManagerListViewModel
+﻿@using BumboData.Enums
+@model Bumbo.Models.UnavailableMoments.UnavailabilityManagerListViewModel
 
 @{
     ViewBag.data = "Unavailability";
@@ -24,14 +23,14 @@
                         </div>
                         <div class="col-md-auto justify-content-center text-center my-auto">
                             <div class="form-group top-header-content form-check">
-                                <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
+                                <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam"/>
                             </div>
                         </div>
 
                         <div class="col-md-2 justify-content-center text-center my-auto">
                             <div class="form-group top-header-content">
                                 <label class="form-check-label">
-                                    @Html.DisplayNameFor(model => model.IncludeAccepted) <br /> <input class="form-check-input" asp-for="IncludeAccepted" />
+                                    @Html.DisplayNameFor(model => model.IncludeAccepted) <br/> <input class="form-check-input" asp-for="IncludeAccepted"/>
                                 </label>
                             </div>
                         </div>
@@ -39,7 +38,7 @@
                             <div class="form-group top-header-content">
                                 <label asp-for="SortingOption" class="control-label"></label>
                                 <select asp-for="SortingOption" class="form-control form-select">
-                                    <option value="@Model.SortingOption">@Model.GetSortingDisplayName(@Model.SortingOption)</option>
+                                    <option value="@Model.SortingOption">@Model.GetSortingDisplayName(Model.SortingOption)</option>
                                     @foreach (var item in Model.AvailableSortOptions)
                                     {
                                         @if (Model.SortingOption != item)
@@ -53,7 +52,7 @@
 
                         <div class="col-md-auto justify-content-center text-center my-auto">
                             <div class="btn btn-warning text-center">
-                                <input type="submit" value="Zoeken" class="btn btn-default search-bar" />
+                                <input type="submit" value="Zoeken" class="btn btn-default search-bar"/>
                             </div>
                         </div>
                     </div>
@@ -65,87 +64,87 @@
 
 <table class="table table-striped table-hover table-bordered">
     <thead class="table table-dark">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].EmployeeName)
-            </th>
-            <th class="text-center">
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
-            </th>
-            <th class="text-center">
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnavailableMoments[0].ReviewStatus)
-            </th>
-            <th>
-                Acties
-            </th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UnavailableMoments[0].EmployeeName)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.UnavailableMoments[0].StartTime)
+        </th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.UnavailableMoments[0].EndTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnavailableMoments[0].ReviewStatus)
+        </th>
+        <th>
+            Acties
+        </th>
+    </tr>
     </thead>
     <tbody>
-        @if (Model.UnavailableMoments.Count == 0)
-        {
-            <tr>
-                <td colspan="6">
-                    <div class="alert alert-info text-center">
-                        <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
-                    </div>
-                </td>
-            </tr>
-        }
+    @if (Model.UnavailableMoments.Count == 0)
+    {
+        <tr>
+            <td colspan="6">
+                <div class="alert alert-info text-center">
+                    <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
+                </div>
+            </td>
+        </tr>
+    }
 
 
-        @foreach (var item in Model.UnavailableMoments)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmployeeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-                <td>
+    @foreach (var item in Model.UnavailableMoments)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @if (item.ReviewStatus == ReviewStatus.Pending)
+                {
+                    <i class="bi bi-patch-question-fill text-primary text-large" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top"></i>
+                }
+                else if (item.ReviewStatus == ReviewStatus.Approved)
+                {
+                    <i class="ms-1 bi-check-circle-fill" style="color: green" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top"/>
+                }
+                else if (item.ReviewStatus == ReviewStatus.Rejected)
+                {
+                    <i class="ms-1 bi-check-circle-fill" style="color: red" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top"/>
+                }
+                @Html.DisplayFor(modelItem => item.ReviewStatus)
+            </td>
+            <td class=" text-center" colspan="2">
+                <div class=" d-flex align-items-center justify-content-center">
                     @if (item.ReviewStatus == ReviewStatus.Pending)
                     {
-                        <i class="bi bi-patch-question-fill text-primary text-large" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top"></i>
+                        <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="AcceptForm" method="post">
+                            <i class="ms-1 bi-check-circle-fill" href="javascript:{}" onclick="document.getElementById('AcceptForm').submit();" style="color: green; cursor: pointer" title="Accepteer dit afwezigheidsverzoek" data-toggle="tooltip" data-placement="top">
+                            </i>
+                        </form>
+                        <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="DenyForm" method="post">
+                            <i class="ms-1 bi-x-circle-fill" href="javascript:{}" onclick="document.getElementById('DenyForm').submit();" style="color: red; cursor: pointer" title="Keur dit afwezigheidsverzoek af" data-toggle="tooltip" data-placement="top">
+                            </i>
+                        </form>
                     }
-                    else if (item.ReviewStatus == ReviewStatus.Approved)
-                    {
-                        <i class="ms-1 bi-check-circle-fill" style="color: green" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top" />
-                    }
-                    else if (item.ReviewStatus == ReviewStatus.Rejected)
-                    {
-                        <i class="ms-1 bi-check-circle-fill" style="color: red" title="@Html.DisplayFor(modelItem => item.ReviewStatus)" data-toggle="tooltip" data-placement="top" />
-                    }
-                    @Html.DisplayFor(modelItem => item.ReviewStatus)
-                </td>
-                <td class=" text-center" colspan="2">
-                    <div class=" d-flex align-items-center justify-content-center">
-                        @if (item.ReviewStatus == ReviewStatus.Pending)
-                        {
-                            <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="AcceptForm" method="post">
-                                <i class="ms-1 bi-check-circle-fill" href="javascript:{}" onclick="document.getElementById('AcceptForm').submit();" style="color: green; cursor: pointer" title="Accepteer dit afwezigheidsverzoek" data-toggle="tooltip" data-placement="top">
-                                </i>
-                            </form>
-                            <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="DenyForm" method="post">
-                                <i class="ms-1 bi-x-circle-fill" href="javascript:{}" onclick="document.getElementById('DenyForm').submit();" style="color: red; cursor: pointer" title="Keur dit afwezigheidsverzoek af" data-toggle="tooltip" data-placement="top">
-                                </i>
-                            </form>
-                        }
-                    </div>
-                </td>
-            </tr>
-        }
+                </div>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
 
@@ -159,7 +158,7 @@
     <!-- The Modal -->
     <div id="modal" class="modal ">
         <!-- Modal content -->
-    <div class="modal-content modal-dialog text-center prognosis-textarea">
+        <div class="modal-content modal-dialog text-center prognosis-textarea">
             <span class="close" style="text-align: right">&times;</span>
             <label> </label>
             <div class="m-3 text-center align-content-center">
@@ -167,13 +166,13 @@
                     <!--We pass all ids of items on screen.-->
                     @foreach (var item in Model.Ids)
                     {
-                        <input hidden asp-for="Ids" value="@item" name="ids" />
+                        <input hidden asp-for="Ids" value="@item" name="ids"/>
                     }
                     <div class="m-3">
                         <span> Weet je zeker dat je alle zichtbare momenten wilt </span> <span class="text-success">goedkeuren?</span>
 
                     </div>
-                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" class="btn btn-success btn-lg " />
+                    <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" class="btn btn-success btn-lg "/>
                 </form>
             </div>
         </div>
@@ -182,7 +181,7 @@
 
 @section Scripts
 {
-<script>
+    <script>
     $('#openModalBTN').click(function() {
         console.log('hoi');
         // Show no new items to accept
@@ -196,4 +195,3 @@
     })
 </script>
 }
-

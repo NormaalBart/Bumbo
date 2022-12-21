@@ -35,10 +35,9 @@ a {
     margin: 5px;
 }
 
-    .edit-box input {
-        padding: 10px;
-    }
-
+.edit-box input {
+    padding: 10px;
+}
 
 input[type="search"] {
     border: 3px;
@@ -82,19 +81,19 @@ input[type="search"] {
     margin-right: 10px;
 }
 
-    .top-date-header div a {
-        color: inherit;
-        text-decoration: none;
-    }
+.top-date-header div a {
+    color: inherit;
+    text-decoration: none;
+}
 
 .center-table {
     margin-right: auto;
     margin-left: auto;
 }
 
-    .center-table td {
-        padding: 5px;
-    }
+.center-table td {
+    padding: 5px;
+}
 
 /* The Modal (background) */
 .modal {
@@ -106,12 +105,9 @@ input[type="search"] {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
-
-
-
 
 /* Modal Content/Box */
 .modal-content {
@@ -121,7 +117,6 @@ input[type="search"] {
     border: 1px solid #888;
 }
 
-
 /* The Close Button */
 .close {
     color: #aaa;
@@ -130,12 +125,12 @@ input[type="search"] {
     font-weight: bold;
 }
 
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .date-display {
     border-right: solid;
@@ -187,10 +182,6 @@ input[type="search"] {
 .employee-roster-box-shift {
     background-color: white;
 }
-
-
-
-
 
 .selected {
     height: 25px;
@@ -257,13 +248,13 @@ p {
         height: 100%;
     }
 }
+
 /*Rooster manager*/
 
 .roster-table-employee-cell {
     width: 50px;
     height: 45px;
 }
-
 
 /*This is the top header row which contains the time collumns*/
 .roster-table-header-cell {
@@ -321,7 +312,6 @@ p {
 .roster-shift-containter {
     position: relative;
 }
-
 
 .roster-table-addbtn {
     background: linear-gradient(to bottom right, mediumspringgreen, springgreen);
@@ -424,7 +414,6 @@ p {
     color: red;
 }
 
-
 /*Unavailable moments overview*/
 
 .moments-row {
@@ -459,7 +448,6 @@ p {
         width: 100%;
     }
 }
-
 
 body.swal2-shown > [aria-hidden="true"] {
     transition: 0.1s filter;
@@ -500,7 +488,7 @@ body.swal2-shown > [aria-hidden="true"] {
     .week-legenda {
         display: flex;
     }
-    
+
     .week-placeholder {
         display: flex;
     }
@@ -541,30 +529,31 @@ input[type='checkbox']:checked:not(normal-checkbox) {
         left: 12.5px !important;
     }
 
-        .dropdown-menu li {
-            position: relative;
-        }
+    .dropdown-menu li {
+        position: relative;
+    }
 
-        .dropdown-menu .submenu {
-            display: none;
-            position: absolute;
-            left: 100%;
-            top: -7px;
-        }
+    .dropdown-menu .submenu {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: -7px;
+    }
 
-        .dropdown-menu .submenu-left {
-            right: 100%;
-            left: auto;
-        }
+    .dropdown-menu .submenu-left {
+        right: 100%;
+        left: auto;
+    }
 
-        .dropdown-menu > li:hover {
-            background-color: #f1f1f1
-        }
+    .dropdown-menu > li:hover {
+        background-color: #f1f1f1
+    }
 
-            .dropdown-menu > li:hover > .submenu {
-                display: block;
-            }
+    .dropdown-menu > li:hover > .submenu {
+        display: block;
+    }
 }
+
 /* ============ desktop view .end// ============ */
 
 /* ============ small devices ============ */
@@ -576,6 +565,7 @@ input[type='checkbox']:checked:not(normal-checkbox) {
         margin-bottom: .5rem;
     }
 }
+
 /* ============ small devices .end// ============ */
 
 .errorpage {
@@ -585,7 +575,6 @@ input[type='checkbox']:checked:not(normal-checkbox) {
     max-width: 800px;
     padding: 20px;
 }
-
 
 .errorpagemsg {
     text-align: center;
@@ -598,6 +587,6 @@ input[type='checkbox']:checked:not(normal-checkbox) {
     color: white;
 }
 
-    .errorpage a:hover {
-        text-decoration: underline;
-    }
+.errorpage a:hover {
+    text-decoration: underline;
+}

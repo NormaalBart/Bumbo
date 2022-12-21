@@ -1,23 +1,20 @@
-﻿using Bumbo.Models.EmployeeManager.Common;
-using BumboData.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Bumbo.Models.EmployeeManager.Common;
+using BumboData.Models;
 
-namespace Bumbo.Models.EmployeeManager.Manager
+namespace Bumbo.Models.EmployeeManager.Manager;
+
+public class ManagerEditViewModel : BaseCreateViewModel
 {
-    public class ManagerEditViewModel : BaseCreateViewModel
+    public ManagerEditViewModel()
     {
-
-        [Required]
-        [DisplayName("Van welke branch is deze persoon de manager?")]
-        public int SelectedBranch { get; set; }
-
-        public List<Branch> Branches { get; set; }
-
-
-        public ManagerEditViewModel() : base()
-        {
-            Branches = new List<Branch>();
-        }
+        Branches = new List<Branch>();
     }
+
+    [Required]
+    [DisplayName("Van welke branch is deze persoon de manager?")]
+    public int SelectedBranch { get; set; }
+
+    public List<Branch> Branches { get; set; }
 }

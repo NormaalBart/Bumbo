@@ -24,44 +24,44 @@
             <tr>
                 <td class="text-center">@Html.DisplayNameFor(model => model.CheckoutEmployees)</td>
                 <td class="form-group">
-                    <input class="input-max-width-40" asp-for="CheckoutEmployees" type="text" inputmode="numeric" /> klanten per uur<br />
+                    <input class="input-max-width-40" asp-for="CheckoutEmployees" type="text" inputmode="numeric"/> klanten per uur<br/>
                     <span asp-validation-for="CheckoutEmployees" class="text-danger"></span>
                 </td>
             </tr>
             <tr>
                 <td class="text-center">@Html.DisplayNameFor(model => model.ColiTime)</td>
                 <td class="form-group">
-                    <input class="input-max-width-40" asp-for="ColiTime" type="text" inputmode="numeric" /> minuten per coli<br />
+                    <input class="input-max-width-40" asp-for="ColiTime" type="text" inputmode="numeric"/> minuten per coli<br/>
                     <span asp-validation-for="ColiTime" class="text-danger"></span>
                 </td>
             </tr>
             <tr>
                 <td class="text-center">@Html.DisplayNameFor(model => model.ShelfStockingTimes)</td>
                 <td class="form-group">
-                    <input class="input-max-width-40" asp-for="ShelfStockingTimes" type="text" inputmode="numeric" /> minuten per coli inruimen<br />
+                    <input class="input-max-width-40" asp-for="ShelfStockingTimes" type="text" inputmode="numeric"/> minuten per coli inruimen<br/>
                     <span asp-validation-for="ShelfStockingTimes" class="text-danger"></span>
                 </td>
             </tr>
             <tr>
                 <td class="text-center">@Html.DisplayNameFor(model => model.FreshEmployees)</td>
                 <td>
-                    <input class="input-max-width-40" asp-for="FreshEmployees" type="text" inputmode="numeric" /> klanten per uur<br />
+                    <input class="input-max-width-40" asp-for="FreshEmployees" type="text" inputmode="numeric"/> klanten per uur<br/>
                     <span asp-validation-for="FreshEmployees" class="text-danger"></span>
                 </td>
             </tr>
             <tr>
                 <td class="text-center">@Html.DisplayNameFor(model => model.ShelfArrangement)</td>
                 <td class="form-group">
-                    <input class="input-max-width-40" asp-for="ShelfArrangement" type="text" inputmode="numeric" /> seconde per meter spiegelen<br />
+                    <input class="input-max-width-40" asp-for="ShelfArrangement" type="text" inputmode="numeric"/> seconde per meter spiegelen<br/>
                     <span asp-validation-for="ShelfArrangement" class="text-danger"></span>
                 </td>
             </tr>
         </form>
         </tbody>
     </table>
-    
+
     <div class="form-group text-center p-2">
-        <input type="submit" value="Veranderingen Opslaan!" form="SaveForm" class="btn btn-success btn-lg" />
+        <input type="submit" value="Veranderingen Opslaan!" form="SaveForm" class="btn btn-success btn-lg"/>
     </div>
 </div>
 
@@ -69,4 +69,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    }
+}

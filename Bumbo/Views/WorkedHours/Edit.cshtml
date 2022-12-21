@@ -2,7 +2,9 @@
 @{
     ViewBag.data = "WorkedHours";
 }
-<h1 class=" col-sm d-flex justify-content-center flex-nowrap"><b>Naam: </b>  @Model.FullName</h1>
+<h1 class=" col-sm d-flex justify-content-center flex-nowrap">
+    <b>Naam: </b> @Model.FullName
+</h1>
 
 @if (!ViewData.ModelState.IsValid)
 {
@@ -26,7 +28,7 @@
             </div>
         }
         <div class="row">
-            <input type="submit" value="Opslaan" />
+            <input type="submit" value="Opslaan"/>
         </div>
     }
 </div>

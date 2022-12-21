@@ -1,10 +1,10 @@
-﻿@model Bumbo.Models.UnavailableMoments.UnavailableMomentsListViewModel
+﻿@using BumboData.Enums
+@model Bumbo.Models.UnavailableMoments.UnavailableMomentsListViewModel
 
 @{
     ViewBag.data = "Availabilty";
     ViewData["Title"] = "Afwezigheid";
 }
-
 
 <div>
 
@@ -29,98 +29,97 @@
     </div>
     <table class="table table-hover ">
         <thead>
-            <tr>
-                <th>
-                    Afwezigheden:
-                </th>
-                <th>
+        <tr>
+            <th>
+                Afwezigheden:
+            </th>
+            <th>
 
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
-                </th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnavailableMoments[0].Type)
+            </th>
 
-            </tr>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var moment in Model.UnavailableMoments)
-            {
-                <tr class="">
-                    <td colspan="5">
-                    </td>
-                </tr>
+        @foreach (var moment in Model.UnavailableMoments)
+        {
+            <tr class="">
+                <td colspan="5">
+                </td>
+            </tr>
 
-                <tr role='button' class="moments-row text-center" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-MM-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-MM-dd")')">
-                    @* if the moment is on the same day, we don't show the date multiple times*@
-                    @if (moment.StartTime.Date == moment.EndTime.Date)
-                    {
-                        <!--Currently uses multiple td objects instead of colspan element to force min sizes on side columns to center properly.-->
-                        <td class="moments-collumn">
-                        </td>
-                        <td class="text-center ">
-                            @moment.StartTime.ToString("dddd d-M-yyyy ")
-                        </td>
-                        <td class="moments-collumn">
-                        </td>
-
-                    }
-                    else
-                    {
-                        <td>
-                        </td>
-                        <td>
-                            @moment.StartTime.ToString("dddd d-M-yyyy") ->  @moment.EndTime.ToString("ddd d-M-yyyy")
-                        </td>
-                        <td>
-                        </td>
-                    }
-                </tr>
-
-                <tr role='button' class="moments-row" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-MM-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-MM-dd")')">
-                    <td class="text-center">
-                        start tijd: <span class="fw-bold">@moment.StartTime.ToString("HH:mm") </span>
+            <tr role='button' class="moments-row text-center" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-MM-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-MM-dd")')">
+                @* if the moment is on the same day, we don't show the date multiple times*@
+                @if (moment.StartTime.Date == moment.EndTime.Date)
+                {
+                    <!--Currently uses multiple td objects instead of colspan element to force min sizes on side columns to center properly.-->
+                    <td class="moments-collumn">
                     </td>
-                    <td class="text-center">
-                        eind tijd: <span class="fw-bold"> @moment.EndTime.ToString("HH:mm") </span>
+                    <td class="text-center ">
+                        @moment.StartTime.ToString("dddd d-M-yyyy ")
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => moment.Type)
+                    <td class="moments-collumn">
                     </td>
-
-                </tr>
-                <tr class="moments-row">
+                }
+                else
+                {
                     <td>
                     </td>
-                    <td class="text-center">
-                        <a asp-action="Delete" asp-route-id="@moment.Id" class="btn btn-sm btn-danger">Verwijder</a>
+                    <td>
+                        @moment.StartTime.ToString("dddd d-M-yyyy") -> @moment.EndTime.ToString("ddd d-M-yyyy")
                     </td>
+                    <td>
+                    </td>
+                }
+            </tr>
 
-                    @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
-                    {
-                        <td>
-                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is goedgekeurd door de manager">
-                                <p>Status: <span class="bi bi-check text-success text-large"></span></p>
-                            </div>
-                        </td>
-                    }
-                    @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
-                    {
-                        <td>
-                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is nog niet gekeurd door de manager">
-                                <p>Status: <span class="bi bi-patch-question-fill text-primary text-large"></span></p>
-                            </div>
-                        </td>
-                    }
-                    @if (moment.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
-                    {
-                        <td>
-                            <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is niet goedgekeurd door de manager. ">
-                                <p>Status: <span class="bi bi-x text-danger text-large"></span></p>
-                            </div>
-                        </td>
-                    }
-                </tr>
-            }
+            <tr role='button' class="moments-row" onclick="onRowClick('@moment.StartTime.Date.ToString("yyyy-MM-dd")', '@moment.StartTime.AddDays(7).Date.ToString("yyyy-MM-dd")')">
+                <td class="text-center">
+                    start tijd: <span class="fw-bold">@moment.StartTime.ToString("HH:mm") </span>
+                </td>
+                <td class="text-center">
+                    eind tijd: <span class="fw-bold"> @moment.EndTime.ToString("HH:mm") </span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => moment.Type)
+                </td>
+
+            </tr>
+            <tr class="moments-row">
+                <td>
+                </td>
+                <td class="text-center">
+                    <a asp-action="Delete" asp-route-id="@moment.Id" class="btn btn-sm btn-danger">Verwijder</a>
+                </td>
+
+                @if (moment.ReviewStatus == ReviewStatus.Approved)
+                {
+                    <td>
+                        <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is goedgekeurd door de manager">
+                            <p>Status: <span class="bi bi-check text-success text-large"></span></p>
+                        </div>
+                    </td>
+                }
+                @if (moment.ReviewStatus == ReviewStatus.Pending)
+                {
+                    <td>
+                        <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is nog niet gekeurd door de manager">
+                            <p>Status: <span class="bi bi-patch-question-fill text-primary text-large"></span></p>
+                        </div>
+                    </td>
+                }
+                @if (moment.ReviewStatus == ReviewStatus.Rejected)
+                {
+                    <td>
+                        <div class="review-status-box" data-toggle="tooltip" data-placement="top" title="Dit moment is niet goedgekeurd door de manager. ">
+                            <p>Status: <span class="bi bi-x text-danger text-large"></span></p>
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
         </tbody>
     </table>
 }
@@ -135,9 +134,9 @@ else
 
 @section Scripts {
 
-<script>
+    <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
 
 </script>
-}
+    }

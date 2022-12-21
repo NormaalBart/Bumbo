@@ -23,7 +23,7 @@ public class MaxWorkDaysInWeek : CAORuleAppliesToAge
                 .Take(_maxWorkDays).ToList();
             return ret;
         }
-        
+
         return new List<PlannedShift>();
     }
 
