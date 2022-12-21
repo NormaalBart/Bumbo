@@ -89,9 +89,11 @@
     <tbody>
         @if (Model.UnavailableMoments.Count == 0)
         {
-            <tr class="alert-info text-center">
-                <td colspan="7">
-                    <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
+            <tr>
+                <td colspan="6">
+                    <div class="alert alert-info text-center">
+                        <p>Er zijn geen nieuwe afwezigheid aanvragingen.</p>
+                    </div>
                 </td>
             </tr>
         }
