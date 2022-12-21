@@ -27,6 +27,14 @@ public class BumboContext : IdentityDbContext<Employee, IdentityRole, string>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<Standard>()
+            .HasKey(u => new 
+        { 
+            u.BranchId, 
+            u.Key 
+        });
+        
         // Setup allowed departments table
         modelBuilder.Entity<Department>()
             .HasMany(i => i.AllowedEmployees)
