@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bumbo.Models.UnavailableMoments
 {
-    public class UnavailabilityManagerListViewModel
+    public class UnavailabilityManagerListViewModel: PaginatedViewModel
     {
         public List<UnavailableMomentsViewModel> UnavailableMoments { get; set; }
 
@@ -21,10 +21,6 @@ namespace Bumbo.Models.UnavailableMoments
         public List<UnavailabilitySortingOption> AvailableSortOptions { get; set; }
 
         public List<int> Ids { get; set; }
-
-        public int Page { get; set; }
-
-        public int MaxPage { get; set; }
 
         public UnavailabilityManagerListViewModel()
         {
