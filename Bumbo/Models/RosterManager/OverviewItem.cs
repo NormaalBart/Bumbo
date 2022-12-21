@@ -19,8 +19,13 @@ public class OverviewItem
     // if the rostered hours are more than the prognosis hours, return true.
     public bool IsSufficientlyRostered()
     {
-        if (RosteredHours >= PrognosisHours && RosteredHours > 0) return true;
-        return false;
+        return RosteredHours >= PrognosisHours && RosteredHours > 0;
+    }
+    
+    // if there are rostered hours, but it is not enough we return true
+    public bool IsInsufficientlyRostered()
+    {
+        return RosteredHours < PrognosisHours;
     }
 
     public string GetDayName()
