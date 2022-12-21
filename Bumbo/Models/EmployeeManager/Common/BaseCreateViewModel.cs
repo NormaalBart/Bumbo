@@ -14,16 +14,16 @@ public abstract class BaseCreateViewModel
 
     [Required(ErrorMessage = "Dit veld is verplicht")]
     [DisplayName("Voornaam")]
-    [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
+    [StringLength(50, ErrorMessage = "Veld heeft te veel karakters.")]
     public string FirstName { get; set; }
 
     [DisplayName("Tussenvoegsel")]
-    [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
+    [StringLength(50, ErrorMessage = "Veld heeft te veel karakters.")]
     public string? Preposition { get; set; }
 
     [Required(ErrorMessage = "Dit veld is verplicht")]
     [DisplayName("Achternaam")]
-    [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
+    [StringLength(50, ErrorMessage = "Veld heeft te veel karakters.")]
     public string LastName { get; set; }
 
     [Required(ErrorMessage = "Dit veld is verplicht")]
@@ -41,7 +41,7 @@ public abstract class BaseCreateViewModel
     public string Email { get; set; }
 
     [DisplayName("Telefoon")]
-    [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
+    [StringLength(50, ErrorMessage = "Veld heeft te veel karakters.")]
     public string? PhoneNumber { get; set; }
 
     [Required(ErrorMessage = "Dit veld is verplicht")]
@@ -51,7 +51,7 @@ public abstract class BaseCreateViewModel
 
     [Required(ErrorMessage = "Dit veld is verplicht")]
     [DisplayName("Huisnummer")]
-    [StringLength(50, ErrorMessage = "Veld heeft te veel karacters.")]
+    [StringLength(50, ErrorMessage = "Veld heeft te veel karakters.")]
     public string HouseNumber { get; set; }
 
     [DisplayName("Straat")] public string? Street { get; set; }
