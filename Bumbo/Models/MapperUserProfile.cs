@@ -56,7 +56,9 @@ public class MapperUserProfile : Profile
             .ForMember(dest => dest.EmployeeJoinedCompany,
                 opt => opt.MapFrom(src => src.EmployeeSince.ToDateTime(new TimeOnly(0, 0, 0)))).ForMember(
                 dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate.ToDateTime(new TimeOnly(0, 0, 0))));
-        CreateMap<Employee, EmployeeRosterViewModel>().ForMember(dest => dest.AllowedDepartments,
+        CreateMap<Employee, EmployeeRosterViewModel>()
+            .ForMember(dest => dest.BranchId, opt => opt.MapFrom(src => src.DefaultBranchId))
+            .ForMember(dest => dest.AllowedDepartments,
             opt => opt.MapFrom(src => src.AllowedDepartments));
         CreateMap<Prognosis, PrognosisViewModel>().ForMember(dest => dest.Date,
             opt => opt.MapFrom(src => src.Date.ToDateTime(new TimeOnly(0, 0, 0))));
@@ -130,16 +132,11 @@ public class MapperUserProfile : Profile
             .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber))
             .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street))
             .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City))
+            .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
             .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 
         CreateMap<Department, DepartmentRosterViewModel>();
         CreateMap<DepartmentRosterViewModel, Department>();
-
-        CreateMap<PlannedShift, EmployeeShiftViewModel>()
-            .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Branch.HouseNumber))
-            .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Branch.Street))
-            .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Branch.City))
-            .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.DepartmentName));
 
         CreateMap<IEnumerable<BumboData.Models.Standard>, StandardViewModel>().ConvertUsing<StandardConverter>();
     }

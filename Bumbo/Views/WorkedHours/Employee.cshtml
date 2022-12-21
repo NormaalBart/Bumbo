@@ -47,7 +47,7 @@
             </td>
             <td>@item.CalculateDifference()</td>
             <td>
-                @if (item.PlannedShifts.Count > 0 || item.WorkedShifts.Count > 0)
+                @if (item.PlannedShifts.Count > 0 && item.WorkedShifts.Count > 0)
                 {
                     @if (item.WorkedShifts.All(w => w.Approved))
                     {

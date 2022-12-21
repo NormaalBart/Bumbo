@@ -42,9 +42,9 @@ public class EmployeeRosterController : Controller
         var dbMoments =
             _unavailableMomentsRepository.GetWeekOfUnavailableMomentsAfterDateForEmployee(date.Date, employee.Id);
 
-        shiftsVM.shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
-        shiftsVM.shifts.AddRange(_mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbMoments).ToList());
-        shiftsVM.shifts = shiftsVM.shifts.OrderBy(s => s.StartTime).ToList();
+        shiftsVM.Shifts = _mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbshifts).ToList();
+        shiftsVM.Shifts.AddRange(_mapper.Map<IEnumerable<EmployeeShiftViewModel>>(dbMoments).ToList());
+        shiftsVM.Shifts = shiftsVM.Shifts.OrderBy(s => s.StartTime).ToList();
         return View(shiftsVM);
     }
 }

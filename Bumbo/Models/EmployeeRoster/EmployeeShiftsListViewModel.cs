@@ -7,7 +7,7 @@ public class EmployeeShiftsListViewModel
 {
     public DateOnly Date { get; set; }
 
-    public List<EmployeeShiftViewModel> shifts { get; set; }
+    public List<EmployeeShiftViewModel> Shifts { get; set; }
 
     public string GetDay(int dayNumber)
     {

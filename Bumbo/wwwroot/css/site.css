@@ -173,12 +173,6 @@ input[type="search"] {
     }
 }
 
-@media only screen and (min-width: 800px) {
-    .employee-roster-box {
-        width: 800px;
-    }
-}
-
 .employee-roster-box-shift {
     background-color: white;
 }

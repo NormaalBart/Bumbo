@@ -13,6 +13,8 @@ public class EmployeeRosterViewModel
 
     public string Id { get; set; }
 
+    public int BranchId { get; set; }
+
     [DisplayName("Voornaam")] public string FirstName { get; set; }
 
     [DisplayName("Tussenvoegsel")] public string? MiddleName { get; set; }

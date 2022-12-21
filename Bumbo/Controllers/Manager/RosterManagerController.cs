@@ -65,8 +65,16 @@ public class RosterManagerController : Controller
 
         var employeeList =
             _mapper.Map<IEnumerable<EmployeeRosterViewModel>>(
-                _employeeRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId ?? -1));
-
+                _employeeRepository.GetAllEmployeesOfBranch(manager.DefaultBranchId ?? -1)).ToList();
+        
+        // Add external employees that are rostered in that day
+        // employeeList.
+        employeeList.AddRange(_mapper.Map<IEnumerable<EmployeeRosterViewModel>>(_shiftRepository.GetAllShiftsDay(manager.DefaultBranchId ?? -1, date.ToDateOnly())
+            .GroupBy(s=>s.Employee)
+            .Where(s=> employeeList.All(e => e.Id != s.Key.Id))
+            .Select(s=>s.Key)
+            .ToList()));
+        
         viewModel.Date = date;
         viewModel.CopyFrom = date;
         viewModel.CopyTo = date.AddDays(7);
