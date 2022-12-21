@@ -146,35 +146,20 @@ public class BranchController : Controller
     }
 
     // GET: BranchController/Edit/5
-    public ActionResult Edit(int id)
+    public async Task<ActionResult> Edit(int id)
     {
         var branch = _branchRepository.Get(id);
         if (branch == null) return RedirectToAction(nameof(Index));
+        var manager = await _userManager.GetUserAsync(User);
+
+        // Make sure the manager cannot access other branches.
+        if (!(User.IsInRole(RoleType.ADMINISTRATOR.Name)) && manager.DefaultBranchId != id)
+            return RedirectToAction("AccessDenied", "Account");
+
+
         var branchViewModel = _mapper.Map<BranchEditViewModel>(branch);
         return View(branchViewModel);
     }
-        // GET: BranchController/Edit/5
-        public async Task<ActionResult> Edit(int id)
-        {
-            var branch = _branchRepository.Get(id);
-            if (branch == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            var manager = await _userManager.GetUserAsync(User);
-
-            // Make sure the manager cannot access other branches.
-            if (!User.IsInRole(RoleType.ADMINISTRATOR.Name))
-            {
-                if (manager.DefaultBranchId != id)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-
-            var branchViewModel = _mapper.Map<BranchEditViewModel>(branch);
-            return View(branchViewModel);
-        }
 
     // POST: BranchController/Edit/5
     [HttpPost]

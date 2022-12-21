@@ -105,10 +105,17 @@ public class WorkedHoursController : NotificationController
     {
         foreach (var item in employeeWorkedHoursViewModel.WorkedShifts)
         {
-            var temp = _workedShiftRepository.Get(item.Id);
-            temp.StartTime = item.StartTime;
-            temp.EndTime = item.EndTime;
-            _workedShiftRepository.Update(temp);
+            var dbHours = _workedShiftRepository.Get(item.Id);
+
+            if (item.StartTime > item.EndTime)
+            {
+                ModelState.AddModelError("", "Eindtijd mag niet na de starttijd komen!");
+                return View(employeeWorkedHoursViewModel);
+            }
+
+            dbHours.StartTime = item.StartTime;
+            dbHours.EndTime = item.EndTime;
+            _workedShiftRepository.Update(dbHours);
         }
 
         ShowMessage(MessageType.Success, "De data is opgeslagen");

@@ -2,8 +2,12 @@
 @{
     ViewBag.data = "WorkedHours";
 }
-<h1 class=" col-sm d-flex justify-content-center flex-nowrap"><b>Uren aanpassen voor: </b></h1>
-<h2 class="text-center">@Model.FullName</h2>
+<h1 class=" col-sm d-flex justify-content-center flex-nowrap">
+    <b>Uren aanpassen voor: </b>
+</h1>
+<h2 class="text-center">
+    @Model.FullName
+</h2>
 
 @if (!ViewData.ModelState.IsValid)
 {

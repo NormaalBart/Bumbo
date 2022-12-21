@@ -71,9 +71,15 @@ public class EmployeeManagerController : EmployeeBaseController
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Edit(string id)
+    public async Task<IActionResult> Edit(string id)
     {
         var employee = _employeesRepository.Get(id);
+
+        // check if the employee is part of managers branch
+        var manager = await _userManager.GetUserAsync(User);
+        if (manager.DefaultBranchId != employee.DefaultBranchId)
+            return RedirectToAction("AccessDenied", "Account");
+
         var viewModel = _mapper.Map<EmployeeEditViewModel>(employee);
         viewModel.EmployeeSelectedDepartments.Clear();
         PopulateDepartments(viewModel);
