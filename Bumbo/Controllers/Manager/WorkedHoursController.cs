@@ -5,11 +5,9 @@ using Bumbo.Models.WorkedHours;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
-using BumboServices.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace Bumbo.Controllers
 {
@@ -88,6 +86,7 @@ namespace Bumbo.Controllers
         [Authorize(Roles = "Manager")]
         public IActionResult Edit(List<int> workedShiftId, string employeeId)
         {
+
             var employeeWorkedHoursViewModel = _mapper.Map<EmployeeWorkedHoursViewModel>(_employeeRepository.Get(employeeId));
             foreach (var id in workedShiftId)
             {
@@ -104,10 +103,17 @@ namespace Bumbo.Controllers
         {
             foreach (var item in employeeWorkedHoursViewModel.WorkedShifts)
             {
-                var temp = _workedShiftRepository.Get(item.Id);
-                temp.StartTime = item.StartTime;
-                temp.EndTime = item.EndTime;
-                _workedShiftRepository.Update(temp);
+                var dbHours = _workedShiftRepository.Get(item.Id);
+
+                if (item.StartTime > item.EndTime)
+                {
+                    ModelState.AddModelError("", "Eindtijd mag niet na de starttijd komen!");
+                    return View(employeeWorkedHoursViewModel);
+                }
+
+                dbHours.StartTime = item.StartTime;
+                dbHours.EndTime = item.EndTime;
+                _workedShiftRepository.Update(dbHours);
             }
             ShowMessage(MessageType.Success, "De data is opgeslagen");
             return RedirectToAction("Index", new { dateInput = employeeWorkedHoursViewModel.WorkedShifts.FirstOrDefault().StartTime.ToString() });

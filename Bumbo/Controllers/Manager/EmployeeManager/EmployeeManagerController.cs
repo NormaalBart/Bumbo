@@ -77,8 +77,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             {
                 return RedirectToAction(nameof(Index));
             }
-            
-
+           
             var viewModel = _mapper.Map<EmployeeEditViewModel>(employee);
             viewModel.EmployeeSelectedDepartments.Clear();
             PopulateDepartments(viewModel);

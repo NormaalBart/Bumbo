@@ -2,26 +2,35 @@
 @{
     ViewBag.data = "WorkedHours";
 }
-<h1 class=" col-sm d-flex justify-content-center flex-nowrap"><b>Naam: </b>  @Model.FullName</h1>
+<h1 class=" col-sm d-flex justify-content-center flex-nowrap"><b>Uren aanpassen voor: </b></h1>
+<h2 class="text-center">@Model.FullName</h2>
 
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger text-center" role="alert">
         <strong>Oeps!</strong> De veranderingen konden niet opgeslagen worden vanwege invalide data. Probeer alstublieft opnieuw.
+        Zorg ervoor dat de starttijd en eindtijd correct zijn!
     </div>
 }
+
+
 <div class="container ">
     @using (Html.BeginForm("Edit", "WorkedHours", FormMethod.Post))
     {
+        
         for (var i = 0; i < Model.WorkedShifts.Count(); i++)
         {
             <div class="row">
                 @Html.HiddenFor(m => m.WorkedShifts[i].Id)
+                @Html.HiddenFor(m => m.FirstName)
+                @Html.HiddenFor(m => m.MiddleName)
+                @Html.HiddenFor(m => m.LastName)
                 <div class="col">
                     @Html.Raw("Start tijd: ") @Html.EditorFor(workedShift => workedShift.WorkedShifts[i].StartTime)
                 </div>
                 <div class="col">
                     @Html.Raw("Eind tijd: ") @Html.EditorFor(workedShift => workedShift.WorkedShifts[i].EndTime)
+                    
                 </div>
             </div>
         }
