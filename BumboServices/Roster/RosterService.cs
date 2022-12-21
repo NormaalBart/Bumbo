@@ -1,8 +1,10 @@
+using System.Collections;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
 using BumboRepositories.Utils;
 using BumboServices.Interface;
+using BumboServices.Roster.Models;
 using BumboServices.Utils;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,24 +16,29 @@ public class RosterService : IRosterService
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IBranchRepository _branchRepository;
     private readonly UserManager<Employee> _userManager;
-    private readonly IPrognosisRepository _prognosisRepository;
+    private readonly IPrognosesService _prognosesService;
     private readonly ICAOService _caoService;
     private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
+    private readonly IDepartmentsRepository _departmentsRepository;
     private readonly Random _random;
 
+    // All generated shifts will be discarded if they are less hours than set here.
     private const int MinShiftDurationHours = 3;
 
     public RosterService(IPlannedShiftsRepository plannedShiftsRepository, IEmployeeRepository employeeRepository,
-        IBranchRepository branchRepository, UserManager<Employee> userManager, IPrognosisRepository prognosisRepository,
-        ICAOService caoService, IUnavailableMomentsRepository unavailableMomentsRepository)
+        IBranchRepository branchRepository, UserManager<Employee> userManager,
+        ICAOService caoService, IUnavailableMomentsRepository unavailableMomentsRepository,
+        IPrognosesService prognosesService,
+        IDepartmentsRepository departmentsRepository)
     {
         _plannedShiftsRepository = plannedShiftsRepository;
         _employeeRepository = employeeRepository;
         _branchRepository = branchRepository;
         _userManager = userManager;
-        _prognosisRepository = prognosisRepository;
+        _prognosesService = prognosesService;
         _caoService = caoService;
         _unavailableMomentsRepository = unavailableMomentsRepository;
+        _departmentsRepository = departmentsRepository;
 
         _random = new Random();
     }
@@ -41,7 +48,8 @@ public class RosterService : IRosterService
         return await GenerateRoster(branchId, day, new List<PlannedShift>());
     }
 
-    public async Task<RosterCreationResponse> GenerateRoster(int branchId, DateOnly day, List<PlannedShift> alreadyPlannedShifts)
+    public async Task<RosterCreationResponse> GenerateRoster(int branchId, DateOnly day,
+        List<PlannedShift> alreadyPlannedShifts)
     {
         var branch = _branchRepository.Get(branchId);
         if (branch == null)
@@ -85,8 +93,26 @@ public class RosterService : IRosterService
         // Employee now has all the available employees in the branch sorted on how much hours they have worked.
 
         // Get all department prognosis
-        // TODO: Get from prognosis
-        var targetPlannedHours = 400;
+        // Put all prognosis values for each department in a list;
+        var departmentPrognosis = new DepartmentPrognoseSummary();
+        foreach (var department in _departmentsRepository.GetList())
+        {
+            departmentPrognosis.Dict[department.Id] =
+                    _prognosesService.GetByDepartment(department, day.ToDateTime(TimeOnly.MinValue), branchId);
+        }
+        
+        // If any is 0 or -1, this means no prognose is found
+        if (departmentPrognosis.Dict.All(d => 
+                (d.Value.Hours == -1 || d.Value.Workers == -1)))
+        {
+            return RosterCreationResponse.NoPrognoseFound;
+        }
+        
+        // Check if prognosis has already been reached
+        if (CalculateCurrentPrognosis(alreadyPlannedShifts).Exceeds(departmentPrognosis))
+        {
+            return RosterCreationResponse.AlreadyReachedPrognosis;
+        }
 
         var times = _branchRepository.GetOpenAndCloseTimes(branchId, day);
 
@@ -103,13 +129,38 @@ public class RosterService : IRosterService
         // Load rest of the week roster days, required when checking for the CAO.
         var allWeekShifts = _plannedShiftsRepository.GetAllShiftsWeek(branchId, day);
 
-        return GenerateRoster(branchId, day, employeesMapped, allWeekShifts, closeTime, openTime, targetPlannedHours,
+        return GenerateRoster(branchId, day, employeesMapped, allWeekShifts, closeTime, openTime, departmentPrognosis,
             alreadyPlannedShifts);
     }
+    
+    // Gets the departments, and the
+    private DepartmentPrognoseSummary CalculateCurrentPrognosis(
+        List<PlannedShift> shifts)
+    {
+        var sum = new DepartmentPrognoseSummary();
+        
+        // Start by putting all departments with 0 into it.
+        foreach (var department in _departmentsRepository.GetList())
+        {
+            sum.Dict[department.Id] = (0, 0);
+        }
+        
+        // Add all the shifts to the dictionary. Except shifts that are registered as sick.
+        foreach (var shift in shifts.Where(s=>!s.Sick))
+        {
+            var department = shift.DepartmentId;
+            var cur = sum.Dict[department];
+            sum.Dict[department] = (cur.Workers + 1, cur.Hours + (shift.EndTime - shift.StartTime).TotalHours);
+        }
+        
+        return sum;
+    }
 
-    private RosterCreationResponse GenerateRoster(int branchId, DateOnly day, List<(Employee?, double TotalHours)> employeesMapped,
+    private RosterCreationResponse GenerateRoster(int branchId, DateOnly day,
+        IList<(Employee?, double TotalHours)> employeesMapped,
         List<PlannedShift> allWeekShifts, DateTime closeTime,
-        DateTime openTime, int targetPlannedHours, List<PlannedShift> alreadyPlannedShifts)
+        DateTime openTime, DepartmentPrognoseSummary plannedPrognose,
+        ICollection<PlannedShift> alreadyPlannedShifts)
     {
         // Remove today from allweeksshifts
         allWeekShifts = allWeekShifts.Where(s => s.StartTime.Date.ToDateOnly() != day).ToList();
@@ -117,13 +168,6 @@ public class RosterService : IRosterService
         // Holds all the shifts on target day.
         var currentShifts = new List<PlannedShift>();
         currentShifts.AddRange(alreadyPlannedShifts);
-
-        // Check if prognosis has already been reached
-        // TODO: Change when prognisis is properly implemented.
-        if (currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours >= targetPlannedHours)
-        {
-            return RosterCreationResponse.AlreadyReachedPrognosis;
-        }
 
         // Check if already planned shifts have CAO violations
         var checkCAOBefore = new List<PlannedShift>();
@@ -133,23 +177,38 @@ public class RosterService : IRosterService
         {
             return RosterCreationResponse.CaoViolationsFound;
         }
-
+        
         // Loop through all employees that are available, starting with the ones that have worked the least hours this month.
         while (employeesMapped.Count > 1)
         {
+            var curPrognose = CalculateCurrentPrognosis(currentShifts);
+            if (curPrognose.Exceeds(plannedPrognose))
+            {
+                break;
+            }
+            
             var emp = employeesMapped.First().Item1;
             employeesMapped.RemoveAt(0);
+            
+            if (emp == null) continue;
 
-            var suggested = TryGenerateShift(branchId, emp, openTime, closeTime, allWeekShifts, currentShifts, day);
+            int? preferredDepartment = curPrognose.SuggestNextDepartmentId(plannedPrognose);
+            
+            // Check if employee can work on that department, and if not check if it can work on any other department.
+            if (emp.AllowedDepartments.All(d => d.Id != preferredDepartment))
+            {
+                preferredDepartment = emp.AllowedDepartments
+                    .FirstOrDefault(d => curPrognose.DepartmentStillRequiresWork(d.Id, plannedPrognose))?.Id;
+                if (preferredDepartment == null)
+                {
+                    continue;
+                }
+            }
+
+            var suggested = TryGenerateShift(branchId, emp, openTime, closeTime, allWeekShifts, currentShifts, day, preferredDepartment ?? -1);
             if (suggested != null)
             {
                 currentShifts.Add(suggested);
-            }
-
-            // TODO: Check if prognosis already hit with proper prognosis instead of hardcoded values.
-            if (currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours >= targetPlannedHours)
-            {
-                break;
             }
         }
 
@@ -157,16 +216,16 @@ public class RosterService : IRosterService
         _plannedShiftsRepository.Import(currentShifts.Where(s => !alreadyPlannedShifts.Contains(s)).ToList());
 
         // Display error if prognosis has not completely been reached.
-        return currentShifts.SumTimeSpan(s => s.EndTime - s.StartTime).TotalHours < targetPlannedHours
-            ? RosterCreationResponse.Incomplete
-            : RosterCreationResponse.Succes;
+        return CalculateCurrentPrognosis(currentShifts).Exceeds(plannedPrognose)
+            ? RosterCreationResponse.Succes
+            : RosterCreationResponse.Incomplete;
     }
 
     /*
      * Tries to generate a shift with given parameters.
      */
     private PlannedShift? TryGenerateShift(int branch, Employee emp, DateTime openTime, DateTime closeTime,
-        List<PlannedShift> allWeekShifts, List<PlannedShift> currentShifts, DateOnly day)
+        IEnumerable<PlannedShift> allWeekShifts, List<PlannedShift> currentShifts, DateOnly day, int departmentId = -1)
     {
         var tempShiftsOrigin = new List<PlannedShift>();
         tempShiftsOrigin.AddRange(allWeekShifts);
@@ -207,7 +266,8 @@ public class RosterService : IRosterService
             var endTime =
                 day.ToDateTime(new TimeOnly(
                     Math.Min(closeTime.Hour, MinShiftDurationHours + startTime.Hour +
-                                             _random.Next(Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
+                                             _random.Next(
+                                                 Convert.ToInt32(Math.Floor((closeTime - openTime).TotalHours))) +
                                              _random.Next(5)), 00));
 
             // Only allow shifts of at least minShiftDurationHours hours
@@ -241,8 +301,7 @@ public class RosterService : IRosterService
                 StartTime = startTime,
                 EndTime = endTime,
                 BranchId = branch,
-                // TODO: Use proper department.
-                DepartmentId = 1,
+                DepartmentId = departmentId,
             };
             tempShifts.Add(pending);
 

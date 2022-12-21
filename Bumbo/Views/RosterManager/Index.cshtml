@@ -1,4 +1,5 @@
-﻿@model Bumbo.Models.RosterManager.RosterDayViewModel
+﻿@using BumboData.Enums
+@model Bumbo.Models.RosterManager.RosterDayViewModel
 
 @section Head
 {
@@ -61,140 +62,172 @@
     </div>
 }
 
-<div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
-    <div>
-        <!--Arrow to left, using an online arrow png-->
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
-            </svg>
-        </a>
-    </div>
-    <div>
-        <!--Week  number, date information which is in the center.-->
-        <p>Week @Model.GetWeekNumber(Model.Date) | @Model.Date.ToString("dddd") @Model.Date.ToShortDateString() </p>
-    </div>
-    <div>
-        <!--Arrow to right, using an online arrow png on the right side of the bar.-->
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
-            </svg>
-        </a>
-    </div>
-</div>
 
-    <div>
-        <div class="row ">
-            <div class="col-sm d-flex justify-content-center flex-nowrap ">
-
-
-                @if (Model.GetTotalPlannedHoursPerDepartment("Kassa") >= Model.CassierePrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Kassa") >= Model.CassierePrognoseWorkers)
-                {
-                    @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
-                }
-                else
-                {
-                    @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
-                }
-                        <div class="vstack">
-                            <div>
-                        @Html.DisplayNameFor(model => model.CassierePrognoseHours):
-
-
-                        @if (Model.CassierePrognoseHours == -1)
-                        {
-                                    <span> Geen informatie</span>
-                        }
-                        else
-                        {
-                                    <span> @Model.CassierePrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Kassa")</span>
-                        }
-                            </div>
-                            <div>
-                        @Html.DisplayNameFor(model => model.CassierePrognoseWorkers):
-
-                        @if (Model.CassierePrognoseWorkers == -1)
-                        {
-                                    <span> Geen informatie</span>
-                        }
-                        else
-                        {
-                                    <span> @Model.CassierePrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Kassa")</span>
-                        }
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-            @if (Model.GetTotalPlannedHoursPerDepartment("Vers") >= Model.FreshPrognoseHours && Model.GetTotalPlannedWorkersPerDepartment("Vers") >= Model.FreshPrognoseHours)
-            {
-                @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
-            }
-            else
-            {
-                @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
-            }
-                            <div class="vstack">
-                                <div>
-                    @Html.DisplayNameFor(model => model.FreshPrognoseHours):
-
-                    @if (Model.FreshPrognoseHours == -1)
-                    {
-                                        <span>Geen Info</span>
-                    }
-                    else
-                    {
-                                        <span>@Model.FreshPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vers")</span>
-                    }
-                                </div>
-
-
-                                <div>
-                    @Html.DisplayNameFor(model => model.FreshPrognoseWorkers):
-
-                    @if (Model.FreshPrognoseWorkers == -1)
-                    {
-                                        <span>Geen Info</span>
-                    }
-                    else
-                    {
-                                        <span>@Model.FreshPrognoseWorkers / @Model.GetTotalPlannedWorkersPerDepartment("Vers")</span>
-                    }
-                                </div>
-
-                            </div>
-                        </div>
-
-    @if (Model.GetTotalPlannedHoursPerDepartment("Vullers") >= Model.StockersPrognoseHours)
-    {
-        @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-success">
-    }
-    else
-    {
-        @:<div class="border col-sm d-flex justify-content-center flex-nowrap department-warning">
-    }
-    <div class="vstack">
+<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
+    <div class="d-flex justify-content-between m-2 align-items-center text-center">
         <div>
-            @Html.DisplayNameFor(model => model.StockersPrognoseHours) :
-
-            @if (Model.StockersPrognoseHours == -1)
-            {
-                <span>Geen informatie</span>
-            }
-            else
-            {
-                <span>@Model.StockersPrognoseHours / @Model.GetTotalPlannedHoursPerDepartment("Vullers")</span>
-            }
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1)">
+                <i class="bi bi-caret-left"></i> Vorige dag
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            Week @Model.GetWeekNumber(Model.Date)<br><span style="font-size:18px">@Model.Date.ToString("dddd d MMMM") @Model.Date.ToString("yyyy")</span>
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1)">
+                Volgende dag <i class="bi bi-caret-right"></i>
+            </a>
         </div>
     </div>
 </div>
 
+@if (Model.CloseTime != TimeOnly.MinValue && Model.OpenTime != TimeOnly.MinValue)
+{
+    <div class="row ">
+        <div class="col-sm d-flex justify-content-center flex-nowrap ">
 
-</div>
-</div>
+            <div class="border col-sm d-flex justify-content-center flex-nowrap">
+
+                <div class="vstack">
+                    <div>
+                        @Html.DisplayNameFor(model => model.CassierePrognoseHours):
+
+                        @if (Model.CassierePrognoseHours == -1)
+                        {
+                            <span>Geen info</span>
+                        }
+                        else
+                        {
+                            <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top">
+                                @Model.GetTotalPlannedHoursPerDepartment(DepartmentType.Cassiers)
+                            </span>
+                            <span>/</span>
+                            <span title="Het aantal uren van de prognose." data-toggle="tooltip" data-placement="top"> @Model.CassierePrognoseHours </span>
+                            if (Model.GetTotalPlannedHoursPerDepartment(DepartmentType.Cassiers) >= Model.CassierePrognoseHours)
+                            {
+                                <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                            else
+                            {
+                                <i class="ms-1 bi-x-circle" style="color: red" title="Het aantal werkuren van de prognose zijn niet behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                        }
+                    </div>
+                    <div>
+                        @Html.DisplayNameFor(model => model.CassierePrognoseWorkers):
+
+                        @if (Model.CassierePrognoseWorkers == -1)
+                        {
+                            <span>Geen info</span>
+                        }
+                        else
+                        {
+                            <span title="Het aantal ingeplande medewerkers." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedWorkersPerDepartment(DepartmentType.Cassiers)</span>
+
+                            <span> /</span>
+
+                            <span title="Het aantal medewerkers van de prognose." data-toggle="tooltip" data-placement="top"> @Model.CassierePrognoseWorkers </span>
+                            if (Model.GetTotalPlannedWorkersPerDepartment(DepartmentType.Cassiers) >= Model.CassierePrognoseWorkers)
+                            {
+                                <i class="ms-1 bi-check-circle" style="color: green" title="Het medewerker aantal van de prognose is behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                            else
+                            {
+                                <i class="ms-1 bi-x-circle" style="color: red" title="Het medewerker aantal van de prognose is niet behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="border col-sm d-flex justify-content-center flex-nowrap ">
+
+                <div class="vstack">
+                    <div>
+                        @Html.DisplayNameFor(model => model.FreshPrognoseHours):
+
+                        @if (Model.FreshPrognoseHours == -1)
+                        {
+                            <span>Geen info</span>
+                        }
+                        else
+                        {
+                            <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedHoursPerDepartment(DepartmentType.Fresh)</span>
+                            <span>/</span>
+                            <span title="Het aantal uren van de prognose." data-toggle="tooltip" data-placement="top"> @Model.FreshPrognoseHours</span>
+                            if (Model.GetTotalPlannedHoursPerDepartment(DepartmentType.Fresh) >= Model.FreshPrognoseHours)
+                            {
+                                <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                            else
+                            {
+                                <i class="ms-1 bi-x-circle" style="color: red" title="Het aantal werkuren van de prognose zijn niet behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                        }
+                    </div>
+
+
+                    <div>
+                        @Html.DisplayNameFor(model => model.FreshPrognoseWorkers):
+
+                        @if (Model.FreshPrognoseWorkers == -1)
+                        {
+                            <span>Geen info</span>
+                        }
+                        else
+                        {
+                            <span title="Het aantal ingeplande medewerkers." data-toggle="tooltip" data-placement="top"> @Model.GetTotalPlannedWorkersPerDepartment(DepartmentType.Fresh)</span>
+                            <span> /</span>
+                            <span title="Het aantal medewerkers van de prognose." data-toggle="tooltip" data-placement="top"> @Model.FreshPrognoseWorkers</span>
+                            if (Model.GetTotalPlannedWorkersPerDepartment(DepartmentType.Fresh) >= Model.FreshPrognoseWorkers)
+                            {
+                                <i class="ms-1 bi-check-circle" style="color: green" title="Het medewerker aantal van de prognose is behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                            else
+                            {
+                                <i class="ms-1 bi-x-circle" style="color: red" title="Het medewerker aantal van de prognose is niet behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="border col-sm d-flex justify-content-center flex-nowrap">
+                <div class="vstack">
+                    <div>
+                        @Html.DisplayNameFor(model => model.StockersPrognoseHours) :
+
+                        @if (Model.StockersPrognoseHours == -1)
+                        {
+                            <span>Geen info</span>
+                        }
+                        else
+                        {
+                            <span title="Het aantal ingeplande uren." data-toggle="tooltip" data-placement="top">@Model.GetTotalPlannedHoursPerDepartment(DepartmentType.Fillers)</span>
+
+                            <span> / </span>
+
+                            <span title="Het aantal uren van de prognose." data-toggle="tooltip" data-placement="top">@Model.StockersPrognoseHours</span>
+                            if (Model.GetTotalPlannedHoursPerDepartment(DepartmentType.Fillers) >= Model.StockersPrognoseHours)
+                            {
+                                <i class="ms-1 bi-check-circle" style="color: green" title="Het aantal werkuren van de prognose zijn behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                            else
+                            {
+                                <i class="ms-1 bi-x-circle" style="color: red" title="Het aantal werkuren van de prognose zijn niet behaald." data-toggle="tooltip" data-placement="top"></i>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 
                     <script>
                         'use strict';
@@ -228,19 +261,15 @@
                                 elem.style.marginLeft = startoffset + 'px';
                             }
 
-                            function resize(shift){
-                                getWidthOfbase(shift.element, shift.shiftlength, shift.shiftstartperc, shift.shiftendperc);
-                            }
+        // Everytime the screen is resized, we resize every shift that's in the list along with it.
+        window.addEventListener("resize", function () {
+            listshifts.forEach(resize);
+        });
 
-                            // Everytime the screen is resized, we resize every shift that's in the list along with it.
-                            window.addEventListener("resize", function () {
-                                listshifts.forEach(resize);
-                            });
+        window.addEventListener('load', function () {
+            listshifts.forEach(resize);
 
-                            window.addEventListener('load', function () {
-                                    listshifts.forEach(resize);
-
-                        });
+        });
 
                             // When you click on a shift, this function is called.
                             // This opens the edit modal
@@ -250,9 +279,8 @@
                                 document.getElementById("shiftIdInput").value = shiftinfo.shiftid;
                                 document.getElementById("starttimeinput").value = shiftinfo.shiftStartHour;
                                 document.getElementById("endtimeinput").value = shiftinfo.shiftEndTimeHour;
-
                                 document.getElementById("departmentIdInput").value =  shiftinfo.shiftDepartmentId;
-
+                                
                                 // Disable editing when shift is set as sick
                                 $('#starttimeinput').prop('disabled', shiftinfo.shiftIsSick);
                                 $('#endtimeinput').prop('disabled', shiftinfo.shiftIsSick);
@@ -262,47 +290,51 @@
                                 let sickBtn = $('#setSickBtn')
                                 sickBtn.prop('disabled', shiftinfo.shiftIsSick);
                                 $('#employeeIdInputEdit').val(shiftinfo.shiftEmployeeId);
+                                
+                                selectedEmployee(shiftinfo.shiftEmployeeId, shiftinfo.shiftDepartmentId)
                             }
 
-                            function onRowClick() {
-                                $('#createNewShiftModal').modal('show');
-                            }
+        function openCreateShift() {
+            // Clear departments in create shift modal
+            $('#CreateShiftDepartment').empty();
+                                
+            $('#createNewShiftModal').modal('show');
+        }
 
                             function replaceShift(start, end, departmentId) {
                                 document.getElementById("CreateShiftStartTime").value = start;
                                 document.getElementById("CreateShiftEndTime").value = end;
                                 document.getElementById("CreateShiftDepartment").value = departmentId
 
-                                onRowClick();
+                                openCreateShift();
                             }
 
-                    </script>
-                    <div class="text-center m-3">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#copyRosterModal" class="btn btn-primary">
-                            Rooster kopiëren
-                        </button>
-                        <!-- Button trigger modal -->
-                        <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
-                            Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
-                        </button>
+    </script>
 
-                        <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")">
-                            <span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span>
-                        </button>
-                    </div>
 
-    @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
+    <div class="text-center m-3">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#copyRosterModal" class="btn btn-primary">
+            Rooster kopiëren
+        </button>
+        <!-- Button trigger modal -->
+        <button @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") type="button" class="btn btn-primary" onclick="openCreateShift()">
+            Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
+        </button>
+        <button id="generate-roster" class="btn btn-primary" data-toggle="tooltip" data-placement="top" @((Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00") ? "disabled" : "") title="@(Model.RosteredEmployees.Count > 0 ? "Door aan te vullen zal het systeem automatisch diensten plannen, tot dat de prognose bereikt is." : "Genereert een rooster automatisch, die voldoet aan de ingestelde prognose.")"><span id="generate-roster-spinner" class="spinner-border spinner-border-sm me-2"></span>@(Model.RosteredEmployees.Count > 0 ? "Rooster aanvullen" : "Rooster genereren")<span class="bi bi-magic ms-1"></span></button>
+    </div>
+
+    @if (Model.CloseTime == TimeOnly.MinValue && Model.OpenTime == TimeOnly.MinValue)
     {
-                        <div class="alert alert-warning text-center text-large">
-                            <span>De winkel is op deze datum gesloten.</span>
-                        </div>
+        <div class="alert alert-warning text-center text-large">
+            <span>De winkel is op deze datum gesloten.</span>
+        </div>
     }
-                    <div class="table-responsive-sm">
+    <div class="table-responsive-sm">
 
                         <!--table, 24 long horizontal -->
                     <table class="table roster-table table-hover">
                     
-                    @if (Model.CloseTime != TimeOnly.MinValue && Model.OpenTime != TimeOnly.MinValue)
+                    @if (Model.CloseTime != TimeOnly.MinValue && Model.OpenTime != TimeOnly.MinValue || Model.RosteredEmployees.Count != 0)
                     {
                         <thead class="sticky-lg-top">
                         <tr>
@@ -317,9 +349,9 @@
                     }
                         
 
-                            <tbody>
+            <tbody>
 
-                                <!--For each available employee, create a row-->
+                <!--For each available employee, create a row-->
                 @if (Model.RosteredEmployees != null)
                 {
                     foreach (var employee in Model.RosteredEmployees)
@@ -420,7 +452,7 @@
                                         </tr>
                     }
 
-                                    <!--Add new shift row.-->
+                    <!--Add new shift row.-->
                     @if (Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00")
                     {
                                         <tr class="roster-shift-containter roster-table-cell-closed border border-3 ">
@@ -442,9 +474,9 @@
                                             </div>
                             }
                                     </td>
-                                    <tr class="roster-shift-containter roster-table-addbtn border-3" id="AddShiftRow" onclick="onRowClick()">
+                                    <tr class="roster-shift-containter roster-table-addbtn border-3" id="AddShiftRow" onclick="openCreateShift()">
                                         <td colspan="25" class="p-0">
-                                            <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary w-100 h-100" data-bs-toggle="modal" data-bs-target="#createNewShiftModal">
+                                            <button @(Model.CloseTime.ToString() == "00:00" && Model.OpenTime.ToString() == "00:00" ? "disabled" : "") type="button" class="btn btn-primary w-100 h-100" onclick="openCreateShift()">
                                                 Voeg dienst toe<span class="bi bi-plus-lg ms-1"></span>
                                             </button>
                                         </td>
@@ -452,13 +484,12 @@
                     }
                 }
 
-                            </tbody>
-                        </table>
+        </tbody>
+    </table>
 
-                    </div>
+                </div>
 
-
-<!-- Modal for creating a new shift-->
+                <!-- Modal for creating a new shift-->
 <div class="modal fade" id="createNewShiftModal" tabindex="-1" aria-labelledby="nieuwedienst" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content m-2">
@@ -489,15 +520,10 @@
                             </div>
                         </div>
 
-
-                        @*TODO make it so you can only select department for employee who have them.*@
                         <label class="col">In afdeling:</label>
 
-                        <select id="CreateShiftDepartment" asp-for="SelectedDepartmentId" class="form-control col" style="height: fit-content">
-                            @foreach (var dep in Model.Departments)
-                            {
-                                <option value="@dep.Id">@dep.DepartmentName</option>
-                            }
+                        <select id="CreateShiftDepartment" asp-for="SelectedDepartmentId" class="form-control col department-input" style="height: fit-content">
+                            
                         </select>
                     </div>
 
@@ -521,7 +547,7 @@
             </div>
             <div class="text-center modal-footer">
                 <button type="button" class="btn btn-secondary text-center" data-bs-dismiss="modal">Annuleren</button>
-                <input type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn "/>
+                <input id="create-shift-save" type="submit" value="Opslaan" form="createShiftForm" class="btn btn-success btn "/>
             </div>
         </div>
     </div>
@@ -584,15 +610,10 @@
                                 <option value="@employee.Id">@employee.FullName</option>
                             }
                         </select>
-                        @*TODO make it so you can only select department for employee who have them.*@
+
                         <p class="col">In afdeling:</p>
+                        <select id="departmentIdInput" asp-for="SelectedDepartmentId" class="form-control col department-input">
 
-                        <select id="departmentIdInput" asp-for="SelectedDepartmentId" class="form-control col">
-
-                            @foreach (var dep in Model.Departments)
-                            {
-                                <option value="@dep.Id">@dep.DepartmentName</option>
-                            }
                         </select>
                     </div>
 
@@ -670,7 +691,7 @@
                         url: 'SearchEmployees/?q={query}&external=true'
                     },
                     onSelect: function(result, response) {
-                        $('#select-employee-id').val(result.id);
+                        selectedEmployee(result.id);
                     },
                 });
         } else {
@@ -682,10 +703,57 @@
                         url: 'SearchEmployees/?q={query}'
                     },
                     onSelect: function(result, response) {
-                        $('#select-employee-id').val(result.id);
+                        selectedEmployee(result.id);
                     }
                 })
         }
+    }
+    
+    function selectedEmployee(employeeId, departmentId) {
+        $('#select-employee-id').val(employeeId);
+        
+        $('.department-input').each(function() {
+           $(this).empty();
+        });
+        
+        // Start loading the allowed departments of the employee.
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AllowedDepartments", "EmployeeManager")',
+            data: {
+                employeeId: employeeId,
+            },
+            success: function(data) {
+                $('#create-shift-save').prop('disabled', data.length === 0);
+                $('#saveEditShift').prop('disabled', data.length === 0);
+                                                        
+                // Update the ui with the received departments.
+                $('.department-input').each(function() {
+                    let $el = $(this);
+                    
+                    $el.empty(); // Remove old options
+                    if (data.length > 0) {
+                       $.each(data, function(index,value) {
+                       $el.append($("<option></option>")
+                           .attr("value", value.id)
+                           .text(value.departmentName));
+                       });
+                    } else { 
+                    // If the employee has no departments, add a placeholder option.
+                        $el.append($("<option></option>")
+                          .attr("value", "").text("Geen afdelingen toegewezen"));
+                    }
+                    
+                    // Try and reselect value, only the edit form.
+                    if (departmentId != null && !($el.attr('id') === 'CreateShiftDepartment')) {
+                        $el.val(departmentId);
+                    }
+                });
+            },
+            error: function(error) {
+                console.log("Error: " + error);
+            }
+        })
     }
 
     function showToast(message) {
@@ -785,7 +853,7 @@
 
     emptycells.forEach(cell => {
         cell.addEventListener('click', function handleClick(event) {
-            onRowClick();
+            openCreateShift();
         });
     });
 

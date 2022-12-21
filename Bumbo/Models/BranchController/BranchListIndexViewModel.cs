@@ -1,11 +1,10 @@
-﻿using System.ComponentModel;
+﻿using BumboData.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Bumbo.Models.EmployeeManager.Index;
-using BumboData.Enums;
 
 namespace Bumbo.Models.BranchController
 {
-    public class BranchListIndexViewModel
+    public class BranchListIndexViewModel: PaginatedViewModel
     {
         public List<ListIndexBranchViewModel> Branches { get; set; }
         [DisplayName("Toon actieve filialen")]
@@ -18,9 +17,7 @@ namespace Bumbo.Models.BranchController
         public BranchSortingOption CurrentSort { get; set; }
 
         public List<BranchSortingOption> AvailableSortOptions { get; set; }
-
-
-
+        
         public BranchListIndexViewModel()
         {
             Branches = new List<ListIndexBranchViewModel>();

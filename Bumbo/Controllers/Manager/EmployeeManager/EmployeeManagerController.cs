@@ -4,11 +4,13 @@ using Bumbo.Models.EmployeeManager.Index;
 using BumboData.Enums;
 using BumboData.Interfaces.Repositories;
 using BumboData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bumbo.Controllers.Manager.EmployeeManager
 {
+    [Authorize(Roles = "Manager")]
     public class EmployeeManagerController : EmployeeBaseController
     {
 
@@ -43,7 +45,7 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
                 ModelState.AddModelError("EmployeeSelectedDepartments", "Er moet minimaal 1 department zijn geselecteerd");
                 return View(viewModel);
             }
-            if(_employeesRepository.GetByEmail(viewModel.Email) != null)
+            if (_employeesRepository.GetByEmail(viewModel.Email) != null)
             {
                 PopulateUnselectedDepartments(viewModel);
                 ModelState.AddModelError("Email", "Dit email is al in gebruik");
@@ -103,6 +105,17 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
             return RedirectToAction(nameof(Index));
         }
 
+        public override IEnumerable<Employee> GetAllEmployees(int start = 0, int amount = int.MaxValue, string searchString = "", bool includeActive = true, bool includeInactive = false, EmployeeSortingOption sortingOption = EmployeeSortingOption.Name_Asc)
+        {
+            int? defaultBranchId = _userManager.GetUserAsync(User).Result.DefaultBranchId;
+            return _employeesRepository.GetAllEmployeesOfBranch(defaultBranchId ?? 0, start, amount, searchString, includeActive, includeInactive, sortingOption);
+        }
+        public override int GetAmountOfEmployees(string searchString = "", bool includeActive = true, bool includeInactive = false)
+        {
+            int? defaultBranchId = _userManager.GetUserAsync(User).Result.DefaultBranchId;
+            return _employeesRepository.GetAmountOfEmployeesOfBranch(defaultBranchId ?? 0, searchString, includeActive, includeInactive);
+        }
+
         private void PopulateDepartments(EmployeeEditViewModel viewModel)
         {
             viewModel.EmployeeSelectedDepartments = _mapper.Map<List<EmployeeDepartmentViewModel>>(_employeesRepository.GetDepartmentsOfEmployee(viewModel.EmployeeKey));
@@ -120,11 +133,22 @@ namespace Bumbo.Controllers.Manager.EmployeeManager
                 }
             }
         }
-
-        public override IEnumerable<Employee> GetAllEmployeesAsync()
+        
+        [HttpPost]
+        public IActionResult AllowedDepartments(string employeeId)
         {
-            var employee = _userManager.GetUserAsync(User).Result;
-            return _employeesRepository.GetAllEmployeesOfBranch(employee.DefaultBranchId ?? -1);
+            var employ = _employeesRepository.Get(employeeId);
+
+            if (employ == null)
+            {
+                return BadRequest("Medewerker niet gevonden");
+            }
+
+            // Clear employees from response
+            var data = _employeesRepository.GetDepartmentsOfEmployee(employeeId).ToList();
+            data.ForEach(d => d.AllowedEmployees = null);
+
+            return Json(data);
         }
     }
 }

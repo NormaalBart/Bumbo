@@ -1,4 +1,5 @@
-﻿using BumboData.Models;
+﻿using BumboData.Enums;
+using BumboData.Models;
 using BumboServices.CAO.Rules;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -58,91 +59,21 @@ namespace Bumbo.Models.RosterManager
         public int TableMinHour { get; set; }
         public int TableMaxHour { get; set; }
 
-
-
         public RosterDayViewModel()
         {
             RosteredEmployees = new List<EmployeeRosterViewModel>();
             AvailableEmployees = new List<EmployeeRosterViewModel>();
         }
-
-
+        
         public int GetWeekNumber(DateTime date)
         {
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
-
-
+        
         public bool IsPlanned(EmployeeRosterViewModel e, int hour)
         {
-            if (e.PlannedShifts == null)
-            {
-                return false;
-            }
-            List<ShiftViewModel> shifts = e.PlannedShifts.Where(p => p.StartTime.Hour <= hour && p.EndTime.Hour > hour).ToList();
-            if (shifts.Count > 0)
-            {
-                return true;
-            }
-            return false;
+            return e.PlannedShifts != null && e.PlannedShifts.Any(p => p.StartTime.Hour <= hour && p.EndTime.Hour > hour);
         }
-
-        public bool IsUnavailable(EmployeeRosterViewModel employee, int hour)
-        {
-
-            List<UnavailableMomentsRosterViewModel> unavailable = employee.UnavailableMoments.Where(u => u.StartTime.Hour <= hour && u.EndTime.Hour > hour).ToList();
-            if (unavailable.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public Department? GetEmployeeDepartmentShift(EmployeeRosterViewModel employee, int hour)
-        {
-            if (employee.PlannedShifts == null)
-            {
-                return null;
-            }
-            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour <= hour && p.EndTime.Hour > hour).ToList();
-            if (shifts.Count > 0)
-            {
-                return shifts.First().Department;
-            }
-            return null;
-        }
-
-
-        public void UpdatePrognosis(List<ShiftViewModel> allShifts)
-        {
-            if (allShifts == null)
-            {
-                return;
-            }
-            foreach (var shift in allShifts)
-            {
-                // TODO Redo code since departments are now stored in db 
-                /*if (shift.Department == DepartmentEnum.Cassiere)
-                {
-                    TimeSpan timespan = shift.EndTime - shift.StartTime;
-                    CassierePrognose = CassierePrognose - timespan.TotalHours;
-                }
-                else if (shift.Department == DepartmentEnum.Fresh)
-                {
-                    TimeSpan timespan = shift.EndTime - shift.StartTime;
-                    FreshPrognose = FreshPrognose - timespan.TotalHours;
-                }
-                else if (shift.Department == DepartmentEnum.Stocker)
-                {
-                    TimeSpan timespan = shift.EndTime - shift.StartTime;
-                    StockersPrognose = StockersPrognose - timespan.TotalHours;
-                }*/
-            }
-            CassierePrognoseHours = Math.Ceiling(CassierePrognoseHours);
-            FreshPrognoseHours = Math.Ceiling(FreshPrognoseHours);
-            StockersPrognoseHours = Math.Ceiling(StockersPrognoseHours);
-        }
-
 
         public ShiftViewModel? GetShiftOnHourOfEmployee(EmployeeRosterViewModel employee, int hour)
         {
@@ -150,12 +81,8 @@ namespace Bumbo.Models.RosterManager
             {
                 return null;
             }
-            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
-            if (shifts.Count > 0)
-            {
-                return shifts.First();
-            }
-            return null;
+
+            return employee.PlannedShifts.FirstOrDefault(p => p.StartTime.Hour == hour);
         }
 
         //<summary>
@@ -164,44 +91,26 @@ namespace Bumbo.Models.RosterManager
         //</summary>
         public int GetShiftHourLength(EmployeeRosterViewModel employee, int hour)
         {
-            if (employee.PlannedShifts == null)
+            var s = GetShiftOnHourOfEmployee(employee, hour);
+            if (s != null)
             {
-                return 0;
-            }
-            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
-            if (shifts.Count > 0)
-            {
-                return shifts.First().EndTime.Hour - shifts.First().StartTime.Hour;
+                return s.EndTime.Hour - s.StartTime.Hour;
             }
             return 0;
         }
 
-        public double GetTotalPlannedHoursPerDepartment(string departmentName)
+        public double GetTotalPlannedHoursPerDepartment(DepartmentType department)
         {
-            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
-            double total = 0;
-            foreach (var employee in allEmployeesOfDepartment)
-            {
-                foreach (var plannedShift in employee.PlannedShifts)
-                {
-                    total += (plannedShift.EndTime - plannedShift.StartTime).TotalHours;
-                }
-            }
-            return total;
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == department.Name));
+            return allEmployeesOfDepartment.Sum(employee => employee.PlannedShifts.Sum(plannedShift => (plannedShift.EndTime - plannedShift.StartTime).TotalHours));
         }
 
-        public int GetTotalPlannedWorkersPerDepartment(string departmentName)
+        public int GetTotalPlannedWorkersPerDepartment(DepartmentType department)
         {
-            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == departmentName));
-            int total = 0;
-            foreach (var employee in allEmployeesOfDepartment)
-            {
-                total++;
-            }
-            return total;
+            var allEmployeesOfDepartment = RosteredEmployees.Where(r => r.PlannedShifts.Any(p => p.Department.DepartmentName == department.Name));
+            return allEmployeesOfDepartment.Count();
         }
-
-
+        
         // These 2 methods return a percentage of the start and end time so the off set can be set in the frontend
         // there's probably a better way of doing these, possibly by returning a time span
         // and then calculating the percentages in the view. But for now this works perfectly fine
@@ -212,14 +121,9 @@ namespace Bumbo.Models.RosterManager
             {
                 return 0;
             }
-            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
-            if (shifts.Count > 0)
-            {
-                // convert minutes into percentage of hour
-                return this.CalculateMinutePercentage(shifts.First().StartTime.Minute);
+            var shift = GetShiftOnHourOfEmployee(employee, hour);
 
-            }
-            return 0;
+            return shift != null ? CalculateMinutePercentage(shift.StartTime.Minute) : 0;
         }
 
         public int GetShiftEndPercentage(EmployeeRosterViewModel employee, int hour)
@@ -228,41 +132,27 @@ namespace Bumbo.Models.RosterManager
             {
                 return 0;
             }
-            List<ShiftViewModel> shifts = employee.PlannedShifts.Where(p => p.StartTime.Hour == hour).ToList();
-            if (shifts.Count > 0)
-            {
-                // convert minutes into percentage of hour
-                return this.CalculateMinutePercentage(shifts.First().EndTime.Minute);
+            var shift = GetShiftOnHourOfEmployee(employee, hour);
 
-            }
-            return 0;
+            return shift != null ? CalculateMinutePercentage(shift.EndTime.Minute) : 0;
         }
 
         private int CalculateMinutePercentage(double minute)
         {
-            double shiftpercentage = (minute / 60) * 100;
+            var shiftpercentage = (minute / 60) * 100;
             return (int)Math.Floor(shiftpercentage);
         }
 
         // It's important that this display time is always the same amount of characters long.
         public string GetHeaderTimeString(int time)
         {
-            TimeOnly timeOnly = new TimeOnly(time, 0);
+            var timeOnly = new TimeOnly(time, 0);
             return timeOnly.ToString();
         }
 
         public bool IsOutSideOfOpeningTimes(int hour)
         {
-
-            if (hour < OpenTime.Hour || hour >= CloseTime.Hour)
-            {
-                return true;
-            }
-            return false;
-
-
-
+            return hour < OpenTime.Hour || hour >= CloseTime.Hour;
         }
-
     }
 }
