@@ -23,13 +23,6 @@ public class OverviewItem
         return false;
     }
 
-    // if there are rostered hours, but it is not enough we return true
-    public bool IsInsufficientlyRostered()
-    {
-        if (RosteredHours <= PrognosisHours && RosteredHours > 0) return true;
-        return false;
-    }
-
     public string GetDayName()
     {
         // Get dutch culture
