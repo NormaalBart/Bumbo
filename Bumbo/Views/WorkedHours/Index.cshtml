@@ -53,7 +53,7 @@ else
                     @employee.WorkedShiftsToString()
                     @if (!employee.WorkedShifts.All(w => w.Approved))
                     {
-                        @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new {workedShiftId = employee.WorkedShifts.Select(w => w.Id), employeeId = employee.Id})
+                        <a class="btn btn-link" asp-action="Edit" asp-route-workedShiftId="@employee.WorkedShifts.Select(w => w.Id)" asp-route-employeeId="@employee.Id">Aanpassen</a>
                     }
                 </td>
                 <td>@employee.CalculateDifference()</td>
