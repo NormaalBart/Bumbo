@@ -66,9 +66,15 @@ public abstract class EmployeeBaseController : NotificationController
         return View("Views/EmployeeBase/Index.cshtml", resultingListViewModel);
     }
 
-    public IActionResult ChangePassword(string id)
+    public async Task<IActionResult> ChangePassword(string id)
     {
         var employee = _employeesRepository.Get(id);
+
+        // Make sure the manager cannot access other branches.
+        var manager = await _userManager.GetUserAsync(User);
+        if (!(User.IsInRole(RoleType.ADMINISTRATOR.Name)) && manager.DefaultBranchId != employee.DefaultBranchId)
+            return RedirectToAction("AccessDenied", "Account");
+
         var viewModel = new EditPasswordViewModel {EmployeeKey = id, FullName = employee.FullName()};
         return View("Views/EmployeeBase/ChangePassword.cshtml", viewModel);
     }
