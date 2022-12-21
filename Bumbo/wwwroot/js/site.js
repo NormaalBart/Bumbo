@@ -3,7 +3,6 @@
 
 // Write your JavaScript code.
 
-
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 })
@@ -28,7 +27,6 @@ if (btn != null) {
         var editmodal = document.getElementById("editshiftmodal");
         editmodal.style.display = "none";
     }
-
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function () {
