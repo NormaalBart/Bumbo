@@ -86,10 +86,14 @@ public class UnavailableMomentsController : Controller
         return Json(result);
     }
 
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var unavailableMoment = _unavailableMomentsRepository.Get(id);
         if (unavailableMoment == null) return RedirectToAction("Index");
+
+        var employee = await _userManager.GetUserAsync(User);
+        if (unavailableMoment.EmployeeId != employee.Id)
+            return RedirectToAction("AccessDenied", "Account");
 
         var unavailableMomentViewModel =
             _mapper.Map<UnavailableMoment, UnavailableMomentsViewModel>(unavailableMoment);
