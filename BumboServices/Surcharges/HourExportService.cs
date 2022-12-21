@@ -13,15 +13,15 @@ namespace BumboServices;
 
 public class HourExportService : IHourExportService
 {
-    private readonly IWorkedShiftRepository _workedShiftRepository;
     private readonly List<ISurchargeRule> _useSurchargesRules;
+    private readonly IWorkedShiftRepository _workedShiftRepository;
 
     public HourExportService(IWorkedShiftRepository workedShiftRepository)
     {
         _workedShiftRepository = workedShiftRepository;
 
         // Set rules that the hour export service uses.
-        _useSurchargesRules = new List<ISurchargeRule>()
+        _useSurchargesRules = new List<ISurchargeRule>
         {
             // Op zon- en feestdagen 100% ( ook voor hulpkrachten)
             new SunOrHolidaySurchargeRule(),
@@ -63,30 +63,22 @@ public class HourExportService : IHourExportService
         var dict = new Dictionary<SurchargeType, TimeSpan>();
 
         // Add all with zero value
-        foreach (var surchargeType in Enum.GetValues<SurchargeType>())
-        {
-            dict[surchargeType] = TimeSpan.Zero;
-        }
+        foreach (var surchargeType in Enum.GetValues<SurchargeType>()) dict[surchargeType] = TimeSpan.Zero;
 
         // Add actual surcharge values for each rule
         if (shifts.Count != 0)
-        {
             _useSurchargesRules.ForEach(s =>
             {
                 var dictAdd = s.CalculateSurcharges(shifts);
-                foreach (var value in dictAdd.Keys)
-                {
-                    dict[value] = dict.GetValueOrDefault(value) + dictAdd[value];
-                }
+                foreach (var value in dictAdd.Keys) dict[value] = dict.GetValueOrDefault(value) + dictAdd[value];
             });
-        }
 
         var hoursSick = shifts.Where(i => i.Sick)
             .SumTimeSpan(i => (i.EndTime ?? i.StartTime) - i.StartTime);
 
         dict[SurchargeType.Sick] = hoursSick;
 
-        return new HourExportModel()
+        return new HourExportModel
         {
             // Sick hours don't count as worked hours, since they are factored in surcharges already.
             HoursWorked = shifts.SumTimeSpan(i => (i.EndTime ?? i.StartTime) - i.StartTime) - hoursSick,
@@ -97,14 +89,14 @@ public class HourExportService : IHourExportService
     /*
      * Generates an export csv for the given employee and hourexport model list.
      */
-    public Byte[] CsvExportForMonth(int branchId, DateTime month)
+    public byte[] CsvExportForMonth(int branchId, DateTime month)
     {
         var workedShiftsInMonth =
             _workedShiftRepository.GetWorkedShiftsInMonth(branchId, month.Year, month.Month);
 
         var exportModels = workedShiftsInMonth.GroupBy(s => s.Employee)
             .Select(s => (s.Key, WorkedShiftsToExportOverview(s.ToList())))
-            .Where(s=>s.Item2.HoursWorked.Ticks > 0).ToList();
+            .Where(s => s.Item2.HoursWorked.Ticks > 0).ToList();
 
         var ms = new MemoryStream();
         using (var writer = new StreamWriter(ms))
@@ -114,7 +106,7 @@ public class HourExportService : IHourExportService
             {
                 csv.WriteField("WeekNr: " + month.GetWeekNumber() + " : " + month.Year);
                 csv.NextRecord();
-            
+
                 csv.WriteHeader<ExportCsvRowModel>();
                 csv.NextRecord();
 
@@ -128,27 +120,28 @@ public class HourExportService : IHourExportService
     private List<ExportCsvRowModel> ExportRowsFromHourExportModel(Employee employee, HourExportModel model)
     {
         var list = new List<ExportCsvRowModel>();
-        list.Add(new ExportCsvRowModel()
+        list.Add(new ExportCsvRowModel
         {
             EmployeeId = employee.Id,
             EmployeeName = employee.FullName(),
-            Hours = Math.Round(model.HoursWorked.TotalHours + 
-                                (model.Surcharges[SurchargeType.Sick] / 100 * SurchargeType.Sick.SurchargePercentage()).TotalHours, 2, MidpointRounding.AwayFromZero),
+            Hours = Math.Round(model.HoursWorked.TotalHours +
+                               (model.Surcharges[SurchargeType.Sick] / 100 * SurchargeType.Sick.SurchargePercentage())
+                               .TotalHours, 2, MidpointRounding.AwayFromZero),
             SurchargePercentage = "0%"
         });
 
         // Only add rows that have more than the value of 0
         list.AddRange(model.Surcharges
-                // Don't include sick as seperate entry in export.
-            .Where(s=>s.Value.Ticks != 0 && s.Key != SurchargeType.Sick)
-            .Select(surcharge => new ExportCsvRowModel()
-        {
-            EmployeeId = employee.Id,
-            EmployeeName = employee.FullName(),
-            // Round hours to 2 decimals.
-            Hours = Math.Round(surcharge.Value.TotalHours, 2, MidpointRounding.AwayFromZero),
-            SurchargePercentage = surcharge.Key.SurchargePercentage() + "%"
-        }));
+            // Don't include sick as seperate entry in export.
+            .Where(s => s.Value.Ticks != 0 && s.Key != SurchargeType.Sick)
+            .Select(surcharge => new ExportCsvRowModel
+            {
+                EmployeeId = employee.Id,
+                EmployeeName = employee.FullName(),
+                // Round hours to 2 decimals.
+                Hours = Math.Round(surcharge.Value.TotalHours, 2, MidpointRounding.AwayFromZero),
+                SurchargePercentage = surcharge.Key.SurchargePercentage() + "%"
+            }));
 
         return list;
     }

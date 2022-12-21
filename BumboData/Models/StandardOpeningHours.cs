@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BumboData.Models;
+﻿namespace BumboData.Models;
 
 public class StandardOpeningHours
 {

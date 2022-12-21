@@ -1,5 +1,3 @@
-using Microsoft.VisualBasic.CompilerServices;
-
 namespace BumboServices.Roster;
 
 public enum RosterCreationResponse

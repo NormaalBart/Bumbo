@@ -1,5 +1,3 @@
-using BumboData.Models;
-
 namespace BumboServices.Roster.Models;
 
 // Stores the departments and their prognosis
@@ -14,10 +12,7 @@ public class DepartmentPrognoseSummary
         foreach (var (department, (workers, hours)) in Dict)
         {
             if (!sum.Dict.TryGetValue(department, out var sumValue)) continue;
-            if (workers < sumValue.Workers || hours < sumValue.Hours)
-            {
-                return false;
-            }
+            if (workers < sumValue.Workers || hours < sumValue.Hours) return false;
         }
 
         return true;
@@ -28,16 +23,16 @@ public class DepartmentPrognoseSummary
     {
         // First check if current and target prognoses have the same departments
         if (Dict.Keys.Count != target.Dict.Keys.Count && !Dict.Keys.All(target.Dict.Keys.Contains))
-        {
             throw new Exception("Suggesting next department with invalid target or current prognosis");
-        };
+        ;
 
         // Get the difference between the current and target prognosis
         var diff = new DepartmentPrognoseSummary();
         foreach (var (department, (workers, hours)) in Dict)
         {
             var targetValue = target.Dict[department];
-            diff.Dict.Add(department, (targetValue.Workers == -1 ? 0 : targetValue.Workers - workers, targetValue.Hours - hours));
+            diff.Dict.Add(department,
+                (targetValue.Workers == -1 ? 0 : targetValue.Workers - workers, targetValue.Hours - hours));
         }
 
         return diff.Dict.Select(d => (d.Key, d.Value))
@@ -47,12 +42,9 @@ public class DepartmentPrognoseSummary
 
     public bool DepartmentStillRequiresWork(int departmentId, DepartmentPrognoseSummary target)
     {
-        if (!Dict.ContainsKey(departmentId))
-        {
-            return false;
-        }
-        
-        return Dict[departmentId].Hours < target.Dict[departmentId].Hours || 
-            Dict[departmentId].Workers < target.Dict[departmentId].Workers;
+        if (!Dict.ContainsKey(departmentId)) return false;
+
+        return Dict[departmentId].Hours < target.Dict[departmentId].Hours ||
+               Dict[departmentId].Workers < target.Dict[departmentId].Workers;
     }
 }

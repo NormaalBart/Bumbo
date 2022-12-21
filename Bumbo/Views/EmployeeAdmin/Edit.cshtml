@@ -16,7 +16,7 @@
     <div>
         <form asp-action="Edit" id="EditForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="@Model.EmployeeKey" />
+            <input type="hidden" asp-for="@Model.EmployeeKey"/>
             <div class="row">
                 <div class="col edit-box">
                     <!--Persoonlijke informatie column-->
@@ -24,54 +24,53 @@
                         <div class="row">
                             <h5 class="text-center">Naam</h5>
                             <div class="form-group col-4">
-                                <input asp-for="FirstName" class="form-control" placeholder="Voornaam" />
+                                <input asp-for="FirstName" class="form-control" placeholder="Voornaam"/>
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
-                                <input asp-for="Preposition" class="form-control" placeholder="Tussenvoegsel" />
+                                <input asp-for="Preposition" class="form-control" placeholder="Tussenvoegsel"/>
                                 <span asp-validation-for="Preposition" class="text-danger"></span>
                             </div>
                             <div class="form-group col-4">
-                                <input asp-for="LastName" class="form-control" placeholder="Achternaam" />
+                                <input asp-for="LastName" class="form-control" placeholder="Achternaam"/>
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
 
-
                     <div class="p-3">
                         <h5 class="text-center">Persoonlijke informatie</h5>
                         <div class="form-group">
                             <label asp-for="Birthdate" class="control-label"></label>
-                            <input asp-for="Birthdate" class="form-control" />
+                            <input asp-for="Birthdate" class="form-control"/>
                             <span asp-validation-for="Birthdate" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="BV. naam@example.com" />
+                            <input asp-for="Email" class="form-control" placeholder="BV. naam@example.com"/>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="PhoneNumber" class="control-label"></label>
-                            <input asp-for="PhoneNumber" class="form-control" placeholder="Voer een gelding telefoon nummer in" />
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Voer een gelding telefoon nummer in"/>
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                         <div class="row">
                             <div class="form-group col">
                                 <label asp-for="PostalCode" class="control-label"></label>
-                                <input asp-for="PostalCode" class="form-control" placeholder="BV. 3943GC" />
+                                <input asp-for="PostalCode" class="form-control" placeholder="BV. 3943GC"/>
                                 <span asp-validation-for="PostalCode" class="text-danger"></span>
                             </div>
                             <div class="form-group col">
                                 <label asp-for="HouseNumber" class="control-label"></label>
-                                <input asp-for="HouseNumber" class="form-control" placeholder="5A" />
+                                <input asp-for="HouseNumber" class="form-control" placeholder="5A"/>
                                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col">
                                 <label asp-for="Street" class="control-label"></label>
-                                <input asp-for="Street" class="form-control" placeholder="Straat" />
+                                <input asp-for="Street" class="form-control" placeholder="Straat"/>
                                 <span asp-validation-for="Street" class="text-danger"></span>
                             </div>
                         </div>
@@ -83,7 +82,7 @@
                     <!--Bedrijfs informatie column-->
                     <div class="form-group">
                         <label asp-for="EmployeeJoinedCompany" class="control-label"></label>
-                        <input asp-for="EmployeeJoinedCompany" class="form-control" />
+                        <input asp-for="EmployeeJoinedCompany" class="form-control"/>
                         <span asp-validation-for="EmployeeJoinedCompany" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -104,13 +103,12 @@
                     </div>
                 </div>
 
-
             </div>
         </form>
     </div>
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <input type="submit" value="Veranderingen Opslaan!" form="EditForm" class="btn btn-success btn-lg" />
+    <input type="submit" value="Veranderingen Opslaan!" form="EditForm" class="btn btn-success btn-lg"/>
 </div>
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
@@ -120,4 +118,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    }
+}

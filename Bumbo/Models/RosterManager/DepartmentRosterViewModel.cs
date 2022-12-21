@@ -1,8 +1,7 @@
-﻿namespace Bumbo.Models.RosterManager
+﻿namespace Bumbo.Models.RosterManager;
+
+public class DepartmentRosterViewModel
 {
-    public class DepartmentRosterViewModel
-    {
-        public int Id { get; set; }
-        public string DepartmentName { get; set; }
-    }
+    public int Id { get; set; }
+    public string DepartmentName { get; set; }
 }

@@ -1,17 +1,12 @@
-﻿using Bumbo.Models.RosterManager;
-using System.Globalization;
+﻿namespace Bumbo.Models.ApproveWorkedHours;
 
-namespace Bumbo.Models.ApproveWorkedHours
+public class IndexWorkedHoursViewModel
 {
-    public class IndexWorkedHoursViewModel
+    public IndexWorkedHoursViewModel()
     {
-        public DateTime Date { get; set; }
-        public List<EmployeeWorkedHoursViewModel> Employees { get; set; }
-        
-        public IndexWorkedHoursViewModel()
-        {
-            Employees = new List<EmployeeWorkedHoursViewModel>();
-        }
-
+        Employees = new List<EmployeeWorkedHoursViewModel>();
     }
+
+    public DateTime Date { get; set; }
+    public List<EmployeeWorkedHoursViewModel> Employees { get; set; }
 }

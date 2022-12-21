@@ -4,7 +4,6 @@ namespace BumboData.Interfaces.Repositories;
 
 public interface IRepository<TEntity> : IRepository<TEntity, int>
 {
-
 }
 
 // Implements basic repository actions interface

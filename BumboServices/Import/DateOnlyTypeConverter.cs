@@ -5,7 +5,7 @@ using CsvHelper.TypeConversion;
 
 namespace BumboServices.Import;
 
-public class DateOnlyTypeConverter: TypeConverter
+public class DateOnlyTypeConverter : TypeConverter
 {
     public override object? ConvertFromString(string? text, IReaderRow row, MemberMapData memberMapData)
     {

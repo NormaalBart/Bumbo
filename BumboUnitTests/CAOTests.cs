@@ -7,10 +7,6 @@ namespace BumboUnitTests;
 
 public class CAOTests
 {
-    private readonly Mock<IUnavailableMomentsRepository> _unavailableMomentsRepositoryMock = new();
-    private readonly Mock<IPlannedShiftsRepository> _plannedShiftsRepositoryMock = new();
-    private BaseCAOService _baseCAOService;
-
     private readonly Branch _branch = new()
     {
         Id = 1,
@@ -40,6 +36,20 @@ public class CAOTests
         Housenumber = "housenumber"
     };
 
+    private readonly Employee _nineteenYearOldEmployee = new()
+    {
+        Id = "id",
+        FirstName = "firstName",
+        LastName = "lastName",
+        Birthdate = DateTime.Now.AddYears(-19).ToDateOnly(),
+        Active = true,
+        EmployeeSince = new DateOnly(2014, 2, 4),
+        Postalcode = "postalcode",
+        Housenumber = "housenumber"
+    };
+
+    private readonly Mock<IPlannedShiftsRepository> _plannedShiftsRepositoryMock = new();
+
     private readonly Employee _seventeenYearOldEmployee = new()
     {
         Id = "id",
@@ -52,17 +62,8 @@ public class CAOTests
         Housenumber = "housenumber"
     };
 
-    private readonly Employee _nineteenYearOldEmployee = new()
-    {
-        Id = "id",
-        FirstName = "firstName",
-        LastName = "lastName",
-        Birthdate = DateTime.Now.AddYears(-19).ToDateOnly(),
-        Active = true,
-        EmployeeSince = new DateOnly(2014, 2, 4),
-        Postalcode = "postalcode",
-        Housenumber = "housenumber"
-    };
+    private readonly Mock<IUnavailableMomentsRepository> _unavailableMomentsRepositoryMock = new();
+    private BaseCAOService _baseCAOService;
 
     [SetUp]
     public void Setup()
@@ -292,7 +293,8 @@ public class CAOTests
         var result =
             _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(),
                 day);
-        var count = plannedShifts.Sum(plannedShift => result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)));
+        var count = plannedShifts.Sum(plannedShift =>
+            result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)));
         Assert.That(count, Is.EqualTo(1));
     }
 
@@ -331,7 +333,8 @@ public class CAOTests
         var result =
             _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(),
                 day);
-        var count = plannedShifts.Sum(plannedShift => result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)));
+        var count = plannedShifts.Sum(plannedShift =>
+            result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)));
         Assert.That(count, Is.EqualTo(1));
     }
 
@@ -459,7 +462,6 @@ public class CAOTests
 
     //employee is now 17
 
-
     [Test]
     [Description("the employee (17) has 4 hours of school but also 6 hours of work")]
     public void FourHoursWorkSixHoursSchoolSeventeenYearsOld()
@@ -560,7 +562,6 @@ public class CAOTests
                 Is.EqualTo(0));
     }
 
-
     [Test]
     [Description("the employee (17) has 0 hours of school but also 9 hours of work")]
     public void NineHoursWorkZeroHoursSchoolSeventeenYearsOld()
@@ -600,7 +601,6 @@ public class CAOTests
             Assert.That(result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)),
                 Is.EqualTo(0));
     }
-
 
     [Test]
     [Description("the employee (17) has 0 hours of school but also 38 hours of work (avg per week) in 4 weeks")]
@@ -643,7 +643,6 @@ public class CAOTests
                 Is.EqualTo(0));
     }
 
-
     [Test]
     [Description("the employee (17) has 0 hours of school but also 44 hours of work (avg per week) in 4 weeks")]
     public void FourtyFourHoursAvgInFourWeeksSeventeenYearsOld()
@@ -682,13 +681,12 @@ public class CAOTests
             _baseCAOService.VerifyPlannedShifts(plannedShifts.Where(e => e.StartTime.Date.ToDateOnly() == day).ToList(),
                 day);
 
-        var count = plannedShifts.Sum(plannedShift => result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)));
+        var count = plannedShifts.Sum(plannedShift =>
+            result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)));
         Assert.That(count, Is.EqualTo(1));
     }
 
-
     //employee is now over 18
-
 
     [Test]
     [Description("the employee (19) has 0 hours of school but also 6 hours of work")]
@@ -790,7 +788,6 @@ public class CAOTests
                 Is.EqualTo(1));
     }
 
-
     [Test]
     [Description("the employee (19) has 0 hours of school but also 38 hours of work (avg per week) in 4 weeks")]
     public void ThirtyEightHoursAvgInFourWeeksNineteenYearsOld()
@@ -831,7 +828,6 @@ public class CAOTests
             Assert.That(result.Keys.Count(e => e is MaxWorkHours && result[e].Contains(plannedShift)),
                 Is.EqualTo(0));
     }
-
 
     [Test]
     [Description("the employee (19) has 0 hours of school but also 62 hours of work (avg per week) in 4 weeks")]

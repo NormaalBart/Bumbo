@@ -7,23 +7,13 @@
 <head>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 
-
-
-
 </head>
 
 <body>
-   
-
-
 
 <h1 class="text-center">Afwezigheid toevoegen</h1>
 
-
 <p class="text-center alert-danger">@Html.ValidationMessage("Invalid Moment")</p>
-
-
-
 
 <div class="container">
     <div >
@@ -38,18 +28,18 @@
                         <div class="row p-1">
                             <div class="form-group text-center">
                                 <span>Van:</span>
-                                    <input id="startdate" onchange="setTimes(true)" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}" />
+                                <input id="startdate" onchange="setTimes(true)" asp-for="StartDate" class="form-control" asp-format="{0:yyyy-MM-dd}"/>
 
-                                    <input id="timepicker-end" class="timepicker-start timepicker form-control" asp-for="StartHour" />
+                                <input id="timepicker-end" class="timepicker-start timepicker form-control" asp-for="StartHour"/>
 
                                 <span asp-validation-for="StartDate" class="text-danger"></span>
                                 <span asp-validation-for="StartHour" class="text-danger"></span>
                             </div>
                             <div class="form-group text-center">
                                 <span>Tot:</span>
-                                    <input id="enddate" onchange="setTimes(false)" asp-for="EndDate" class="form-control" />
+                                <input id="enddate" onchange="setTimes(false)" asp-for="EndDate" class="form-control"/>
 
-                                    <input asp-for="EndHour" class="form-control timepicker-end timepicker" />
+                                <input asp-for="EndHour" class="form-control timepicker-end timepicker"/>
                                 <span asp-validation-for="EndDate" class="text-danger"></span>
                                 <span asp-validation-for="EndHour" class="text-danger"></span>
                             </div>
@@ -70,17 +60,16 @@
     </div>
 </div>
 
-
 <div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
-    <input type="submit" value="Voeg toe!" form="CreateForm" class="btn btn-success btn-lg" />
+    <input type="submit" value="Voeg toe!" form="CreateForm" class="btn btn-success btn-lg"/>
 </div>
 
-<div class ="form-group h-100 d-flex align-items-center justify-content-center p-3">
+<div class="form-group h-100 d-flex align-items-center justify-content-center p-3">
     <a class="btn btn-danger btn-sm" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
 </div>
 
 @section Scripts {
-        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 
     <script>
 
@@ -145,7 +134,6 @@
 
     </script>
 
+}
 
-    }
-
-    </body>
+</body>

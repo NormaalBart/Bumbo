@@ -11,7 +11,7 @@ public class DutchCAOService : BaseCAOService
         // Sets up all CAO rules of the dutch CAO
         // All < 16 year rules
         var below16Range = new Range(0, 15);
-        var below16Rules = new List<ICAORule>()
+        var below16Rules = new List<ICAORule>
         {
             // - Maximaal 8 uur werken per dag incl. school
             new MaxWorkHours(below16Range, 8.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
@@ -27,7 +27,7 @@ public class DutchCAOService : BaseCAOService
 
         // All 16 and 17 year rules
         var otherRange = new Range(16, 17);
-        var otherRules = new List<ICAORule>()
+        var otherRules = new List<ICAORule>
         {
             // - Maximaal 9 uur werken per dag incl. school
             new MaxWorkHours(otherRange, 9.0, MaxWorkHoursTimeframe.Day, true, unavailableMomentsRepository),
@@ -35,7 +35,7 @@ public class DutchCAOService : BaseCAOService
             new AvgWorkHoursWeek(otherRange, 40.0, 4, plannedShiftsRepository)
         };
 
-        var generalRules = new List<ICAORule>()
+        var generalRules = new List<ICAORule>
         {
             // Maximaal 12 uur per dienst
             new MaxConsecutiveHours(12.0),

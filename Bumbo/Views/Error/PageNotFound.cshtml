@@ -2,21 +2,20 @@
     ViewData["Title"] = "Oeps!";
 }
 
+<div class="errorpage border border-1 border-dark rounded rounded-3">
 
-  <div class="errorpage border border-1 border-dark rounded rounded-3">
-
-        <div class="errorpagemsg">
+    <div class="errorpagemsg">
         <div>
             <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
-                <img src="~/images/bumbo.png" class="img-fluid" alt="Bumbo logo" />
+                <img src="~/images/bumbo.png" class="img-fluid" alt="Bumbo logo"/>
             </a>
         </div>
-            <h2>De pagina kon niet gevonden worden. </h2>
-            <br />
-             <p>Check dat je de juiste link gebruikt.</p>
-             
+        <h2>De pagina kon niet gevonden worden. </h2>
+        <br/>
+        <p>Check dat je de juiste link gebruikt.</p>
+
         <p>Ga naar de <a asp-area="" asp-controller="Account" asp-action="Login">de thuispagina</a> pagina en probeer het opnieuw.</p>
-        <br />
+        <br/>
         <p>Is dit een fout en zou deze pagina wel moeten bestaan? Neem dan contact op met de helpdesk.</p>
-        </div>
-   </div>
+    </div>
+</div>

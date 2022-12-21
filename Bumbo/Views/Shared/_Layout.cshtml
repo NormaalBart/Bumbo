@@ -1,5 +1,4 @@
-﻿@using Bumbo.Models.Validations
-@using BumboData.Models
+﻿@using BumboData.Models
 @using Microsoft.AspNetCore.Identity
 @using BumboData.Enums
 @inject SignInManager<Employee> SignInManager
@@ -8,146 +7,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Bumbo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Bumbo.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/Bumbo.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/notification.js"></script>
-    @await RenderSectionAsync("Head", required: false)
+    @await RenderSectionAsync("Head", false)
 </head>
 
 <body>
-    @if (User != null && SignInManager.IsSignedIn(User))
-    {
-        <header>
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
-                        <img src="~/images/bumbo.png" class="logo-nav" alt="Bumbo logo" />
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+@if (User != null && SignInManager.IsSignedIn(User))
+{
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
+                    <img src="~/images/bumbo.png" class="logo-nav" alt="Bumbo logo"/>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="main_nav">
-                        <ul class="navbar-nav">
-                            @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
-                            {
-                                <li class="nav-item Branch">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Branch" asp-action="Index">Filiaalbeheer</a>
-                                </li>
-
-                                <li class="nav-item Employee">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeAdmin" asp-action="Index">Personeelsbeheer</a>
-                                </li>
-                            }
-                            else if (User.IsInRole(RoleType.MANAGER.Name))
-                            {
-
-                                <li class="nav-item Roster">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Rooster</a>
-                                </li>
-                                <li class="nav-item dropdown WorkedHours Export">
-                                    <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Uren management</a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark WorkedHours" asp-area="" asp-controller="WorkedHours" asp-action="Index">Gewerkte uren accorderen</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark Export" asp-area="" asp-controller="Export" asp-action="Overview">Exporteer uren</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown Employee Unavailability">
-                                    <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Personeel management</a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark Employee" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Personeelsbeheer</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark Unavailability" asp-area="" asp-controller="UnavailabilityManager" asp-action="Index">Afwezigheidverzoeken</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown RosterOverview Prognosis">
-                                    <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Prognose management</a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark Prognosis" asp-area="" asp-controller="Prognosis" asp-action="Index">Prognose veranderen</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark RosterOverview" asp-area="" asp-controller="RosterManager" asp-action="Overview">Prognose overzicht</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item dropdown Import Standard Branch">
-                                    <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Filiaal management</a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark Branch" asp-area="" asp-controller="Branch" asp-action="EditManager">Filiaalinformatie</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark Standard" asp-area="" asp-controller="Standard" asp-action="Index">Normeringen</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link text-dark Import" asp-area="" asp-controller="Export" asp-action="Import">Informatie importeren</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            }
-                            else if (User.IsInRole(RoleType.EMPLOYEE.Name))
-                            {
-
-                                <li class="nav-item Roster">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeRoster" asp-action="Index">Rooster</a>
-                                </li>
-                                <li class="nav-item WorkedHours">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="WorkedHours" asp-action="Employee">Gewerkte uren</a>
-                                </li>
-                                <li class="nav-item Availabilty">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="UnavailableMoments" asp-action="Index">Beschikbaarheid</a>
-                                </li>
-                            }
-                        </ul>
-
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Uitloggen</a>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="main_nav">
+                    <ul class="navbar-nav">
+                        @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
+                        {
+                            <li class="nav-item Branch">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Branch" asp-action="Index">Filiaalbeheer</a>
                             </li>
-                        </ul>
 
-                    </div> <!-- navbar-collapse.// -->
+                            <li class="nav-item Employee">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeAdmin" asp-action="Index">Personeelsbeheer</a>
+                            </li>
+                        }
+                        else if (User.IsInRole(RoleType.MANAGER.Name))
+                        {
+                            <li class="nav-item Roster">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="RosterManager" asp-action="Index">Rooster</a>
+                            </li>
+                            <li class="nav-item dropdown WorkedHours Export">
+                                <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Uren management</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark WorkedHours" asp-area="" asp-controller="WorkedHours" asp-action="Index">Gewerkte uren accorderen</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark Export" asp-area="" asp-controller="Export" asp-action="Overview">Exporteer uren</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown Employee Unavailability">
+                                <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Personeel management</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark Employee" asp-area="" asp-controller="EmployeeManager" asp-action="Index">Personeelsbeheer</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark Unavailability" asp-area="" asp-controller="UnavailabilityManager" asp-action="Index">Afwezigheidverzoeken</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown RosterOverview Prognosis">
+                                <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Prognose management</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark Prognosis" asp-area="" asp-controller="Prognosis" asp-action="Index">Prognose veranderen</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark RosterOverview" asp-area="" asp-controller="RosterManager" asp-action="Overview">Prognose overzicht</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown Import Standard Branch">
+                                <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown">Filiaal management</a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark Branch" asp-area="" asp-controller="Branch" asp-action="EditManager">Filiaalinformatie</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark Standard" asp-area="" asp-controller="Standard" asp-action="Index">Normeringen</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item nav-link text-dark Import" asp-area="" asp-controller="Export" asp-action="Import">Informatie importeren</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole(RoleType.EMPLOYEE.Name))
+                        {
+                            <li class="nav-item Roster">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="EmployeeRoster" asp-action="Index">Rooster</a>
+                            </li>
+                            <li class="nav-item WorkedHours">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="WorkedHours" asp-action="Employee">Gewerkte uren</a>
+                            </li>
+                            <li class="nav-item Availabilty">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="UnavailableMoments" asp-action="Index">Beschikbaarheid</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Uitloggen</a>
+                        </li>
+                    </ul>
+
+                </div> <!-- navbar-collapse.// -->
             </div> <!-- container-fluid.// -->
         </nav>
-        </header>
-    }
+    </header>
+}
 
-    <div class="container mt-4">
-        <main role="main" class="pb-3">
-            @if (TempData["ValidationType"] != null)
-            {
-                <script>
+<div class="container mt-4">
+    <main role="main" class="pb-3">
+        @if (TempData["ValidationType"] != null)
+        {
+            <script>
                     var type = '@TempData["ValidationType"]';
                     var message = '@TempData["ValidationMessage"]';
                     Notification.show(type, message);
                 </script>
-            }
-            @RenderBody()
-        </main>
-    </div>
+        }
+        @RenderBody()
+    </main>
+</div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/passwordvalidation.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/passwordvalidation.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
-    <script>
+@await RenderSectionAsync("Scripts", false)
+<script>
         $(document).ready(function () {
             if ('@ViewBag.data' != null) {
                 var elements = document.getElementsByClassName('@ViewBag.data');

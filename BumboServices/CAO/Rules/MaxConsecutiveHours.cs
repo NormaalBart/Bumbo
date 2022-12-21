@@ -2,7 +2,7 @@ using BumboData.Models;
 
 namespace BumboServices.CAO.Rules;
 
-public class MaxConsecutiveHours: ICAORule
+public class MaxConsecutiveHours : ICAORule
 {
     private readonly double _maxHours;
 
@@ -16,7 +16,7 @@ public class MaxConsecutiveHours: ICAORule
         return plannedShifts
             .Where(s => (s.EndTime - s.StartTime).TotalHours > _maxHours).ToList();
     }
-    
+
     public bool AppliesTo(Employee employee)
     {
         // Applies to all employees

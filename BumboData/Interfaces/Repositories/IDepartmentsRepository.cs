@@ -1,9 +1,8 @@
 ﻿using BumboData.Models;
 
-namespace BumboData.Interfaces.Repositories
+namespace BumboData.Interfaces.Repositories;
+
+public interface IDepartmentsRepository : IRepository<Department>
 {
-    public interface IDepartmentsRepository: IRepository<Department>
-    {
-        Department GetById(int id);
-    }
+    Department GetById(int id);
 }

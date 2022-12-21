@@ -1,8 +1,7 @@
-﻿namespace Bumbo.Models
+﻿namespace Bumbo.Models;
+
+public class IncomingDataClockIn
 {
-    public class IncomingDataClockIn
-    {
-        public string EmployeeId { get; set; }
-        public int BranchId { get; set; }
-    }
+    public string EmployeeId { get; set; }
+    public int BranchId { get; set; }
 }

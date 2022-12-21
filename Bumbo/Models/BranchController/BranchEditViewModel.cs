@@ -1,13 +1,11 @@
-﻿namespace Bumbo.Models.BranchController
+﻿namespace Bumbo.Models.BranchController;
+
+public class BranchEditViewModel : BranchCreateViewModel
 {
-    public class BranchEditViewModel : BranchCreateViewModel
+    public BranchEditViewModel()
     {
-
-        public List<OpeningHoursOverrideViewModel> SpecialOpeningHours { get; set; }
-
-        public BranchEditViewModel() : base()
-        {
-            SpecialOpeningHours = new List<OpeningHoursOverrideViewModel>();
-        }
+        SpecialOpeningHours = new List<OpeningHoursOverrideViewModel>();
     }
+
+    public List<OpeningHoursOverrideViewModel> SpecialOpeningHours { get; set; }
 }
