@@ -134,11 +134,11 @@
                         @if (item.ReviewStatus == ReviewStatus.Pending)
                         {
                             <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="AcceptForm" method="post">
-                                <i class="ms-1 bi-check-circle-fill" href="javascript:{}" onclick="document.getElementById('AcceptForm').submit();" style="color: green" title="Accepteer dit afwezigheidsverzoek" data-toggle="tooltip" data-placement="top">
+                                <i class="ms-1 bi-check-circle-fill" href="javascript:{}" onclick="document.getElementById('AcceptForm').submit();" style="color: green; cursor: pointer" title="Accepteer dit afwezigheidsverzoek" data-toggle="tooltip" data-placement="top">
                                 </i>
                             </form>
                             <form asp-action="Review" asp-route-id="@item.Id" asp-route-isApproved="false" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" id="DenyForm" method="post">
-                                <i class="ms-1 bi-x-circle-fill" href="javascript:{}" onclick="document.getElementById('DenyForm').submit();" style="color: red" title="Keur dit afwezigheidsverzoek af" data-toggle="tooltip" data-placement="top">
+                                <i class="ms-1 bi-x-circle-fill" href="javascript:{}" onclick="document.getElementById('DenyForm').submit();" style="color: red; cursor: pointer" title="Keur dit afwezigheidsverzoek af" data-toggle="tooltip" data-placement="top">
                                 </i>
                             </form>
                         }
