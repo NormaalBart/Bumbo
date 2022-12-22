@@ -29,16 +29,16 @@
                 @Html.HiddenFor(m => m.FirstName)
                 @Html.HiddenFor(m => m.MiddleName)
                 @Html.HiddenFor(m => m.LastName)
-                <div class="col">
+                <div class="col text-center">
                     @Html.Raw("Start tijd: ") @Html.EditorFor(workedShift => workedShift.WorkedShifts[i].StartTime)
                 </div>
-                <div class="col">
+                <div class="col text-center">
                     @Html.Raw("Eind tijd: ") @Html.EditorFor(workedShift => workedShift.WorkedShifts[i].EndTime)
                     
                 </div>
             </div>
         }
-        <div class="row">
+        <div class="row m-3">
             <input type="submit" value="Opslaan"/>
         </div>
     }
