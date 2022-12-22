@@ -169,7 +169,7 @@
                         <input hidden asp-for="Ids" value="@item" name="ids"/>
                     }
                     <div class="m-3">
-                        <span> Weet je zeker dat je alle zichtbare momenten wilt </span> <span class="text-success">goedkeuren?</span>
+                        <span> Weet je zeker dat je alle zichtbare momenten op deze huidige pagina wilt </span> <span class="text-success">goedkeuren?</span>
 
                     </div>
                     <input type="submit" value="Opslaan" asp-action="ReviewAll" asp-route-isApproved="true" asp-route-Page="@(Model.Page - 1)" asp-route-searchString="@Model.SearchString" asp-route-includeAccepted="@Model.IncludeAccepted" asp-route-sortingOption="@Model.SortingOption" class="btn btn-success btn-lg "/>

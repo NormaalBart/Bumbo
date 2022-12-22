@@ -89,8 +89,8 @@ public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnava
     public int GetTotalMoments(int? defaultBranchId, string searchString, bool includeAccepted)
     {
         return DbSet
-            .Where(u => u.EndTime.Year >= DateTime.Now.Year && u.EndTime.Month >= DateTime.Now.Month &&
-                        u.EndTime.Day >= DateTime.Now.Day).Include(u => u.Employee).AsEnumerable()
+            .Where(u => u.EndTime.Date >= DateTime.Now.Date)
+            .Include(u => u.Employee).AsEnumerable()
             .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()))
             .Where(u => includeAccepted ? true : u.ReviewStatus == ReviewStatus.Pending)
             .Count();
@@ -100,10 +100,11 @@ public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnava
         UnavailabilitySortingOption sortingOption, int? page, int momentsPerPage)
     {
         var set = DbSet
-            .Where(u => u.EndTime.Year >= DateTime.Now.Year && u.EndTime.Month >= DateTime.Now.Month &&
-                        u.EndTime.Day >= DateTime.Now.Day).Include(u => u.Employee).AsEnumerable()
+            .Where(u => u.EndTime.Date >= DateTime.Now.Date)
+            .Include(u => u.Employee).AsEnumerable()
             .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()))
             .Where(u => includeAccepted ? true : u.ReviewStatus == ReviewStatus.Pending);
+
         set = sortingOption switch
         {
             UnavailabilitySortingOption.Name_Asc => set.OrderBy(u => u.Employee.FullName()),

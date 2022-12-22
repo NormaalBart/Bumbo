@@ -99,7 +99,7 @@ public class UnavailabilityManagerController : NotificationController
         if (!isApproved) newStatus = ReviewStatus.Rejected;
 
         _unavailableMomentsRepository.UpdateRange(newStatus, ids);
-        ShowMessage(MessageType.Success, "Afwezigheidsverzoeken geupdate");
+        ShowMessage(MessageType.Success, "Afwezigheidsverzoeken geupdated");
         return RedirectToAction(nameof(Index), new {searchString, includeAccepted, sortingOption, Page});
     }
 }
