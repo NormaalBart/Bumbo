@@ -46,7 +46,12 @@ public class ExportController : NotificationController
             .Select(s => new DateTime(s.Key.Year, s.Key.Month, 1))
             .OrderBy(s => s.Date).Reverse().ToList();
 
-        var monthSelected = SelectedMonth == null || SelectedMonth.Length != 7
+        if (selectableMonths.Count == 0)
+        {
+            selectableMonths.Add(DateTime.Today);
+        }
+
+        var monthSelected = SelectedMonth is not {Length: 7}
             ? selectableMonths.First()
             : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
 
