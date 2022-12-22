@@ -70,16 +70,10 @@ public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnava
     {
         // updates a list of unavailable moments to a new status.
         var trackedMoments = new List<UnavailableMoment>();
-        foreach (var id in momentIds)
+        foreach (var moment in from id in momentIds select Get(id) into moment where moment != null where moment.ReviewStatus == ReviewStatus.Pending select moment)
         {
-            var moment = Get(id);
-            // potentially throw exception here if it is null? Or continue with rest of list? Even if this situation is incredibly rare.
-            if (moment != null)
-                if (moment.ReviewStatus == ReviewStatus.Pending)
-                {
-                    moment.ReviewStatus = newStatus;
-                    trackedMoments.Add(moment);
-                }
+            moment.ReviewStatus = newStatus;
+            trackedMoments.Add(moment);
         }
 
         DbSet.UpdateRange(trackedMoments);
@@ -88,22 +82,19 @@ public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnava
 
     public int GetTotalMoments(int? defaultBranchId, string searchString, bool includeAccepted)
     {
-        return DbSet
-            .Where(u => u.EndTime.Year >= DateTime.Now.Year && u.EndTime.Month >= DateTime.Now.Month &&
-                        u.EndTime.Day >= DateTime.Now.Day).Include(u => u.Employee).AsEnumerable()
-            .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()))
-            .Where(u => includeAccepted ? true : u.ReviewStatus == ReviewStatus.Pending)
-            .Count();
+        return DbSet.Where(u => u.EndTime > DateTime.Now).Include(u => u.Employee)
+            .AsEnumerable()
+            .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()) && u.Employee.DefaultBranchId == defaultBranchId)
+            .Count(u => includeAccepted || u.ReviewStatus == ReviewStatus.Pending);
     }
 
     public IEnumerable<UnavailableMoment> GetAllMoments(int? defaultBranchId, string searchString, bool includeAccepted,
         UnavailabilitySortingOption sortingOption, int? page, int momentsPerPage)
     {
         var set = DbSet
-            .Where(u => u.EndTime.Year >= DateTime.Now.Year && u.EndTime.Month >= DateTime.Now.Month &&
-                        u.EndTime.Day >= DateTime.Now.Day).Include(u => u.Employee).AsEnumerable()
-            .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()))
-            .Where(u => includeAccepted ? true : u.ReviewStatus == ReviewStatus.Pending);
+            .Where(u => u.EndTime > DateTime.Now).Include(u => u.Employee).AsEnumerable()
+            .Where(u => u.Employee.FullName().ToLower().StartsWith(searchString.ToLower()) && u.Employee.DefaultBranchId == defaultBranchId)
+            .Where(u => includeAccepted || u.ReviewStatus == ReviewStatus.Pending);
         set = sortingOption switch
         {
             UnavailabilitySortingOption.Name_Asc => set.OrderBy(u => u.Employee.FullName()),
@@ -115,32 +106,6 @@ public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnava
             _ => set = set.OrderBy(u => u.Employee.FullName())
         };
         return set.Skip(momentsPerPage * ((page ?? 1) - 1)).Take(momentsPerPage)
-            .ToList();
-    }
-
-    public IEnumerable<UnavailableMoment> GetAllUnavailabilityMomentsByReviewStatus(int branchId, ReviewStatus status,
-        string search)
-    {
-        if (search == null)
-            return DbSet.Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status)
-                .Include(u => u.Employee).ToList();
-        return DbSet
-            .Where(u => u.Employee.DefaultBranchId == branchId && u.ReviewStatus == status &&
-                        (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim()))
-            .Include(u => u.Employee).ToList();
-    }
-
-    public IEnumerable<UnavailableMoment> GetAllMomentsFromMonth(int branchId, DateTime date, string search)
-    {
-        if (search == null)
-            return DbSet
-                .Where(u => u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year &&
-                            u.Employee.DefaultBranchId == branchId).Include(u => u.Employee).ToList();
-        return DbSet.Where(u =>
-                u.StartTime.Month <= date.Month && u.EndTime >= date && u.StartTime.Year == date.Year &&
-                u.Employee.DefaultBranchId == branchId &&
-                (u.Employee.FirstName + " " + u.Employee.LastName).Trim().Contains(search.Trim()))
-            .Include(u => u.Employee)
             .ToList();
     }
 }
