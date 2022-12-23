@@ -45,11 +45,25 @@ public class StandardController : NotificationController
         var branch = _branchRepository.Get(employee.DefaultBranchId ?? -1);
 
         if (branch == null) return View(viewModel);
+        var existingStandard = _standardRepository.Get(branch.Id);
 
-        foreach (var standard in standards) standard.BranchId = branch.Id;
-
-        branch.Standards = standards;
-        _branchRepository.Update(branch);
+        foreach (var standard in standards)
+        {
+            if (existingStandard.Any(s => s.Key == standard.Key))
+            {
+                // Update existing standard
+                var existing = existingStandard.First(s => s.Key == standard.Key);
+                existing.Value = standard.Value;
+                _standardRepository.Update(existing);
+            }
+            else
+            {
+                // Add new
+                standard.Branch = branch;
+                _standardRepository.Update(standard);
+            }
+        }
+        
         ShowMessage(MessageType.Success, "De data is opgeslagen");
         return RedirectToAction(nameof(Index));
     }

@@ -8,6 +8,7 @@ public class EmployeeShiftViewModel
     public DateTime EndTime { get; set; }
     public string DepartmentName { get; set; }
 
+    public string BranchName { get; set; }
     public string City { get; set; }
     public string Street { get; set; }
     public string HouseNumber { get; set; }
