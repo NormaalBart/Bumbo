@@ -45,32 +45,29 @@
                 <span class="dot red me-2"></span> <span>Rode omlijning: Dag heeft CAO overtredingen.</span>
             </div>
         </div>
-        </div>
+    </div>
 
-    
     <div class="row py-1 seven-cols week-legenda">
         @{
             var daysInWeek = Enum.GetValues(typeof(DayOfWeek));
             // Shift days in week by 2 forward to start with monday.
             var daysInWeekShifted = daysInWeek.Cast<DayOfWeek>().Skip(1).Concat(daysInWeek.Cast<DayOfWeek>().Take(1));
         }
-        @foreach (DayOfWeek day in daysInWeekShifted)
+        @foreach (var day in daysInWeekShifted)
         {
             <div class="col-xl-2 d-xl-inline d-none fw-bold text-center">@CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(day)</div>
         }
-            <hr/>
+        <hr/>
     </div>
-        
 
-
-        <div class="row pt-4 seven-cols m-0">
+    <div class="row pt-4 seven-cols m-0">
         @* Add placeholder items so the week is properly aligned. Start with monday *@
-        @{ var offset = (int) (new DateTime(Model.Date.Year, Model.Date.Month, 1).DayOfWeek - 1);}
-        @for (int i = 0; i < (offset < 0 ? offset + 7 : offset); i++)
+        @{ var offset = (int) (new DateTime(Model.Date.Year, Model.Date.Month, 1).DayOfWeek - 1); }
+        @for (var i = 0; i < (offset < 0 ? offset + 7 : offset); i++)
         {
             <div class="col-xl-2 d-xl-inline d-none"></div>
         }
-        @for (int day = 0; day <= DateTime.DaysInMonth(Model.Date.Year, Model.Date.Month); day++)
+        @for (var day = 0; day <= DateTime.DaysInMonth(Model.Date.Year, Model.Date.Month); day++)
         {
             var item = Model.GetDayByIndex(day);
 

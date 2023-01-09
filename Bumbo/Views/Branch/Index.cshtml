@@ -1,6 +1,5 @@
-﻿@using Bumbo.Models.BranchController
-@using BumboData.Enums
-@model BranchListIndexViewModel
+﻿@model Bumbo.Models.BranchController.BranchListIndexViewModel
+
 
 @{
     ViewData["Title"] = "Filiaal overzicht";
@@ -11,134 +10,139 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <!--Create new button and sorting buttons in a header above the table-->
-            <div class="edit-box align-items-center align-items-center">
-                <div class="top-header-content">
-                    <form asp-action="Index" method="get" class="container ">
-                        <div class="form-actions no-color row ">
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="top-header-content">
-                                    <a asp-action="Create" class="btn btn-lg btn-primary">Nieuw filiaal</a>
-                                </div>
+    <tr>
+        <!--Create new button and sorting buttons in a header above the table-->
+        <div class="edit-box align-items-center align-items-center">
+            <div class="top-header-content">
+                <form asp-action="Index" method="get" class="container ">
+                    <div class="form-actions no-color row ">
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="top-header-content">
+                                <a asp-action="Create" class="btn btn-lg btn-primary">Nieuw filiaal</a>
                             </div>
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content form-check">
-                                    <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content">
-                                    <label class="form-check-label">
-                                        @Html.DisplayNameFor(model => model.IncludeActive) <br /> <input class="form-check-input" asp-for="IncludeActive" />
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content">
-                                    <label class="form-check-label">
-                                        @Html.DisplayNameFor(model => model.IncludeInactive) <br /> <input class="form-check-input" asp-for="IncludeInactive" />
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content">
-                                    <label asp-for="CurrentSort" class="control-label"></label>
-                                    <select asp-for="CurrentSort" class="form-control form-select">
-                                        @foreach (var item in Model.AvailableSortOptions)
-                                        {
-                                            <option value="@item">@Model.GetSortingDisplayName(item)</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="btn btn-warning text-center">
-                                    <input type="submit" value="Zoeken" class="btn btn-default search-bar" />
-                                </div>
-                            </div>
-
                         </div>
-                    </form>
-                </div>
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content form-check">
+                                <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam"/>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label class="form-check-label">
+                                    @Html.DisplayNameFor(model => model.IncludeActive) <br/> <input class="form-check-input" asp-for="IncludeActive"/>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label class="form-check-label">
+                                    @Html.DisplayNameFor(model => model.IncludeInactive) <br/> <input class="form-check-input" asp-for="IncludeInactive"/>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label asp-for="CurrentSort" class="control-label"></label>
+                                <select asp-for="CurrentSort" class="form-control form-select">
+                                    @foreach (var item in Model.AvailableSortOptions)
+                                    {
+                                        <option value="@item">@Model.GetSortingDisplayName(item)</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="btn btn-warning text-center">
+                                <input type="submit" value="Zoeken" class="btn btn-default search-bar"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
             </div>
+        </div>
 
-
-            <table class="table table-striped table-hover table-bordered">
-                <thead class="table table-dark">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Branches[0].Name)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Branches[0].FormattedStreet)
-                        </th>
-                        <th class="text-center">
-                            @Html.DisplayNameFor(model => model.Branches[0].Managers)
-                        </th>
-                        <th class="text-center">
-                            @Html.DisplayNameFor(model => model.Branches[0].Employees)
-                        </th>
-                        <th>
-                            Acties
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Branches.Count == 0)
-                    {
-                        <tr class="alert-info text-center">
-                            <td colspan="5">
-                                <p>Er zijn geen filialen gevonden.</p>
-                            </td>
-                        </tr>
-                    }
-                    @foreach (var item in Model.Branches)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FormattedStreet)
-                            </td>
-                            <td class="text-center">
-                                @if (string.IsNullOrEmpty(item.Managers))
-                                {
-                                    @Html.Label("Geen")
-                                }
-                                else
-                                {
-                                    @Html.DisplayFor(modelItem => item.Managers)
-                                }
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.Employees)
-                            </td>
-                            <td>
-                                @Html.ActionLink("Verander", "Edit", new {  id=item.Id }) |
-                                @if (item.Inactive)
-                                {
-                                    <button type="button" onclick="setActiveClick(@item.Id, '@item.Name')" class="btn btn-success" data-toggle="modal" data-target="#setBranchActive">
-                                        Zet actief
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button type="button" onclick="setInactiveClick(@item.Id, '@item.Name')" class="btn btn-danger" data-toggle="modal" data-target="#setBranchInactive">
-                                        Zet inactief
-                                    </button>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </tr>
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table table-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Branches[0].Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Branches[0].FormattedStreet)
+                </th>
+                <th class="text-center">
+                    @Html.DisplayNameFor(model => model.Branches[0].Managers)
+                </th>
+                <th class="text-center">
+                    @Html.DisplayNameFor(model => model.Branches[0].Employees)
+                </th>
+                <th>
+                    Acties
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model.Branches.Count == 0)
+            {
+                <tr class="alert-info text-center">
+                    <td colspan="5">
+                        <p>Er zijn geen filialen gevonden.</p>
+                    </td>
+                </tr>
+            }
+            @foreach (var item in Model.Branches)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FormattedStreet)
+                    </td>
+                    <td class="text-center">
+                        @if (string.IsNullOrEmpty(item.Managers))
+                        {
+                            @Html.Label("Geen")
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Managers)
+                        }
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Employees)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Verander</a> |
+                        @if (item.Inactive)
+                        {
+                            <button type="button" onclick="setActiveClick(@item.Id, '@item.Name')" class="btn btn-success" data-toggle="modal" data-target="#setBranchActive">
+                                Zet actief
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" onclick="setInactiveClick(@item.Id, '@item.Name')" class="btn btn-danger" data-toggle="modal" data-target="#setBranchInactive">
+                                Zet inactief
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </tr>
     </thead>
 </table>
 
 @Html.Partial("_SetInactive")
 @Html.Partial("_SetActive")
+
+<div class="py-3 d-flex justify-content-between">
+    <a class="btn btn-primary @(Model.Page <= 1 ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page - 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Vorige</a>
+    <p class="text-center">Pagina @Model.Page/@Model.MaxPage</p>
+    <a class="btn btn-primary @(Model.Page >= Model.MaxPage ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page + 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Volgende</a>
+</div>

@@ -11,15 +11,16 @@ namespace BumboServices.Import;
 
 public class ImportService : IImportService
 {
+    private readonly IDepartmentsRepository _departmentsRepository;
     private readonly IEmployeeRepository _employeeRepository;
-    private readonly IWorkedShiftRepository _workedShiftRepository;
+    private readonly IMapper _mapper;
     private readonly IPlannedShiftsRepository _plannedShiftsRepository;
     private readonly UserManager<Employee> _userManager;
-    private readonly IDepartmentsRepository _departmentsRepository;
-    private readonly IMapper _mapper;
+    private readonly IWorkedShiftRepository _workedShiftRepository;
 
     public ImportService(IEmployeeRepository employeeRepository, IWorkedShiftRepository workedShiftRepository,
-        IMapper mapper, IPlannedShiftsRepository plannedShiftsRepository, UserManager<Employee> userManager, IDepartmentsRepository departmentsRepository)
+        IMapper mapper, IPlannedShiftsRepository plannedShiftsRepository, UserManager<Employee> userManager,
+        IDepartmentsRepository departmentsRepository)
     {
         _employeeRepository = employeeRepository;
         _workedShiftRepository = workedShiftRepository;
@@ -46,19 +47,16 @@ public class ImportService : IImportService
         });
 
         _employeeRepository.Import(mappedEmployees);
-        
+
         // Add employee role by default
         foreach (var mappedEmployee in mappedEmployees)
-        { 
+        {
             await _userManager.AddToRoleAsync(mappedEmployee, RoleType.EMPLOYEE.Name);
-            
+
             // Add all departments to employee
             var usr = _employeeRepository.Get(mappedEmployee.Id);
-            
-            foreach (var department in _departmentsRepository.GetList())
-            {
-                usr.AllowedDepartments.Add(department);
-            }
+
+            foreach (var department in _departmentsRepository.GetList()) usr.AllowedDepartments.Add(department);
 
             _employeeRepository.Update(usr);
         }
@@ -79,7 +77,7 @@ public class ImportService : IImportService
 
         if (type == ImportClockEventsType.Planned)
         {
-            var plannedShifts = mappedModels.Select(s => new PlannedShift()
+            var plannedShifts = mappedModels.Select(s => new PlannedShift
             {
                 StartTime = s.StartTime,
                 EndTime = (DateTime) s.EndTime,
@@ -89,7 +87,8 @@ public class ImportService : IImportService
             }).ToList();
 
             _plannedShiftsRepository.Import(plannedShifts);
-        } else if (type == ImportClockEventsType.Worked)
+        }
+        else if (type == ImportClockEventsType.Worked)
         {
             _workedShiftRepository.Import(mappedModels);
         }

@@ -1,0 +1,46 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Oeps!";
+}
+
+<div class="errorpage border border-1 border-dark rounded rounded-3">
+
+    <div class="errorpagemsg">
+        <div>
+            <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
+                <img src="~/images/bumbo.png" class="img-fluid" alt="Bumbo logo"/>
+            </a>
+        </div>
+        <h2>Oeps, er ging iets fout!</h2>
+        <br/>
+        <p>Als het probleem herhaald, neem contact op met de helpdesk.</p>
+        <br/>
+        <p>Ga naar de <a asp-area="" asp-controller="Account" asp-action="Login">de thuispagina</a> pagina en probeer het opnieuw.</p>
+        <p>Of <a href="">ververs</a> de pagina.</p>
+    </div>
+</div>
+
+<div class="text-center m-2">
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Zie extra informatie
+    </button>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            <p>Het kan zijn dat een helpdesk medewerker deze informatie nodig heeft:</p>
+            <br/>
+            @if (Model.ShowRequestId)
+            {
+                <p class="text-center">
+                    <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                </p>
+            }
+
+            <p>
+                Foutcode: @Model.ErrorCode
+            </p>
+            <p>
+                Foutbericht: @Model.ErrorMessage
+            </p>
+        </div>
+    </div>
+</div>

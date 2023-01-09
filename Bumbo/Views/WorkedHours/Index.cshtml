@@ -1,26 +1,29 @@
-﻿@model Bumbo.Models.ApproveWorkedHours.IndexWorkedHoursViewModel
-@using Bumbo.Utils;
+﻿@using Bumbo.Utils
+@model Bumbo.Models.ApproveWorkedHours.IndexWorkedHoursViewModel
 @{
     ViewBag.data = "WorkedHours";
 }
 
-
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren accorderen</h1>
 
-<div class="d-flex justify-content-between m-4 border rounded-2">
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date"> Vorige dag </a>
-    </button>
-
-    <p>Week @Model.Date.GetWeekNumber() | @Model.Date.ToShortDateString() </p>
-
-    <button class="btn btn-outline-primary">
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date"> Volgende dag </a>
-    </button>
-
-
+<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
+    <div class="d-flex justify-content-between m-2 align-items-center text-center">
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
+                <i class="bi bi-caret-left"></i> Vorige dag
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            Week @Model.Date.GetWeekNumber()<br><span style="font-size:18px">@Model.Date.ToString("dddd d MMMM") @Model.Date.ToString("yyyy")</span>
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
+                Volgende dag <i class="bi bi-caret-right"></i>
+            </a>
+        </div>
+    </div>
 </div>
-
 
 @if (Model.Employees.Count < 1)
 {
@@ -30,44 +33,43 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Naam</th>
-                <th scope="col">Geplande uren</th>
-                <th scope="col">Werkelijke uren</th>
-                <th scope="col">Verschil</th>
-                <th scope="col">Status</th>
-            </tr>
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table table-dark">
+        <tr>
+            <th scope="col">Naam</th>
+            <th scope="col">Geplande uren</th>
+            <th scope="col">Werkelijke uren</th>
+            <th scope="col">Verschil</th>
+            <th scope="col">Status</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var employee in Model.Employees)
-            {
-                <tr>
-                    <td>@employee.FullName</td>
-                    <td>@employee.PlannedShiftsToString()</td>
-                    <td>
-                        @employee.WorkedShiftsToString()
-                        @if (!employee.WorkedShifts.All(w => w.Approved == true))
-                        {
-                            @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new { workedShiftId = employee.WorkedShifts.Select(w => w.Id),employeeId = employee.Id})
-                        }
-                    </td>
-                    <td>@employee.CalculateDifference()</td>
-                    <td>
-                        @if (employee.WorkedShifts.All(w => w.Approved == true))
-                        {
-                            <i class="ms-1 bi-check-circle" style="color: green" title="Uren zijn al goedgekeurd." data-toggle="tooltip" data-placement="top"></i>
-                        }
-                        else
-                        {
+        @foreach (var employee in Model.Employees)
+        {
+            <tr>
+                <td>@employee.FullName</td>
+                <td>@employee.PlannedShiftsToString()</td>
+                <td>
+                    @employee.WorkedShiftsToString()
+                    @if (!employee.WorkedShifts.All(w => w.Approved))
+                    {
+                        @Html.ActionLink("Aanpassen", "Edit", "WorkedHours", new {workedShiftId = employee.WorkedShifts.Select(w => w.Id), employeeId = employee.Id})
+                    }
+                </td>
+                <td>@employee.CalculateDifference()</td>
+                <td>
+                    @if (employee.WorkedShifts.All(w => w.Approved))
+                    {
+                        <i class="ms-1 bi-check-circle" style="color: green" title="Uren zijn al goedgekeurd." data-toggle="tooltip" data-placement="top"></i>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Goedkeuren", "Approve", "WorkedHours", new {ids = employee.WorkedShifts.Select(w => w.Id)})
+                    }
+                </td>
 
-                            @Html.ActionLink("Goedkeuren", "Approve", "WorkedHours", new { ids = employee.WorkedShifts.Select(w => w.Id)})
-                        }
-                    </td>
-
-                </tr>
-            }
+            </tr>
+        }
         </tbody>
     </table>
 }

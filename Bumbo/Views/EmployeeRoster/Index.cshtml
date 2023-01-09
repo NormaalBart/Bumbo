@@ -1,47 +1,36 @@
-﻿@model Bumbo.Models.EmployeeRoster.EmployeeShiftsListViewModel
+﻿@using Bumbo.Utils
 @using BumboData.Enums
+@model Bumbo.Models.EmployeeRoster.EmployeeShiftsListViewModel
 @{
     ViewData["Title"] = "Rooster";
     ViewBag.data = "Roster";
 }
 
-
 <h1 class="text-center">
     Diensten deze week
 </h1>
 
-
-<div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark p-2 mx-auto">
-
-    <div>
-        <!--Arrow to left, using an bootstrap arrow png-->
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-7)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
-                <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z" />
-            </svg>
-        </a>
-    </div>
-
-    <div >
-        <!--Week  number, date information which is in the center.-->
-        @Model.Date.ToString("dd MMMM yyyy") -> @Model.Date.AddDays(7).ToString("dd MMMM yyyy")
-    </div>
-    <div>
-        <!--Arrow to right, using an bootstrap arrow png on the right side of the bar.-->
-        <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(7)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
-                <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z" />
-            </svg>
-        </a>
+<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
+    <div class="d-flex justify-content-between m-2 align-items-center text-center">
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-7)">
+                <i class="bi bi-caret-left"></i> Vorige week
+            </a>
+        </div>
+        <div class="fw-bold">
+            @Model.Date.ToString("yyyy") Week @Model.Date.ToDateTime(new TimeOnly()).GetWeekNumber()
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(7)">
+                Volgende week <i class="bi bi-caret-right"></i>
+            </a>
+        </div>
     </div>
 </div>
 
-<!--Display of all days in line, selected day is highlighted-->
 <div class="row border-bottom border-2 border-dark">
-    @for (int i = 0; i < 7; i++)
+    @for (var i = 0; i < 7; i++)
     {
-
-
         <div class="col text-center m-0">
             <a class="text-decoration-none " asp-action="Index" asp-route-dateInput="@Model.GetDayDate(i)">
                 <div class="day-header text-black @(Model.DayIsSelected(i) ? "selected" : "") @(Model.IsToday(i) ? "today" : "") ">
@@ -50,39 +39,32 @@
                 <div class="text-black">
                     @Model.GetDay(i)
                 </div>
-      
             </a>
         </div>
-            
     }
-
 </div>
 
+<div class="container">
 
-
-<div class="container ">
-
-     @if (Model.shifts.Count() == 0)
+    @if (Model.Shifts.Count() == 0)
     {
         <p class="text-center mt-2">Geen ingeplande diensten komende week.</p>
     }
-    @foreach (var item in Model.shifts)
+    @foreach (var item in Model.Shifts)
     {
-
         <div class="row employee-roster-box employee-roster-box-shift rounded rounded-4 m-2 p-2 d-flex flex-row justify-content-center mx-auto border-bottom border-1 border-dark position-relative">
-    
 
-                @if (item.Type != null)
-                {
+
+            @if (item.Type != null)
+            {
                 <div class="position-absolute top-50 start-50 translate-middle">
-                        <i class="bi bi-box-arrow-right "></i>
-                    </div>
-
-                }
+                    <i class="bi bi-box-arrow-right "></i>
+                </div>
+            }
             <div class="col-2 date-display text-center">
                 <h3>@item.StartTime.Day</h3>
                 <p>@item.StartTime.ToString("ddd")</p>
-            
+
             </div>
             <div class="col-6 ">
 
@@ -101,42 +83,41 @@
                                 <div class="employee-roster-box-time  col-auto @(item.Sick ? "employee-roster-box-dep-sick" : "employee-roster-box-dep")" data-toggle="tooltip" data-placement="top" @(item.Sick ? "title=Ziek" : "")>
                                     <p>@item.DepartmentName Afdeling</p>
                                 </div>
-                            }else{
-                                
+                            }
+                            else
+                            {
                                 <div class="employee-roster-box-reason employee-roster-box-time col-auto">
-                                    @Html.DisplayFor(modelItem => item.Type) 
+                                    @Html.DisplayFor(modelItem => item.Type)
                                 </div>
                                 <div class="col-auto ">
                                     @if (item.ReviewStatus == null)
                                     {
-
                                         <span class="bi bi-exclamation-circle text-danger text-large"></span>
                                     }
-                                    @if (item.ReviewStatus == BumboData.Enums.ReviewStatus.Approved)
+                                    @if (item.ReviewStatus == ReviewStatus.Approved)
                                     {
                                         <div data-toggle="tooltip" data-placement="top" title="Dit moment is goedgekeurd door de manager">
                                             <span class="bi bi-check text-success text-large"></span>
                                         </div>
-
-
                                     }
-                                    @if (item.ReviewStatus == BumboData.Enums.ReviewStatus.Pending)
+                                    @if (item.ReviewStatus == ReviewStatus.Pending)
                                     {
                                         <div data-toggle="tooltip" data-placement="top" title="Dit moment is nog niet gekeurd door de manager">
                                             <span class="bi bi-patch-question-fill text-primary text-large"></span>
                                         </div>
-
                                     }
-                                    @if (item.ReviewStatus == BumboData.Enums.ReviewStatus.Rejected)
+                                    @if (item.ReviewStatus == ReviewStatus.Rejected)
                                     {
                                         <div data-toggle="tooltip" data-placement="top" title="Dit moment is niet goedgekeurd door de manager. ">
-                                            <span> <span class="bi bi-x text-danger text-large"></span></span>
+                                            <span>
+                                                <span class="bi bi-x text-danger text-large"></span>
+                                            </span>
                                         </div>
                                     }
                                 </div>
                             }
-                         
-                    
+
+
                         </div>
                     </div>
                 </div>
@@ -149,7 +130,12 @@
                 {
                     <div class="row">
                         <div class="col">
-                            <small>@item.Street  @item.HouseNumber</small>
+                            <p class="fw-bold">@item.BranchName</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <small>@item.Street @item.HouseNumber</small>
                         </div>
                     </div>
                     <div class="row">
@@ -157,15 +143,17 @@
                             <p>@item.City</p>
                         </div>
                     </div>
-                }else{
+                }
+                else
+                {
                     <div class="row">
                         <div class="col">
                             <!--Decided to only show the length if it lasts longer than a day, because otherwise the view gets too cluttered when viewing on mobile.-->
                             @if (item.StartTime.Date != item.EndTime.Date)
                             {
-                                <small>  @item.GetLengthDays()</small>
+                                <small> @item.GetLengthDays()</small>
                             }
-                                          
+
                         </div>
                     </div>
                     <div class="row">
@@ -178,16 +166,13 @@
                         </div>
                     </div>
                 }
-              
+
 
             </div>
         </div>
-
-        }
+    }
 
 </div>
-
-
 
 @section Scripts {
     <script>

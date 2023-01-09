@@ -30,25 +30,34 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
 
     protected DbSet<TEntity> DbSet => _dbSet ??= Context.Set<TEntity>();
 
-    public virtual TEntity? Get(TKey id) =>
-        DbSet
+    public virtual TEntity? Get(TKey id)
+    {
+        return DbSet
             .AsQueryable()
             .FirstOrDefault(i => i.Id.Equals(id));
+    }
 
-    public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate) =>
-        DbSet
+    public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate)
+    {
+        return DbSet
             .AsQueryable()
             .FirstOrDefault(predicate);
+    }
 
-    public virtual IEnumerable<TEntity> GetList() => DbSet
-        .AsQueryable()
-        .ToList();
+    public virtual IEnumerable<TEntity> GetList()
+    {
+        return DbSet
+            .AsQueryable()
+            .ToList();
+    }
 
-    public virtual IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate) =>
-        DbSet
+    public virtual IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> predicate)
+    {
+        return DbSet
             .AsQueryable()
             .Where(predicate)
             .ToList();
+    }
 
     public virtual TEntity Create(TEntity entity)
     {
@@ -59,17 +68,16 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
 
     public virtual TEntity Update(TEntity entity)
     {
-        bool IsBeingTracked(TEntity e) => DbSet.Local.Any(i => i == e);
+        bool IsBeingTracked(TEntity e)
+        {
+            return DbSet.Local.Any(i => i == e);
+        }
 
         // Fix duplicate tracking issues
         if (IsBeingTracked(entity))
-        {
             Context.Entry(entity).CurrentValues.SetValues(entity);
-        }
         else
-        {
             Context.Update(entity);
-        }
 
         Context.SaveChanges();
         return entity;
@@ -79,5 +87,12 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
     {
         Context.Remove(entity);
         Context.SaveChanges();
+    }
+
+    public IEnumerable<TEntity> GetList(int start, int amount)
+    {
+        return DbSet
+            .AsQueryable().Skip(start).Take(amount)
+            .ToList();
     }
 }

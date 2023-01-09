@@ -1,5 +1,4 @@
 ﻿@using Bumbo.Utils
-@using BumboData.Enums
 @using BumboServices.Surcharges.SurchargeRules
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bumbo.Models.ExportManager.ExportOverviewViewModel
@@ -110,7 +109,7 @@
                                 @if (hasUnapprovedShifts)
                                 {
                                     <div class="alert-warning rounded mt-2">
-                                        <p class="fw-bold mt-2">Diens(ten) gevonden die nog niet zijn goedgekeurd.</p>
+                                        <p class="fw-bold mt-2">Dienst(en) gevonden die nog niet zijn goedgekeurd.</p>
                                         <p class="mb-2">Deze worden pas opgenomen in de export, zodra ze zijn goedgekeurd.</p>
                                         <ul>
                                             @foreach (var unapprovedShift in viewModel.UnapprovedShifts)

@@ -6,116 +6,100 @@ using BumboData.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
-using System.Data;
 
-namespace Bumbo.Controllers.Manager
+namespace Bumbo.Controllers.Manager;
+
+[Authorize(Roles = "Manager")]
+public class UnavailabilityManagerController : NotificationController
 {
-    [Authorize(Roles = "Manager")]
-    public class UnavailabilityManagerController : Controller
+    private const int _pageSize = 20;
+    private readonly IMapper _mapper;
+    private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
+    private readonly UserManager<Employee> _userManager;
+
+    public UnavailabilityManagerController(UserManager<Employee> userManager, IMapper mapper,
+        IUnavailableMomentsRepository unavailableMomentsRepository)
     {
-        private readonly UserManager<Employee> _userManager;
-        private readonly IMapper _mapper;
-        private readonly IUnavailableMomentsRepository _unavailableMomentsRepository;
+        _userManager = userManager;
+        _mapper = mapper;
+        _unavailableMomentsRepository = unavailableMomentsRepository;
+    }
 
-        public UnavailabilityManagerController(UserManager<Employee> userManager, IMapper mapper, IUnavailableMomentsRepository unavailableMomentsRepository)
+    public async Task<IActionResult> Index(string? searchString = "", bool includeAccepted = false,
+        UnavailabilitySortingOption sortingOption = UnavailabilitySortingOption.Status_Todo, int? Page = 1)
+    {
+        if (string.IsNullOrEmpty(searchString)) searchString = "";
+        if (Page <= 1) Page = 1;
+        var viewModel = new UnavailabilityManagerListViewModel();
+        var manager = await _userManager.GetUserAsync(User);
+        var total = _unavailableMomentsRepository.GetTotalMoments(manager.DefaultBranchId, searchString,
+            includeAccepted);
+        var unavailabilityMoments = _unavailableMomentsRepository.GetAllMoments(manager.DefaultBranchId, searchString,
+            includeAccepted, sortingOption, Page, _pageSize);
+
+        viewModel.UnavailableMoments =
+            _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(unavailabilityMoments).ToList();
+        viewModel.SearchString = searchString;
+        viewModel.MaxPage = (total + _pageSize - 1) / _pageSize;
+        viewModel.Page = Page ?? 1;
+        viewModel.IncludeAccepted = includeAccepted;
+        viewModel.SortingOption = sortingOption;
+        viewModel.Ids = viewModel.UnavailableMoments.Select(u => u.Id).ToList();
+        return View(viewModel);
+    }
+
+    [ValidateAntiForgeryToken]
+    [HttpPost]
+    public IActionResult Review(int id, bool isApproved, string? searchString = "", bool includeAccepted = false,
+        UnavailabilitySortingOption sortingOption = UnavailabilitySortingOption.Status_Todo, int? Page = 1)
+    {
+        var unavailabilityMoment = _unavailableMomentsRepository.Get(id);
+        if (unavailabilityMoment == null)
         {
-            _userManager = userManager;
-            _mapper = mapper;
-            _unavailableMomentsRepository = unavailableMomentsRepository;
+            ShowMessage(MessageType.Error, "Er is iets fout gegaan");
+            return NotFound();
         }
 
-
-        public async Task<IActionResult> Index(string? searchString)
+        if (unavailabilityMoment.ReviewStatus != ReviewStatus.Pending)
         {
-  
-            var manager = await _userManager.GetUserAsync(User);
-            // Returns all unavailability moments that haven't been approved yet.
-
-            var unavailabilityMoments = _unavailableMomentsRepository.GetAllUnavailabilityMomentsByReviewStatus(manager.DefaultBranchId ?? -1, BumboData.Enums.ReviewStatus.Pending, searchString);
-
-            UnavailabilityManagerListViewModel viewModel = new UnavailabilityManagerListViewModel();
-            viewModel.UnavailableMoments = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(unavailabilityMoments).ToList();
-            viewModel.SearchString = searchString;
-
-            var selectedids = viewModel.UnavailableMoments.Select(u => u.Id).ToList();
-            viewModel.Ids = selectedids;
-            return View(viewModel);
+            ShowMessage(MessageType.Error, "Afwezigheidsverzoek is al geupdate");
+            return BadRequest();
         }
 
-        public async Task<IActionResult> MonthlyOverview(string? dateInput, string? searchString)
+        if (isApproved)
         {
-            DateTime inputtedDate = DateTime.Now;
-            if (dateInput != null)
-            {
-                inputtedDate = DateTime.Parse(dateInput);
-            }
-            DateTime firstDateOfMonth = new DateTime(inputtedDate.Year, inputtedDate.Month, 1);
-
-            var manager = await _userManager.GetUserAsync(User);
-            // Returns all unavailability moments that haven't been approved yet.
-
-            var unavailabilityMoments = _unavailableMomentsRepository.GetAllMomentsFromMonth(manager.DefaultBranchId ?? -1, firstDateOfMonth, searchString);
-
-            UnavailabilityManagerListViewModel viewModel = new UnavailabilityManagerListViewModel();
-            viewModel.UnavailableMoments = _mapper.Map<IEnumerable<UnavailableMomentsViewModel>>(unavailabilityMoments).ToList();
-            viewModel.Date = firstDateOfMonth;
-            viewModel.SearchString = searchString;
-            return View(viewModel);
+            unavailabilityMoment.ReviewStatus = ReviewStatus.Approved;
+            ShowMessage(MessageType.Success, "Afwezigheidsverzoek goedgekeurd");
+        }
+        else
+        {
+            unavailabilityMoment.ReviewStatus = ReviewStatus.Rejected;
+            ShowMessage(MessageType.Success, "Afwezigheidsverzoek afgekeurd");
         }
 
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> Review(int id, bool isApproved)
-        {
-            
-            var unavailabilityMoment = _unavailableMomentsRepository.Get(id);
-            if (unavailabilityMoment == null)
-            {
-                return NotFound();
-            }
+        _unavailableMomentsRepository.Update(unavailabilityMoment);
+        return RedirectToAction(nameof(Index), new {searchString, includeAccepted, sortingOption, Page});
+    }
 
-            if (unavailabilityMoment.ReviewStatus != BumboData.Enums.ReviewStatus.Pending)
-            {
-                return BadRequest();
-            }
+    [ValidateAntiForgeryToken]
+    [HttpPost]
+    public async Task<IActionResult> ReviewAll(bool isApproved, List<int> ids, string? searchString = "",
+        bool includeAccepted = false,
+        UnavailabilitySortingOption sortingOption = UnavailabilitySortingOption.Status_Todo, int? Page = 1)
+    {
+        // This method recieves a 'isApproved' bool to indicate if it is approved or reject.
+        // Currently there's only a button to approve all, as I am not sure if a reject all is neccesesary.
+        // I still made this method work for a reject all button incase it is ever requested in the future. 
+        // But there's almost no situation in which a manager would use such a button.
 
-            if (isApproved)
-            {
-                unavailabilityMoment.ReviewStatus = BumboData.Enums.ReviewStatus.Approved;
-            }
-            else
-            {
-               unavailabilityMoment.ReviewStatus = BumboData.Enums.ReviewStatus.Rejected;
-            }
-            _unavailableMomentsRepository.Update(unavailabilityMoment);
-            return RedirectToAction(nameof(Index));
-        }
+        var manager = await _userManager.GetUserAsync(User);
 
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> ReviewAll(bool isApproved, List<int> ids)
-        {
-            // This method recieves a 'isApproved' bool to indicate if it is approved or reject.
-            // Currently there's only a button to approve all, as I am not sure if a reject all is neccesesary.
-            // I still made this method work for a reject all button incase it is ever requested in the future. 
-            // But there's almost no situation in which a manager would use such a button.
-            
-            var manager = await _userManager.GetUserAsync(User);
+        // We set the status of each moment in the list to the given status
+        var newStatus = ReviewStatus.Approved;
+        if (!isApproved) newStatus = ReviewStatus.Rejected;
 
-            // We set the status of each moment in the list to the given status
-            ReviewStatus newStatus = ReviewStatus.Approved;
-            if (!isApproved)
-            {
-                newStatus = ReviewStatus.Rejected;
-            }
-
-            
-            _unavailableMomentsRepository.UpdateRange(newStatus, ids);
-
-            return RedirectToAction("Index");
-        }
-
-        
+        _unavailableMomentsRepository.UpdateRange(newStatus, ids);
+        ShowMessage(MessageType.Success, "Afwezigheidsverzoeken geupdated");
+        return RedirectToAction(nameof(Index), new {searchString, includeAccepted, sortingOption, Page});
     }
 }

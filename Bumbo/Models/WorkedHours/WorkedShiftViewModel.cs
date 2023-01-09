@@ -1,19 +1,14 @@
-﻿using BumboData.Models;
+﻿namespace Bumbo.Models.ApproveWorkedHours;
 
-namespace Bumbo.Models.ApproveWorkedHours
+public class WorkedShiftViewModel
 {
-    public class WorkedShiftViewModel
-    {
-        public int Id { get; set; }
-        
-        public DateTime StartTime { get; set; }
+    public int Id { get; set; }
 
-        public DateTime EndTime { get; set; }
+    public DateTime StartTime { get; set; }
 
-        public Boolean Approved { get; set; }
+    public DateTime EndTime { get; set; }
 
-        public Boolean Sick { get; set; }
+    public bool Approved { get; set; }
 
-
-    }
+    public bool Sick { get; set; }
 }

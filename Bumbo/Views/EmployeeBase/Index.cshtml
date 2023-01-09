@@ -1,8 +1,7 @@
-﻿@using Bumbo.Models.EmployeeManager.Index
-@using BumboData.Models
+﻿@using BumboData.Models
 @using Microsoft.AspNetCore.Identity
 @using BumboData.Enums
-@model EmployeeListIndexViewModel
+@model Bumbo.Models.EmployeeManager.Index.EmployeeListIndexViewModel
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
 
@@ -13,134 +12,138 @@
 
 <h1 class="text-center">Personeelsbeheer</h1>
 
-
 <table class="table">
     <thead>
-        <tr>
-            <!--Create new button and sorting buttons in a header above the table-->
-            <div class="edit-box align-items-center align-items-center">
-                <div class="top-header-content">
-                    <form asp-action="Index" method="get" class="container ">
-                        <div class="form-actions no-color row ">
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="top-header-content">
-                                    @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
-                                    {
-                                        <a asp-action="Create" class="btn btn-lg btn-primary">Nieuwe manager</a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-action="Create" class="btn btn-lg btn-primary">Nieuwe medewerker</a>
-                                    }
-                                </div>
+    <tr>
+        <!--Create new button and sorting buttons in a header above the table-->
+        <div class="edit-box align-items-center align-items-center">
+            <div class="top-header-content">
+                <form asp-action="Index" method="get" class="container ">
+                    <div class="form-actions no-color row ">
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="top-header-content">
+                                @if (User.IsInRole(RoleType.ADMINISTRATOR.Name))
+                                {
+                                    <a asp-action="Create" class="btn btn-lg btn-primary">Nieuwe manager</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Create" class="btn btn-lg btn-primary">Nieuwe medewerker</a>
+                                }
                             </div>
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content form-check">
-                                    <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam" />
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content">
-                                    <label class="form-check-label">
-                                        @Html.DisplayNameFor(model => model.IncludeActive) <br /> <input class="form-check-input" asp-for="IncludeActive" />
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content">
-                                    <label class="form-check-label">
-                                        @Html.DisplayNameFor(model => model.IncludeInactive) <br /> <input class="form-check-input" asp-for="IncludeInactive" />
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="form-group top-header-content">
-                                    <label asp-for="CurrentSort" class="control-label"></label>
-                                    <select asp-for="CurrentSort" class="form-control form-select">
-                                        <option value="">Selecteer een afdeling</option>
-                                        @foreach (var item in Model.AvailableSortOptions)
-                                        {
-                                            <option value="@item">@Model.GetSortingDisplayName(item)</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 justify-content-center text-center my-auto">
-                                <div class="btn btn-warning text-center">
-                                    <input type="submit" value="Zoeken" class="btn btn-default search-bar" />
-                                </div>
-                            </div>
-
                         </div>
-                    </form>
-                </div>
-            </div>
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content form-check">
+                                <input type="search" name="SearchString" value="@Model.SearchString" placeholder="Zoek op naam"/>
+                            </div>
+                        </div>
 
-
-            <table class="table table-striped table-hover table-bordered">
-                <thead class="table table-dark">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Employees[0].FullName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Employees[0].Function)
-                        </th>
-                        <th class="text-center">
-                            @Html.DisplayNameFor(model => model.Employees[0].Birthdate)
-                        </th>
-                        <th class="text-center">
-                            @Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)
-                        </th>
-                        <th>
-                            Acties
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Employees.Count == 0)
-                    {
-                        <tr class="alert-info text-center">
-                            <td colspan="5">
-                                <p>Er zijn geen medewekers gevonden.</p>
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        @foreach (var item in Model.Employees)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FullName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Function)
-                                </td>
-                                <td class="text-center">
-                                    @Html.DisplayFor(modelItem => item.Birthdate)
-                                </td>
-                                <td class="text-center">
-                                    @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
-                                </td>
-                                <td class="text-center">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Verander</a>
-                                    <a asp-action="ChangePassword" asp-route-id="@item.Id" class="btn btn-warning">Reset wachtwoord</a>
-                                    @if (item.Active)
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label class="form-check-label">
+                                    @Html.DisplayNameFor(model => model.IncludeActive) <br/> <input class="form-check-input" asp-for="IncludeActive"/>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label class="form-check-label">
+                                    @Html.DisplayNameFor(model => model.IncludeInactive) <br/> <input class="form-check-input" asp-for="IncludeInactive"/>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="form-group top-header-content">
+                                <label asp-for="CurrentSort" class="control-label"></label>
+                                <select asp-for="CurrentSort" class="form-control form-select">
+                                    <option value="">Selecteer een afdeling</option>
+                                    @foreach (var item in Model.AvailableSortOptions)
                                     {
-                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-danger">Zet inactief</a>
-                                    } else
-                                    {
-                                        <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-success">Zet actief</a>
+                                        <option value="@item">@Model.GetSortingDisplayName(item)</option>
                                     }
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </tr>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 justify-content-center text-center my-auto">
+                            <div class="btn btn-warning text-center">
+                                <input type="submit" value="Zoeken" class="btn btn-default search-bar"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table table-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Employees[0].FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Employees[0].Function)
+                </th>
+                <th class="text-center">
+                    @Html.DisplayNameFor(model => model.Employees[0].Birthdate)
+                </th>
+                <th class="text-center">
+                    @Html.DisplayNameFor(model => model.Employees[0].EmployeeJoinedCompany)
+                </th>
+                <th>
+                    Acties
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model.Employees.Count == 0)
+            {
+                <tr class="alert-info text-center">
+                    <td colspan="5">
+                        <p>Er zijn geen medewekers gevonden.</p>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.Employees)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Function)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.Birthdate)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.EmployeeJoinedCompany)
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Verander</a>
+                            <a asp-action="ChangePassword" asp-route-id="@item.Id" class="btn btn-warning">Reset wachtwoord</a>
+                            @if (item.Active)
+                            {
+                                <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-danger">Zet inactief</a>
+                            }
+                            else
+                            {
+                                <a asp-action="ToggleActive" asp-route-id="@item.Id" class="btn btn-success">Zet actief</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </tr>
     </thead>
 </table>
+
+<div class="py-3 d-flex justify-content-between">
+    <a class="btn btn-primary @(Model.Page <= 1 ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page - 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Vorige</a>
+    <p class="text-center">Pagina @Model.Page/@Model.MaxPage</p>
+    <a class="btn btn-primary @(Model.Page >= Model.MaxPage ? "hidden" : "")" asp-action="Index" asp-route-Page="@(Model.Page + 1)" asp-route-SearchString="@Model.SearchString" asp-route-IncludeActive="@Model.IncludeActive" asp-route-IncludeInactive="@Model.IncludeInactive" asp-route-CurrentSort="@Model.CurrentSort">Volgende</a>
+</div>

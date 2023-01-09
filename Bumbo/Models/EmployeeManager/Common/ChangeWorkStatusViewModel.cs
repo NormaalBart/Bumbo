@@ -1,13 +1,10 @@
-﻿namespace Bumbo.Models.EmployeeManager.Common
+﻿namespace Bumbo.Models.EmployeeManager.Common;
+
+public class ChangeWorkStatusViewModel
 {
-    public class ChangeWorkStatusViewModel
-    {
+    public string Id { get; set; }
 
-        public string Id { get; set; }
+    public string? Name { get; set; }
 
-        public string? Name { get; set; }
-
-        public bool IsActive { get; set; }
-
-    }
+    public bool IsActive { get; set; }
 }

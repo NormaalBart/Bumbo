@@ -71,7 +71,7 @@
                                 @Html.HiddenFor(model => model.OpeningHours[i].DayOfWeek)
                                 <tr>
                                     <td class="w-25">
-                                        @Html.DisplayFor(model => @CultureInfo.CurrentCulture.DateTimeFormat.DayNames[(int) Model.OpeningHours[i].DayOfWeek])
+                                        @Html.DisplayFor(model => CultureInfo.CurrentCulture.DateTimeFormat.DayNames[(int) Model.OpeningHours[i].DayOfWeek])
                                     </td>
                                     <td class="w-25">
                                         @Html.EditorFor(model => model.OpeningHours[i].OpenTime)
@@ -88,7 +88,7 @@
                                         @Html.ValidationMessageFor(model => model.OpeningHours[i].OpenTime)
                                         @Html.ValidationMessageFor(model => model.OpeningHours[i].CloseTime)
                                     </td>
-                               </tr>
+                                </tr>
                             }
                         </table>
                     </div>
@@ -102,49 +102,49 @@
                             </div>
                         </div>
                         <div class="row">
-                        <table class="w-100 text-center">
-                            <tr>
-                                <th class="w-25">Dag</th>
-                                <th class="w-25">Openingstijd</th>
-                                <th class="w-25">Sluitingstijd</th>
-                                <th class="w-25">Actie</th>
-                            </tr>
-                            @if (Model.SpecialOpeningHours.Count != 0)
-                            {
-                                @for (int i = 0; i < Model.SpecialOpeningHours.Count; i++)
+                            <table class="w-100 text-center">
+                                <tr>
+                                    <th class="w-25">Dag</th>
+                                    <th class="w-25">Openingstijd</th>
+                                    <th class="w-25">Sluitingstijd</th>
+                                    <th class="w-25">Actie</th>
+                                </tr>
+                                @if (Model.SpecialOpeningHours.Count != 0)
                                 {
-                                    var item = Model.SpecialOpeningHours[i];
-                                    <tr>
-                                        <td class="w-25">
-                                            @Html.DisplayFor(model => item.Date)
-                                        </td>
-                                        @if (item.IsClosed)
-                                        {
-                                            <td class="w-50" colspan="2">
-                                                <p>Gesloten</p>
-                                            </td>
-                                        }
-                                        else
-                                        {
+                                    @for (var i = 0; i < Model.SpecialOpeningHours.Count; i++)
+                                    {
+                                        var item = Model.SpecialOpeningHours[i];
+                                        <tr>
                                             <td class="w-25">
-                                                @Html.DisplayFor(model => item.OpenTime)
+                                                @Html.DisplayFor(model => item.Date)
                                             </td>
+                                            @if (item.IsClosed)
+                                            {
+                                                <td class="w-50" colspan="2">
+                                                    <p>Gesloten</p>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="w-25">
+                                                    @Html.DisplayFor(model => item.OpenTime)
+                                                </td>
+                                                <td class="w-25">
+                                                    @Html.DisplayFor(model => item.CloseTime)
+                                                </td>
+                                            }
                                             <td class="w-25">
-                                                @Html.DisplayFor(model => item.CloseTime)
+                                                <a class="btn btn-link" asp-action="DeleteSpecialOpeningHour" asp-route-id="@Model.Id" asp-route-date="@item.Date">Verwijder</a>
                                             </td>
-                                        }
-                                        <td class="w-25">
-                                            <a class="btn btn-link" asp-action="DeleteSpecialOpeningHour" asp-route-id="@Model.Id" asp-route-date="@item.Date">Verwijder</a>
-                                        </td>
-                                    </tr>
+                                        </tr>
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                <td colspan="4" class="text-center py-2">
-                                    <p>Er zijn geen speciale openingstijden gevonden.</p>
-                                </td>
-                            }
+                                else
+                                {
+                                    <td colspan="4" class="text-center py-2">
+                                        <p>Er zijn geen speciale openingstijden gevonden.</p>
+                                    </td>
+                                }
                             </table>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                             <a class="btn btn-danger h-100" asp-action="Index">Ga terug naar lijst zonder opslaan</a>
                         </div>
                         <div class="m-2">
-                            <input type="submit" value="Veranderingen opslaan!" form="EditForm" class="btn btn-succes"/>
+                            <input type="submit" value="Veranderingen opslaan!" form="EditForm" class="btn btn-success"/>
                         </div>
                     </div>
                 </div>

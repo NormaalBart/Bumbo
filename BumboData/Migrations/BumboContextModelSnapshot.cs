@@ -404,50 +404,49 @@ namespace BumboData.Migrations
 
             modelBuilder.Entity("BumboData.Models.Standard", b =>
                 {
-                    b.Property<int>("Key")
-                        .HasColumnType("int");
-
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
+
+                    b.Property<int>("Key")
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("Key");
-
-                    b.HasIndex("BranchId");
+                    b.HasKey("BranchId", "Key");
 
                     b.ToTable("Standards");
 
                     b.HasData(
                         new
                         {
-                            Key = 2,
                             BranchId = 1,
+                            Key = 2,
                             Value = 30
                         },
                         new
                         {
-                            Key = 3,
                             BranchId = 1,
+                            Key = 3,
                             Value = 100
                         },
                         new
                         {
+                            BranchId = 1,
                             Key = 4,
-                            BranchId = 1,
                             Value = 30
                         },
                         new
                         {
+                            BranchId = 1,
                             Key = 1,
-                            BranchId = 1,
                             Value = 30
                         },
                         new
                         {
-                            Key = 0,
                             BranchId = 1,
+                            Key = 0,
                             Value = 5
                         });
                 });
@@ -478,57 +477,57 @@ namespace BumboData.Migrations
                         {
                             BranchId = 1,
                             DayOfWeek = 1,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 21, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 2,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 21, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 3,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 21, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 4,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 21, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 5,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 21, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 6,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 21, 8, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             BranchId = 1,
                             DayOfWeek = 0,
-                            CloseTime = new DateTime(2022, 12, 16, 20, 0, 0, 0, DateTimeKind.Local),
+                            CloseTime = new DateTime(2022, 12, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             IsClosed = false,
-                            OpenTime = new DateTime(2022, 12, 16, 8, 0, 0, 0, DateTimeKind.Local)
+                            OpenTime = new DateTime(2022, 12, 21, 8, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 

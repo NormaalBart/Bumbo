@@ -1,24 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Bumbo.Controllers
+namespace Bumbo.Controllers;
+
+public class NotificationController : Controller
 {
-    public class NotificationController : Controller
+    public enum MessageType
     {
+        Error,
+        Warning,
+        Success
+    }
 
-        public void ShowMessage(MessageType messageType, string message)
+    public void ShowMessage(MessageType messageType, string message)
+    {
+        TempData["ValidationType"] = messageType switch
         {
-            TempData["ValidationType"] = messageType switch
-            {
-                MessageType.Error => "error",
-                MessageType.Warning => "warning",
-                MessageType.Success => "success"
-            };
-            TempData["ValidationMessage"] = message;
-        }
-
-        public enum MessageType
-        {
-            Error, Warning, Success
-        }
+            MessageType.Error => "error",
+            MessageType.Warning => "warning",
+            MessageType.Success => "success"
+        };
+        TempData["ValidationMessage"] = message;
     }
 }

@@ -1,5 +1,3 @@
-using Microsoft.VisualBasic.CompilerServices;
-
 namespace BumboServices.Roster;
 
 public enum RosterCreationResponse
@@ -10,5 +8,6 @@ public enum RosterCreationResponse
     NoBranch,
     ClosedOnDay,
     AlreadyReachedPrognosis,
-    CaoViolationsFound
+    CaoViolationsFound,
+    NoPrognoseFound
 }
