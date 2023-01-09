@@ -118,13 +118,14 @@
                         </ul>
 
                         <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
+                            <li class="nav-item text-end">
+                                <p>Ingelogd als: @(UserManager.GetUserAsync(User).Result.Email)</p>
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Uitloggen</a>
                             </li>
                         </ul>
 
-                    </div> <!-- navbar-collapse.// -->
-            </div> <!-- container-fluid.// -->
+                    </div>
+            </div>
         </nav>
         </header>
     }
@@ -134,8 +135,8 @@
             @if (TempData["ValidationType"] != null)
             {
                 <script>
-                    var type = '@TempData["ValidationType"]';
-                    var message = '@TempData["ValidationMessage"]';
+                    let type = '@TempData["ValidationType"]';
+                    let message = '@TempData["ValidationMessage"]';
                     Notification.show(type, message);
                 </script>
             }
