@@ -6,23 +6,23 @@
 
 <h1 class=" col-sm d-flex justify-content-center flex-nowrap">Gewerkte uren accorderen</h1>
 
-<div class="top-date-header  d-flex justify-content-between m-2 border rounded-2 align-items-center border border-5 border-dark">
-    <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
-        </svg>
-    </a>
-
-    <div>
-        <!--Week  number, date information which is in the center.-->
-        <p>Week @Model.Date.GetWeekNumber() | @Model.Date.ToString("dddd") @Model.Date.ToShortDateString() </p>
+<div class="border border-2 border-dark rounded col-md-12 bg-white m-1">
+    <div class="d-flex justify-content-between m-2 align-items-center text-center">
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(-1).Date">
+                <i class="bi bi-caret-left"></i> Vorige dag
+            </a>
+        </div>
+        <div class="fw-bold">
+            <!--Week  number, date information which is in the center.-->
+            Week @Model.Date.GetWeekNumber()<br><span style="font-size:18px">@Model.Date.ToString("dddd d MMMM") @Model.Date.ToString("yyyy")</span>
+        </div>
+        <div>
+            <a class="btn btn-primary" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
+                Volgende dag <i class="bi bi-caret-right"></i>
+            </a>
+        </div>
     </div>
-
-    <a class="text-decoration-none" asp-action="Index" asp-route-dateInput="@Model.Date.AddDays(1).Date">
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
-        </svg>
-    </a>
 </div>
 
 @if (Model.Employees.Count < 1)

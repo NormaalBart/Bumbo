@@ -22,4 +22,10 @@ public class StandardRepository : IStandardRepository
     {
         return _context.Standards.Where(o => o.BranchId == branch).ToList();
     }
+
+    public void Update(Standard standard)
+    {
+        _context.Standards.Update(standard);
+        _context.SaveChanges();
+    }
 }

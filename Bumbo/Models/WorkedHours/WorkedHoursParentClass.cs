@@ -43,6 +43,6 @@ public class WorkedHoursParentClass
         var totalPlannedTime = PlannedShifts.SumTimeSpan(s => s.EndTime - s.StartTime);
         var totalWorkedTime = WorkedShifts.SumTimeSpan(s => s.EndTime - s.StartTime);
         var diff = totalWorkedTime - totalPlannedTime;
-        return diff.ToString();
+        return diff.ToString("hh\\:mm");
     }
 }
