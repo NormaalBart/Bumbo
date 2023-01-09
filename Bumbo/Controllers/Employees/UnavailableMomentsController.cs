@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bumbo.Controllers.Employees;
 
 [Authorize(Roles = "Employee")]
-public class UnavailableMomentsController : Controller
+public class UnavailableMomentsController : NotificationController
 {
     private readonly IBranchRepository _branchRepository;
     private readonly IMapper _mapper;
@@ -71,6 +71,7 @@ public class UnavailableMomentsController : Controller
 
         newUnavailableMoment.ReviewStatus = ReviewStatus.Pending;
         _unavailableMomentsRepository.Create(newUnavailableMoment);
+        ShowMessage(MessageType.Success, "Het verzoek is aangemaakt!");
         return RedirectToAction("Index");
     }
 
@@ -86,10 +87,14 @@ public class UnavailableMomentsController : Controller
         return Json(result);
     }
 
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var unavailableMoment = _unavailableMomentsRepository.Get(id);
         if (unavailableMoment == null) return RedirectToAction("Index");
+
+        var employee = await _userManager.GetUserAsync(User);
+        if (unavailableMoment.EmployeeId != employee.Id)
+            return RedirectToAction("AccessDenied", "Account");
 
         var unavailableMomentViewModel =
             _mapper.Map<UnavailableMoment, UnavailableMomentsViewModel>(unavailableMoment);
@@ -102,6 +107,7 @@ public class UnavailableMomentsController : Controller
     {
         var unavailableMoment = _mapper.Map<UnavailableMoment>(unavailableMomentViewModel);
         _unavailableMomentsRepository.Delete(unavailableMoment);
+        ShowMessage(MessageType.Success, "Moment is verwijderd!");
         return RedirectToAction("Index");
     }
 
@@ -120,6 +126,9 @@ public class UnavailableMomentsController : Controller
         return null;
     }
 
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> CopyFromDay(UnavailableMomentsListViewModel unavailableMomentViewModel)
     {
         var newMoments = new List<UnavailableMoment>();
@@ -140,10 +149,31 @@ public class UnavailableMomentsController : Controller
             newMoments.Add(newMoment);
         }
 
+        // Since there could be multiple Moments on a day
+        // We save the error outside the loop, and check after if it is null.
+        // If we were to instead show the error inside the loop, it is ovverriden. 
+        string? error = null;
         newMoments.ForEach(e =>
         {
-            if (UnavailableMomentValid(e) == null) _unavailableMomentsRepository.Create(e);
+            string? er = UnavailableMomentValid(e);
+            if (er == null)
+            {
+                _unavailableMomentsRepository.Create(e);
+            }
+            else
+            {
+                error = er;
+            }
         });
+
+        if (error != null)
+        {
+            ShowMessage(MessageType.Warning, error);
+        }
+        else
+        {
+            ShowMessage(MessageType.Success, "De data is opgeslagen");
+        }
 
         return RedirectToAction("Index");
     }

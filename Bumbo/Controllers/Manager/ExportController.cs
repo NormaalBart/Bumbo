@@ -46,14 +46,15 @@ public class ExportController : NotificationController
             .Select(s => new DateTime(s.Key.Year, s.Key.Month, 1))
             .OrderBy(s => s.Date).Reverse().ToList();
 
-        if (selectableMonths.Count == 0)
+
+        if (selectableMonths == null || selectableMonths.Count <= 0)
         {
+            selectableMonths = new List<DateTime>();
             selectableMonths.Add(DateTime.Today);
         }
 
-        var monthSelected = SelectedMonth is not {Length: 7}
-            ? selectableMonths.First()
-            : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
+        var monthSelected = SelectedMonth is not { Length: 7 }
+        ? selectableMonths.First() : DateTime.ParseExact(SelectedMonth, "yyyy-MM", CultureInfo.CurrentCulture);
 
         var workedShiftsInMonth =
             _workedShiftRepository.GetWorkedShiftsInMonth(branch ?? -1, monthSelected.Year, monthSelected.Month);
