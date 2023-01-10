@@ -9,8 +9,6 @@ namespace BumboUnitTests;
 public class RosterTests
 {
     private readonly Mock<IBranchRepository> _branchRepositoryMock = new();
-    private readonly Mock<IPrognosisRepository> _prognosisRepositoryMock = new();
-    private readonly Mock<IStandardRepository> _standardRepositoryMock = new();
     private readonly Mock<IPlannedShiftsRepository> _plannedShiftsRepositoryMock = new();
     private readonly Mock<IEmployeeRepository> _employeeRepositoryMock = new();
     private readonly Mock<IUnavailableMomentsRepository> _unavailableMomentsRepositoryMock = new();
