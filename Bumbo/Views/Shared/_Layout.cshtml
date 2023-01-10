@@ -113,7 +113,8 @@
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
+                        <li class="nav-item text-end">
+                            <p>Ingelogd als: @(UserManager.GetUserAsync(User).Result.Email)</p>
                             <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Uitloggen</a>
                         </li>
                     </ul>
