@@ -188,7 +188,7 @@ public class RosterService : IRosterService
 
         // Display error if prognosis has not completely been reached.
         return CalculateCurrentPrognosis(currentShifts).Exceeds(plannedPrognose)
-            ? RosterCreationResponse.Succes
+            ? RosterCreationResponse.Success
             : RosterCreationResponse.Incomplete;
     }
 

@@ -2,7 +2,7 @@ namespace BumboServices.Roster;
 
 public enum RosterCreationResponse
 {
-    Succes,
+    Success,
     Incomplete,
     NoEmployees,
     NoBranch,
