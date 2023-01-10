@@ -46,7 +46,6 @@ public class AvgWorkHoursWeek : CAORuleAppliesToAge
         allWorkedShiftsInTimeframe.AddRange(plannedShifts);
 
         if (allWorkedShiftsInTimeframe.Count == 0) return new List<PlannedShift>();
-        ;
 
         // Group by week num first, from there on sum up the weekly totals. And calculate the average from that.
         var weeklyAverage = allWorkedShiftsInTimeframe.GroupBy(s => s.StartTime.Date.GetWeekNumber())

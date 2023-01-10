@@ -305,7 +305,7 @@ public class RosterManagerController : Controller
         var error = await _rosterService.GenerateRoster(manager.DefaultBranchId ?? -1, forDate.ToDateOnly(),
             plannedShifts);
 
-        if (error == RosterCreationResponse.Succes || error == RosterCreationResponse.Incomplete)
+        if (error == RosterCreationResponse.Success || error == RosterCreationResponse.Incomplete)
         {
             var jsonObj = new JsonObject();
             jsonObj["incomplete"] = error == RosterCreationResponse.Incomplete;

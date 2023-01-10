@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32825.248
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33130.400
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bumbo", "Bumbo\Bumbo.csproj", "{F5A39451-A8D9-41AF-8B39-128FD174E496}"
 EndProject
@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboRepositories", "BumboR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboServices", "BumboServices\BumboServices.csproj", "{FE5FAD97-1B95-4EEB-9215-424F5CDB7B4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BumboUnitTests", "BumboUnitTests\BumboUnitTests.csproj", "{8DB9F03E-3AB6-418D-BB38-6A80F33F8FD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BumboUnitTests", "BumboUnitTests\BumboUnitTests.csproj", "{8DB9F03E-3AB6-418D-BB38-6A80F33F8FD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
