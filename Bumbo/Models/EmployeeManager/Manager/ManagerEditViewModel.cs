@@ -13,7 +13,7 @@ public class ManagerEditViewModel : BaseCreateViewModel
     }
 
     [Required]
-    [DisplayName("Van welke branch is deze persoon de manager?")]
+    [DisplayName("Van welke filiaal is deze persoon de manager?")]
     public int SelectedBranch { get; set; }
 
     public List<Branch> Branches { get; set; }
