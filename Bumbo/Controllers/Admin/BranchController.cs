@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bumbo.Controllers.Admin;
 
 [Authorize(Roles = "Administrator,Manager")]
-public class BranchController : Controller
+public class BranchController : NotificationController
 {
     private const int ItemsPerPage = 25;
     private readonly IBranchRepository _branchRepository;
@@ -134,7 +134,7 @@ public class BranchController : Controller
             _branchRepository.Update(branch);
             return RedirectToAction(nameof(Index));
         }
-
+        ShowMessage(MessageType.Success, "Filiaal aangemaakt");
         return View(branchModel);
     }
 
@@ -177,6 +177,7 @@ public class BranchController : Controller
             var branch = _branchRepository.Get(branchViewModel.Id);
             _mapper.Map<BranchEditViewModel, Branch>(branchViewModel, branch);
             _branchRepository.Update(branch);
+            ShowMessage(MessageType.Success, "Veranderingen opgeslagen!");
             return RedirectToAction("Edit", "Branch");
         }
         catch
@@ -191,6 +192,7 @@ public class BranchController : Controller
     public ActionResult SetInactive(int id, IFormCollection collection)
     {
         _branchRepository.SetInactive(id);
+        ShowMessage(MessageType.Success, "Filiaal inactief gezet");
         return RedirectToAction(nameof(Index));
     }
 
@@ -200,6 +202,7 @@ public class BranchController : Controller
     public ActionResult SetActive(int id, IFormCollection collection)
     {
         _branchRepository.SetActive(id);
+        ShowMessage(MessageType.Success, "Filiaal actief gezet");
         return RedirectToAction(nameof(Index));
     }
 
