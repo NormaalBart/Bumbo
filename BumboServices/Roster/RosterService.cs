@@ -43,7 +43,12 @@ public class RosterService : IRosterService
 
     public async Task<RosterCreationResponse> GenerateRoster(int branchId, DateOnly day)
     {
-        return await GenerateRoster(branchId, day, new List<PlannedShift>());
+        var plannedShift = _plannedShiftsRepository.GetAllShiftsDay(branchId, day);
+        if(plannedShift == null)
+        {
+            plannedShift = new List<PlannedShift>();
+        }
+        return await GenerateRoster(branchId, day, plannedShift);
     }
 
     public async Task<RosterCreationResponse> GenerateRoster(int branchId, DateOnly day,
