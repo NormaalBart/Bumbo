@@ -129,8 +129,14 @@ public class BranchController : NotificationController
                 openingHour.Branch = branch;
                 openingHour.BranchId = branch.Id;
             }
-
             branch.StandardOpeningHours = openingHours;
+
+            branch.Standards = new List<Standard> {
+                new Standard { BranchId = branch.Id, Key = StandardType.CHECKOUT_EMPLOYEES, Value = 30 },
+                new Standard { BranchId = branch.Id, Key = StandardType.FRESH_EMPLOYEES, Value = 100 },
+                new Standard { BranchId = branch.Id, Key = StandardType.SHELF_ARRANGEMENT, Value = 30 },
+                new Standard { BranchId = branch.Id, Key = StandardType.SHELF_STOCKING_TIME, Value = 30 },
+                new Standard { BranchId = branch.Id, Key = StandardType.COLI_TIME, Value = 5 }};
             _branchRepository.Update(branch);
             return RedirectToAction(nameof(Index));
         }
