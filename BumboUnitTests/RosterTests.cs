@@ -187,7 +187,7 @@ public class RosterTests
         _userManager.Setup(u => u.GetRolesAsync(It.IsAny<Employee>()))
             .Returns(Task.FromResult<IList<string>>(new List<string> { RoleType.EMPLOYEE.Name }));
         _unavailableMomentsRepositoryMock.Setup(u =>
-            u.IsEmployeeAvailable(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            u.IsEmployeeAvailable(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), true))
             .Returns(true);
         
         // Act
