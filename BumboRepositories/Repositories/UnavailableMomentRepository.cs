@@ -9,8 +9,11 @@ namespace BumboRepositories.Repositories;
 
 public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnavailableMomentsRepository
 {
-    public UnavailableMomentRepository(BumboContext context) : base(context)
+    private readonly IPlannedShiftsRepository _plannedShiftsRepository;
+
+    public UnavailableMomentRepository(BumboContext context, IPlannedShiftsRepository plannedShiftsRepository) : base(context)
     {
+        _plannedShiftsRepository = plannedShiftsRepository;
     }
 
     public IEnumerable<UnavailableMoment> GetAll(string employeeId)
@@ -30,8 +33,11 @@ public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnava
         // check if employee is unavailable in unavailable moments 
         var unavailableMoments = DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date == startTime.Date)
             .ToList();
+        var plannedShifts = (_plannedShiftsRepository.GetOfEmployeeOnDay(startTime, employeeId));
         return !unavailableMoments.Any(moment => startTime < moment.EndTime &&
-                                                 moment.StartTime < endTime);
+                                                 moment.StartTime < endTime)
+            || !plannedShifts.Any(shift => startTime < shift.EndTime &&
+                            shift.StartTime < endTime);
     }
 
     /*
