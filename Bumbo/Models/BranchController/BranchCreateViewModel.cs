@@ -24,6 +24,11 @@ public class BranchCreateViewModel
 
     [Required] [DisplayName("Straat")] public string Street { get; set; }
 
+    [Required]
+    [Range(0, int.MaxValue, ErrorMessage = "Er mogen geen negatieve getallen worden ingevoerd.")]
+    [DisplayName("Spiegelmeters")]
+    public int ShelvingDistance { get; set; }
+
     [Required] public List<OpeningHoursViewModel> OpeningHours { get; set; }
 
     [DisplayName("Adres")] public string FormattedStreet => $"{Street} {HouseNumber} te {City}";
