@@ -28,15 +28,19 @@ public class UnavailableMomentRepository : Repository<UnavailableMoment>, IUnava
                         e.StartTime < unavailableMoment.EndTime).ToList();
     }
 
-    public bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime)
+    public bool IsEmployeeAvailable(string employeeId, DateTime startTime, DateTime endTime, bool takePlannedShiftIntoAccount)
     {
         // check if employee is unavailable in unavailable moments 
         var unavailableMoments = DbSet.Where(u => u.Employee.Id == employeeId && u.StartTime.Date == startTime.Date)
             .ToList();
+        if (!takePlannedShiftIntoAccount)
+        {
+            return !unavailableMoments.Any(moment => startTime < moment.EndTime && moment.StartTime < endTime);
+        }
         var plannedShifts = (_plannedShiftsRepository.GetOfEmployeeOnDay(startTime, employeeId));
         return !unavailableMoments.Any(moment => startTime < moment.EndTime &&
                                                  moment.StartTime < endTime)
-            || !plannedShifts.Any(shift => startTime < shift.EndTime &&
+            && !plannedShifts.Any(shift => startTime < shift.EndTime &&
                             shift.StartTime < endTime);
     }
 

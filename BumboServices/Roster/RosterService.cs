@@ -254,7 +254,7 @@ public class RosterService : IRosterService
                 continue;
 
             // Check for employee availability.
-            if (!_unavailableMomentsRepository.IsEmployeeAvailable(emp.Id, startTime, endTime)) continue;
+            if (!_unavailableMomentsRepository.IsEmployeeAvailable(emp.Id, startTime, endTime, true)) continue;
 
             // Create list to send to the CAO service
             var tempShifts = new List<PlannedShift>();

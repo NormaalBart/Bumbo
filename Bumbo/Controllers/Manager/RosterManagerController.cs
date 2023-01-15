@@ -368,7 +368,7 @@ public class RosterManagerController : Controller
 
         // check availability employee
         if (!_unavailableRepository.IsEmployeeAvailable(plannedShift.Employee.Id, plannedShift.StartTime,
-                plannedShift.EndTime))
+                plannedShift.EndTime, true))
             return RedirectToAction("Index", "RosterManager",
                 new {dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd."});
 
@@ -414,7 +414,7 @@ public class RosterManagerController : Controller
 
         // check availability employee
         if (!_unavailableRepository.IsEmployeeAvailable(plannedShift.Employee.Id, plannedShift.StartTime,
-                plannedShift.EndTime))
+                plannedShift.EndTime, false))
             return RedirectToAction("Index", "RosterManager",
                 new {dateInput = date, errormessage = "Medewerker is niet beschikbaar voor deze tijd."});
 
