@@ -14,7 +14,7 @@ public class BranchCreateViewModel
 
     [DisplayName("Naam")] public string Name { get; set; }
 
-    [DisplayName("Mannagers")] public string? Managers { get; set; }
+    [DisplayName("Managers")] public string? Managers { get; set; }
 
     [DisplayName("Aantal medewerkers")] public int Employees { get; set; }
 
